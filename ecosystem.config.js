@@ -8,5 +8,6 @@ module.exports = {
     merge_logs: true,
     env_dev: { NODE_ENV: 'development' },
     env_production: { NODE_ENV: 'production' },
+    node_args: '--require ./tsconfig-paths-bootstrap.js',
   }],
 }

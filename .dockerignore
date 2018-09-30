@@ -1,0 +1,12 @@
+node_modules
+dist
+test
+*.spec.ts
+jest.json
+nest.cli
+nodemon-debug.json
+nodemon.json
+README.md
+tsconfig.spec.json
+tslint.json
+*.log
