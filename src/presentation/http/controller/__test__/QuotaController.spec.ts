@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 
 import QuotaController from '../QuotaController'
 
-describe('AppController', () => {
+describe('QuotaController', () => {
   let app: TestingModule
 
   beforeAll(async () => {
