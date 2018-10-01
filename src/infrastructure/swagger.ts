@@ -1,7 +1,7 @@
 import { INestApplication, INestExpressApplication } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
-export default (app: INestApplication & INestExpressApplication) => {
+export default (app: INestApplication) => {
   const options = new DocumentBuilder()
     .setTitle('oncohelp-core')
     .setDescription('The core API documentation')
