@@ -1,7 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export default class QuotaResponse {
-
   @ApiModelProperty({ example: 's12jHH-23Hjfpk4' })
   public readonly id: string
 
