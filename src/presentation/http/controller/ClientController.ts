@@ -1,14 +1,17 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse,
   ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
+import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
+import LoginRequest from '../request/LoginRequest'
 import PaginationPipe from '../request/pagination/PaginationPipe'
 import PaginationRequest from '../request/pagination/PaginationRequest'
 import RegistrationRequest from '../request/RegistrationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
 import ClientResponse from '../response/ClientResponse'
+import TokenResponse from '../response/TokenResponse'
 
 @Controller('clients')
 @ApiUseTags('clients')
@@ -31,7 +34,7 @@ export default class ClientController {
     }
   }
 
-  @Post('/register')
+  @Post('register')
   @ApiOperation({ title: 'Create the new client' })
   @ApiOkResponse({ description: 'Registered', type: ClientResponse })
   @ApiBadRequestResponse({ description: 'Login already taken' })
@@ -40,6 +43,17 @@ export default class ClientController {
       id: 'ffh',
       email: registrationRequest.email,
       phone: registrationRequest.phone,
+    }
+  }
+
+  @Post('login')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Issue the new token' })
+  @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
+  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  public login(@Body() loginRequest: LoginRequest): TokenResponse {
+    return {
+      token: 'eyJ0eXA.ey1MWFiZWExIn0.FSFbUuBfG4hgbxo',
     }
   }
 }

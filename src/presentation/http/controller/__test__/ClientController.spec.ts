@@ -31,7 +31,7 @@ describe('ClientController', () => {
     })
   })
 
-  describe('describe', () => {
+  describe('register', () => {
     it('should return email and phone according to request', () => {
       const clientController = app.get<ClientController>(ClientController)
       const registration = { email: 'email@email.com' }
@@ -39,6 +39,16 @@ describe('ClientController', () => {
       const response = clientController.register(registration)
       expect(response.email).toBe(registration.email)
       expect(response.phone).toBe(undefined)
+    })
+  })
+
+  describe('login', () => {
+    it('should return token with 3 segments', () => {
+      const clientController = app.get<ClientController>(ClientController)
+      const creds = { login: 'email@email.com', password: 'pass' }
+
+      const response = clientController.login(creds)
+      expect(response.token.split('.')).toHaveLength(3)
     })
   })
 })
