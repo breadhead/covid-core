@@ -1,6 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 
-import LogicException from '../exception/LogicException'
+import LogicException from '../../exception/LogicException'
 import PaginationRequest from './PaginationRequest'
 
 interface PaginationQuery {

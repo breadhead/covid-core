@@ -4,8 +4,8 @@ import {
   ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
-import PaginationPipe from '../request/PaginationPipe'
-import PaginationRequest from '../request/PaginationRequest'
+import PaginationPipe from '../request/pagination/PaginationPipe'
+import PaginationRequest from '../request/pagination/PaginationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
 
 @Controller('clients')
