@@ -41,4 +41,17 @@ describe('AppController', () => {
       expect(response.count).toBe(request.count)
     })
   })
+
+  describe('edit', () => {
+    it('should return quotas with the provided id, name and count', () => {
+      const request = { id: 'id', name: 'name one', count: 12 }
+
+      const quotaController = app.get<QuotaController>(QuotaController)
+
+      const response = quotaController.edit(request)
+      expect(response.id).toBe(request.id)
+      expect(response.name).toBe(request.name)
+      expect(response.count).toBe(request.count)
+    })
+  })
 })
