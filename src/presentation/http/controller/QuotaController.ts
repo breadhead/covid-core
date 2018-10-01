@@ -1,6 +1,10 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common'
-import { ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import {
+  ApiBadRequestResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation, ApiUseTags,
+} from '@nestjs/swagger'
 
+import QuotaCreateRequest from '../request/QuotaCreateRequest'
 import QuotaTransferRequest from '../request/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
@@ -38,6 +42,19 @@ export default class QuotaController {
         name: 'Общая квота',
         count: 10000 + transferRequest.count,
       },
+    }
+  }
+
+  @Post('create')
+  @ApiOperation({ title: 'Create the new qouta' })
+  @ApiOkResponse({ description: 'Created', type: QuotaResponse })
+  @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
+  public create(@Body() createRequest: QuotaCreateRequest): QuotaResponse {
+    return {
+      id: 'fdf',
+      name: createRequest.name,
+      count: createRequest.count,
     }
   }
 }
