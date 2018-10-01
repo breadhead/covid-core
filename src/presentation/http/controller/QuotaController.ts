@@ -5,6 +5,7 @@ import {
 } from '@nestjs/swagger'
 
 import QuotaCreateRequest from '../request/QuotaCreateRequest'
+import QuotaEditRequest from '../request/QuotaEditRequest'
 import QuotaTransferRequest from '../request/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
@@ -46,7 +47,7 @@ export default class QuotaController {
   }
 
   @Post('create')
-  @ApiOperation({ title: 'Create the new qouta' })
+  @ApiOperation({ title: 'Create the new quota' })
   @ApiCreatedResponse({ description: 'Created', type: QuotaResponse })
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
@@ -55,6 +56,20 @@ export default class QuotaController {
       id: 'fdf',
       name: createRequest.name,
       count: createRequest.count,
+    }
+  }
+
+  @Post('edit')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Edit the existing quota'})
+  @ApiOkResponse({ description: 'Success', type: QuotaResponse })
+  @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
+  public edit(@Body() editRequest: QuotaEditRequest): QuotaResponse {
+    return {
+      id: editRequest.id,
+      name: editRequest.name,
+      count: editRequest.count,
     }
   }
 }
