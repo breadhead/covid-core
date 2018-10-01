@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
-  ApiOperation, ApiUseTags,
+  ApiOperation, ApiUseTags, ApiCreatedResponse,
 } from '@nestjs/swagger'
 
 import QuotaCreateRequest from '../request/QuotaCreateRequest'
@@ -47,7 +47,7 @@ export default class QuotaController {
 
   @Post('create')
   @ApiOperation({ title: 'Create the new qouta' })
-  @ApiOkResponse({ description: 'Created', type: QuotaResponse })
+  @ApiCreatedResponse({ description: 'Created', type: QuotaResponse })
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public create(@Body() createRequest: QuotaCreateRequest): QuotaResponse {
