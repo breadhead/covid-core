@@ -16,7 +16,7 @@ export default class ClientController {
   @ApiOkResponse({ description: 'Success', type: ClientPageResponse })
   @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
   public showList(
-    @Query(new PaginationPipe()) pagination: PaginationRequest,
+    @Query(PaginationPipe) pagination: PaginationRequest,
   ): ClientPageResponse {
     return {
       page: pagination.page,
