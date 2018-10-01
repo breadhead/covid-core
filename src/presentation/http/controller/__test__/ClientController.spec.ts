@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 
-import PaginationRequest from '../../request/PaginationRequest'
+import PaginationRequest from '../../request/pagination/PaginationRequest'
 import ClientController from '../ClientController'
 
 describe('ClientController', () => {
@@ -28,6 +28,17 @@ describe('ClientController', () => {
 
       const response = clientController.showList(pagination)
       expect(response.items.length).toBeLessThanOrEqual(pagination.perPage)
+    })
+  })
+
+  describe('describe', () => {
+    it('should return email and phone according to request', () => {
+      const clientController = app.get<ClientController>(ClientController)
+      const registration = { email: 'email@email.com' }
+
+      const response = clientController.register(registration)
+      expect(response.email).toBe(registration.email)
+      expect(response.phone).toBe(undefined)
     })
   })
 })

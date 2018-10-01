@@ -1,12 +1,14 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import {
-  ApiForbiddenResponse, ApiOkResponse,
+  ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse,
   ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
 import PaginationPipe from '../request/pagination/PaginationPipe'
 import PaginationRequest from '../request/pagination/PaginationRequest'
+import RegistrationRequest from '../request/RegistrationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
+import ClientResponse from '../response/ClientResponse'
 
 @Controller('clients')
 @ApiUseTags('clients')
@@ -26,6 +28,18 @@ export default class ClientController {
         { id: 'fds', email: 'perto@gmail.com' },
         { id: 'ffh', email: 'ann@gmail.com', phone: '79999999999' },
       ],
+    }
+  }
+
+  @Post('/register')
+  @ApiOperation({ title: 'Create the new client' })
+  @ApiOkResponse({ description: 'Registered', type: ClientResponse })
+  @ApiBadRequestResponse({ description: 'Login already taken' })
+  public register(@Body() registrationRequest: RegistrationRequest): ClientResponse {
+    return {
+      id: 'ffh',
+      email: registrationRequest.email,
+      phone: registrationRequest.phone,
     }
   }
 }
