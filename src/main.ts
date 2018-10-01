@@ -1,19 +1,12 @@
 import { NestFactory } from '@nestjs/core'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from '@app/app.module'
+import setupSwagger from '@app/infrastructure/swagger'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
-  const options = new DocumentBuilder()
-    .setTitle('oncohelp-core')
-    .setDescription('The core API documentation')
-    .setVersion('1.0')
-    .build()
-
-  const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('docs', app, document)
+  setupSwagger(app)
 
   await app.listen(3000)
 }
