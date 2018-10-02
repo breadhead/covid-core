@@ -12,7 +12,7 @@ import { Gender } from '../response/claim/PersonalData'
 export default class ClaimController {
 
   @Get(':id/common')
-  @ApiOperation({ title: 'Common claim\'s data' })
+  @ApiOperation({ title: 'Claim\'s common data' })
   @ApiOkResponse({ description: 'Success', type: CommonClaimResponse })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
