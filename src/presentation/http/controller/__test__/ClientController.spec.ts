@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { Option } from 'tsoption'
 
 import PaginationRequest from '../../request/pagination/PaginationRequest'
 import ClientController from '../ClientController'
@@ -15,7 +16,10 @@ describe('ClientController', () => {
   describe('showList', () => {
     it('should return page and perPage according to request', () => {
       const clientController = app.get<ClientController>(ClientController)
-      const pagination = new PaginationRequest(2, 13)
+      const pagination = new PaginationRequest(
+        Option.of(2),
+        Option.of(13),
+      )
 
       const response = clientController.showList(pagination)
       expect(response.page).toBe(pagination.page)
@@ -24,7 +28,10 @@ describe('ClientController', () => {
 
     it('should return less than or equal to perPage ', () => {
       const clientController = app.get<ClientController>(ClientController)
-      const pagination = new PaginationRequest(2, 13)
+      const pagination = new PaginationRequest(
+        Option.of(2),
+        Option.of(13),
+      )
 
       const response = clientController.showList(pagination)
       expect(response.items.length).toBeLessThanOrEqual(pagination.perPage)
