@@ -18,11 +18,8 @@ export default class PaginationPipe implements PipeTransform<PaginationQuery, Pa
 
     const { page, perPage } = value
 
-    const parsedPage = Option.of(page)
-      .map((_) => parseInt(_, 10))
-
-    const parsedPerPage = Option.of(perPage)
-      .map((_) => parseInt(_, 10))
+    const parsedPage = Option.of(page).map(parseInt)
+    const parsedPerPage = Option.of(perPage).map(parseInt)
 
     return new PaginationRequest(parsedPage, parsedPerPage)
   }
