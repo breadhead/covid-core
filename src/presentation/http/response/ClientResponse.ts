@@ -1,12 +1,18 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
+export const exampleClient = {
+  id: 'gjkfdhg34kJK',
+  email: 'pert@sergeevich.me',
+  phone: '79999999999',
+}
+
 export default class ClientResponse {
-  @ApiModelProperty({ example: 'gjkfdhg34kJK' })
+  @ApiModelProperty({ example: exampleClient.id })
   public readonly id: string
 
-  @ApiModelProperty({ example: 'pert@sergeevich.me' })
+  @ApiModelProperty({ example: exampleClient.email })
   public readonly email: string
 
-  @ApiModelProperty({ required: false, example: '79999999999' })
+  @ApiModelProperty({ required: false, example: exampleClient.phone })
   public readonly phone?: string
 }
