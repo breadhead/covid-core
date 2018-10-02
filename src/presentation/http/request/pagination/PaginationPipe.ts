@@ -1,4 +1,5 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
+import { Option } from 'tsoption'
 
 import LogicException from '../../exception/LogicException'
 import PaginationRequest from './PaginationRequest'
@@ -17,10 +18,13 @@ export default class PaginationPipe implements PipeTransform<PaginationQuery, Pa
 
     const { page, perPage } = value
 
-    return new PaginationRequest(
-      !!page ? parseInt(page, 10) : undefined,
-      !!perPage ? parseInt(perPage, 10) : undefined,
-    )
+    const parsedPage = Option.of(page)
+      .map((_) => parseInt(_, 10))
+
+    const parsedPerPage = Option.of(perPage)
+      .map((_) => parseInt(_, 10))
+
+    return new PaginationRequest(parsedPage, parsedPerPage)
   }
 
   private supports(metadata: ArgumentMetadata) {
