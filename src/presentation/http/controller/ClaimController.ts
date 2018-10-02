@@ -5,6 +5,7 @@ import {
 } from '@nestjs/swagger'
 
 import CommonClaimResponse from '../response/claim/CommonClaimResponse'
+import { Gender } from '../response/claim/PersonalData'
 
 @Controller('claims')
 @ApiUseTags('claims')
@@ -22,6 +23,7 @@ export default class ClaimController {
         name: 'fd',
         region: 'fdf',
         age: 23,
+        gender: Gender.female,
         client: {
           id: 'fdf',
           email: 'fdfd',
