@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 
+import ConfigurationFactory from '@app/infrastructure/Configuration/ConfigationFactory'
 import * as httpControllers from '@app/presentation/http/controller'
 
 @Module({
@@ -7,6 +8,8 @@ import * as httpControllers from '@app/presentation/http/controller'
   controllers: [
     ...Object.values(httpControllers),
   ],
-  providers: [],
+  providers: [
+    ConfigurationFactory.provider(),
+  ],
 })
 export class AppModule {}
