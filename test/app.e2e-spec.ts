@@ -21,4 +21,8 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(404)
   })
+
+  afterAll(async () => {
+    app.close()
+  })
 })
