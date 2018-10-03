@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+
+import Company from '../company/Company.entity'
 
 @Entity()
 export default class Quota {
@@ -10,4 +12,8 @@ export default class Quota {
 
   @Column()
   public readonly balance: number
+
+  @JoinColumn()
+  @OneToOne((type) => Company)
+  public readonly company: Company
 }
