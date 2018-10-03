@@ -1,8 +1,8 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export default class Quota {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   public readonly id: number
 
   @Column({ length: 500 })
