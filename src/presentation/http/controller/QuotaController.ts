@@ -28,11 +28,7 @@ export default class QuotaController {
   public async showList(): Promise<QuotaResponse[]> {
     const quotas = await this.quotaRepo.findAll()
 
-    return quotas.map((quota) => ({
-      id: quota.id.toString(),
-      name: quota.name,
-      count: quota.balance,
-    }))
+    return quotas.map(QuotaResponse.fromEntity)
   }
 
   @Post('transfer')

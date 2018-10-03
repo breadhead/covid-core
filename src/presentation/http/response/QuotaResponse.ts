@@ -1,6 +1,16 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
+import Quota from '@app/domain/quota/Quota.entity'
+
 export default class QuotaResponse {
+  public static fromEntity(quota: Quota) {
+    return {
+      id: quota.id.toString(),
+      name: quota.name,
+      count: quota.balance,
+    } as QuotaResponse
+  }
+
   @ApiModelProperty({ example: 's12jHH-23Hjfpk4' })
   public readonly id: string
 
