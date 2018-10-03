@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common'
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
+import { Option } from 'tsoption'
 
 import Configuration from '../Configuration/Configuration'
 
@@ -17,8 +18,12 @@ export default class DbConnectionFactory implements TypeOrmOptionsFactory {
       username: this.config.get('DB_USER').getOrElse('admin'),
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
-      entities: [__dirname + '/**/*.entity.ts'],
-      synchronize: !this.config.get('PRODUCTION_READY').map(Boolean).getOrElse(true),
+      entities: [__dirname + '/../../../**/*.entity.ts'],
+      synchronize: !this.toBoolean(this.config.get('PRODUCTION_READY')),
     }
+  }
+
+  private toBoolean(option: Option<string>) {
+    return Boolean(parseInt(option.getOrElse('1'), 10))
   }
 }

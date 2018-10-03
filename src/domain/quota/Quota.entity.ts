@@ -1,22 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
-export class Photo {
+export default class Quota {
   @PrimaryGeneratedColumn()
   public readonly id: number
 
   @Column({ length: 500 })
   public readonly name: string
 
-  @Column('text')
-  public readonly  description: string
-
   @Column()
-  public readonly filename: string
-
-  @Column('int')
-  public readonly views: number
-
-  @Column()
-  public readonly isPublished: boolean
+  public readonly balance: number
 }
