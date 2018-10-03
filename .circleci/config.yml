@@ -31,7 +31,6 @@ jobs:
           MYSQL_DB: oncohelp
           MYSQL_USER: admin
           MYSQL_PASSWORD: admin
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
 
     working_directory: ~/repo
 
