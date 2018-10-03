@@ -18,7 +18,7 @@ export default class DbConnectionFactory implements TypeOrmOptionsFactory {
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
       entities: [__dirname + '/**/*.entity.ts'],
-      synchronize: true,
+      synchronize: !this.config.get('PRODUCTION_READY').map(Boolean).getOrElse(true),
     }
   }
 }
