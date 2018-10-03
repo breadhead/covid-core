@@ -1,15 +1,21 @@
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-import ConfigurationFactory from '@app/infrastructure/Configuration/ConfigationFactory'
+import ConfigModule from '@app/config.module'
+import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
 import * as httpControllers from '@app/presentation/http/controller'
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: DbConnectionFactory,
+    }),
+  ],
   controllers: [
     ...Object.values(httpControllers),
   ],
-  providers: [
-    ConfigurationFactory.provider(),
-  ],
+  providers: [],
 })
 export class AppModule {}
