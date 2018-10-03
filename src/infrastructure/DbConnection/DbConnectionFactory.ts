@@ -13,8 +13,8 @@ export default class DbConnectionFactory implements TypeOrmOptionsFactory {
   public createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'mysql',
-      host: this.config.get('DB_HOST').getOrElse('localhost'),
-      port: this.config.get('DB_HOST').map(parseInt).getOrElse(3306),
+      host: this.config.get('DB_HOST').getOrElse('127.0.0.1'),
+      port: this.config.get('DB_PORT').map(parseInt).getOrElse(3306),
       username: this.config.get('DB_USER').getOrElse('admin'),
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
