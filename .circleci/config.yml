@@ -25,21 +25,11 @@ jobs:
   test:
     docker:
       - image: circleci/node:8.11.1
-      - image: mysql:5.7
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
-        environment:
-          MYSQL_DB: oncohelp
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: admin
-          MYSQL_RANDOM_ROOT_PASSWORD: true
 
     working_directory: ~/repo
 
     steps:
       - checkout
-      - run:
-          name: Install MySQL client
-          command: sudo apt-get install -y mysql-client
       - restore_cache:
           keys:
             - js-dependencies-{{ checksum "yarn.lock" }}
@@ -53,9 +43,6 @@ jobs:
       - run:
           name: Test Code (unit)
           command: yarn test
-      - run:
-          name: Test Code (e2e)
-          command: yarn test:e2e
 
 workflows:
   version: 2
