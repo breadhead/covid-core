@@ -1,7 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
-import * as R from 'ramda'
+import { head } from 'ramda'
+import { Option } from 'tsoption'
 import { QueryFailedError } from 'typeorm'
 import { matches } from 'z'
+
+import { capitalize, strip } from '@app/infrastructure/utils/string'
 
 const HTTP_STATUS = 400
 
@@ -18,9 +21,11 @@ export default class EntityNotFoundFilter implements ExceptionFilter {
 
   private duplicateEntry(exception: QueryFailedError, host: ArgumentsHost) {
     const regex = /`(.+?)`/gm
-    const entryName = capitalize(
-      regex.exec((exception as any).query as string)[1],
-    )
+    const entryName = Option.of(regex.exec((exception as any).query as string))
+      .map(head)
+      .map(strip(/`/g))
+      .map(capitalize)
+      .getOrElse('Unknown')
 
     host
       .switchToHttp()
@@ -36,11 +41,3 @@ export default class EntityNotFoundFilter implements ExceptionFilter {
     throw exception
   }
 }
-
-const capitalize: (s: string) => string = R.converge(
-  R.concat,
-  [
-    R.compose(R.toUpper, R.head),
-    R.compose(R.toLower, R.tail),
-  ],
-)
