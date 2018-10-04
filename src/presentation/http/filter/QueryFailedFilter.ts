@@ -11,12 +11,10 @@ const HTTP_STATUS = 400
 @Catch(QueryFailedError)
 export default class EntityNotFoundFilter implements ExceptionFilter {
   public catch(exception: QueryFailedError, host: ArgumentsHost) {
-    const handler = matches(exception)(
+    matches(exception)(
       (e = { code: 'ER_DUP_ENTRY'}) => this.duplicateEntry,
       (e)                           => this.skipFilter,
-    )
-
-    handler(exception, host)
+    )(exception, host)
   }
 
   private duplicateEntry(exception: QueryFailedError, host: ArgumentsHost) {
