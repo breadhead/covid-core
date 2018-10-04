@@ -9,6 +9,7 @@ import * as httpControllers from '@app/presentation/http/controller'
 import EntityNotFoundFilter from '@app/presentation/http/filter/EntityNotFoundFilter'
 import FilterProviderFactory from '@app/presentation/http/filter/FilterProviderFactory'
 import InvariantViolationFilter from '@app/presentation/http/filter/InvariantViolationFilter'
+import QueryFailedFilter from '@app/presentation/http/filter/QueryFailedFilter'
 
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
@@ -41,6 +42,7 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
     ...FilterProviderFactory.providers(
       EntityNotFoundFilter,
       InvariantViolationFilter,
+      QueryFailedFilter,
     ),
     ...commandHandlers,
     {
