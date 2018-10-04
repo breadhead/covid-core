@@ -40,6 +40,14 @@
     path-to-regexp "2.2.1"
     uuid "3.3.2"
 
+"@nestjs/cqrs@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/cqrs/-/cqrs-5.1.1.tgz#e0e6eba31765e1e91c0496d786dfa594f5611368"
+  dependencies:
+    "@nestjs/common" "^5.0.0"
+    reflect-metadata "^0.1.12"
+    rxjs "^6.1.0"
+
 "@nestjs/swagger@^2.5.1":
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-2.5.1.tgz#f05e96ee82fa2b6b9c5a508b55bb0162fa025068"
@@ -3114,6 +3122,10 @@ nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
 
+nanoid@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.2.6.tgz#5b9427cabf41f5df1fc371b14c969ffcd3b095aa"
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -3935,7 +3947,7 @@ rsvp@^3.3.3:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"
 
-rxjs@^6.2.2:
+rxjs@^6.1.0, rxjs@^6.2.2:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
   dependencies:

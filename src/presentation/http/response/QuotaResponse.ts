@@ -11,8 +11,8 @@ export default class QuotaResponse {
     } as QuotaResponse
   }
 
-  @ApiModelProperty({ example: 45 })
-  public readonly id: number
+  @ApiModelProperty({ example: 'fdsf34' })
+  public readonly id: string
 
   @ApiModelProperty({ example: 'Рак молочной железы, Кемеровская область' })
   public readonly name: string

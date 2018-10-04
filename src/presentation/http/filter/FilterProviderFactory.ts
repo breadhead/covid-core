@@ -9,7 +9,7 @@ export default class FilterProviderFactory {
     }
   }
 
-  public static providers(filters: Array<Type<ExceptionFilter>>): Provider[] {
+  public static providers(...filters: Array<Type<ExceptionFilter>>): Provider[] {
     return filters.map(FilterProviderFactory.provider)
   }
 }

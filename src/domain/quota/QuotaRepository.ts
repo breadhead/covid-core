@@ -9,13 +9,19 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     return this.repository.find()
   }
 
-  public async getOne(id: number): Promise<Quota> {
+  public async getOne(id: string): Promise<Quota> {
     const quota = await this.repository.findOne(id)
 
     if (!quota) {
-      throw new EntityNotFoundException(Quota, { id })
+      throw new EntityNotFoundException(Quota.name, { id })
     }
 
     return quota
+  }
+
+  public findOneByName(name: string): Promise<Quota | null> {
+    return this.repository.findOne({
+      where: { name },
+    })
   }
 }

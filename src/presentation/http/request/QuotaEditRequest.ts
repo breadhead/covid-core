@@ -1,8 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-export default class QuotaCreateRequest {
-  @ApiModelProperty({ example: 12 })
-  public readonly id: number
+export default class QuotaEditRequest {
+  @ApiModelProperty({ example: 'fdfd' })
+  public readonly id: string
 
   @ApiModelProperty({ example: 'Сотрудники ПАО Сбербанк' })
   public readonly name: string
