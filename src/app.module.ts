@@ -10,6 +10,7 @@ import EntityNotFoundFilter from '@app/presentation/http/filter/EntityNotFoundFi
 import FilterProviderFactory from '@app/presentation/http/filter/FilterProviderFactory'
 
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
+import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
@@ -18,7 +19,7 @@ import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFa
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 
-const commandHandlers = [CreateQuotaHandler]
+const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler]
 
 @Module({
   imports: [

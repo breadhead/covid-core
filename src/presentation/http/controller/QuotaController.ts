@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateQuotaCommand from '@app/application/quota/CreateQuotaCommand'
+import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
@@ -41,23 +42,14 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public async transfer(@Body() transferRequest: QuotaTransferRequest): Promise<QuotaTransferResponse> {
-    const [ sourceQuota, targetQuota ] = await Promise.all([
-      this.quotaRepo.getOne(transferRequest.sourceId),
-      this.quotaRepo.getOne(transferRequest.targetId),
-    ])
+  public async transfer(@Body() request: QuotaTransferRequest): Promise<QuotaTransferResponse> {
+    const [ sourceQuota, targetQuota ]: [ Quota, Quota ] = await this.commandBus.execute(
+      new TransferQuotaCommand(request.sourceId, request.targetId, request.count),
+    )
 
     return {
-      source: {
-        id: sourceQuota.id,
-        name: sourceQuota.name,
-        count: sourceQuota.balance - transferRequest.count,
-      },
-      target: {
-        id: targetQuota.id,
-        name: targetQuota.name,
-        count: targetQuota.balance + transferRequest.count,
-      },
+      source: QuotaResponse.fromEntity(sourceQuota),
+      target: QuotaResponse.fromEntity(targetQuota),
     }
   }
 

@@ -10,17 +10,29 @@ export default class Quota {
   @Column({ length: 500, unique: true })
   public readonly name: string
 
-  @Column()
-  public readonly balance: number
+  public get balance() {
+    return this._balance
+  }
 
   @JoinColumn()
   @OneToOne((type) => Company)
   public readonly company?: Company
 
+  @Column()
+  private _balance: number
+
   public constructor(id: string, name: string, balance: number, company?: Company) {
     this.id = id
     this.name = name
-    this.balance = balance
+    this._balance = balance
     this.company = company
+  }
+
+  public decreaseBalance(diff: number): void {
+    this._balance = this._balance - diff
+  }
+
+  public increaseBalance(diff: number): void {
+    this._balance = this._balance + diff
   }
 }
