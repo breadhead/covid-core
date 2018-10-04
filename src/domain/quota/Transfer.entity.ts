@@ -21,12 +21,7 @@ export default class Transfer {
   @Column()
   public readonly date: Date
 
-  public constructor(
-    source: Quota,
-    target: Quota,
-    amount: number,
-    date: Date,
-  ) {
+  public constructor(source: Quota, target: Quota, amount: number, date: Date) {
     this.source = source
     this.target = target
     this.amount = amount
