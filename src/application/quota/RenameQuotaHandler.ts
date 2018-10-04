@@ -1,8 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
+import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
+import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 
 import RenameQuotaCommand from './RenameQuotaCommand'
 
