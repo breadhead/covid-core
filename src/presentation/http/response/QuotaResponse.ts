@@ -5,14 +5,14 @@ import Quota from '@app/domain/quota/Quota.entity'
 export default class QuotaResponse {
   public static fromEntity(quota: Quota) {
     return {
-      id: quota.id.toString(),
+      id: quota.id,
       name: quota.name,
       count: quota.balance,
     } as QuotaResponse
   }
 
-  @ApiModelProperty({ example: 's12jHH-23Hjfpk4' })
-  public readonly id: string
+  @ApiModelProperty({ example: 45 })
+  public readonly id: number
 
   @ApiModelProperty({ example: 'Рак молочной железы, Кемеровская область' })
   public readonly name: string

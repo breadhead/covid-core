@@ -37,17 +37,22 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public transfer(@Body() transferRequest: QuotaTransferRequest): QuotaTransferResponse {
+  public async transfer(@Body() transferRequest: QuotaTransferRequest): Promise<QuotaTransferResponse> {
+    const [ sourceQuota, targetQuota ] = await Promise.all([
+      this.quotaRepo.getOne(transferRequest.sourceId),
+      this.quotaRepo.getOne(transferRequest.targetId),
+    ])
+
     return {
       source: {
-        id: transferRequest.sourceId,
-        name: 'Рак молочной железы, Кемеровская область',
-        count: 12 - transferRequest.count,
+        id: sourceQuota.id,
+        name: sourceQuota.name,
+        count: sourceQuota.balance - transferRequest.count,
       },
       target: {
-        id: transferRequest.targetId,
-        name: 'Общая квота',
-        count: 10000 + transferRequest.count,
+        id: targetQuota.id,
+        name: targetQuota.name,
+        count: targetQuota.balance + transferRequest.count,
       },
     }
   }
@@ -59,7 +64,7 @@ export default class QuotaController {
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public create(@Body() createRequest: QuotaCreateRequest): QuotaResponse {
     return {
-      id: 'fdf',
+      id: 3444,
       name: createRequest.name,
       count: createRequest.count,
     }
@@ -71,9 +76,11 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public edit(@Body() editRequest: QuotaEditRequest): QuotaResponse {
+  public async edit(@Body() editRequest: QuotaEditRequest): Promise<QuotaResponse> {
+    const quota = await this.quotaRepo.getOne(editRequest.id)
+
     return {
-      id: editRequest.id,
+      id: quota.id,
       name: editRequest.name,
       count: editRequest.count,
     }
