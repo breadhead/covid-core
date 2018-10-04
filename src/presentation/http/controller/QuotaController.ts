@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateQuotaCommand from '@app/application/quota/CreateQuotaCommand'
+import RenameQuotaCommand from '@app/application/quota/RenameQuotaCommand'
 import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 
 import Quota from '@app/domain/quota/Quota.entity'
@@ -17,6 +18,7 @@ import QuotaEditRequest from '../request/QuotaEditRequest'
 import QuotaTransferRequest from '../request/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
+
 @Controller('quotas')
 @ApiUseTags('quotas')
 export default class QuotaController {
@@ -72,13 +74,11 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public async edit(@Body() editRequest: QuotaEditRequest): Promise<QuotaResponse> {
-    const quota = await this.quotaRepo.getOne(editRequest.id)
+  public async edit(@Body() request: QuotaEditRequest): Promise<QuotaResponse> {
+    const quota: Quota = await this.commandBus.execute(
+      new RenameQuotaCommand(request.id, request.name),
+    )
 
-    return {
-      id: quota.id,
-      name: editRequest.name,
-      count: editRequest.count,
-    }
+    return QuotaResponse.fromEntity(quota)
   }
 }

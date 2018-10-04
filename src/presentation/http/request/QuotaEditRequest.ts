@@ -6,7 +6,4 @@ export default class QuotaEditRequest {
 
   @ApiModelProperty({ example: 'Сотрудники ПАО Сбербанк' })
   public readonly name: string
-
-  @ApiModelProperty({ example: 12 })
-  public readonly count: number
 }
