@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common'
-import { CommandBus } from '@nestjs/cqrs'
 import {
   ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
   ApiOperation, ApiUseTags,
@@ -12,6 +11,8 @@ import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
+
+import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
 import QuotaCreateRequest from '../request/QuotaCreateRequest'
 import QuotaEditRequest from '../request/QuotaEditRequest'
@@ -44,8 +45,8 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public async transfer(@Body() request: QuotaTransferRequest): Promise<QuotaTransferResponse> {
-    const [ sourceQuota, targetQuota ]: [ Quota, Quota ] = await this.commandBus.execute(
+  public async transfer(@Body() request: QuotaTransferRequest) {
+    const [ sourceQuota, targetQuota ] = await this.commandBus.execute(
       new TransferQuotaCommand(request.sourceId, request.targetId, request.count),
     )
 

@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
 
 import Company from '../company/Company.entity'
+import InvariantViolationException from '../exception/InvariantViolationException'
 
 @Entity()
 export default class Quota {
@@ -33,6 +34,10 @@ export default class Quota {
   }
 
   public decreaseBalance(diff: number): void {
+    if (diff > this._balance) {
+      throw new InvariantViolationException(Quota.name, 'Balance must be positive')
+    }
+
     this._balance = this._balance - diff
   }
 

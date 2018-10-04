@@ -4,6 +4,7 @@ import { EntityManager } from 'typeorm'
 
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Transfer from '@app/domain/quota/Transfer.entity'
+import ThrowableExecute from '@app/infrastructure/CommandBus/ThrowableExecute'
 
 import TransferQuotaCommand from './TransferQuotaCommand'
 
@@ -14,6 +15,7 @@ export default class TransferQuotaHandler implements ICommandHandler<TransferQuo
     @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
   ) { }
 
+  @ThrowableExecute()
   public async execute(command: TransferQuotaCommand, resolve: (value?) => void) {
     const [ source, target ] = await Promise.all([
       this.quotaRepo.getOne(command.sourceId),
