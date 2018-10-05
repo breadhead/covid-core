@@ -2,24 +2,28 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs'
 
 import CommandBusResult from './CommandBusResult'
 
-const makeExecuteThrowable = (execute) =>
-  async function(command: ICommand, resolve: (value?) => void) {
-    const originalMethod = execute.bind(this)
+type Execute = (command: ICommand, resolve: (value?) => void) => void
 
-    let result
-    const fakeResolve = (resultFromExecute) => {
-      result = resultFromExecute
-    }
-
+const makeExecuteThrowable = (execute: Execute) =>
+  async function(command: ICommand, resolve: (value: CommandBusResult) => void) {
     try {
+      const originalMethod = execute.bind(this) as Execute
+
+      let result: any
+      const fakeResolve = (resultFromExecute: any) => {
+        result = resultFromExecute
+      }
+
       await originalMethod(command, fakeResolve)
+
       resolve(CommandBusResult.success(result))
     } catch (error) {
       resolve(CommandBusResult.failure(error))
     }
   }
 
-export default (command: ICommand): ClassDecorator => (target: any) => {
+// tslint:disable-next-line:ban-types
+export default (command: ICommand): ClassDecorator => <T extends Function>(target: T) => {
   CommandHandler(command)(target)
 
   const newExecute = makeExecuteThrowable(target.prototype.execute)
