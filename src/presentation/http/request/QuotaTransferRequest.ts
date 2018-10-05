@@ -2,10 +2,10 @@ import { ApiModelProperty } from '@nestjs/swagger'
 
 export default class QutaTransferRequest {
 
-  @ApiModelProperty({ example: 'fdsjfhsdk123' })
+  @ApiModelProperty({ example: 'fsdfsdf' })
   public readonly sourceId: string
 
-  @ApiModelProperty({ example: 'dsdgfJjhff3f' })
+  @ApiModelProperty({ example: 'fdfsd' })
   public readonly targetId: string
 
   @ApiModelProperty({ example: 12 })

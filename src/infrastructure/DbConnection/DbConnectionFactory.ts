@@ -18,12 +18,12 @@ export default class DbConnectionFactory implements TypeOrmOptionsFactory {
       username: this.config.get('DB_USER').getOrElse('admin'),
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
-      entities: [__dirname + '/../../../**/*.entity.ts'],
-      synchronize: !this.toBoolean(this.config.get('PRODUCTION_READY')),
+      entities: [__dirname + '/../../../**/*.{entity,vo}.ts'],
+      synchronize: !this.config
+        .get('PRODUCTION_READY')
+        .map(parseInt)
+        .map(Boolean)
+        .getOrElse(true),
     }
-  }
-
-  private toBoolean(option: Option<string>) {
-    return Boolean(parseInt(option.getOrElse('1'), 10))
   }
 }

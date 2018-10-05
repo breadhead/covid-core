@@ -3,6 +3,16 @@ import {
   ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
   ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
+import { InjectRepository } from '@nestjs/typeorm'
+
+import CreateQuotaCommand from '@app/application/quota/CreateQuotaCommand'
+import RenameQuotaCommand from '@app/application/quota/RenameQuotaCommand'
+import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
+
+import Quota from '@app/domain/quota/Quota.entity'
+import QuotaRepository from '@app/domain/quota/QuotaRepository'
+
+import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
 import QuotaCreateRequest from '../request/QuotaCreateRequest'
 import QuotaEditRequest from '../request/QuotaEditRequest'
@@ -14,15 +24,19 @@ import QuotaTransferResponse from '../response/QuotaTransferResponse'
 @ApiUseTags('quotas')
 export default class QuotaController {
 
+  public constructor(
+    @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
+    private readonly commandBus: CommandBus,
+  ) {}
+
   @Get()
   @ApiOperation({ title: 'List of quotas' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse, isArray: true })
   @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
-  public showList(): QuotaResponse[] {
-    return [
-      { id: 'jkhgd434kkkk', name: 'Общая квота', count: 10000 },
-      { id: '123ffdsf4jhj', name: 'Рак молочной железы, Кемеровская область', count: 12 },
-    ]
+  public async showList(): Promise<QuotaResponse[]> {
+    const quotas = await this.quotaRepo.findAll()
+
+    return quotas.map(QuotaResponse.fromEntity)
   }
 
   @Post('transfer')
@@ -31,18 +45,14 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public transfer(@Body() transferRequest: QuotaTransferRequest): QuotaTransferResponse {
+  public async transfer(@Body() request: QuotaTransferRequest) {
+    const [ sourceQuota, targetQuota ] = await this.commandBus.execute(
+      new TransferQuotaCommand(request.sourceId, request.targetId, request.count),
+    )
+
     return {
-      source: {
-        id: transferRequest.sourceId,
-        name: 'Рак молочной железы, Кемеровская область',
-        count: 12 - transferRequest.count,
-      },
-      target: {
-        id: transferRequest.targetId,
-        name: 'Общая квота',
-        count: 10000 + transferRequest.count,
-      },
+      source: QuotaResponse.fromEntity(sourceQuota),
+      target: QuotaResponse.fromEntity(targetQuota),
     }
   }
 
@@ -51,12 +61,12 @@ export default class QuotaController {
   @ApiCreatedResponse({ description: 'Created', type: QuotaResponse })
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public create(@Body() createRequest: QuotaCreateRequest): QuotaResponse {
-    return {
-      id: 'fdf',
-      name: createRequest.name,
-      count: createRequest.count,
-    }
+  public async create(@Body() request: QuotaCreateRequest): Promise<QuotaResponse> {
+    const quota: Quota = await this.commandBus.execute(
+      new CreateQuotaCommand(request.name, request.count),
+    )
+
+    return QuotaResponse.fromEntity(quota)
   }
 
   @Post('edit')
@@ -65,11 +75,11 @@ export default class QuotaController {
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
-  public edit(@Body() editRequest: QuotaEditRequest): QuotaResponse {
-    return {
-      id: editRequest.id,
-      name: editRequest.name,
-      count: editRequest.count,
-    }
+  public async edit(@Body() request: QuotaEditRequest): Promise<QuotaResponse> {
+    const quota: Quota = await this.commandBus.execute(
+      new RenameQuotaCommand(request.id, request.name),
+    )
+
+    return QuotaResponse.fromEntity(quota)
   }
 }
