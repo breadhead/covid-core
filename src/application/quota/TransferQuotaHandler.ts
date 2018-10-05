@@ -1,9 +1,8 @@
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { EntityManager } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
+import Accountant from '@app/domain/quota/Accountant'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
-import Transfer from '@app/domain/quota/Transfer.entity'
 import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 
 import TransferQuotaCommand from './TransferQuotaCommand'
@@ -11,8 +10,8 @@ import TransferQuotaCommand from './TransferQuotaCommand'
 @CommandHandler(TransferQuotaCommand)
 export default class TransferQuotaHandler implements ICommandHandler<TransferQuotaCommand> {
   public constructor(
-    @InjectEntityManager() private readonly em: EntityManager,
     @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
+    private readonly accountant: Accountant,
   ) { }
 
   public async execute(command: TransferQuotaCommand, resolve: (value?) => void) {
@@ -21,18 +20,7 @@ export default class TransferQuotaHandler implements ICommandHandler<TransferQuo
       this.quotaRepo.getOne(command.targetId),
     ])
 
-    await this.em.transaction((em) => {
-      source.decreaseBalance(command.count)
-      target.increaseBalance(command.count)
-
-      const transfer = new Transfer(source, target, command.count, new Date())
-
-      return Promise.all([
-        em.save(source),
-        em.save(target),
-        em.save(transfer),
-      ])
-    })
+    await this.accountant.tranfser(source, target, command.count)
 
     resolve([ source, target ])
   }

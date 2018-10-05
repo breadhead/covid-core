@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import Quota from './Quota.entity'
 
@@ -8,11 +8,11 @@ export default class Transfer {
   public readonly id
 
   @JoinColumn()
-  @OneToOne((type) => Quota)
+  @ManyToOne((type) => Quota)
   public readonly source: Quota
 
   @JoinColumn()
-  @OneToOne((type) => Quota)
+  @ManyToOne((type) => Quota)
   public readonly target: Quota
 
   @Column()

@@ -15,6 +15,7 @@ import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
+import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 
@@ -50,6 +51,7 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
       useClass: NanoIdGenerator,
     },
     CommandBus,
+    Accountant,
   ],
 })
 export class AppModule {
