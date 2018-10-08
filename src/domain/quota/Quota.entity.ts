@@ -2,6 +2,13 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import Company from '../company/Company.entity'
 import InvariantViolationException from '../exception/InvariantViolationException'
+import defineType from './utils/defineType'
+
+export enum QuotaType {
+  Common = 'Common',
+  Corporate = 'Corporate',
+  Special = 'Special',
+}
 
 @Entity()
 export default class Quota {
@@ -14,6 +21,13 @@ export default class Quota {
 
   public get balance() {
     return this._balance
+  }
+
+  public get type(): QuotaType {
+    return defineType({
+      corporate: this.corporate,
+      constraints: this.constraints,
+    })
   }
 
   @Column('simple-array')
@@ -32,7 +46,7 @@ export default class Quota {
   @Column({ length: 500, unique: true })
   private _name: string
 
-  public constructor(id: string, name: string, constraints: string[], company?: Company, corporate = false) {
+  public constructor(id: string, name: string, constraints: string[] = [], company?: Company, corporate = false) {
     this.id = id
     this._name = name
     this._balance = 0

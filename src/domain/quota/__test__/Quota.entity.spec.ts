@@ -5,17 +5,18 @@ import InvariantViolationException from '../../exception/InvariantViolationExcep
 describe('Quota', () => {
   describe('increaseBalance', () => {
     test('should increased correctly', () => {
-      const q = new Quota('1', 'first', 12)
+      const q = new Quota('1', 'first')
 
       q.increaseBalance(12)
 
-      expect(q.balance).toBe(24)
+      expect(q.balance).toBe(12)
     })
   })
 
   describe('decreaseBalance', () => {
     test('should decreased correctly', () => {
-      const q = new Quota('2', 'second', 12)
+      const q = new Quota('2', 'second')
+      q.increaseBalance(12)
 
       q.decreaseBalance(12)
 
@@ -23,7 +24,8 @@ describe('Quota', () => {
     })
 
     test('should throw exception if balance less than diff', () => {
-      const q = new Quota('2', 'second', 12)
+      const q = new Quota('2', 'second')
+      q.increaseBalance(12)
 
       expect(
         () => q.decreaseBalance(13),
@@ -33,7 +35,7 @@ describe('Quota', () => {
 
   describe('rename', () => {
     test('should rename quota correctly', () => {
-      const q = new Quota('3', 'third', 12)
+      const q = new Quota('3', 'third')
 
       q.rename('new name')
 
