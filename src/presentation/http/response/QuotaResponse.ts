@@ -12,6 +12,7 @@ export default class QuotaResponse {
       count: quota.balance,
       company: quota.company ? CompanyResponse.fromEntity(quota.company) : undefined,
       type: quota.type,
+      constraints: quota.constraints,
     } as QuotaResponse
   }
 
@@ -27,6 +28,9 @@ export default class QuotaResponse {
   @ApiModelProperty({ example: exampleCompanyResponse, required: false })
   public readonly company?: CompanyResponse
 
-  @ApiModelProperty({ example: QuotaType.Special })
+  @ApiModelProperty({ example: QuotaType.Special, enum: Object.values(QuotaType) })
   public readonly type: QuotaType
+
+  @ApiModelProperty({ example: ['Красноярский край'] })
+  public readonly constraints: string[]
 }
