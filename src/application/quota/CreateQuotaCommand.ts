@@ -7,5 +7,7 @@ export default class CreateQuotaCommand implements ICommand {
     public readonly constraints: string[],
     public readonly corporate: boolean,
     public readonly companyName?: string,
+    public readonly publicCompany?: boolean,
+    public readonly comment?: string,
   ) {}
 }

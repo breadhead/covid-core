@@ -22,7 +22,7 @@ export default class CreateQuotaHandler implements ICommandHandler<CreateQuotaCo
   ) { }
 
   public async execute(command: CreateQuotaCommand, resolve: (value?) => void) {
-    const { name, constraints, corporate, balance, companyName } = command
+    const { name, constraints, corporate, balance, companyName, publicCompany, comment } = command
 
     const id = this.idGenerator.get()
 
@@ -30,7 +30,7 @@ export default class CreateQuotaHandler implements ICommandHandler<CreateQuotaCo
       ? await this.getOrCreateCompany(companyName)
       : undefined
 
-    const quota = new Quota(id, name, constraints, company, corporate)
+    const quota = new Quota(id, name, constraints, company, corporate, publicCompany, comment)
     await this.em.save(quota)
 
     await this.accountant.income(quota, balance)

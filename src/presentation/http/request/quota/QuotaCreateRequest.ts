@@ -15,4 +15,10 @@ export default class QuotaCreateRequest {
 
   @ApiModelProperty({ example: true, default: false, required: false })
   public readonly corporate?: boolean = false
+
+  @ApiModelProperty({ example: true, default: false, required: false })
+  public readonly publicCompany?: boolean = false
+
+  @ApiModelProperty({ example: 'Любой коментарий', required: false })
+  public readonly comment?: string
 }

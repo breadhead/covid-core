@@ -13,6 +13,8 @@ export default class QuotaResponse {
       company: quota.company ? CompanyResponse.fromEntity(quota.company) : undefined,
       type: quota.type,
       constraints: quota.constraints,
+      publicCompany: quota.publicCompany,
+      comment: quota.comment,
     } as QuotaResponse
   }
 
@@ -33,4 +35,10 @@ export default class QuotaResponse {
 
   @ApiModelProperty({ example: ['Красноярский край'] })
   public readonly constraints: string[]
+
+  @ApiModelProperty({ example: true })
+  public readonly publicCompany: boolean
+
+  @ApiModelProperty({ example: 'Любой контейнер' })
+  public readonly comment: string
 }

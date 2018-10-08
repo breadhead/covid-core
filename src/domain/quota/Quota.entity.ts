@@ -41,18 +41,34 @@ export default class Quota {
   public readonly company?: Company
 
   @Column()
+  public readonly publicCompany: boolean
+
+  @Column()
+  public readonly comment: string
+
+  @Column()
   private _balance: number
 
   @Column({ length: 500, unique: true })
   private _name: string
 
-  public constructor(id: string, name: string, constraints: string[] = [], company?: Company, corporate = false) {
+  public constructor(
+    id: string,
+    name: string,
+    constraints: string[] = [],
+    company?: Company,
+    corporate = false,
+    publicCompany = true,
+    comment = '',
+  ) {
     this.id = id
     this._name = name
     this._balance = 0
     this.constraints = constraints || []
     this.corporate = corporate
     this.company = company
+    this.publicCompany = publicCompany
+    this.comment = comment
   }
 
   public decreaseBalance(diff: number): void {
