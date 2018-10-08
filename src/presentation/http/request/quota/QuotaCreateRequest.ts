@@ -9,4 +9,10 @@ export default class QuotaCreateRequest {
 
   @ApiModelProperty({ example: 'Сбербанк', required: false })
   public readonly companyName: string
+
+  @ApiModelProperty({ example: ['рак молочной железы'] })
+  public readonly constraints: string[]
+
+  @ApiModelProperty({ example: true, default: false, required: false })
+  public readonly corporate?: boolean = false
 }

@@ -63,7 +63,13 @@ export default class QuotaController {
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async create(@Body() request: QuotaCreateRequest): Promise<QuotaResponse> {
     const quota: Quota = await this.commandBus.execute(
-      new CreateQuotaCommand(request.name, request.count, request.companyName),
+      new CreateQuotaCommand(
+        request.name,
+        request.count,
+        request.constraints,
+        !!request.corporate,
+        request.companyName,
+      ),
     )
 
     return QuotaResponse.fromEntity(quota)

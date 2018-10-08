@@ -16,6 +16,12 @@ export default class Quota {
     return this._balance
   }
 
+  @Column('simple-array')
+  public readonly constraints: string[]
+
+  @Column()
+  public readonly corporate: boolean
+
   @JoinColumn()
   @ManyToOne((type) => Company, { eager: true })
   public readonly company?: Company
@@ -26,10 +32,12 @@ export default class Quota {
   @Column({ length: 500, unique: true })
   private _name: string
 
-  public constructor(id: string, name: string, company?: Company) {
+  public constructor(id: string, name: string, constraints: string[], company?: Company, corporate = false) {
     this.id = id
     this._name = name
     this._balance = 0
+    this.constraints = constraints || []
+    this.corporate = corporate
     this.company = company
   }
 
