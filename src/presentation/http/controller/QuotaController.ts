@@ -14,9 +14,9 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 
 import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
-import QuotaCreateRequest from '../request/QuotaCreateRequest'
-import QuotaEditRequest from '../request/QuotaEditRequest'
-import QuotaTransferRequest from '../request/QuotaTransferRequest'
+import QuotaCreateRequest from '../request/quota/QuotaCreateRequest'
+import QuotaEditRequest from '../request/quota/QuotaEditRequest'
+import QuotaTransferRequest from '../request/quota/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
 
