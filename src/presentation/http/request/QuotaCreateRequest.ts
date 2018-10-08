@@ -6,4 +6,7 @@ export default class QuotaCreateRequest {
 
   @ApiModelProperty({ example: 12 })
   public readonly count: number
+
+  @ApiModelProperty({ example: 'Сбербанк', required: false })
+  public readonly companyName: string
 }

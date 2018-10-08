@@ -15,6 +15,8 @@ import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
+import Company from '@app/domain/company/Company.entity'
+import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
@@ -35,6 +37,7 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
       useClass: DbConnectionFactory,
     }),
     TypeOrmModule.forFeature([Quota, QuotaRepository]),
+    TypeOrmModule.forFeature([Company, CompanyRepository]),
   ],
   controllers: [
     ...Object.values(httpControllers),

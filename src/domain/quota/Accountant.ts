@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
+import Company from '../company/Company.entity'
+
+import Income from './Income.entity'
 import Quota from './Quota.entity'
 import Transfer from './Transfer.entity'
 
@@ -22,6 +25,19 @@ export default class Accountant {
         em.save(source),
         em.save(target),
         em.save(transfer),
+      ])
+    })
+  }
+
+  public async income(target: Quota, amount: number): Promise<void> {
+    await this.em.transaction((em) => {
+      target.increaseBalance(amount)
+
+      const incomeRecord = new Income(target, amount, new Date())
+
+      return Promise.all([
+        em.save(target),
+        em.save(incomeRecord),
       ])
     })
   }

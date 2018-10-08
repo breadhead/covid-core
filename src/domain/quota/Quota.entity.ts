@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import Company from '../company/Company.entity'
 import InvariantViolationException from '../exception/InvariantViolationException'
@@ -17,7 +17,7 @@ export default class Quota {
   }
 
   @JoinColumn()
-  @OneToOne((type) => Company)
+  @ManyToOne((type) => Company, { eager: true })
   public readonly company?: Company
 
   @Column()
@@ -26,10 +26,10 @@ export default class Quota {
   @Column({ length: 500, unique: true })
   private _name: string
 
-  public constructor(id: string, name: string, balance: number, company?: Company) {
+  public constructor(id: string, name: string, company?: Company) {
     this.id = id
     this._name = name
-    this._balance = balance
+    this._balance = 0
     this.company = company
   }
 
