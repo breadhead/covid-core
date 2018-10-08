@@ -1,10 +1,11 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
-import { head } from 'ramda'
+import { capitalize } from 'lodash'
+import { head } from 'lodash'
 import { Option } from 'tsoption'
 import { QueryFailedError } from 'typeorm'
 import { matches } from 'z'
 
-import { capitalize, strip } from '@app/infrastructure/utils/string'
+import { strip } from '@app/infrastructure/utils/string'
 
 const HTTP_STATUS = 400
 

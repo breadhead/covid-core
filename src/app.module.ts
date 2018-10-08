@@ -18,6 +18,7 @@ import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
+import Historian from '@app/domain/quota/Historian'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 
@@ -55,6 +56,7 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
     },
     CommandBus,
     Accountant,
+    Historian,
   ],
 })
 export class AppModule {

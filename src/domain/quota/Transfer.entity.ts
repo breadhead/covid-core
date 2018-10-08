@@ -8,11 +8,11 @@ export default class Transfer {
   public readonly id
 
   @JoinColumn()
-  @ManyToOne((type) => Quota)
+  @ManyToOne((type) => Quota, { eager: true })
   public readonly source: Quota
 
   @JoinColumn()
-  @ManyToOne((type) => Quota)
+  @ManyToOne((type) => Quota, { eager: true })
   public readonly target: Quota
 
   @Column()

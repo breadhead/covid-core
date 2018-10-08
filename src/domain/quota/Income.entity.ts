@@ -10,7 +10,7 @@ export default class Income {
   public readonly id
 
   @JoinColumn()
-  @ManyToOne((type) => Quota)
+  @ManyToOne((type) => Quota, { eager: true })
   public readonly target: Quota
 
   @Column()
@@ -20,7 +20,7 @@ export default class Income {
   public readonly date: Date
 
   @JoinColumn()
-  @ManyToOne((type) => Company)
+  @ManyToOne((type) => Company, { eager: true })
   public readonly payer?: Company
 
   public constructor(target: Quota, amount: number, date: Date) {
