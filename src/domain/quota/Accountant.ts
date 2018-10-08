@@ -3,7 +3,7 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import Quota from './Quota.entity'
-import Transfer from './Transfer.vo'
+import Transfer from './Transfer.entity'
 
 @Injectable()
 export default class Accountant {
