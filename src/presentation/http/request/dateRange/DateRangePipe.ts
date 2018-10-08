@@ -1,12 +1,12 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 import { flow } from 'lodash'
-import { Option } from 'tsoption'
 
 import { endOfTheDay, previusMonth, startOfTheDay } from '@app/infrastructure/utils/date'
 
 import LogicException from '../../exception/LogicException'
 import DateRangeRequest from './DateRangeRequest'
 import normalizeDate from './utils/normalizeDate'
+import toOptionalDate from './utils/toOptionalDate'
 
 interface DateRangeQuery {
   from?: string
@@ -26,13 +26,13 @@ export default class DateRandePipe implements PipeTransform<DateRangeQuery, Date
     const { from, to } = value
 
     const parsedFrom: Date = flow([
-      (this.toDate),
+      toOptionalDate,
       normalizeDate(DEFAULT_FROM),
       startOfTheDay,
     ])(from)
 
     const parsedTo: Date = flow([
-      this.toDate,
+      toOptionalDate,
       normalizeDate(DEFAULT_TO),
       endOfTheDay,
     ])(to)
@@ -42,9 +42,5 @@ export default class DateRandePipe implements PipeTransform<DateRangeQuery, Date
 
   private supports(metadata: ArgumentMetadata) {
     return metadata.type === 'query' && metadata.metatype === DateRangeRequest
-  }
-
-  private toDate(date?: string): Option<Date> {
-    return Option.of(date).map((v) => new Date(v))
   }
 }
