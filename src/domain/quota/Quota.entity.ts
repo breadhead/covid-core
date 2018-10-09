@@ -1,7 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import Company from '../company/Company.entity'
 import InvariantViolationException from '../exception/InvariantViolationException'
+import defineType from './utils/defineType'
+
+export enum QuotaType {
+  Common = 'Common',
+  Corporate = 'Corporate',
+  Special = 'Special',
+}
 
 @Entity()
 export default class Quota {
@@ -16,9 +23,28 @@ export default class Quota {
     return this._balance
   }
 
+  public get type(): QuotaType {
+    return defineType({
+      corporate: this.corporate,
+      constraints: this.constraints,
+    })
+  }
+
+  @Column('simple-array')
+  public readonly constraints: string[]
+
+  @Column()
+  public readonly corporate: boolean
+
   @JoinColumn()
-  @OneToOne((type) => Company)
+  @ManyToOne((type) => Company, { eager: true })
   public readonly company?: Company
+
+  @Column()
+  public readonly publicCompany: boolean
+
+  @Column()
+  public readonly comment: string
 
   @Column()
   private _balance: number
@@ -26,11 +52,23 @@ export default class Quota {
   @Column({ length: 500, unique: true })
   private _name: string
 
-  public constructor(id: string, name: string, balance: number, company?: Company) {
+  public constructor(
+    id: string,
+    name: string,
+    constraints: string[] = [],
+    company?: Company,
+    corporate = false,
+    publicCompany = true,
+    comment = '',
+  ) {
     this.id = id
     this._name = name
-    this._balance = balance
+    this._balance = 0
+    this.constraints = constraints || []
+    this.corporate = corporate
     this.company = company
+    this.publicCompany = publicCompany
+    this.comment = comment
   }
 
   public decreaseBalance(diff: number): void {

@@ -12,8 +12,11 @@ describe('Accountant', () => {
 
   describe('transfer', () => {
     test('should change balances correct', async () => {
-      const source = new Quota('1', 'firse', 12)
-      const target = new Quota('2', 'second', 12)
+      const source = new Quota('1', 'firse')
+      source.increaseBalance(12)
+
+      const target = new Quota('2', 'second')
+      target.increaseBalance(12)
 
       await accountant.tranfser(source, target, 12)
 

@@ -1,8 +1,11 @@
 import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
+import Company from '@app/domain/company/Company.entity'
+import CompanyRepository from '@app/domain/company/CompanyRepository'
+import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
 import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
@@ -14,15 +17,35 @@ export default class CreateQuotaHandler implements ICommandHandler<CreateQuotaCo
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
+    @InjectRepository(CompanyRepository) private readonly companyRepo: CompanyRepository,
+    private readonly accountant: Accountant,
   ) { }
 
   public async execute(command: CreateQuotaCommand, resolve: (value?) => void) {
+    const { name, constraints, corporate, balance, companyName, publicCompany, comment } = command
+
     const id = this.idGenerator.get()
 
-    const quota = new Quota(id, command.name, command.balance)
+    const company = companyName
+      ? await this.getOrCreateCompany(companyName)
+      : undefined
 
+    const quota = new Quota(id, name, constraints, company, corporate, publicCompany, comment)
     await this.em.save(quota)
 
+    await this.accountant.income(quota, balance)
+
     resolve(quota)
+  }
+
+  private async getOrCreateCompany(name: string): Promise<Company> {
+    let company = await this.companyRepo.findOne(name)
+
+    if (!company) {
+      company = new Company(name)
+      await this.em.save(company)
+    }
+
+    return company
   }
 }

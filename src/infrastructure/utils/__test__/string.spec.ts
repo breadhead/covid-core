@@ -1,16 +1,4 @@
-import { capitalize, strip } from '../string'
-
-describe('capitalize', () => {
-  test('should make first letter uppercased', () => {
-    const input = 'hello'
-    expect(capitalize(input)).toBe('Hello')
-  })
-
-  test('should make all leters exect first lowercased', () => {
-    const input = 'HELLO'
-    expect(capitalize(input)).toBe('Hello')
-  })
-})
+import { strip } from '../string'
 
 describe('strip', () => {
 
