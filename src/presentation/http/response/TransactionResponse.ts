@@ -51,4 +51,4 @@ const fromIncome = (income: Income) => ({
   amount: income.amount,
   date: income.date,
   kind: TransactionKind.Income,
-} as any)
+} as TransactionRepsonse)
