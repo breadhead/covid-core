@@ -11,10 +11,13 @@ import FilterProviderFactory from '@app/presentation/http/filter/FilterProviderF
 import InvariantViolationFilter from '@app/presentation/http/filter/InvariantViolationFilter'
 import QueryFailedFilter from '@app/presentation/http/filter/QueryFailedFilter'
 
+import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
+import Message from '@app/domain/claim/Message.entity'
+import MessageRepository from '@app/domain/claim/MessageRepository'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
@@ -27,7 +30,10 @@ import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFa
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 
-const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler]
+const commandHandlers = [
+  CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
+  PostMessageHandler,
+]
 
 @Module({
   imports: [
@@ -39,6 +45,7 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
     }),
     TypeOrmModule.forFeature([Quota, QuotaRepository]),
     TypeOrmModule.forFeature([Company, CompanyRepository]),
+    TypeOrmModule.forFeature([Message, MessageRepository]),
   ],
   controllers: [
     ...Object.values(httpControllers),
