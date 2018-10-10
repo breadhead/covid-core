@@ -2,13 +2,25 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 import { Between, EntityManager, ObjectType } from 'typeorm'
 
-import Income from './Income.entity'
-import Transfer from './Transfer.entity'
+import Donator from '../../company/Donator.dto'
+import Income from '../../quota/Income.entity'
+import Transfer from '../../quota/Transfer.entity'
+
+import incomesToDonators from './incomesToDonators'
 
 export default class Historian {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
   ) {}
+
+  public async getDonators(from: Date, to: Date): Promise<Donator[]> {
+    const history = await this.getEntityHistory(from, to)(Income)
+
+    const notCorporateIncomes = history
+      .filter((income) => !income.target.corporate)
+
+    return incomesToDonators(notCorporateIncomes)
+  }
 
   public async getHistory(from: Date, to: Date): Promise<Array<Income | Transfer>> {
     const history = this.getEntityHistory(from, to)

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse,
-  ApiImplicitQuery, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -9,12 +9,13 @@ import CreateQuotaCommand from '@app/application/quota/CreateQuotaCommand'
 import RenameQuotaCommand from '@app/application/quota/RenameQuotaCommand'
 import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 
-import Historian from '@app/domain/quota/Historian'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
+import Historian from '@app/domain/service/Historian/Historian'
 
 import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
+import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
 import DateRangeRequest from '../request/dateRange/DateRangeRequest'
 import QuotaCreateRequest from '../request/quota/QuotaCreateRequest'
@@ -46,8 +47,7 @@ export default class QuotaController {
 
   @Get('history')
   @ApiOperation({ title: 'Transaction\'s history' })
-  @ApiImplicitQuery({ name: 'from', required: false })
-  @ApiImplicitQuery({ name: 'to', required: false })
+  @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success', type: TransactionRepsonse, isArray: true })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async showTransactionHistory(@Query(DateRandePipe) request: DateRangeRequest): Promise<TransactionRepsonse[]> {
