@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
+import User from '../user/User.entity'
 import Claim from './Claim.entity'
 
 @Entity()
@@ -17,12 +18,15 @@ export default class Message {
   @ManyToOne((type) => Claim)
   public readonly claim: Claim
 
-  // TODO: Add link to user
+  @JoinColumn()
+  @ManyToOne((type) => User)
+  public readonly user: User
 
-  public constructor(id: string, date: Date, content: string, claim: Claim) {
+  public constructor(id: string, date: Date, content: string, claim: Claim, user: User) {
     this.id = id
     this.date = date
     this.content = content
     this.claim = claim
+    this.user = user
   }
 }

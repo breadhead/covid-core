@@ -23,6 +23,8 @@ import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
+import User from '@app/domain/user/User.entity'
+import UserRepository from '@app/domain/user/UserRepository'
 
 import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
@@ -46,6 +48,7 @@ const commandHandlers = [
     TypeOrmModule.forFeature([Company, CompanyRepository]),
     TypeOrmModule.forFeature([Message, MessageRepository]),
     TypeOrmModule.forFeature([Claim, ClaimRepository]),
+    TypeOrmModule.forFeature([User, UserRepository]),
   ],
   controllers: [
     ...Object.values(httpControllers),

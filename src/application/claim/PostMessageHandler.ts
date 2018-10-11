@@ -5,6 +5,7 @@ import { EntityManager } from 'typeorm'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
+import UserRepository from '@app/domain/user/UserRepository'
 import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 
 import PostMessageCommand from './PostMessageCommand'
@@ -14,20 +15,22 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
   ) { }
 
   public async execute(command: PostMessageCommand, resolve: (value?) => void) {
     const { id, content, date, claimId, userId } = command
 
-    const claim = await this.claimRepo.getOne(claimId)
+    const [ claim, user ] = await Promise.all([
+      this.claimRepo.getOne(claimId),
+      this.userRepo.getOne(userId),
+    ])
 
     if (claim.isInactive()) {
       throw new ActionUnavailableException('Post message', 'Inactive claim messaging')
     }
 
-    // TODO: get user from repo and pass it to message constructor
-
-    const message = new Message(id, date, content, claim)
+    const message = new Message(id, date, content, claim, user)
 
     await this.em.save(message)
 
