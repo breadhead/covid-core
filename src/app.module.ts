@@ -16,6 +16,8 @@ import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
+import Claim from '@app/domain/claim/Claim.entity'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import Company from '@app/domain/company/Company.entity'
@@ -46,6 +48,7 @@ const commandHandlers = [
     TypeOrmModule.forFeature([Quota, QuotaRepository]),
     TypeOrmModule.forFeature([Company, CompanyRepository]),
     TypeOrmModule.forFeature([Message, MessageRepository]),
+    TypeOrmModule.forFeature([Claim, ClaimRepository]),
   ],
   controllers: [
     ...Object.values(httpControllers),

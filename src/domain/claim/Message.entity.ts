@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+
+import Claim from './Claim.entity'
 
 @Entity()
 export default class Message {
@@ -11,12 +13,16 @@ export default class Message {
   @Column()
   public readonly content: string
 
-  // TODO: Add link to claim
+  @JoinColumn()
+  @ManyToOne((type) => Claim)
+  public readonly claim: Claim
+
   // TODO: Add link to user
 
-  public constructor(id: string, date: Date, content: string) {
+  public constructor(id: string, date: Date, content: string, claim: Claim) {
     this.id = id
     this.date = date
     this.content = content
+    this.claim = claim
   }
 }
