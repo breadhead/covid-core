@@ -6,28 +6,35 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import ConfigModule from '@app/config.module'
 
 import * as httpControllers from '@app/presentation/http/controller'
-import EntityNotFoundFilter from '@app/presentation/http/filter/EntityNotFoundFilter'
-import FilterProviderFactory from '@app/presentation/http/filter/FilterProviderFactory'
-import InvariantViolationFilter from '@app/presentation/http/filter/InvariantViolationFilter'
-import QueryFailedFilter from '@app/presentation/http/filter/QueryFailedFilter'
+import httpFilters from '@app/presentation/http/filter'
 
+import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 
+import Claim from '@app/domain/claim/Claim.entity'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import Message from '@app/domain/claim/Message.entity'
+import MessageRepository from '@app/domain/claim/MessageRepository'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
+import User from '@app/domain/user/User.entity'
+import UserRepository from '@app/domain/user/UserRepository'
 
 import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 
-const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler]
+const commandHandlers = [
+  CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
+  PostMessageHandler,
+]
 
 @Module({
   imports: [
@@ -39,16 +46,15 @@ const commandHandlers = [CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHa
     }),
     TypeOrmModule.forFeature([Quota, QuotaRepository]),
     TypeOrmModule.forFeature([Company, CompanyRepository]),
+    TypeOrmModule.forFeature([Message, MessageRepository]),
+    TypeOrmModule.forFeature([Claim, ClaimRepository]),
+    TypeOrmModule.forFeature([User, UserRepository]),
   ],
   controllers: [
     ...Object.values(httpControllers),
   ],
   providers: [
-    ...FilterProviderFactory.providers(
-      EntityNotFoundFilter,
-      InvariantViolationFilter,
-      QueryFailedFilter,
-    ),
+    ...httpFilters,
     ...commandHandlers,
     {
       provide: IdGenerator,
