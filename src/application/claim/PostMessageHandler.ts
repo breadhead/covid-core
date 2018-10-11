@@ -21,7 +21,7 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
 
     const claim = await this.claimRepo.getOne(claimId)
 
-    if (Math.random() < 0.2) { // TODO: check claim is active
+    if (claim.isInactive()) {
       throw new ActionUnavailableException('Post message', 'Inactive claim messaging')
     }
 
