@@ -6,10 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import ConfigModule from '@app/config.module'
 
 import * as httpControllers from '@app/presentation/http/controller'
-import EntityNotFoundFilter from '@app/presentation/http/filter/EntityNotFoundFilter'
-import FilterProviderFactory from '@app/presentation/http/filter/FilterProviderFactory'
-import InvariantViolationFilter from '@app/presentation/http/filter/InvariantViolationFilter'
-import QueryFailedFilter from '@app/presentation/http/filter/QueryFailedFilter'
+import httpFilters from '@app/presentation/http/filter'
 
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
@@ -54,11 +51,7 @@ const commandHandlers = [
     ...Object.values(httpControllers),
   ],
   providers: [
-    ...FilterProviderFactory.providers(
-      EntityNotFoundFilter,
-      InvariantViolationFilter,
-      QueryFailedFilter,
-    ),
+    ...httpFilters,
     ...commandHandlers,
     {
       provide: IdGenerator,
