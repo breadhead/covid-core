@@ -1,3 +1,4 @@
+import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import {
   ApiCreatedResponse, ApiForbiddenResponse, ApiGoneResponse,
@@ -8,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import PostMessageCommand from '@app/application/claim/PostMessageCommand'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
-import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
 import ChatMessageResponse from '../response/ChatMessageResponse'

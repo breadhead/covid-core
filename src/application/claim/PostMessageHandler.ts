@@ -1,3 +1,4 @@
+import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
@@ -6,7 +7,6 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
 import UserRepository from '@app/domain/user/UserRepository'
-import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 
 import PostMessageCommand from './PostMessageCommand'
 

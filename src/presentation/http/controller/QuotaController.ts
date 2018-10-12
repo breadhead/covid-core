@@ -1,3 +1,4 @@
+import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse,
@@ -12,8 +13,6 @@ import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
-
-import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'

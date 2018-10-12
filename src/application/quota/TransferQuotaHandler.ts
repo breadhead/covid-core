@@ -1,9 +1,9 @@
+import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import Accountant from '@app/domain/quota/Accountant'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
-import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 
 import TransferQuotaCommand from './TransferQuotaCommand'
 

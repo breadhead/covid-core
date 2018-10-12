@@ -1,3 +1,4 @@
+import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Module } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
@@ -26,7 +27,6 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import CommandBus from '@app/infrastructure/CommandBus/CommandBus'
 import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'

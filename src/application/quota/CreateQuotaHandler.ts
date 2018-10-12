@@ -1,3 +1,4 @@
+import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
@@ -7,7 +8,6 @@ import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
-import CommandHandler from '@app/infrastructure/CommandBus/CommandHandler'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import CreateQuotaCommand from './CreateQuotaCommand'
