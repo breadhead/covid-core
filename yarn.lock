@@ -16,6 +16,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@breadhead/detil-ts@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@breadhead/detil-ts/-/detil-ts-1.0.1.tgz#8a7a4a242258ffe66d73f526e62d829ddbd2e870"
+
 "@breadhead/nest-throwable-bus@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@breadhead/nest-throwable-bus/-/nest-throwable-bus-1.0.5.tgz#641bf4e1571ac3a5de6379176b369aa200bbfd63"
