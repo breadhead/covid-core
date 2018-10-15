@@ -35,6 +35,8 @@ import UserRepository from '@app/domain/user/UserRepository'
 import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
+import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
+import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
@@ -71,6 +73,10 @@ const commandHandlers = [
     {
       provide: IdGenerator,
       useClass: NanoIdGenerator,
+    },
+    {
+      provide: PasswordEncoder,
+      useClass: BcryptPasswordEncoder,
     },
     CommandBus,
     Accountant,

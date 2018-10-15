@@ -37,10 +37,11 @@ export default class AuthController {
   @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   public async login(@Body() loginRequest: LoginRequest): Promise<TokenResponse> {
-    const token = await this.authenticator.signIn()
+    const token = await this.authenticator.signIn(
+      loginRequest.login,
+      loginRequest.password,
+    )
 
-    return {
-      token,
-    } as TokenResponse
+    return new TokenResponse(token)
   }
 }
