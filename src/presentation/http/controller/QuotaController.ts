@@ -1,8 +1,9 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse,
-  ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
+  ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -23,6 +24,7 @@ import QuotaTransferRequest from '../request/quota/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
 import TransactionRepsonse from '../response/TransactionResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('quotas')
 @ApiUseTags('quotas')
@@ -35,7 +37,9 @@ export default class QuotaController {
   ) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ title: 'List of quotas' })
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Success', type: QuotaResponse, isArray: true })
   @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
   public async showList(): Promise<QuotaResponse[]> {

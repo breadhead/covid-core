@@ -5,8 +5,12 @@ import User from './User.entity'
 
 @EntityRepository(User)
 export default class UserRepository extends AbstractRepository<User> {
+  public findOne(login: string): Promise<User | null> {
+    return this.repository.findOne(login)
+  }
+
   public async getOne(login: string): Promise<User> {
-    const user = await this.repository.findOne(login)
+    const user = await this.findOne(login)
 
     if (!user) {
       throw new EntityNotFoundException(User.name, { login })

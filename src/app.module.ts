@@ -2,17 +2,22 @@ import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Module } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
+import { JwtModule } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import ConfigModule from '@app/config.module'
 
 import * as httpControllers from '@app/presentation/http/controller'
 import httpFilters from '@app/presentation/http/filter'
+import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
+import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
+import Authenticator from '@app/application/user/Authenticator'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -40,6 +45,13 @@ const commandHandlers = [
   imports: [
     ConfigModule,
     CQRSModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secretOrPrivateKey: 'secretKey',
+      signOptions: {
+        expiresIn: 3600,
+      },
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: DbConnectionFactory,
@@ -63,6 +75,9 @@ const commandHandlers = [
     CommandBus,
     Accountant,
     Historian,
+    Authenticator,
+    JwtStrategy,
+    JwtAuthGuard,
   ],
 })
 export class AppModule {
