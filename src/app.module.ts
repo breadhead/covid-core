@@ -32,9 +32,10 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import DbConnectionFactory from '@app/infrastructure/DbConnection/DbConnectionFactory'
+import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
+import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 
@@ -48,15 +49,13 @@ const commandHandlers = [
     ConfigModule,
     CQRSModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secretOrPrivateKey: 'secretKey',
-      signOptions: {
-        expiresIn: 3600,
-      },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useClass: JwtOptionsFactory,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useClass: DbConnectionFactory,
+      useClass: DbOptionsFactory,
     }),
     TypeOrmModule.forFeature([Quota, QuotaRepository]),
     TypeOrmModule.forFeature([Company, CompanyRepository]),

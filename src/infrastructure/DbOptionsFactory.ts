@@ -1,13 +1,12 @@
+
 import { Inject } from '@nestjs/common'
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
-import { Option } from 'tsoption'
 
-import Configuration from '../Configuration/Configuration'
+import Configuration from './Configuration/Configuration'
 
-export default class DbConnectionFactory implements TypeOrmOptionsFactory {
+export default class DbOptionsFactory implements TypeOrmOptionsFactory {
   public constructor(
-    @Inject(Configuration)
-    private readonly config: Configuration,
+    @Inject(Configuration) private readonly config: Configuration,
   ) { }
 
   public createTypeOrmOptions(): TypeOrmModuleOptions {
