@@ -8,10 +8,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import PostMessageCommand from '@app/application/claim/PostMessageCommand'
+import TokenPayload from '@app/application/user/TokenPayload'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
+import CurrentUser from '../request/CurrentUser'
 import ChatMessageResponse from '../response/ChatMessageResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 
@@ -44,14 +46,13 @@ export default class ChatController {
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
   public async addMessage(
     @Param('id') claimId: string,
+    @CurrentUser() user: TokenPayload,
     @Body() request: ChatMessageRequest,
   ): Promise<ChatMessageResponse> {
     const { id, content, date } = request
 
-    const userLogin = 'fakeUserId' // TODO: user user login from token
-
     const message: Message = await this.bus.execute(
-      new PostMessageCommand(id, date, content, claimId, userLogin),
+      new PostMessageCommand(id, date, content, claimId, user.login),
     )
 
     return ChatMessageResponse.fromEntity(message)
