@@ -27,7 +27,9 @@ import TransactionRepsonse from '../response/TransactionResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('quotas')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('quotas')
+@ApiBearerAuth()
 export default class QuotaController {
 
   public constructor(
@@ -37,9 +39,7 @@ export default class QuotaController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ title: 'List of quotas' })
-  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Success', type: QuotaResponse, isArray: true })
   @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
   public async showList(): Promise<QuotaResponse[]> {

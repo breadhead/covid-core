@@ -1,14 +1,17 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
-  ApiOperation, ApiUseTags,
+  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
 import CommonClaimResponse from '../response/claim/CommonClaimResponse'
 import { Gender } from '../response/claim/PersonalData'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('claims')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('claims')
+@ApiBearerAuth()
 export default class ClaimController {
 
   @Get(':id/common')

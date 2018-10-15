@@ -1,16 +1,20 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiForbiddenResponse, ApiOkResponse,
-  ApiOperation, ApiUseTags,
+  ApiBearerAuth, ApiForbiddenResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
 import PaginationPipe from '../request/pagination/PaginationPipe'
 import PaginationRequest from '../request/pagination/PaginationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('clients')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('clients')
+@ApiBearerAuth()
 export default class ClientController {
+
   @Get()
   @ApiOperation({ title: 'List of clients' })
   @ApiOkResponse({ description: 'Success', type: ClientPageResponse })

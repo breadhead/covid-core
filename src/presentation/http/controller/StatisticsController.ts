@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 
 import Historian from '@app/domain/service/Historian/Historian'
 
@@ -7,9 +7,12 @@ import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
 import DateRangeRequest from '../request/dateRange/DateRangeRequest'
 import CompanyResponse from '../response/CompanyResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('statistics')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('statistics')
+@ApiBearerAuth()
 export default class StatisticsController {
   public constructor(
     private readonly historian: Historian,

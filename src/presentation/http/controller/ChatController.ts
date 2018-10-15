@@ -1,8 +1,9 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import {
-  ApiCreatedResponse, ApiForbiddenResponse, ApiGoneResponse,
-  ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse,
+  ApiGoneResponse, ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -12,9 +13,12 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
 import ChatMessageResponse from '../response/ChatMessageResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('chat')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('chat')
+@ApiBearerAuth()
 export default class ChatController {
   public constructor(
     @InjectRepository(MessageRepository) private readonly messageRepo: MessageRepository,
