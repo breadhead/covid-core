@@ -44,10 +44,10 @@ export default class ChatController {
   ): Promise<ChatMessageResponse> {
     const { id, content, date } = request
 
-    const userId = 'fakeUserId' // TODO: user user id from token
+    const userLogin = 'fakeUserId' // TODO: user user login from token
 
     const message: Message = await this.bus.execute(
-      new PostMessageCommand(id, date, content, claimId, userId),
+      new PostMessageCommand(id, date, content, claimId, userLogin),
     )
 
     return ChatMessageResponse.fromEntity(message)

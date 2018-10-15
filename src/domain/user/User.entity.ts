@@ -3,9 +3,9 @@ import { Entity, PrimaryColumn } from 'typeorm'
 @Entity()
 export default class User {
   @PrimaryColumn()
-  public readonly id: string
+  public readonly login: string
 
-  public constructor(id: string) {
-    this.id = id
+  public constructor(login: string) {
+    this.login = login
   }
 }

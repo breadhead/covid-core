@@ -19,11 +19,11 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
   ) { }
 
   public async execute(command: PostMessageCommand, resolve: (value?) => void) {
-    const { id, content, date, claimId, userId } = command
+    const { id, content, date, claimId, userLogin } = command
 
     const [ claim, user ] = await Promise.all([
       this.claimRepo.getOne(claimId),
-      this.userRepo.getOne(userId),
+      this.userRepo.getOne(userLogin),
     ])
 
     if (claim.isInactive()) {
