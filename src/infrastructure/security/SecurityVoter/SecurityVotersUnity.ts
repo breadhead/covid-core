@@ -4,6 +4,7 @@ import { ModuleRef } from '@nestjs/core'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 
 import TokenPayload from '../TokenPayload'
+import Attribute from './Attribute'
 import NoVotersException from './NoVotersException'
 import SecurityVoter from './SecurityVoter'
 import affirmativeStrategy from './strategy/affirmativeStrategy'
@@ -13,9 +14,9 @@ import unanimousStrategy from './strategy/unanimousStrategy'
 import VotingFailedException from './VotingFailedException'
 
 const STRATEGY_MAP = {
-  [Strategy.affirmative]: affirmativeStrategy,
-  [Strategy.consensus]: consensusStrategy,
-  [Strategy.unanimous]: unanimousStrategy,
+  [Strategy.Affirmative]: affirmativeStrategy,
+  [Strategy.Consensus]: consensusStrategy,
+  [Strategy.Unanimous]: unanimousStrategy,
 }
 
 export default class SecurityVotersUnity {
@@ -36,7 +37,7 @@ export default class SecurityVotersUnity {
   }
 
   public async denyAccessUnlessGranted<Subject = any>(
-    attribute: string,
+    attribute: Attribute,
     subject: Subject,
     token: TokenPayload,
   ): Promise<void> {

@@ -1,9 +1,9 @@
 type StrategyType = (votes: boolean[]) => boolean
 
 enum Strategy {
-  affirmative = 'affirmative',
-  consensus = 'consensus',
-  unanimous = 'unanimous',
+  Affirmative = 'affirmative',
+  Consensus = 'consensus',
+  Unanimous = 'unanimous',
 }
 
 export {

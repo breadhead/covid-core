@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import PostMessageCommand from '@app/application/claim/PostMessageCommand'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -54,7 +55,7 @@ export default class ChatController {
     const { id, content, date } = request
     const command = new PostMessageCommand(id, date, content, claimId, user.login)
 
-    await this.votersUnity.denyAccessUnlessGranted('execute', command, user)
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Execute, command, user)
 
     const message: Message = await this.bus.execute(command)
 
