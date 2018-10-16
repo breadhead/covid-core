@@ -23,6 +23,6 @@ export default class DbOptionsFactory implements TypeOrmOptionsFactory {
         .map(parseInt)
         .map(Boolean)
         .getOrElse(true),
-    }
+    } as TypeOrmModuleOptions
   }
 }

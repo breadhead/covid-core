@@ -54,6 +54,11 @@ const securityVoters = [
   imports: [
     ConfigModule,
     CQRSModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useClass: JwtOptionsFactory,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: DbOptionsFactory,
@@ -63,11 +68,6 @@ const securityVoters = [
     TypeOrmModule.forFeature([Message, MessageRepository]),
     TypeOrmModule.forFeature([Claim, ClaimRepository]),
     TypeOrmModule.forFeature([User, UserRepository]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useClass: JwtOptionsFactory,
-    }),
   ],
   controllers: [
     ...Object.values(httpControllers),
