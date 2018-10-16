@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import Authenticator from '@app/application/user/Authenticator'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 @Injectable()
 export default class JwtStrategy extends PassportStrategy(Strategy) {
@@ -17,7 +18,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  public async validate(token: string) {
+  public async validate(token: string): Promise<TokenPayload> {
     const user = await this.authenticator.validateUser(token)
 
     if (!user) {

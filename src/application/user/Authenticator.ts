@@ -34,8 +34,13 @@ export default class Authenticator {
     return this.jwtService.sign(payload)
   }
 
-  public async validateUser(token: string): Promise<any> {
-    // return await this.userRepo.findOne(token)
-    return Promise.resolve({ hello: 'ok' })
+  public async validateUser(token: string): Promise<TokenPayload | null> {
+    const payload = this.jwtService.verify<TokenPayload>(token, {})
+
+    const user = await this.userRepo.findOne(payload.login)
+
+    // TODO: check user is blocked
+
+    return Promise.resolve(payload)
   }
 }
