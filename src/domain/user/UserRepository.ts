@@ -18,4 +18,12 @@ export default class UserRepository extends AbstractRepository<User> {
 
     return user
   }
+
+  public findOneByCabinetId(id: number): Promise<User | null> {
+    return this.repository.findOne({
+      where: {
+        '_nenaprasnoCabinetCredentials.id': id,
+      },
+    })
+  }
 }
