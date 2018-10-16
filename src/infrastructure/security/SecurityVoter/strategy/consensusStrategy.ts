@@ -1,4 +1,4 @@
-import { StrategyType } from './strategy'
+import { StrategyType } from './Strategy'
 
 const consensusStrategy: StrategyType = (votes) => {
   const pros = votes.filter((vote) => vote).length
