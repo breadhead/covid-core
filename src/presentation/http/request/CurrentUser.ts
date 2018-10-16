@@ -1,6 +1,6 @@
 import { createParamDecorator } from '@nestjs/common'
 
-import TokenPayload from '@app/application/user/TokenPayload'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import LogicException from '../exception/LogicException'
 

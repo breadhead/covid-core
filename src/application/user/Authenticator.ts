@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import UserRepository from '@app/domain/user/UserRepository'
 import PasswordEncoder,
 { PasswordEncoder as PasswordEncoderSymbol } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import InvalidCredentialsException from '../exception/InvalidCredentialsException'
-import TokenPayload from './TokenPayload'
 
 @Injectable()
 export default class Authenticator {
