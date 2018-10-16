@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import UserRepository from '@app/domain/user/UserRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
-import InternalSignInProvider from './providers/InternalSignInProvider'
 import SignInProvider, { SignInProviders } from './providers/SignInProvider'
 
 @Injectable()
