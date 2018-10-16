@@ -1,24 +1,33 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import {
-  ApiCreatedResponse, ApiForbiddenResponse, ApiGoneResponse,
-  ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse,
+  ApiGoneResponse, ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import PostMessageCommand from '@app/application/claim/PostMessageCommand'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
+import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
+import CurrentUser from '../request/CurrentUser'
 import ChatMessageResponse from '../response/ChatMessageResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('chat')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('chat')
+@ApiBearerAuth()
 export default class ChatController {
   public constructor(
     @InjectRepository(MessageRepository) private readonly messageRepo: MessageRepository,
     private readonly bus: CommandBus,
+    private readonly votersUnity: SecurityVotersUnity,
   ) { }
 
   @Get(':id')
@@ -40,15 +49,15 @@ export default class ChatController {
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
   public async addMessage(
     @Param('id') claimId: string,
+    @CurrentUser() user: TokenPayload,
     @Body() request: ChatMessageRequest,
   ): Promise<ChatMessageResponse> {
     const { id, content, date } = request
+    const command = new PostMessageCommand(id, date, content, claimId, user.login)
 
-    const userId = 'fakeUserId' // TODO: user user id from token
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Create, command, user)
 
-    const message: Message = await this.bus.execute(
-      new PostMessageCommand(id, date, content, claimId, userId),
-    )
+    const message: Message = await this.bus.execute(command)
 
     return ChatMessageResponse.fromEntity(message)
   }

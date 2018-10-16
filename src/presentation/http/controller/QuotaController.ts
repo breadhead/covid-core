@@ -1,8 +1,9 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse,
-  ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
+  ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -23,9 +24,12 @@ import QuotaTransferRequest from '../request/quota/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
 import TransactionRepsonse from '../response/TransactionResponse'
+import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('quotas')
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('quotas')
+@ApiBearerAuth()
 export default class QuotaController {
 
   public constructor(

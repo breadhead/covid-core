@@ -1,3 +1,4 @@
+export { default as AuthController } from './AuthController'
 export { default as ChatController } from './ChatController'
 export { default as ClaimController } from './ClaimController'
 export { default as ClientController } from './ClientController'
