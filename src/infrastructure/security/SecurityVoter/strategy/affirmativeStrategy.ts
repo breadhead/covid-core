@@ -1,4 +1,4 @@
-import { StrategyType } from './strategy'
+import { StrategyType } from './Strategy'
 
 const affirmativeStrategy: StrategyType = (votes) => votes.some(Boolean)
 

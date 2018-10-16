@@ -9,7 +9,7 @@ import NoVotersException from './NoVotersException'
 import SecurityVoter from './SecurityVoter'
 import affirmativeStrategy from './strategy/affirmativeStrategy'
 import consensusStrategy from './strategy/consensusStrategy'
-import Strategy, { StrategyType } from './strategy/strategy'
+import Strategy, { StrategyType } from './strategy/Strategy'
 import unanimousStrategy from './strategy/unanimousStrategy'
 import VotingFailedException from './VotingFailedException'
 

@@ -1,4 +1,4 @@
-import { StrategyType } from './strategy'
+import { StrategyType } from './Strategy'
 
 const unanimousStrategy: StrategyType = (votes) => votes.every(Boolean)
 
