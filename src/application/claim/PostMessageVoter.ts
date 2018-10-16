@@ -4,7 +4,7 @@ import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import PostMessageCommand from './PostMessageCommand'
 
 export default class PostMessageVoter implements SecurityVoter<PostMessageCommand> {
-  public supports(attribute: string, subject: PostMessageCommand) {
+  public supports(attribute: string, subject) {
     return attribute === 'execute' && subject instanceof PostMessageCommand
   }
 
