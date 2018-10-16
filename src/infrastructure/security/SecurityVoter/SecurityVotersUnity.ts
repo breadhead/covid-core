@@ -56,13 +56,13 @@ export default class SecurityVotersUnity {
   }
 
   private legitimacy(votes: boolean[]): boolean {
-    const allowIfAllAbstrain = this.config
-      .get('SECURITY_ALLOW_IF_ALL_ABSTRAIN')
+    const allowIfAllAbstain = this.config
+      .get('SECURITY_ALLOW_IF_ALL_ABSTAIN')
       .map(parseInt)
       .map(Boolean)
       .getOrElse(false)
 
-    return (votes.length !== 0 || allowIfAllAbstrain)
+    return (votes.length !== 0 || allowIfAllAbstain)
   }
 
   private votesResult(votes: boolean[]): boolean {

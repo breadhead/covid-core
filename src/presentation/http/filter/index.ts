@@ -5,6 +5,7 @@ import EntityNotFoundFilter from './EntityNotFoundFilter'
 import InvalidCredentialsFilter from './InvalidCredentialsFilter'
 import InvariantViolationFilter from './InvariantViolationFilter'
 import QueryFailedFilter from './QueryFailedFilter'
+import SecurityFilter from './SecurityFilter'
 
 export default FilterProviderFactory.providers(
   ActionUnavailableFilter,
@@ -12,4 +13,5 @@ export default FilterProviderFactory.providers(
   InvariantViolationFilter,
   QueryFailedFilter,
   InvalidCredentialsFilter,
+  SecurityFilter,
 )

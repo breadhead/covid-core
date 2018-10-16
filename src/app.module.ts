@@ -41,7 +41,6 @@ import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPas
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 
-
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
   PostMessageHandler,

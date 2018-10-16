@@ -9,7 +9,6 @@ export default class PostMessageVoter implements SecurityVoter<PostMessageComman
   }
 
   public voteOnAttribute(attribute: string, subject: PostMessageCommand, token: TokenPayload): Promise<boolean> {
-    console.log(attribute, subject, token)
     return Promise.resolve(true)
   }
 }
