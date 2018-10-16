@@ -15,7 +15,7 @@ export default class PostMessageVoter implements SecurityVoter<PostMessageComman
   ) {}
 
   public supports(attribute: Attribute, subject) {
-    return attribute === Attribute.Execute && subject instanceof PostMessageCommand
+    return attribute === Attribute.Create && subject instanceof PostMessageCommand
   }
 
   public async voteOnAttribute(

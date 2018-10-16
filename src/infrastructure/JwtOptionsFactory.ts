@@ -10,9 +10,11 @@ export default class JwtOptionsFactory implements Factory {
 
   public createJwtOptions(): JwtModuleOptions {
     return {
-      secretOrPrivateKey: this.config.get('APP_SECRET').getOrElse('NotSoSecret'),
+      secretOrPrivateKey: this.config
+        .get('APP_SECRET')
+        .getOrElse('NotSoSecret'),
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: '365 days',
       },
     }
   }

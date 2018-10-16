@@ -55,7 +55,7 @@ export default class ChatController {
     const { id, content, date } = request
     const command = new PostMessageCommand(id, date, content, claimId, user.login)
 
-    await this.votersUnity.denyAccessUnlessGranted(Attribute.Execute, command, user)
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Create, command, user)
 
     const message: Message = await this.bus.execute(command)
 

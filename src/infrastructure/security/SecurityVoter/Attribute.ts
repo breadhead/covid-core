@@ -1,5 +1,5 @@
 enum Attribute {
-  Execute = 'execute',
+  Create = 'create',
 }
 
 export default Attribute
