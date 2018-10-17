@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 
+import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -32,13 +33,11 @@ export default class Authenticator {
     return this.jwtService.sign(payload)
   }
 
-  public async validateUser(token: string): Promise<TokenPayload | null> {
-    const payload = this.jwtService.verify<TokenPayload>(token, {})
-
-    const user = await this.userRepo.findOne(payload.login)
+  public async validateUser(token: TokenPayload): Promise<User | null> {
+    const user = await this.userRepo.findOne(token.login)
 
     // TODO: check user is blocked
 
-    return Promise.resolve(payload)
+    return user
   }
 }

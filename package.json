@@ -29,6 +29,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "mysql": "^2.16.0",
+    "nanoevents": "^1.0.5",
     "nanoid": "^1.2.6",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
