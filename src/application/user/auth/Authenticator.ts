@@ -18,7 +18,7 @@ export default class Authenticator {
   public async signIn(login: string, credential: string): Promise<string> {
     let payload: TokenPayload
     for (const provider of this.signInProviders) {
-      const supports = await provider.supports(login)
+      const supports = await provider.supports(login, credential)
       if (supports) {
         payload = await provider.signIn(login, credential)
         break

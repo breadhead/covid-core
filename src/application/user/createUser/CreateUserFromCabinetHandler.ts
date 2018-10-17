@@ -5,7 +5,6 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import User from '@app/domain/user/User.entity'
-import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import CreateUserFromCabinetCommand from './CreateUserFromCabinetCommand'
 
@@ -13,12 +12,11 @@ import CreateUserFromCabinetCommand from './CreateUserFromCabinetCommand'
 export default class CreateUserFromCabinetHandler implements ICommandHandler<CreateUserFromCabinetCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(IdGeneratorSymbol) private readonly idGenrator: IdGenerator,
   ) { }
 
   public async execute(command: CreateUserFromCabinetCommand, resolve: (value?) => void) {
     const { id } = command
-    const login = await this.idGenrator.get()
+    const login = `nenaprasno-cabinet-${id}`
 
     const user = new User(login)
     user.bindToNenaprasnoCabinet(id)

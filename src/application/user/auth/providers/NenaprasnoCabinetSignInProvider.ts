@@ -19,28 +19,25 @@ export default class NenaprasnoCabinetSignInProvider implements SignInProvider {
     private readonly bus: CommandBus,
   ) {}
 
-  public async supports(login: string): Promise<boolean> {
-    const id = await this.nenaprasno.findId(login)
+  public async supports(login: string, password: string): Promise<boolean> {
+    const id = await this.nenaprasno.signIn(login, password)
 
-    return Boolean(id)
+    return !!id
   }
 
   public async signIn(login: string, password: string): Promise<TokenPayload> {
-    const id = await this.nenaprasno.findId(login)
+    const id = await this.nenaprasno.signIn(login, password)
+
+    const valid = !!id
+
+    if (!valid) {
+      throw new InvalidCredentialsException({ login, password })
+    }
 
     let user: User = await this.userRepo.findOneByCabinetId(id)
 
     if (!user) {
       user = await this.bus.execute(new CreateUserFromCabinetCommand(id))
-    }
-
-    const valid = await user.nanprasnoCabinetCredentials
-      .map((credentials) => credentials.id)
-      .map((cabinetId) => this.nenaprasno.valid(cabinetId, password))
-      .getOrElse(Promise.resolve(false))
-
-    if (!valid) {
-      throw new InvalidCredentialsException({ login, password })
     }
 
     const payload: TokenPayload = { login: user.login }

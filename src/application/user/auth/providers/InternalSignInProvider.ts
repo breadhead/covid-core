@@ -17,7 +17,11 @@ export default class InternalSignInProvider implements SignInProvider {
   ) {}
 
   public async supports(login: string): Promise<boolean> {
-    const user = await this.userRepo.getOne(login)
+    const user = await this.userRepo.findOne(login)
+
+    if (!user) {
+      return false
+    }
 
     return user.passwordCredentials.nonEmpty()
   }
