@@ -16,6 +16,8 @@ import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 import NewMessageSubscriber from '@app/application/boardManagement/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import EmailNotificator from '@app/application/notifications/EmailNotificator'
+import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
@@ -112,6 +114,10 @@ const eventSubscribers = [
     {
       provide: PasswordEncoder,
       useClass: BcryptPasswordEncoder,
+    },
+    {
+      provide: Notificator,
+      useClass: EmailNotificator,
     },
     CommandBus,
     Accountant,
