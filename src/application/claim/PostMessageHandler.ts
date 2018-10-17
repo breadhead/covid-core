@@ -12,7 +12,6 @@ import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 
-import NotificationMessage from '../notifications/NotificationMessage'
 import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
 import NewMessageEvent from './NewMessageEvent'
 import PostMessageCommand from './PostMessageCommand'
@@ -37,7 +36,7 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
 
     const message = await this.saveMessage(messageBody, claim, user)
 
-    await this.sendNotification(user, message)
+    await this.notificator.newMessage(user, message)
 
     this.eventEmitter.emit(new NewMessageEvent(message))
 
@@ -52,11 +51,5 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     const message = new Message(id, date, content, claim, user)
 
     return this.em.save(message)
-  }
-
-  private sendNotification(user: User, message: Message) {
-    const notification = new NotificationMessage('12', message.content)
-
-    return this.notificator.notify(user, notification)
   }
 }

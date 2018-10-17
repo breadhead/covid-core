@@ -51,6 +51,8 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
+import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/HandlebarsTemplateEngine'
+import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
@@ -124,6 +126,10 @@ const eventSubscribers = [
     {
       provide: EmailSender,
       useClass: NodemailerEmailSender,
+    },
+    {
+      provide: TemplateEngine,
+      useClass: HandlebarsTemplateEngine,
     },
     CommandBus,
     Accountant,
