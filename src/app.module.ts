@@ -13,7 +13,7 @@ import httpFilters from '@app/presentation/http/filter'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import NewMessageSubscriber from '@app/application/boardManagement/NewMessageSubscriber'
+import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'

@@ -15,9 +15,9 @@ export default class EmailNotificator implements Notificator {
     @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
   ) { }
 
-  public async newMessage(user: User, message: Message): Promise<void> {
+  public async newMessage(message: Message): Promise<void> {
     const html = await this.templating.render('email/new-message', { text: message.content })
 
-    return this.sender.send('s', 'ds', 'ds', { html })
+    return this.sender.send('s', 'igor@kamyshev.me', 'ds', { html })
   }
 }
