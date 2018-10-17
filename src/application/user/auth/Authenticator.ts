@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import User from '@app/domain/user/User.entity'
+import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import UserRepository from '@app/domain/user/UserRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -27,7 +28,7 @@ export default class Authenticator {
     }
 
     if (!payload) {
-      throw Error() // TODO: specific
+      throw new InvalidCredentialsException({ login, password: credential })
     }
 
     return this.jwtService.sign(payload)
