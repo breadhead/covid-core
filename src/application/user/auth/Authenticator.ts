@@ -3,33 +3,31 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import UserRepository from '@app/domain/user/UserRepository'
-import PasswordEncoder,
-{ PasswordEncoder as PasswordEncoderSymbol } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
-import InvalidCredentialsException from '../exception/InvalidCredentialsException'
+import SignInProvider, { SignInProviders } from './providers/SignInProvider'
 
 @Injectable()
 export default class Authenticator {
   constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @Inject(PasswordEncoderSymbol) private readonly encoder: PasswordEncoder,
+    @Inject(SignInProviders) private readonly signInProviders: SignInProvider[],
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
-  public async signIn(login: string, password: string): Promise<string> {
-    const user = await this.userRepo.getOne(login)
-
-    const valid = await user.passwordCredentials
-      .map((userCredentials) => userCredentials.password)
-      .map((encodedPassword) => this.encoder.isPasswordValid(encodedPassword, password))
-      .getOrElse(Promise.resolve(false))
-
-    if (!valid) {
-      throw new InvalidCredentialsException({ login, password })
+  public async signIn(login: string, credential: string): Promise<string> {
+    let payload: TokenPayload
+    for (const provider of this.signInProviders) {
+      const supports = await provider.supports(login, credential)
+      if (supports) {
+        payload = await provider.signIn(login, credential)
+        break
+      }
     }
 
-    const payload: TokenPayload = { login: user.login }
+    if (!payload) {
+      throw Error() // TODO: specific
+    }
 
     return this.jwtService.sign(payload)
   }

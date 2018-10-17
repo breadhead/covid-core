@@ -4,7 +4,7 @@ import {
   ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
-import Authenticator from '@app/application/user/Authenticator'
+import Authenticator from '@app/application/user/auth/Authenticator'
 
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
 import LoginRequest from '../request/LoginRequest'

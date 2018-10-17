@@ -1,5 +1,5 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Module } from '@nestjs/common'
+import { HttpModule, Module } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
@@ -18,7 +18,11 @@ import PostMessageVoter from '@app/application/claim/PostMessageVoter'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
-import Authenticator from '@app/application/user/Authenticator'
+import Authenticator from '@app/application/user/auth/Authenticator'
+import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
+import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
+import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
+import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -37,6 +41,7 @@ import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
+import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -44,6 +49,12 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
   PostMessageHandler,
+  CreateUserFromCabinetHandler,
+]
+
+const signInProviders = [
+  InternalSignInProvider,
+  NenaprasnoCabinetSignInProvider,
 ]
 
 const securityVoters = [
@@ -72,6 +83,7 @@ const securityVoters = [
       Claim, ClaimRepository,
       User, UserRepository,
     ]),
+    HttpModule,
   ],
   controllers: [
     ...Object.values(httpControllers),
@@ -80,6 +92,12 @@ const securityVoters = [
     ...httpFilters,
     ...commandHandlers,
     ...securityVoters,
+    ...signInProviders,
+    {
+      provide: SignInProviders,
+      useFactory: (...providers: SignInProvider[]) => providers,
+      inject: signInProviders,
+    },
     {
       provide: IdGenerator,
       useClass: NanoIdGenerator,
@@ -95,6 +113,7 @@ const securityVoters = [
     JwtStrategy,
     JwtAuthGuard,
     SecurityVotersUnity,
+    NenaprasnoCabinetClient,
   ],
 })
 export class AppModule {
