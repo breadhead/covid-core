@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
+import User from '@app/domain/user/User.entity'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -18,7 +19,7 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  public async validate(token: string): Promise<TokenPayload> {
+  public async validate(token: TokenPayload): Promise<User> {
     const user = await this.authenticator.validateUser(token)
 
     if (!user) {

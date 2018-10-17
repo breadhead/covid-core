@@ -13,6 +13,7 @@ import httpFilters from '@app/presentation/http/filter'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewMessageSubscriber from '@app/application/boardManagement/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
@@ -38,6 +39,7 @@ import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
@@ -59,6 +61,10 @@ const signInProviders = [
 
 const securityVoters = [
   PostMessageVoter,
+]
+
+const eventSubscribers = [
+  NewMessageSubscriber,
 ]
 
 @Module({
@@ -92,6 +98,7 @@ const securityVoters = [
     ...httpFilters,
     ...commandHandlers,
     ...securityVoters,
+    ...eventSubscribers,
     ...signInProviders,
     {
       provide: SignInProviders,
@@ -114,6 +121,7 @@ const securityVoters = [
     JwtAuthGuard,
     SecurityVotersUnity,
     NenaprasnoCabinetClient,
+    EventEmitter,
   ],
 })
 export class AppModule {
@@ -121,6 +129,7 @@ export class AppModule {
     private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public onModuleInit() {
@@ -129,5 +138,8 @@ export class AppModule {
 
     this.votersUnity.setModuleRef(this.moduleRef)
     this.votersUnity.register(securityVoters)
+
+    this.eventEmitter.setModuleRef(this.moduleRef)
+    this.eventEmitter.register(eventSubscribers)
   }
 }

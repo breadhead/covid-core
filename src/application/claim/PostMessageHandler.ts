@@ -7,7 +7,9 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
 import UserRepository from '@app/domain/user/UserRepository'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
 
+import NewMessageEvent from './NewMessageEvent'
 import PostMessageCommand from './PostMessageCommand'
 
 @CommandHandler(PostMessageCommand)
@@ -16,6 +18,7 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     @InjectEntityManager() private readonly em: EntityManager,
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly eventEmitter: EventEmitter,
   ) { }
 
   public async execute(command: PostMessageCommand, resolve: (value?) => void) {
@@ -33,6 +36,8 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     const message = new Message(id, date, content, claim, user)
 
     await this.em.save(message)
+
+    this.eventEmitter.emit(new NewMessageEvent(message))
 
     resolve(message)
   }
