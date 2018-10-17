@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import User from '@app/domain/user/User.entity'
-import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import UserRepository from '@app/domain/user/UserRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
+import InvalidCredentialsException from '../../exception/InvalidCredentialsException'
 import SignInProvider, { SignInProviders } from './providers/SignInProvider'
 
 @Injectable()
