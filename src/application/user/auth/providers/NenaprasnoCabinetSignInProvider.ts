@@ -8,7 +8,7 @@ import UserRepository from '@app/domain/user/UserRepository'
 import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
-import CreateUserFromCabinetCommand from '../CreateUserFromCabinetCommand'
+import CreateUserFromCabinetCommand from '../../createUser/CreateUserFromCabinetCommand'
 import SignInProvider from './SignInProvider'
 
 @Injectable()
