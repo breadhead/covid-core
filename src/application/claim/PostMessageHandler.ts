@@ -37,7 +37,7 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
 
     const message = await this.saveMessage(messageBody, claim, user)
 
-    await this.notify(user, message)
+    await this.sendNotification(user, message)
 
     this.eventEmitter.emit(new NewMessageEvent(message))
 
@@ -54,9 +54,9 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     return this.em.save(message)
   }
 
-  private notify(user: User, message: Message) {
+  private sendNotification(user: User, message: Message) {
     const notification = new NotificationMessage('12', message.content)
 
-    return this.notificator.sendNotification(user, notification)
+    return this.notificator.notify(user, notification)
   }
 }

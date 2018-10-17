@@ -41,6 +41,8 @@ import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
+import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
+import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
@@ -118,6 +120,10 @@ const eventSubscribers = [
     {
       provide: Notificator,
       useClass: EmailNotificator,
+    },
+    {
+      provide: EmailSender,
+      useClass: NodemailerEmailSender,
     },
     CommandBus,
     Accountant,
