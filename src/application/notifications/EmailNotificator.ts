@@ -9,8 +9,6 @@ import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
-import Notificator from './Notificator'
-
 export default class EmailNotificator implements Notificator {
   private readonly send: (from: string, subject: string, content: MessageContent) => Promise<void>
   private siteUrl: string
@@ -48,8 +46,8 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newFeedbackMessage(message: Message): Promise<void> {
-    const { id, applicantName, status } = message.claim
+  public async newFeedbackMessage(message: Feedback): Promise<void> {
+    const { id, applicantName, status } = message
 
     const subject = `Сообщение "[Тема]" от ${applicantName}`
 
@@ -57,7 +55,7 @@ export default class EmailNotificator implements Notificator {
       name: applicantName,
       number: id,
       status,
-      link: `${this.siteUrl}/claim/${id}`, // TODO: ceheck url after frontend
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
       text: message.content,
     })
 
