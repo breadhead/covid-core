@@ -179,8 +179,6 @@ export class AppModule implements NestModule {
   }
 
   public configure(consumer: MiddlewareConsumer) {
-    // consumer
-    //   .apply(LoggerMiddleware)
-    //   .forRoutes({ path: '*', method: RequestMethod.ALL })
+    // pass
   }
 }
