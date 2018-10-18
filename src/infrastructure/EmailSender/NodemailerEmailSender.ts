@@ -34,7 +34,7 @@ export default class NodemailerEmailSender implements EmailSender {
     })
 
     if (this.config.isDev()) {
-      this.logger.error(`Email sent to test server, url: ${getTestMessageUrl(result)}`)
+      this.logger.log(`Email sent to test server, url: ${getTestMessageUrl(result)}`)
     } else {
       this.logger.log(`Email sent to "${to}"`)
     }
