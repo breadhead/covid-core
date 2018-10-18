@@ -2,12 +2,14 @@ import { HttpService, Injectable } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 
 import Configuration from '../Configuration/Configuration'
+import Logger from '../Logger/Logger'
 
 @Injectable()
 export default class NenaprasnoCabinetClient {
   public constructor(
     private readonly http: HttpService,
     private readonly config: Configuration,
+    private readonly logger: Logger,
   ) {}
 
   /** @returns nenaprasnoUserId */
@@ -22,6 +24,11 @@ export default class NenaprasnoCabinetClient {
       .get('NENAPRASNO_CABINET_URL')
       .getOrElse('https://cabinet.nenaprasno.ru')
 
-    return this.http.post(`${nenaprasnoCabinetUrl}/external/${suffix}`, data).toPromise()
+    return this.http.post(`${nenaprasnoCabinetUrl}/external/${suffix}`, data)
+      .toPromise()
+      .catch((e) => {
+        this.logger.error('Nenaprasno cabinet returns error')
+        throw e
+      })
   }
 }
