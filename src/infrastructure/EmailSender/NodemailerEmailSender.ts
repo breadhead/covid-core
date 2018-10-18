@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { createTransport, getTestMessageUrl, Transporter } from 'nodemailer'
 
 import Configuration from '../Configuration/Configuration'
+import Logger from '../Logger/Logger'
 import EmailSender, { MessageContent } from './EmailSender'
 
 const SECURE_PORT = 587
@@ -12,6 +13,7 @@ export default class NodemailerEmailSender implements EmailSender {
 
   public constructor(
     private readonly config: Configuration,
+    private readonly logger: Logger,
   ) {
     const host = this.config.get('SMTP_HOST').getOrElse('localhost')
     const port = this.config.get('SMTP_PORT').map(Number).getOrElse(587)
@@ -32,8 +34,9 @@ export default class NodemailerEmailSender implements EmailSender {
     })
 
     if (this.config.isDev()) {
-      // TODO: make normal loggin
-      console.log(getTestMessageUrl(result)) // tslint:disable-line
+      this.logger.error(`Email sent to test server, url: ${getTestMessageUrl(result)}`)
+    } else {
+      this.logger.log(`Email sent to "${to}"`)
     }
   }
 }

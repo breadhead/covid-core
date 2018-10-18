@@ -47,6 +47,10 @@ import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
+import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
+import Logger from '@app/infrastructure/Logger/Logger'
+import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
+import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
 import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
@@ -130,6 +134,14 @@ const eventSubscribers = [
     {
       provide: TemplateEngine,
       useClass: HandlebarsTemplateEngine,
+    },
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
+    },
+    {
+      provide: Monitor,
+      useClass: VoidMonitor,
     },
     CommandBus,
     Accountant,

@@ -25,6 +25,7 @@
     "@nestjs/swagger": "^2.5.1",
     "@nestjs/typeorm": "^5.2.2",
     "bcrypt": "^3.0.1",
+    "chalk": "^2.4.1",
     "dotenv": "^6.0.0",
     "handlebars": "^4.0.12",
     "lodash": "^4.17.11",
@@ -43,6 +44,7 @@
     "tsoption": "^0.7.0",
     "typeorm": "^0.2.7",
     "typescript": "^3.0.1",
+    "winston": "^3.1.0",
     "z": "^1.0.8"
   },
   "devDependencies": {
