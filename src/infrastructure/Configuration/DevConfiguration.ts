@@ -15,4 +15,8 @@ export default class DevConfiguration extends Configuration {
   public get(key: string): Option<string> {
     return Option.of(this.envConfig[key])
   }
+
+  public isDev() {
+    return true
+  }
 }

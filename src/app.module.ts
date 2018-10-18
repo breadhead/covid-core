@@ -13,9 +13,11 @@ import httpFilters from '@app/presentation/http/filter'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import NewMessageSubscriber from '@app/application/boardManagement/NewMessageSubscriber'
+import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import EmailNotificator from '@app/application/notifications/EmailNotificator'
+import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
@@ -39,6 +41,8 @@ import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
+import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
+import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
@@ -47,6 +51,8 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
+import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/HandlebarsTemplateEngine'
+import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
@@ -112,6 +118,18 @@ const eventSubscribers = [
     {
       provide: PasswordEncoder,
       useClass: BcryptPasswordEncoder,
+    },
+    {
+      provide: Notificator,
+      useClass: EmailNotificator,
+    },
+    {
+      provide: EmailSender,
+      useClass: NodemailerEmailSender,
+    },
+    {
+      provide: TemplateEngine,
+      useClass: HandlebarsTemplateEngine,
     },
     CommandBus,
     Accountant,
