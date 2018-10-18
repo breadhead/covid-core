@@ -47,7 +47,7 @@ const format = printf((info) => {
     (_ = { level: 'info'  }) => chalk.green,
     (_ = { level: 'warn'  }) => chalk.yellow,
     (_ = { level: 'error' }) => chalk.red,
-    (_)                      => (text: string) => text,
+    (_)                      => chalk.black,
   )
 
   const helpColor = chalk.grey
