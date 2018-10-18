@@ -24,8 +24,13 @@ export default class Feedback {
   public readonly content: string
 
   public constructor(
-    id: string, date: Date, name: string, content: string,
-    theme?: string, email?: string, phone?: string,
+    id: string,
+    date: Date,
+    name: string,
+    content: string,
+    theme?: string,
+    email?: string,
+    phone?: string,
   ) {
     this.id = id
     this.date = date
