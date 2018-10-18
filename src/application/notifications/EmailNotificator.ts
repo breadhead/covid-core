@@ -1,4 +1,4 @@
-import Feedback from '@app/domain/feedback/Feedback.entity';
+import Feedback from '@app/domain/feedback/Feedback.entity'
 import { Inject } from '@nestjs/common'
 
 import Message from '@app/domain/claim/Message.entity'
