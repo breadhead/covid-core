@@ -23,6 +23,6 @@ export default class NewMessageSubscriber implements EventSubscriber {
   }
 
   private notify({ payload }: NewMessageEvent) {
-    return this.notificator.newMessage(payload)
+    return this.notificator.newChatMessage(payload)
   }
 }
