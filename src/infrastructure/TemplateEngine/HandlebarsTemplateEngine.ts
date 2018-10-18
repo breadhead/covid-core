@@ -24,7 +24,9 @@ export default class HandlebarsTemplateEngine implements TemplateEngine {
 
   private async compile(name: string): Promise<TemplateDelegate> {
     const template = await this.readFile(path.resolve(__dirname, `../../../templates/${name}.hbs`))
-
+      
+    this.compiled[name] = template
+    
     return compile(template)
   }
 }
