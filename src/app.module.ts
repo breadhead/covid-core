@@ -1,6 +1,6 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { HttpModule, Module } from '@nestjs/common'
-import { ModuleRef } from '@nestjs/core'
+import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
+import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
@@ -10,6 +10,7 @@ import ConfigModule from '@app/config.module'
 
 import * as httpControllers from '@app/presentation/http/controller'
 import httpFilters from '@app/presentation/http/filter'
+import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
@@ -47,6 +48,10 @@ import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
+import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
+import Logger from '@app/infrastructure/Logger/Logger'
+import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
+import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
 import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
@@ -131,6 +136,18 @@ const eventSubscribers = [
       provide: TemplateEngine,
       useClass: HandlebarsTemplateEngine,
     },
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
+    },
+    {
+      provide: Monitor,
+      useClass: VoidMonitor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterseptor,
+    },
     CommandBus,
     Accountant,
     Historian,
@@ -142,13 +159,13 @@ const eventSubscribers = [
     EventEmitter,
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   public constructor(
     private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
     private readonly eventEmitter: EventEmitter,
-  ) {}
+  ) { }
 
   public onModuleInit() {
     this.command$.setModuleRef(this.moduleRef)
@@ -159,5 +176,9 @@ export class AppModule {
 
     this.eventEmitter.setModuleRef(this.moduleRef)
     this.eventEmitter.register(eventSubscribers)
+  }
+
+  public configure(consumer: MiddlewareConsumer) {
+    // pass
   }
 }
