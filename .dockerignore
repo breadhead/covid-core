@@ -10,3 +10,4 @@ README.md
 tsconfig.spec.json
 tslint.json
 *.log
+docker-compose.yml

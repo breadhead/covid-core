@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { promisify } from 'util'
 
 import PasswordEncoder from './PasswordEncoder'
