@@ -13,6 +13,8 @@ COPY . .
 
 RUN yarn prestart:prod
 
+RUN rm -rf src
+
 EXPOSE 3000
 
 CMD [ "pm2-docker", "start", "ecosystem.config.js" ]

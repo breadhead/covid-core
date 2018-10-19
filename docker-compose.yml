@@ -29,8 +29,6 @@ services:
       ONCOHELP_SENDER_EMAIL: "hello@breadhead.ru"
       SITE_URL: "localhost:3332"
   mysql:
-    ports:
-      - "3307:3306"
     image: mysql:5.7
     volumes:
       - ./.data/db:/var/lib/mysql
