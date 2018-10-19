@@ -15,42 +15,48 @@ export default class Quota {
   @PrimaryColumn()
   public readonly id: string
 
-  public get name() {
-    return this._name
-  }
+  public get name() { return this._name }
 
-  public get balance() {
-    return this._balance
-  }
+  public get balance() { return this._balance }
 
-  public get type(): QuotaType {
+  public get publicCompany() { return this._publicCompany }
+
+  public get type() {
     return defineType({
       corporate: this.corporate,
       constraints: this.constraints,
-    })
+    }) as QuotaType
   }
 
-  @Column('simple-array')
-  public readonly constraints: string[]
+  public get constraints() { return this._constraints }
 
-  @Column()
-  public readonly corporate: boolean
+  public get corporate() { return this._corporate }
+
+  public get comment() { return this._comment }
+
+  public get company() { return this._company }
 
   @JoinColumn()
   @ManyToOne((type) => Company, { eager: true })
-  public readonly company?: Company
+  private _company?: Company
 
   @Column()
-  public readonly publicCompany: boolean
+  private _publicCompany: boolean
 
   @Column()
-  public readonly comment: string
+  private _comment: string
 
   @Column()
   private _balance: number
 
   @Column({ length: 500, unique: true })
   private _name: string
+
+  @Column('simple-array')
+  private _constraints: string[]
+
+  @Column()
+  private _corporate: boolean
 
   public constructor(
     id: string,
@@ -64,11 +70,11 @@ export default class Quota {
     this.id = id
     this._name = name
     this._balance = 0
-    this.constraints = constraints || []
-    this.corporate = corporate
-    this.company = company
-    this.publicCompany = publicCompany
-    this.comment = comment
+    this._constraints = constraints || []
+    this._corporate = corporate
+    this._company = company
+    this._publicCompany = publicCompany
+    this._comment = comment
   }
 
   public decreaseBalance(diff: number): void {
@@ -85,5 +91,25 @@ export default class Quota {
 
   public rename(newName: string): void {
     this._name = newName
+  }
+
+  public newConstraints(newConstraints: string[]): void {
+    this._constraints = newConstraints
+  }
+
+  public adjustCorporate(newCorparate: boolean): void {
+    this._corporate = newCorparate
+  }
+
+  public changeCompanyPublicity(newPublicity: boolean): void {
+    this._publicCompany = newPublicity
+  }
+
+  public changeComment(newComment: string): void {
+    this._comment = newComment
+  }
+
+  public changeCompany(newCompany: Company): void {
+    this._company = newCompany
   }
 }
