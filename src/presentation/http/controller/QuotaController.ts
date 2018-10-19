@@ -82,10 +82,18 @@ export default class QuotaController {
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async create(@Body() request: QuotaCreateRequest): Promise<QuotaResponse> {
-    const { name, count, constraints, corporate, companyName, publicCompany, comment } = request
+    const {
+      name, count, constraints, corporate,
+      companyName, companyLogoUrl, companyLink,
+      publicCompany, comment,
+    } = request
 
     const quota: Quota = await this.commandBus.execute(
-      new CreateQuotaCommand(name, count, constraints, corporate, companyName, publicCompany, comment),
+      new CreateQuotaCommand(
+        name, count, constraints, corporate,
+        companyName, companyLogoUrl, companyLink,
+        publicCompany, comment,
+      ),
     )
 
     return QuotaResponse.fromEntity(quota)

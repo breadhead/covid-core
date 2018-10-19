@@ -8,7 +8,13 @@ export default class QuotaCreateRequest {
   public readonly count: number
 
   @ApiModelProperty({ example: 'Сбербанк', required: false })
-  public readonly companyName: string
+  public readonly companyName?: string
+
+  @ApiModelProperty({ example: '/path/to/logo.png', required: false })
+  public readonly companyLogoUrl?: string
+
+  @ApiModelProperty({ example: 'google.com', required: false })
+  public readonly companyLink?: string
 
   @ApiModelProperty({ example: ['рак молочной железы'] })
   public readonly constraints: string[]
