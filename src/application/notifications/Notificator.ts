@@ -1,8 +1,9 @@
 import Message from '@app/domain/claim/Message.entity'
-import User from '@app/domain/user/User.entity'
+import Feedback from '@app/domain/feedback/Feedback.entity'
 
 export default interface Notificator {
-  newMessage(message: Message): Promise<void>
+  newChatMessage(message: Message): Promise<void>
+  newFeedbackMessage(message: Feedback): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')

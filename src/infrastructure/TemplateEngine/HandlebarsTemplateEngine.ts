@@ -1,15 +1,18 @@
+import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import { compile, TemplateDelegate } from 'handlebars'
 import * as path from 'path'
 import { promisify } from 'util'
 
+import Configuration from '../Configuration/Configuration'
 import TemplateEngine, { Context } from './TemplateEngine'
 
+@Injectable()
 export default class HandlebarsTemplateEngine implements TemplateEngine {
   private readonly readFile: (filepath: string) => Promise<string>
   private compiled: { [key: string]: TemplateDelegate } = {}
 
-  public constructor() {
+  public constructor(private readonly config: Configuration) {
     this.readFile = (filepath: string) =>
       promisify(fs.readFile)(filepath)
         .then((data) => data.toString())
@@ -26,7 +29,9 @@ export default class HandlebarsTemplateEngine implements TemplateEngine {
     const template = await this.readFile(path.resolve(__dirname, `../../../templates/${name}.hbs`))
 
     const compiledTemplate = compile(template)
-    this.compiled[name] = compiledTemplate
+    if (this.config.isProd()) {
+      this.compiled[name] = compiledTemplate
+    }
 
     return compiledTemplate
   }

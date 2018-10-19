@@ -17,6 +17,8 @@ import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
+import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
@@ -63,6 +65,7 @@ const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
+  PostFeedbackHandler,
 ]
 
 const signInProviders = [
@@ -75,7 +78,7 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber,
+  NewMessageSubscriber, NewFeedbackSubscriber,
 ]
 
 @Module({
