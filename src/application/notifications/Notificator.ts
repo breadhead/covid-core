@@ -5,7 +5,7 @@ import Claim from 'domain/claim/Claim.entity'
 export default interface Notificator {
   newChatMessage(message: Message): Promise<void>
   newFeedbackMessage(message: Feedback): Promise<void>
-  newShortClaimApproved(claim: Claim): Promise<void>
+  newShortClaimApprovedEvent(claim: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')

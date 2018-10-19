@@ -65,14 +65,14 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newShortClaimApproved(claim: Claim): Promise<void> {
+  public async newShortClaimApprovedEvent(claim: Claim): Promise<void> {
     const { id, applicantName, status } = claim
     const subject = `${applicantName}, пожалуйста, продолжите заполнение заявки на консультацию`
 
     const html = await this.templating.render('email/new-short-claim-message', {
       name: applicantName,
       status,
-      date: new Date().toLocaleString(),
+      date: new Date().toLocaleString(), // TODO: change to real date
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
     })
 
