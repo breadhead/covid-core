@@ -1,7 +1,9 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { None, Option, Some } from 'tsoption'
 import { EntityManager } from 'typeorm'
+import { matches } from 'z'
 
 import Company from '@app/domain/company/Company.entity'
 import Quota from '@app/domain/quota/Quota.entity'
@@ -17,21 +19,17 @@ export default class EditQuotaHandler implements ICommandHandler<EditQuotaComman
   ) { }
 
   public async execute(command: EditQuotaCommand, resolve: (value?) => void) {
-    const quota = await this.quotaRepo.getOne(command.id)
-
     const {
       name, constraints, corporate,
       publicCompany, comment,
     } = command
 
-    await this.em.transaction((em) => {
-      quota.rename(name)
-      quota.newConstraints(constraints)
-      quota.adjustCorporate(corporate)
-      quota.changeCompanyPublicity(!!publicCompany)
-      quota.changeComment(comment || '')
+    const quota = await this.quotaRepo.getOne(command.id)
 
-      const company = this.editCompany(quota, command)
+    await this.em.transaction((em) => {
+      quota.editContent(name, constraints, corporate, publicCompany, comment)
+
+      const company = this.ajustedCompany(quota, command)
 
       return em.save([
         company,
@@ -42,25 +40,35 @@ export default class EditQuotaHandler implements ICommandHandler<EditQuotaComman
     resolve(quota)
   }
 
-  private editCompany(quota: Quota, command: EditQuotaCommand): Company | null {
+  private ajustedCompany(quota: Quota, command: EditQuotaCommand): Company | null {
     const { company } = quota
+    const { companyName } = command
+
+    return matches({
+      companyExist: !!company,
+      newNameExist: !!companyName,
+      needNewCompany: company && company.name !== companyName,
+    })(
+      (_ = { companyExist: false, newNameExist: false }) => null,
+      (_ = { companyExist: true, newNameExist: false })  => company,
+      (_ = { needNewCompany: true })                     => this.attachNewCompany(quota, command),
+      (_ = { needNewCompany: false })                    => this.editExistCompany(quota, command),
+    )
+  }
+
+  private attachNewCompany(quota: Quota, command: EditQuotaCommand) {
     const { companyName, companyLink, companyLogoUrl } = command
 
-    if (!companyName && !company) {
-      return null
-    }
+    const newCompany = new Company(companyName, companyLogoUrl, companyLink)
 
-    if (!companyName && company) {
-      return company
-    }
+    quota.changeCompany(newCompany)
 
-    if (companyName !== company.name) {
-      const newCompany = new Company(companyName, companyLogoUrl, companyLink)
+    return newCompany
+  }
 
-      quota.changeCompany(newCompany)
-
-      return newCompany
-    }
+  private editExistCompany(quota: Quota, command: EditQuotaCommand) {
+    const { company } = quota
+    const { companyLink, companyLogoUrl } = command
 
     company.changeSite(companyLink)
     company.changeLogo(companyLogoUrl)

@@ -112,4 +112,18 @@ export default class Quota {
   public changeCompany(newCompany: Company): void {
     this._company = newCompany
   }
+
+  public editContent(
+    name: string,
+    constraints: string[],
+    corporate: boolean = false,
+    publicCompany: boolean = false,
+    comment: string = '',
+  ) {
+    this.rename(name)
+    this.newConstraints(constraints)
+    this.adjustCorporate(corporate)
+    this.changeCompanyPublicity(!!publicCompany)
+    this.changeComment(comment || '')
+  }
 }
