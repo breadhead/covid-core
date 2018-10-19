@@ -1,9 +1,9 @@
 FROM keymetrics/pm2:latest
 
 RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/testing' > /etc/apk/repositories
-RUN apk add --no-cache yarn
+RUN apk add --no-cache yarn git mysql-client
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package.json ./
 COPY yarn.lock ./
@@ -12,6 +12,8 @@ RUN yarn
 COPY . .
 
 RUN yarn prestart:prod
+
+RUN rm -rf src
 
 EXPOSE 3000
 
