@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./.data/upload:/usr/src/app/public/upload
+      - ./.data/upload:/app/public/upload
     links:
       - mysql:mysql
     depends_on:
