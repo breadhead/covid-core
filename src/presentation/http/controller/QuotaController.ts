@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateQuotaCommand from '@app/application/quota/CreateQuotaCommand'
-import RenameQuotaCommand from '@app/application/quota/RenameQuotaCommand'
+import EditQuotaCommand from '@app/application/quota/EditQuotaCommand'
 import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 
 import Quota from '@app/domain/quota/Quota.entity'
@@ -82,10 +82,19 @@ export default class QuotaController {
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async create(@Body() request: QuotaCreateRequest): Promise<QuotaResponse> {
-    const { name, count, constraints, corporate, companyName, publicCompany, comment } = request
+    const { count } = request
+    const {
+      name, constraints, corporate,
+      companyName, companyLogoUrl, companyLink,
+      publicCompany, comment,
+    } = request.quota
 
     const quota: Quota = await this.commandBus.execute(
-      new CreateQuotaCommand(name, count, constraints, corporate, companyName, publicCompany, comment),
+      new CreateQuotaCommand(
+        name, count, constraints, corporate,
+        companyName, companyLogoUrl, companyLink,
+        publicCompany, comment,
+      ),
     )
 
     return QuotaResponse.fromEntity(quota)
@@ -98,8 +107,19 @@ export default class QuotaController {
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async edit(@Body() request: QuotaEditRequest): Promise<QuotaResponse> {
+    const { id } = request
+    const {
+      name, constraints, corporate,
+      companyName, companyLogoUrl, companyLink,
+      publicCompany, comment,
+    } = request.quota
+
     const quota: Quota = await this.commandBus.execute(
-      new RenameQuotaCommand(request.id, request.name),
+      new EditQuotaCommand(
+        id, name, constraints, corporate,
+        companyName, companyLogoUrl, companyLink,
+        publicCompany, comment,
+      ),
     )
 
     return QuotaResponse.fromEntity(quota)

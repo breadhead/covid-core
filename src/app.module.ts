@@ -22,7 +22,7 @@ import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
-import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
+import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
@@ -64,7 +64,7 @@ import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/Handleb
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
+  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
