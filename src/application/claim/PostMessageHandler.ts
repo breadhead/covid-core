@@ -41,7 +41,7 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
       new Message(id, date, content, claim, user),
     )
 
-    // this.eventEmitter.emit(new NewMessageEvent(message))
+    this.eventEmitter.emit(new NewMessageEvent(message))
 
     this.eventEmitter.emit(new ShortClaimApprovedEvent(message.claim)) // TODO: moved to another place
 

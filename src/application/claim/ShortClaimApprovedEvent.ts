@@ -1,7 +1,7 @@
 import Event from '@app/infrastructure/events/Event'
 import Claim from 'domain/claim/Claim.entity'
 
-export const NAME = 'claim/new-short-approved-message'
+export const NAME = 'claim/new-short-approved-event'
 
 export default class ShortClaimApprovedEvent implements Event<Claim> {
   public readonly name = NAME
