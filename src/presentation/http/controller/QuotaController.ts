@@ -27,9 +27,9 @@ import TransactionRepsonse from '../response/TransactionResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 
 @Controller('quotas')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @ApiUseTags('quotas')
-// @ApiBearerAuth()т
+@ApiBearerAuth()
 export default class QuotaController {
 
   public constructor(
