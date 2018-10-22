@@ -1,7 +1,7 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
-import Quota from './Quota.entity'
+import Quota, { QuotaType } from './Quota.entity'
 
 @EntityRepository(Quota)
 export default class QuotaRepository extends AbstractRepository<Quota> {
@@ -23,5 +23,15 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     return this.repository.findOne({
       where: { name },
     })
+  }
+
+  public findCommon(): Promise<Quota[]> {
+    return this.findByType(QuotaType.Common)
+  }
+
+  private async findByType(type: QuotaType): Promise<Quota[]> {
+    const allQuotas = await this.findAll()
+
+    return allQuotas.filter((quota) => quota.type === type)
   }
 }
