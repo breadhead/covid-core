@@ -61,8 +61,8 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/HandlebarsTemplateEngine'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
@@ -140,7 +140,7 @@ const eventSubscribers = [
     },
     {
       provide: TemplateEngine,
-      useClass: HandlebarsTemplateEngine,
+      useClass: TwigTemplateEngine,
     },
     {
       provide: Logger,
