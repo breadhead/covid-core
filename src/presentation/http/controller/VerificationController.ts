@@ -3,7 +3,7 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
-import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
   ApiForbiddenResponse, ApiGoneResponse, ApiNotFoundResponse,
@@ -23,6 +23,7 @@ export default class VerificationController {
 
   @Post('send')
   @HttpCode(200)
+  @UsePipes(ValidationPipe)
   @ApiOkResponse({ description: 'Success' })
   @ApiBadRequestResponse({ description: 'Invalid number' })
   public async send(
@@ -30,7 +31,7 @@ export default class VerificationController {
     @CurrentUser() user: TokenPayload,
   ): Promise<void> {
 
-    /* TODO: валидация номера*/
+
     /* TODO: генерация кода подтверждения */
     /* TODO: отпражка смс по номеру телефона */
 
