@@ -48,6 +48,21 @@ export default class Allocator {
     }).catch(this.throwAllocatorException(quota))
   }
 
+  public deallocate(claim: Claim, restoreQuota: boolean = false): Promise<void> {
+    return this.em.transaction(async (em) => {
+      if (restoreQuota) { // restore quota if needed
+        const quota = claim.quota
+        quota.increaseBalance(1)
+
+        await em.save(quota)
+      }
+
+      claim.unbindQuota()
+
+      await em.save(claim)
+    })
+  }
+
   private throwAllocatorException(quota?: Quota, cause?: string) {
     return (e: Error) => {
       const realCause = cause || e.message

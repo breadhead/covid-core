@@ -76,4 +76,34 @@ describe('Allocator', () => {
         .toThrow(QuotaAllocationFailedException)
     })
   })
+
+  describe('deallocate', () => {
+    test('shloud deallocate quota without restore', async () => {
+      const claim = new Claim('1', 'Petro')
+
+      const quota = new Quota('1', 'quota')
+      quota.increaseBalance(1)
+
+      await allocator.allocate(claim, quota)
+
+      await allocator.deallocate(claim)
+
+      expect(claim.quota).toBeNull()
+      expect(quota.balance).toBe(0)
+    })
+
+    test('shloud deallocate quota with restore', async () => {
+      const claim = new Claim('1', 'Petro')
+
+      const quota = new Quota('1', 'quota')
+      quota.increaseBalance(1)
+
+      await allocator.allocate(claim, quota)
+
+      await allocator.deallocate(claim, true)
+
+      expect(claim.quota).toBeNull()
+      expect(quota.balance).toBe(1)
+    })
+  })
 })
