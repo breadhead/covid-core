@@ -3,6 +3,19 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
 
+export enum ClaimStatus {
+  New = 'new',
+  QuotaAllocation = 'quota-allocation',
+  QueueForQuota = 'queue-for-quota',
+  QuestionnaireWaiting = 'questionnaire-waiting',
+  QuestionnaireValidation = 'questionnaire-validation',
+  AtTheDoctor = 'at-the-doctor',
+  AnswerValidation = 'answer-validation',
+  DeliveredToCustomer = 'delivered-to-customer',
+  ClosedSuccessfully = 'closed-successfully',
+  Denied = 'denied',
+}
+
 @Entity()
 export default class Claim {
   @PrimaryColumn()
@@ -11,7 +24,7 @@ export default class Claim {
   @Column()
   public readonly applicantName: string
 
-  public readonly status: string = 'Fake Status'
+  public get status(): ClaimStatus { return this._status }
 
   public get quota(): Quota | null { return this._quota }
 
@@ -19,9 +32,13 @@ export default class Claim {
   @ManyToOne((type) => Quota, { eager: true, nullable: true })
   private _quota?: Quota
 
+  @Column({ type: 'enum', enum: ClaimStatus })
+  private _status: ClaimStatus
+
   public constructor(id: string, applicantName: string) {
     this.id = id
     this.applicantName = applicantName
+    this._status = ClaimStatus.New
   }
 
   public isActive() { // TODO: check claim is active
@@ -46,5 +63,9 @@ export default class Claim {
     }
 
     this._quota = null
+  }
+
+  public changeStatus(newStatus: ClaimStatus) {
+    this._status = newStatus
   }
 }

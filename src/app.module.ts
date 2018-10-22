@@ -14,6 +14,7 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewClaimHandler from '@app/application/claim/NewClaimHandler'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
@@ -34,6 +35,7 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
@@ -69,6 +71,7 @@ const commandHandlers = [
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
+  NewClaimHandler,
 ]
 
 const signInProviders = [
@@ -159,6 +162,7 @@ const eventSubscribers = [
       useClass: LocalFileSaver,
     },
     CommandBus,
+    StatusMover,
     Allocator,
     Accountant,
     Historian,
