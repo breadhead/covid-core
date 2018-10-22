@@ -37,6 +37,7 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
+import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
@@ -158,6 +159,7 @@ const eventSubscribers = [
       useClass: LocalFileSaver,
     },
     CommandBus,
+    Allocator,
     Accountant,
     Historian,
     Authenticator,

@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+
+import InvariantViolationException from '../exception/InvariantViolationException'
+import Quota from '../quota/Quota.entity'
 
 @Entity()
 export default class Claim {
@@ -9,6 +12,12 @@ export default class Claim {
   public readonly applicantName: string
 
   public readonly status: string = 'Fake Status'
+
+  public get quota(): Quota | null { return this._quota }
+
+  @JoinColumn()
+  @ManyToOne((type) => Quota, { eager: true, nullable: true })
+  private _quota?: Quota
 
   public constructor(id: string, applicantName: string) {
     this.id = id
@@ -21,5 +30,21 @@ export default class Claim {
 
   public isInactive() {
     return !this.isActive()
+  }
+
+  public bindQuota(quota: Quota): void {
+    if (this._quota) {
+      throw new InvariantViolationException(Quota.name, 'Try to rebind quota')
+    }
+
+    this._quota = quota
+  }
+
+  public unbindQuota(): void {
+    if (!this._quota) {
+      throw new InvariantViolationException(Quota.name, 'Try to unbind empty quota')
+    }
+
+    this._quota = null
   }
 }
