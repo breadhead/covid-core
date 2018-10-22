@@ -4,6 +4,7 @@ import { sample } from 'lodash'
 import { EntityManager } from 'typeorm'
 
 import Claim from '../claim/Claim.entity'
+import QuotaAllocationFailedException from './exception/QuotaAllocationFailedException'
 import Quota from './Quota.entity'
 import QuotaRepository from './QuotaRepository'
 
@@ -16,11 +17,14 @@ export default class Allocator {
 
   public allocateAuto(claim: Claim): Promise<void> {
     return this.em.transaction(async (em) => {
-      const commonQuotas = await this.quotaRepo.findCommon()
+      const commonQuotas = (await this.quotaRepo.findCommon())
+        .filter((commonQuota) => commonQuota.balance > 0)
 
-      const quota = sample(
-        commonQuotas.filter((q) => q.balance > 0),
-      )
+      if (commonQuotas.length === 0) {
+        throw new QuotaAllocationFailedException(null, 'Common quota not found')
+      }
+
+      const quota = sample(commonQuotas)
 
       claim.bindQuota(quota)
       quota.decreaseBalance(1)
@@ -29,7 +33,7 @@ export default class Allocator {
         claim,
         quota,
       ])
-    })
+    }).catch(this.throwAllocatorException())
   }
 
   public allocate(claim: Claim, quota: Quota): Promise<void> {
@@ -41,6 +45,14 @@ export default class Allocator {
         claim,
         quota,
       ])
-    })
+    }).catch(this.throwAllocatorException(quota))
+  }
+
+  private throwAllocatorException(quota?: Quota, cause?: string) {
+    return (e: Error) => {
+      const realCause = cause || e.message
+
+      throw new QuotaAllocationFailedException(quota, realCause, e)
+    }
   }
 }
