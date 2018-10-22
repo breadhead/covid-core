@@ -4,7 +4,7 @@ import MockEntityManager from '../../../__mocks__/EnitityManager'
 import Claim from '../../claim/Claim.entity'
 import Quota, { QuotaType } from '../Quota.entity'
 
-describe('Accountant', () => {
+describe('Allocator', () => {
   let allocator: Allocator
 
   beforeAll(() => {
@@ -18,12 +18,27 @@ describe('Accountant', () => {
   })
 
   describe('allocateAuto', () => {
-    test('should allocate common quotas', async () => {
+    test('should allocate common quota', async () => {
       const claim = new Claim('1', 'Petro')
 
       await allocator.allocateAuto(claim)
 
       expect(claim.quota.type).toBe(QuotaType.Common)
+      expect(claim.quota.balance).toBe(0)
+    })
+  })
+
+  describe('allocate', () => {
+    test('shloud allocate quota', async () => {
+      const claim = new Claim('1', 'Petro')
+
+      const quota = new Quota('1', 'quota')
+      quota.increaseBalance(1)
+
+      await allocator.allocate(claim, quota)
+
+      expect(claim.quota.id).toBe('1')
+      expect(claim.quota.name).toBe('quota')
       expect(claim.quota.balance).toBe(0)
     })
   })
