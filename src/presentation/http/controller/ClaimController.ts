@@ -54,9 +54,13 @@ export default class ClaimController {
     const { theme, diagnosis, company } = request
     const { name, age, gender, region, email, phone } = request.personalData
 
+    const { companyName = null, companyPosition = null } = company
+      ? { companyName: company.name, companyPosition: company.position }
+      : { }
+
     const claim: Claim = await this.bus.execute(new NewClaimCommand(
       login, theme, name, age, gender, region,
-      diagnosis, email, phone, company.name, company.position,
+      diagnosis, email, phone, companyName, companyPosition,
     ))
 
     return ShortClaimData.fromEntity(claim)
