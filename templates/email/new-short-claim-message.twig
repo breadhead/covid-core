@@ -1,85 +1,46 @@
-{% include './utils/header.html' %}
-<body>
-  <center class="wrapper">
+{% extends "./utils/_layout.twig" %}
 
-    <div class="webkit">
-
-      <table class="outer">
+{% block innerTable %}
+    <table class="inner__table">
         <tr>
-          <td class="td i-r header">
-            <a target="_blank" href="http://placecorgi.com/200/25">
-              <img src="http://placecorgi.com/238/48" alt="logo" width="208">
-            </a>
-          </td>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
         </tr>
         <tr>
-          <td>
-            <table class="main__table">
-              <tr>
-                <td class="main__container">
-                  <table class="inner__table">
+            <td class="text__h1">
+                <div>Заполните анкету с медицинскими данными и вопросами к врачу</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Мы выделили средства на консультацию для вас. Пожалуйста, заполните анкету с вашими медицинскими данными и вопросами врачу до
+                    <b>{{date}}</b>.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    После этого ваша заявка будет передана на изучение подходящему врачу.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="button__td">
+                <table>
                     <tr>
-                      <td class="text__p">
-                        <div>Здравствуйте, {{ name }}!</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text__h1">
-                        <div>Заполните анкету с медицинскими данными и вопросами к врачу</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text__p">
-                        <div>
-                          Мы выделили средства на консультацию для вас. Пожалуйста, заполните анкету с вашими медицинскими данными и вопросами врачу
-                          до
-                          <b>{{date}}</b>.
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text__p">
-                        <div>
-                          После этого ваша заявка будет передана на изучение подходящему врачу.
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="button__td">
-                        <table>
-                          <tr>
-                            <td class="btn btn__td">
-                              <a target="_blank" href={{link}}>
+                        <td class="btn btn__td">
+                            <a target="_blank" href="{{link}}">
                                 <nobr>Заполнить анкету</nobr>
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
+                            </a>
+                        </td>
                     </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
+                </table>
+            </td>
         </tr>
-        <tr>
-          <td style="padding: 0;">&nbsp;</td>
-        </tr>
-        <tr>
-          <td>
-            <table>
-              <tr>
-                <td class="footer__p">
-                  <div>© 2018 «Просто спросить»</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </center>
-</body>
+    </table>
 
-</html>
+{% endblock innerTable %}
