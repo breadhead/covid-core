@@ -1,9 +1,11 @@
+import { None, Option, Some } from 'tsoption'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
 import User from '../user/User.entity'
 import Applicant from './Applicant.vo'
+import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
 
 export enum ClaimStatus {
   New = 'new',
@@ -34,6 +36,18 @@ export default class Claim {
 
   public get quota(): Quota | null { return this._quota }
 
+  @Column()
+  public readonly theme: string
+
+  @Column({ nullable: true })
+  public readonly diagnosis?: string
+
+  public get corporateInfo(): Option<CorporateInfo> {
+    return this._corporateInfo.name && this._corporateInfo.position
+      ? new Some(this._corporateInfo)
+      : new None()
+  }
+
   @JoinColumn()
   @ManyToOne((type) => Quota, { eager: true, nullable: true })
   private _quota?: Quota
@@ -41,10 +55,21 @@ export default class Claim {
   @Column({ type: 'enum', enum: ClaimStatus })
   private _status: ClaimStatus
 
-  public constructor(id: string, applicant: Applicant, author: User) {
+  @Column((type) => CorporateInfo)
+  private _corporateInfo: CorporateInfo
+
+  public constructor(
+    id: string, applicant: Applicant, author: User,
+    theme: string, diagnosis?: string,
+    { company, position }: CorporateParams = {},
+  ) {
     this.id = id
     this.applicant = applicant
     this.author = author
+    this.theme = theme
+    this.diagnosis = diagnosis
+
+    this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
   }

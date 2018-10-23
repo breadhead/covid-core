@@ -15,22 +15,28 @@ const exampleShortClaim = {
 
 export default class ShortClaimData {
   public static fromEntity(claim: Claim) {
+    const personalData = {
+      name: claim.applicant.name,
+      gender: claim.applicant.gender,
+      age: claim.applicant.age,
+      region: claim.applicant.region,
+      email: claim.author.conatcts.email,
+      phone: claim.author.conatcts.phone,
+    } as PersonalData
+
+    const company = claim.corporateInfo
+      .map((info) => ({
+        name: info.name,
+        position: info.position,
+      }))
+      .getOrElse(null)
+
     return {
       id: claim.id,
-      personalData: {
-        name: claim.applicant.name,
-        gender: claim.applicant.gender,
-        age: claim.applicant.age,
-        region: claim.applicant.region,
-        email: claim.author.conatcts.email,
-        phone:  claim.author.conatcts.phone,
-      } as PersonalData,
-      diagnosis: '',
-      theme: '',
-      company: {
-        name: '',
-        position: '',
-      },
+      personalData,
+      diagnosis: claim.diagnosis,
+      theme: claim.theme,
+      company,
     } as ShortClaimData
   }
 

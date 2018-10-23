@@ -6,6 +6,7 @@ import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
+import CorporateInfo from '@app/domain/claim/CorporateInfo.vo'
 import UserRepository from '@app/domain/user/UserRepository'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
@@ -23,6 +24,8 @@ export default class NewClaimHandler implements ICommandHandler<NewClaimCommand>
     const {
       userLogin, email, phone,
       name, age, gender, region,
+      theme, diagnosis,
+      company, position,
     } = command
 
     const id = this.idGenerator.get()
@@ -32,7 +35,12 @@ export default class NewClaimHandler implements ICommandHandler<NewClaimCommand>
       user.newContacts({ email, phone })
 
       const applicant = new Applicant(name, age, gender, region)
-      const shortClaim = new Claim(id, applicant, user)
+
+      const shortClaim = new Claim(
+        id, applicant, user,
+        theme, diagnosis,
+        { company, position },
+      )
 
       return em.save([
         shortClaim,
