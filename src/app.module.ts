@@ -14,9 +14,12 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewClaimHandler from '@app/application/claim/NewClaimHandler'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
+import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
@@ -34,8 +37,11 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
+import Draft from '@app/domain/draft/Draft.entity'
+import DraftRepository from '@app/domain/draft/DraftRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
@@ -70,6 +76,8 @@ const commandHandlers = [
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
+  NewClaimHandler,
+  CreateDraftHandler, EditDraftHandler,
 ]
 
 const signInProviders = [
@@ -106,6 +114,7 @@ const eventSubscribers = [
       Message, MessageRepository,
       Claim, ClaimRepository,
       User, UserRepository,
+      Draft, DraftRepository,
     ]),
     HttpModule,
   ],
@@ -160,6 +169,7 @@ const eventSubscribers = [
       useClass: LocalFileSaver,
     },
     CommandBus,
+    StatusMover,
     Allocator,
     Accountant,
     Historian,

@@ -1,27 +1,77 @@
+import { None, Option, Some } from 'tsoption'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
+import User from '../user/User.entity'
+import Applicant from './Applicant.vo'
+import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
+
+export enum ClaimStatus {
+  New = 'new',
+  QuotaAllocation = 'quota-allocation',
+  QueueForQuota = 'queue-for-quota',
+  QuestionnaireWaiting = 'questionnaire-waiting',
+  QuestionnaireValidation = 'questionnaire-validation',
+  AtTheDoctor = 'at-the-doctor',
+  AnswerValidation = 'answer-validation',
+  DeliveredToCustomer = 'delivered-to-customer',
+  ClosedSuccessfully = 'closed-successfully',
+  Denied = 'denied',
+}
 
 @Entity()
 export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
-  @Column()
-  public readonly applicantName: string
+  @Column((type) => Applicant)
+  public readonly applicant: Applicant
 
-  public readonly status: string = 'Fake Status'
+  @ManyToOne((type) => User, { eager: true })
+  @JoinColumn()
+  public readonly author: User
+
+  public get status(): ClaimStatus { return this._status }
 
   public get quota(): Quota | null { return this._quota }
+
+  @Column()
+  public readonly theme: string
+
+  @Column({ nullable: true })
+  public readonly diagnosis?: string
+
+  public get corporateInfo(): Option<CorporateInfo> {
+    return this._corporateInfo.name && this._corporateInfo.position
+      ? new Some(this._corporateInfo)
+      : new None()
+  }
 
   @JoinColumn()
   @ManyToOne((type) => Quota, { eager: true, nullable: true })
   private _quota?: Quota
 
-  public constructor(id: string, applicantName: string) {
+  @Column({ type: 'enum', enum: ClaimStatus })
+  private _status: ClaimStatus
+
+  @Column((type) => CorporateInfo)
+  private _corporateInfo: CorporateInfo
+
+  public constructor(
+    id: string, applicant: Applicant, author: User,
+    theme: string, diagnosis?: string,
+    { company, position }: CorporateParams = {},
+  ) {
     this.id = id
-    this.applicantName = applicantName
+    this.applicant = applicant
+    this.author = author
+    this.theme = theme
+    this.diagnosis = diagnosis
+
+    this._corporateInfo = new CorporateInfo({ company, position })
+
+    this._status = ClaimStatus.New
   }
 
   public isActive() { // TODO: check claim is active
@@ -46,5 +96,9 @@ export default class Claim {
     }
 
     this._quota = null
+  }
+
+  public changeStatus(newStatus: ClaimStatus) {
+    this._status = newStatus
   }
 }
