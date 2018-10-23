@@ -70,6 +70,7 @@ import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEnc
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
+import ShortClaimQueuedSubscriber from 'application/claim/ShortClaimQueuedSubscriber';
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
@@ -90,7 +91,7 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber, NewFeedbackSubscriber, ShortClaimApprovedSubscriber,
+  NewMessageSubscriber, NewFeedbackSubscriber, ShortClaimApprovedSubscriber, ShortClaimQueuedSubscriber,
 ]
 
 @Module({

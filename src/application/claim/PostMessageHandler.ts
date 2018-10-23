@@ -15,6 +15,7 @@ import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import NewMessageEvent from './NewMessageEvent'
 import PostMessageCommand from './PostMessageCommand'
 import ShortClaimApprovedEvent from './ShortClaimApprovedEvent'
+import ShortClaimQueuedEvent from './ShortClaimQueuedEvent'
 
 @CommandHandler(PostMessageCommand)
 export default class PostMessageHandler implements ICommandHandler<PostMessageCommand> {
@@ -44,6 +45,8 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     this.eventEmitter.emit(new NewMessageEvent(message))
 
     this.eventEmitter.emit(new ShortClaimApprovedEvent(message.claim)) // TODO: moved to another place
+
+    this.eventEmitter.emit(new ShortClaimQueuedEvent(message.claim)) // TODO: moved to another place
 
     resolve(message)
   }

@@ -49,8 +49,8 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newFeedbackMessage(message: Feedback): Promise<void> {
-    const { content, name, theme, email, phone } = message
+  public async newFeedbackMessage(feedback: Feedback): Promise<void> {
+    const { content, name, theme, email, phone } = feedback
 
     const subject = `Сообщение "${theme}" от ${name}`
 
@@ -65,13 +65,29 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async shortClaimApprovedEvent(claim: Claim): Promise<void> {
+  public async shortClaimApproved(claim: Claim): Promise<void> {
     const { id, status } = claim
     const { name } = claim.applicant
 
     const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
     const html = await this.templating.render('email/short-claim-message-approved', {
+      name,
+      status,
+      date: new Date().toLocaleString(), // TODO: change to real date
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async shortClaimQueued(claim: Claim): Promise<void> {
+    const { id, status } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
+
+    const html = await this.templating.render('email/short-claim-message-queued', {
       name,
       status,
       date: new Date().toLocaleString(), // TODO: change to real date
