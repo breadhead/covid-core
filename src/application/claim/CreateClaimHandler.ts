@@ -9,17 +9,17 @@ import Claim from '@app/domain/claim/Claim.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import NewClaimCommand from './NewClaimCommand'
+import CreateClaimCommand from './CreateClaimCommand'
 
-@CommandHandler(NewClaimCommand)
-export default class NewClaimHandler implements ICommandHandler<NewClaimCommand> {
+@CommandHandler(CreateClaimCommand)
+export default class CreateClaimHandler implements ICommandHandler<CreateClaimCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
   ) { }
 
-  public async execute(command: NewClaimCommand, resolve: (value?) => void) {
+  public async execute(command: CreateClaimCommand, resolve: (value?) => void) {
     const {
       userLogin, email, phone,
       name, age, gender, region,

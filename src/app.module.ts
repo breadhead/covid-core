@@ -14,7 +14,7 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import NewClaimHandler from '@app/application/claim/NewClaimHandler'
+import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
@@ -75,7 +75,7 @@ const commandHandlers = [
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
-  NewClaimHandler,
+  CreateClaimHandler,
   CreateDraftHandler, EditDraftHandler,
 ]
 

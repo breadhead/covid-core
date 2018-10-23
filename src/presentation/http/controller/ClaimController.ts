@@ -6,10 +6,9 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import NewClaimCommand from '@app/application/claim/NewClaimCommand'
+import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
-import Gender from '@app/infrastructure/customTypes/Gender'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
@@ -53,7 +52,7 @@ export default class ClaimController {
       ? { companyName: company.name, companyPosition: company.position }
       : { }
 
-    const claim: Claim = await this.bus.execute(new NewClaimCommand(
+    const claim: Claim = await this.bus.execute(new CreateClaimCommand(
       login, theme, name, age, gender, region,
       diagnosis, email, phone, companyName, companyPosition,
     ))
