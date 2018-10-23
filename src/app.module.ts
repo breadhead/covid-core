@@ -18,6 +18,7 @@ import NewClaimHandler from '@app/application/claim/NewClaimHandler'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
@@ -72,6 +73,7 @@ const commandHandlers = [
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
   NewClaimHandler,
+  CreateDraftHandler,
 ]
 
 const signInProviders = [
