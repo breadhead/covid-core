@@ -1,8 +1,37 @@
-<h1>Привет {{name}}!</h1>
-<p>{{theme}}</p>
-<p>{{content}}</p>
-<p>
-  e-mail: <a href="mailto:{{email}}">{{email}}</a>
-  <br>
-  телефон: <a href="tel:{{phone}}">{{phone}}</a>
-</p>
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>{{theme}}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>{{content}}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>e-mail:
+                    <a href="mailto:{{email}}">{{email}}</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>телефон:
+                    <a href="tel:{{phone}}">{{phone}}</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

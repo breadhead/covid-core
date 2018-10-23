@@ -1,12 +1,39 @@
 {% extends "./utils/_layout.twig" %}
 
-{% block body %}
-<h1>Привет {{name}}!</h1>
-<p>
-  В чат по заявке №{{ number }} со статусом {{ status }} пришло новое сообщение: 
-  {{ text }}
-</p>
-<p>
-  Перейти в чат <a href={{ link }}>по этой ссылке</a>.
-</p>
-{% endblock body %}
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>В чат по заявке №{{ number }}
+                    со статусом
+                    {{ status }}
+                    пришло новое сообщение:
+                    <br/>{{ text }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div><br/>{{ text }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="button__td">
+                <table>
+                    <tr>
+                        <td class="btn btn__td">
+                            <a target="_blank" href="{{link}}">
+                                <nobr>Перейти в чат</nobr>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+{% endblock content %}
