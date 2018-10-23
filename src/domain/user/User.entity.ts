@@ -26,6 +26,7 @@ export default class User {
   }
 
   public get conatcts(): Contacts { return this._contacts }
+  public get verificationCode(): string | null { return this._verificationCode }
 
   @Column((type) => Contacts)
   public _contacts: Contacts
@@ -35,6 +36,9 @@ export default class User {
 
   @Column((type) => NenaprasnoCabinetCredentials)
   private _nenaprasnoCabinetCredentials: NenaprasnoCabinetCredentials
+
+  @Column({nullable: true})
+  private _verificationCode?: string
 
   public constructor(login: string, contacts?: Contacts) {
     this.login = login
@@ -53,6 +57,12 @@ export default class User {
     const password = await encoder.encodePassword(raw)
 
     this._passwordCredentials = new PasswordCredentials(password)
+  }
+
+  public async changeVerificationCode(raw: string, encoder: PasswordEncoder): Promise<void> {
+    const code = await encoder.encodePassword(raw)
+
+    this._verificationCode = code
   }
 
   public bindToNenaprasnoCabinet(cabinetId: number): void {

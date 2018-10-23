@@ -3,6 +3,7 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
+import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
@@ -14,12 +15,16 @@ import CurrentUser from '../request/CurrentUser'
 import SendRequest from '../request/verification/SendRequest'
 import VerificateRequest from '../request/verification/VerificateRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand';
 
 @Controller('verification')
 @ApiUseTags('verification')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export default class VerificationController {
+  public constructor (
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Post('send')
   @HttpCode(200)
@@ -30,6 +35,9 @@ export default class VerificationController {
     @Body() request: SendRequest,
     @CurrentUser() user: TokenPayload,
   ): Promise<void> {
+    await this.commandBus.execute(
+      new SendVerificationCommand(request.number, user.login),
+    )
     /* TODO: генерация кода подтверждения */
     /* TODO: отпражка смс по номеру телефона */
     return
