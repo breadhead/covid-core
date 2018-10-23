@@ -6,7 +6,6 @@ import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
-import CorporateInfo from '@app/domain/claim/CorporateInfo.vo'
 import UserRepository from '@app/domain/user/UserRepository'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
@@ -47,6 +46,8 @@ export default class NewClaimHandler implements ICommandHandler<NewClaimCommand>
         user,
       ])
     })
+
+    // TODO: emit event!
 
     resolve(claim as Claim)
   }
