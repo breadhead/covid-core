@@ -34,12 +34,12 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessage(message: Message): Promise<void> {
-    const { id, applicantName, status } = message.claim
-
-    const subject = `Новое сообщение в заявке N ${id}, ${applicantName}`
+    const { id, status } = message.claim
+    const { name } = message.claim.applicant
+    const subject = `Новое сообщение в заявке N ${id}, ${name}`
 
     const html = await this.templating.render('email/new-chat-message', {
-      name: applicantName,
+      name,
       number: id,
       status,
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
@@ -66,11 +66,13 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async shortClaimApprovedEvent(claim: Claim): Promise<void> {
-    const { id, applicantName, status } = claim
-    const subject = `${applicantName}, пожалуйста, продолжите заполнение заявки на консультацию`
+    const { id, status } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
     const html = await this.templating.render('email/new-short-claim-message', {
-      name: applicantName,
+      name,
       status,
       date: new Date().toLocaleString(), // TODO: change to real date
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
