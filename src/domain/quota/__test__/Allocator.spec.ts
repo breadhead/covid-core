@@ -1,12 +1,21 @@
 import Allocator from '../Allocator'
 
 import MockEntityManager from '../../../__mocks__/EnitityManager'
+import Applicant from '../../claim/Applicant.vo'
 import Claim from '../../claim/Claim.entity'
+import User from '../../user/User.entity'
 import QuotaAllocationFailedException from '../exception/QuotaAllocationFailedException'
 import Quota, { QuotaType } from '../Quota.entity'
 
 describe('Allocator', () => {
+  let applicant: Applicant
+  let user: User
   let allocator: Allocator
+
+  beforeAll(() => {
+    applicant = new Applicant('Petr', 12, 'q', 'Tomsk')
+    user = new User('login')
+  })
 
   beforeEach(() => {
     const quota = new Quota('1', 'name')
@@ -20,7 +29,7 @@ describe('Allocator', () => {
 
   describe('allocateAuto', () => {
     test('should allocate common quota', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       await allocator.allocateAuto(claim)
 
@@ -29,11 +38,11 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if no common quota found', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       // spent all quotas
       await allocator.allocateAuto(
-        new Claim('2', 'Skip'),
+        new Claim('2', applicant, user, 'theme'),
       )
 
       await expect(allocator.allocateAuto(claim))
@@ -42,7 +51,7 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if try to allocate already binded claim', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       claim.bindQuota(new Quota('1', 'quota'))
 
@@ -54,7 +63,7 @@ describe('Allocator', () => {
 
   describe('allocate', () => {
     test('shloud allocate quota', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
@@ -67,7 +76,7 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if try to allocate empty quota', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
 
@@ -79,7 +88,7 @@ describe('Allocator', () => {
 
   describe('deallocate', () => {
     test('shloud deallocate quota without restore', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
@@ -93,7 +102,7 @@ describe('Allocator', () => {
     })
 
     test('shloud deallocate quota with restore', async () => {
-      const claim = new Claim('1', 'Petro')
+      const claim = new Claim('1', applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
