@@ -1,5 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
+import Claim from '@app/domain/claim/Claim.entity'
+
 import CompanyData, { exampleCompanyData } from './CompanyData'
 import PersonalData, { examplePersonalData } from './PersonalData'
 
@@ -11,7 +13,11 @@ const exampleShortClaim = {
   company: exampleCompanyData,
 }
 
-export default class ShortClaimResponse {
+export default class ShortClaimData {
+  public static fromEntity(claim: Claim) {
+    return { } as ShortClaimData
+  }
+
   @ApiModelProperty({ example: exampleShortClaim.id })
   public readonly id: string
 

@@ -1,13 +1,9 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import ClientResponse from '../ClientResponse'
-import { exampleClient } from '../ClientResponse'
+import Gender from '@app/infrastructure/customTypes/Gender'
 
-export enum Gender {
-  male = 'male',
-  female = 'female',
-  nonbinary = 'nonbinary',
-}
+import ClientResponse from '../client/ClientData'
+import { exampleClient } from '../client/ClientData'
 
 export const examplePersonalData = {
   name: 'Катерина Петрован',

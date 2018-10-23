@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import ClientResponse from './ClientResponse'
+import ClientResponse from '../io/client/ClientData'
 import PageResponse from './PageResponse'
 
 const itemsExample = [
