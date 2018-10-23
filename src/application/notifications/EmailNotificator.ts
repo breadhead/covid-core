@@ -96,4 +96,18 @@ export default class EmailNotificator implements Notificator {
 
     return this.send('igor@kamyshev.me', subject, { html })
   }
+
+  public async claimRejected(claim: Claim): Promise<void> {
+    const { id } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, к сожалению, ваша заявка отклонена`
+
+    const html = await this.templating.render('email/claim-rejected', {
+      name,
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
 }

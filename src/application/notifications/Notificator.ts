@@ -7,6 +7,7 @@ export default interface Notificator {
   newFeedbackMessage(feedback: Feedback): Promise<void>
   shortClaimApproved(claim: Claim): Promise<void>
   shortClaimQueued(claim: Claim): Promise<void>
+  claimRejected(claim: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')

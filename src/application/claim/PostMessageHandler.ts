@@ -12,6 +12,7 @@ import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 
+import ClaimRejectedEvent from './ClaimRejectedEvent'
 import NewMessageEvent from './NewMessageEvent'
 import PostMessageCommand from './PostMessageCommand'
 import ShortClaimApprovedEvent from './ShortClaimApprovedEvent'
@@ -47,6 +48,8 @@ export default class PostMessageHandler implements ICommandHandler<PostMessageCo
     this.eventEmitter.emit(new ShortClaimApprovedEvent(message.claim)) // TODO: moved to another place
 
     this.eventEmitter.emit(new ShortClaimQueuedEvent(message.claim)) // TODO: moved to another place
+
+    this.eventEmitter.emit(new ClaimRejectedEvent(message.claim)) // TODO: moved to another place
 
     resolve(message)
   }
