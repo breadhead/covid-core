@@ -4,8 +4,9 @@ import { Column, Entity, PrimaryColumn } from 'typeorm'
 import PasswordEncoder from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
-import NenaprasnoCabinetCredentials from './credentials/NenaprasnoCabinetCredentials'
-import PasswordCredentials from './credentials/PasswordCredentials'
+import Contacts, { Params as ContactsParams } from './Contacts.vo'
+import NenaprasnoCabinetCredentials from './credentials/NenaprasnoCabinetCredentials.vo'
+import PasswordCredentials from './credentials/PasswordCredentials.vo'
 
 @Entity()
 export default class User {
@@ -24,17 +25,28 @@ export default class User {
       : new None()
   }
 
+  public get conatcts(): Contacts { return this._contacts }
+
+  @Column((type) => Contacts)
+  public _contacts: Contacts
+
   @Column((type) => PasswordCredentials)
   private _passwordCredentials: PasswordCredentials
 
   @Column((type) => NenaprasnoCabinetCredentials)
   private _nenaprasnoCabinetCredentials: NenaprasnoCabinetCredentials
 
-  public constructor(login: string) {
+  public constructor(login: string, contacts?: Contacts) {
     this.login = login
+
+    this._contacts = contacts || new Contacts()
 
     this._passwordCredentials = new PasswordCredentials()
     this._nenaprasnoCabinetCredentials = new NenaprasnoCabinetCredentials()
+  }
+
+  public newContacts({ email, phone }: ContactsParams) {
+    this._contacts = new Contacts({ email, phone })
   }
 
   public async changePassword(raw: string, encoder: PasswordEncoder): Promise<void> {
