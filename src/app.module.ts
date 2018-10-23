@@ -71,6 +71,7 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 import ClaimRejectedSubscriber from 'application/claim/ClaimRejectedSubscriber'
+import DoctorAnswerSubscriber from 'application/claim/DoctorAnswerSubscriber'
 import ShortClaimQueuedSubscriber from 'application/claim/ShortClaimQueuedSubscriber'
 
 const commandHandlers = [
@@ -97,6 +98,7 @@ const eventSubscribers = [
   ShortClaimApprovedSubscriber,
   ShortClaimQueuedSubscriber,
   ClaimRejectedSubscriber,
+  DoctorAnswerSubscriber,
 ]
 
 @Module({

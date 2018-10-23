@@ -110,4 +110,18 @@ export default class EmailNotificator implements Notificator {
 
     return this.send('igor@kamyshev.me', subject, { html })
   }
+
+  public async doctorAnswer(claim: Claim): Promise<void> {
+    const { id } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, готов ответ специалиста по вашей консультации`
+
+    const html = await this.templating.render('email/doctor-answer', {
+      name,
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
 }

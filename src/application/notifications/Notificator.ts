@@ -8,6 +8,7 @@ export default interface Notificator {
   shortClaimApproved(claim: Claim): Promise<void>
   shortClaimQueued(claim: Claim): Promise<void>
   claimRejected(claim: Claim): Promise<void>
+  doctorAnswer(answer: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')
