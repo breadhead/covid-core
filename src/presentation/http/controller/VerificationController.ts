@@ -31,7 +31,6 @@ export default class VerificationController {
     @CurrentUser() user: TokenPayload,
   ): Promise<void> {
 
-
     /* TODO: генерация кода подтверждения */
     /* TODO: отпражка смс по номеру телефона */
 
