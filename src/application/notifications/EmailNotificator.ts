@@ -65,7 +65,7 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newShortClaimApprovedEvent(claim: Claim): Promise<void> {
+  public async shortClaimApprovedEvent(claim: Claim): Promise<void> {
     const { id, applicantName, status } = claim
     const subject = `${applicantName}, пожалуйста, продолжите заполнение заявки на консультацию`
 

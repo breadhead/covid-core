@@ -17,6 +17,6 @@ export default class ShortClaimApprovedSubscriber implements EventSubscriber {
   }
 
   private notify({ payload }: ShortClaimApprovedEvent) {
-    return this.notificator.newShortClaimApprovedEvent(payload)
+    return this.notificator.shortClaimApprovedEvent(payload)
   }
 }
