@@ -39,6 +39,8 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
+import Draft from '@app/domain/draft/Draft.entity'
+import DraftRepository from '@app/domain/draft/DraftRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
@@ -110,6 +112,7 @@ const eventSubscribers = [
       Message, MessageRepository,
       Claim, ClaimRepository,
       User, UserRepository,
+      Draft, DraftRepository,
     ]),
     HttpModule,
   ],

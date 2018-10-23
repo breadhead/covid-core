@@ -1,9 +1,11 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateDraftCommand from '@app/application/draft/CreateDraftCommand'
 import Draft from '@app/domain/draft/Draft.entity'
+import DraftRepository from '@app/domain/draft/DraftRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import CurrentUser from '../request/CurrentUser'
@@ -18,6 +20,7 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 export default class DraftController {
 
   public constructor(
+    @InjectRepository(DraftRepository) private readonly draftRepo: DraftRepository,
     private readonly bus: CommandBus,
   ) { }
 
@@ -38,7 +41,7 @@ export default class DraftController {
     return DraftResponse.fromEntity(draft)
   }
 
-  @Post('update/:id')
+  @Post(':id/update')
   @HttpCode(200)
   @ApiOperation({ title: 'Update the existed draft' })
   @ApiOkResponse({ description: 'Updated', type: DraftResponse })
@@ -55,10 +58,10 @@ export default class DraftController {
   @Get(':id')
   @ApiOperation({ title: 'Show the draft' })
   @ApiOkResponse({ description: 'Success', type: DraftResponse })
-  public async shoe(@Param('id') id: string): Promise<DraftResponse> {
-    return {
-      id,
-      body: '',
-    }
+  @ApiNotFoundResponse({ description: 'Draft not found' })
+  public async show(@Param('id') id: string): Promise<DraftResponse> {
+    const draft = await this.draftRepo.getOne(id)
+
+    return DraftResponse.fromEntity(draft)
   }
 }
