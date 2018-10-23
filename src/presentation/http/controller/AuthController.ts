@@ -7,9 +7,9 @@ import {
 import Authenticator from '@app/application/user/auth/Authenticator'
 
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
-import ClientResponse from '../io/client/ClientData'
 import LoginRequest from '../request/LoginRequest'
 import RegistrationRequest from '../request/RegistrationRequest'
+import ClientResponse from '../response/ClientResponse'
 import TokenResponse from '../response/TokenResponse'
 
 @Controller('auth')
