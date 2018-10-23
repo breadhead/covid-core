@@ -23,6 +23,9 @@ export default class NewMessageSubscriber implements EventSubscriber {
   }
 
   private notify({ payload }: NewMessageEvent) {
-    return this.notificator.newChatMessage(payload)
+    return Promise.all([
+      this.notificator.newChatMessageToClient(payload),
+      this.notificator.newChatMessageToSpecialist(payload), // TODO: Игорь, разрули пожалуйста что-то с ролями
+    ])
   }
 }

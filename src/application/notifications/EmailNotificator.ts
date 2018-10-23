@@ -33,14 +33,27 @@ export default class EmailNotificator implements Notificator {
       .getOrElse('localhost')
   }
 
-  public async newChatMessage(message: Message): Promise<void> {
+  public async newChatMessageToClient(message: Message): Promise<void> {
+    const { id } = message.claim
+    const { name } = message.claim.applicant
+    const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
+
+    const html = await this.templating.render('email/new-chat-message-to-client', {
+      name,
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async newChatMessageToSpecialist(message: Message): Promise<void> {
     const { id, status } = message.claim
     const { name } = message.claim.applicant
-    const subject = `Новое сообщение в заявке N ${id}, ${name}`
+    const subject = `Новое сообщение в заявке ${id}, ${name}`
 
-    const html = await this.templating.render('email/new-chat-message', {
+    const html = await this.templating.render('email/new-chat-message-to-specialist', {
       name,
-      number: id,
+      id,
       status,
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
       text: message.content,
