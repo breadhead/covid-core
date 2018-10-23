@@ -9,6 +9,7 @@ import EmailSender, {
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import Claim from 'domain/claim/Claim.entity'
 import Notificator from './Notificator'
 
 export default class EmailNotificator implements Notificator {
@@ -59,6 +60,20 @@ export default class EmailNotificator implements Notificator {
       phone,
       theme,
       content,
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async shortClaimApprovedEvent(claim: Claim): Promise<void> {
+    const { id, applicantName, status } = claim
+    const subject = `${applicantName}, пожалуйста, продолжите заполнение заявки на консультацию`
+
+    const html = await this.templating.render('email/new-short-claim-message', {
+      name: applicantName,
+      status,
+      date: new Date().toLocaleString(), // TODO: change to real date
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
     })
 
     return this.send('igor@kamyshev.me', subject, { html })

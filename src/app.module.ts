@@ -50,6 +50,7 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -89,7 +90,7 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber, NewFeedbackSubscriber,
+  NewMessageSubscriber, NewFeedbackSubscriber, ShortClaimApprovedSubscriber,
 ]
 
 @Module({
