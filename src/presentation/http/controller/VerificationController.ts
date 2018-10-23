@@ -30,10 +30,8 @@ export default class VerificationController {
     @Body() request: SendRequest,
     @CurrentUser() user: TokenPayload,
   ): Promise<void> {
-
     /* TODO: генерация кода подтверждения */
     /* TODO: отпражка смс по номеру телефона */
-
     return
   }
 
