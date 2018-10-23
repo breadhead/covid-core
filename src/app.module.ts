@@ -22,7 +22,7 @@ import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
-import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
+import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
@@ -37,6 +37,7 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
+import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
@@ -61,11 +62,11 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/HandlebarsTemplateEngine'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
+  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
@@ -140,7 +141,7 @@ const eventSubscribers = [
     },
     {
       provide: TemplateEngine,
-      useClass: HandlebarsTemplateEngine,
+      useClass: TwigTemplateEngine,
     },
     {
       provide: Logger,
@@ -159,6 +160,7 @@ const eventSubscribers = [
       useClass: LocalFileSaver,
     },
     CommandBus,
+    Allocator,
     Accountant,
     Historian,
     Authenticator,

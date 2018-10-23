@@ -22,12 +22,16 @@ export default class CreateQuotaHandler implements ICommandHandler<CreateQuotaCo
   ) { }
 
   public async execute(command: CreateQuotaCommand, resolve: (value?) => void) {
-    const { name, constraints, corporate, balance, companyName, publicCompany, comment } = command
+    const {
+      name, constraints, corporate, balance,
+      companyName, companyLogoUrl, companyLink,
+      publicCompany, comment,
+    } = command
 
     const id = this.idGenerator.get()
 
     const company = companyName
-      ? await this.getOrCreateCompany(companyName)
+      ? await this.getOrCreateCompany(companyName, companyLogoUrl, companyLink)
       : undefined
 
     const quota = new Quota(id, name, constraints, company, corporate, publicCompany, comment)
@@ -38,12 +42,13 @@ export default class CreateQuotaHandler implements ICommandHandler<CreateQuotaCo
     resolve(quota)
   }
 
-  private async getOrCreateCompany(name: string): Promise<Company> {
+  private async getOrCreateCompany(name: string, logoUrl?: string, companyLink?: string): Promise<Company> {
     let company = await this.companyRepo.findOne(name)
 
     if (!company) {
-      company = new Company(name)
-      await this.em.save(company)
+      company = await this.em.save(
+        new Company(name, logoUrl, companyLink),
+        )
     }
 
     return company

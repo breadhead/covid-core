@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import Company from '../company/Company.entity'
-
 import Income from './Income.entity'
 import Quota from './Quota.entity'
 import Transfer from './Transfer.entity'
