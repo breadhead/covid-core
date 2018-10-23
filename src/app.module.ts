@@ -32,6 +32,7 @@ import InternalSignInProvider from '@app/application/user/auth/providers/Interna
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
 import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
+import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -74,7 +75,7 @@ import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateE
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
   PostMessageHandler,
-  CreateUserFromCabinetHandler,
+  CreateUserFromCabinetHandler, SendVerificationHandler,
   PostFeedbackHandler,
   NewClaimHandler,
   CreateDraftHandler, EditDraftHandler,
