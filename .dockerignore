@@ -10,3 +10,11 @@ README.md
 tsconfig.spec.json
 tslint.json
 *.log
+docker-compose.yml
+coverage
+.git
+.env
+.env.dist
+.circleci
+.data
+nest-cli.json

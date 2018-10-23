@@ -1,0 +1,12 @@
+{% extends "_layout.twig" %}
+
+{% block body %}
+<h1>Привет {{name}}!</h1>
+<p>
+  В чат по заявке №{{ number }} со статусом {{ status }} пришло новое сообщение: 
+  {{ text }}
+</p>
+<p>
+  Перейти в чат <a href={{ link }}>по этой ссылке</a>.
+</p>
+{% endblock body %}

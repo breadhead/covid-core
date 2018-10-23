@@ -14,13 +14,18 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewClaimHandler from '@app/application/claim/NewClaimHandler'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
+import EditDraftHandler from '@app/application/draft/EditDraftHandler'
+import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
+import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
-import RenameQuotaHandler from '@app/application/quota/RenameQuotaHandler'
+import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
@@ -32,19 +37,26 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
+import Draft from '@app/domain/draft/Draft.entity'
+import DraftRepository from '@app/domain/draft/DraftRepository'
 import Accountant from '@app/domain/quota/Accountant'
+import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
+import LocalFileSaver from '@app/infrastructure/FileSaver/LocalFileSaver'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
@@ -56,13 +68,16 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import HandlebarsTemplateEngine from '@app/infrastructure/TemplateEngine/HandlebarsTemplateEngine'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, RenameQuotaHandler,
+  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
+  PostFeedbackHandler,
+  NewClaimHandler,
+  CreateDraftHandler, EditDraftHandler,
 ]
 
 const signInProviders = [
@@ -75,7 +90,7 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber,
+  NewMessageSubscriber, NewFeedbackSubscriber, ShortClaimApprovedSubscriber,
 ]
 
 @Module({
@@ -99,6 +114,7 @@ const eventSubscribers = [
       Message, MessageRepository,
       Claim, ClaimRepository,
       User, UserRepository,
+      Draft, DraftRepository,
     ]),
     HttpModule,
   ],
@@ -134,7 +150,7 @@ const eventSubscribers = [
     },
     {
       provide: TemplateEngine,
-      useClass: HandlebarsTemplateEngine,
+      useClass: TwigTemplateEngine,
     },
     {
       provide: Logger,
@@ -148,7 +164,13 @@ const eventSubscribers = [
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterseptor,
     },
+    {
+      provide: FileSaver,
+      useClass: LocalFileSaver,
+    },
     CommandBus,
+    StatusMover,
+    Allocator,
     Accountant,
     Historian,
     Authenticator,

@@ -1,0 +1,39 @@
+version: '3'
+services:
+  oncohelp-code:
+    image: oncohelp-core
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.data/upload:/app/public/upload
+    links:
+      - mysql:mysql
+    depends_on:
+      - mysql
+    environment:
+      NODE_ENV: "production"
+      APP_SECRET: "NotSoSecret"
+      DB_HOST: "mysql"
+      DB_PORT: 3306
+      DB_USER: "root"
+      DB_PASSWORD: "root"
+      DB_NAME: "oncohelp"
+      PRODUCTION_READY: 0
+      SECURITY_STRATEGY: "unanimous"
+      SECURITY_ALLOW_IF_ALL_ABSTAIN: 0
+      NENAPRASNO_CABINET_URL: "https://cabinet.nenaprasno.ru"
+      SMTP_HOST: "smtp.ethereal.email"
+      SMTP_PORT: 587
+      SMTP_USER: "cemj7hczk6j4golp@ethereal.email"
+      SMTP_PASSWORD: "D1EBHkyHV7nhkuQJA7"
+      ONCOHELP_SENDER_EMAIL: "hello@breadhead.ru"
+      SITE_URL: "localhost:3332"
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./.data/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "oncohelp"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
