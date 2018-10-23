@@ -1,3 +1,4 @@
+import Gender from '../../../infrastructure/customTypes/Gender'
 import InvariantViolationException from '../../exception/InvariantViolationException'
 import Quota from '../../quota/Quota.entity'
 import User from '../../user/User.entity'
@@ -9,7 +10,7 @@ describe('Claim', () => {
   let user: User
 
   beforeAll(() => {
-    applicant = new Applicant('Petr', 12, 'q', 'Tomsk')
+    applicant = new Applicant('Petr', 12, Gender.unknown, 'Tomsk')
     user = new User('login')
   })
 

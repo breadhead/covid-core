@@ -1,6 +1,7 @@
 import Allocator from '../Allocator'
 
 import MockEntityManager from '../../../__mocks__/EnitityManager'
+import Gender from '../../../infrastructure/customTypes/Gender'
 import Applicant from '../../claim/Applicant.vo'
 import Claim from '../../claim/Claim.entity'
 import User from '../../user/User.entity'
@@ -13,7 +14,7 @@ describe('Allocator', () => {
   let allocator: Allocator
 
   beforeAll(() => {
-    applicant = new Applicant('Petr', 12, 'q', 'Tomsk')
+    applicant = new Applicant('Petr', 12, Gender.unknown, 'Tomsk')
     user = new User('login')
   })
 
