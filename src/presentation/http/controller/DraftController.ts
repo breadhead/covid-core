@@ -4,6 +4,7 @@ import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUse
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateDraftCommand from '@app/application/draft/CreateDraftCommand'
+import EditDraftCommand from '@app/application/draft/EditDraftCommand'
 import Draft from '@app/domain/draft/Draft.entity'
 import DraftRepository from '@app/domain/draft/DraftRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
@@ -47,12 +48,15 @@ export default class DraftController {
   @ApiOkResponse({ description: 'Updated', type: DraftResponse })
   public async update(
     @Param('id') id: string,
-    @Body() draft: DraftRequest,
+    @Body() request: DraftRequest,
   ): Promise<DraftResponse> {
-    return {
-      id,
-      body: '',
-    }
+    const { body } = request
+
+    const draft: Draft = await this.bus.execute(
+      new EditDraftCommand(id, body),
+    )
+
+    return DraftResponse.fromEntity(draft)
   }
 
   @Get(':id')
