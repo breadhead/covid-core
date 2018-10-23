@@ -4,9 +4,11 @@ import {
   ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
   ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
+import { InjectRepository } from '@nestjs/typeorm'
 
 import NewClaimCommand from '@app/application/claim/NewClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Gender from '@app/infrastructure/customTypes/Gender'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -21,26 +23,19 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 export default class ClaimController {
 
   public constructor(
+    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
   ) { }
 
-  @Get(':id/common')
-  @ApiOperation({ title: 'Claim\'s common data' })
+  @Get(':id/short')
+  @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
-  public showShort(@Query('id') id: string): ShortClaimData {
-    return {
-      id,
-      personalData: {
-        name: 'fd',
-        region: 'fdf',
-        age: 23,
-        gender: Gender.female,
-        email: 'fdfd',
-      },
-      theme: 'dfdf',
-    }
+  public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
+    const claim = await this.claimRepo.getOne(id)
+
+    return ShortClaimData.fromEntity(claim)
   }
 
   @Post('/short')

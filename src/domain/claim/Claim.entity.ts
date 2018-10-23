@@ -28,7 +28,7 @@ export default class Claim {
   @Column((type) => Applicant)
   public readonly applicant: Applicant
 
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, { eager: true })
   @JoinColumn()
   public readonly author: User
 
