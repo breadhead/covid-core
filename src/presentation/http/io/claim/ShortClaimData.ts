@@ -15,7 +15,23 @@ const exampleShortClaim = {
 
 export default class ShortClaimData {
   public static fromEntity(claim: Claim) {
-    return { } as ShortClaimData
+    return {
+      id: claim.id,
+      personalData: {
+        name: claim.applicant.name,
+        gender: claim.applicant.gender,
+        age: claim.applicant.age,
+        region: claim.applicant.region,
+        email: claim.author.conatcts.email,
+        phone:  claim.author.conatcts.phone,
+      } as PersonalData,
+      diagnosis: '',
+      theme: '',
+      company: {
+        name: '',
+        position: '',
+      },
+    } as ShortClaimData
   }
 
   @ApiModelProperty({ example: exampleShortClaim.id })

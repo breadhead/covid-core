@@ -2,8 +2,10 @@ import { ICommand } from '@nestjs/cqrs'
 
 import Gender from '@app/infrastructure/customTypes/Gender'
 
+// TODO: add "Для кого это консультация, консультируемый — родственник, я, клиент"
 export default class NewClaimCommand implements ICommand {
   public constructor(
+    public readonly userLogin: string,
     public readonly theme: string,
     public readonly name: string,
     public readonly age: number,

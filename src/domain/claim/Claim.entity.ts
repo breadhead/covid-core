@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
+import User from '../user/User.entity'
+import Applicant from './Applicant.vo'
 
 export enum ClaimStatus {
   New = 'new',
@@ -21,8 +23,12 @@ export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
-  @Column()
-  public readonly applicantName: string
+  @Column((type) => Applicant)
+  public readonly applicant: Applicant
+
+  @ManyToOne((type) => User)
+  @JoinColumn()
+  public readonly author: User
 
   public get status(): ClaimStatus { return this._status }
 
@@ -35,9 +41,11 @@ export default class Claim {
   @Column({ type: 'enum', enum: ClaimStatus })
   private _status: ClaimStatus
 
-  public constructor(id: string, applicantName: string) {
+  public constructor(id: string, applicant: Applicant, author: User) {
     this.id = id
-    this.applicantName = applicantName
+    this.applicant = applicant
+    this.author = author
+
     this._status = ClaimStatus.New
   }
 

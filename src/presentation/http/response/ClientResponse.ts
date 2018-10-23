@@ -6,7 +6,7 @@ export const exampleClient = {
   phone: '79999999999',
 }
 
-export default class ClientData {
+export default class ClientResponse {
   @ApiModelProperty({ example: exampleClient.id })
   public readonly id: string
 

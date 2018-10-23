@@ -2,15 +2,13 @@ import { ApiModelProperty } from '@nestjs/swagger'
 
 import Gender from '@app/infrastructure/customTypes/Gender'
 
-import ClientResponse from '../client/ClientData'
-import { exampleClient } from '../client/ClientData'
-
 export const examplePersonalData = {
   name: 'Катерина Петрован',
   region: 'Кемеровская область',
   age: 57,
-  client: exampleClient,
   gender: Gender.female,
+  email: 'kate@gmail.com',
+  phone: '+79999999999',
 }
 
 export default class PersonalData {
@@ -26,6 +24,9 @@ export default class PersonalData {
   @ApiModelProperty({ example: examplePersonalData.gender, enum: Object.values(Gender) })
   public readonly gender: Gender
 
-  @ApiModelProperty({ example: examplePersonalData.client })
-  public readonly client: ClientResponse
+  @ApiModelProperty({ example: examplePersonalData.email, required: false })
+  public readonly email?: string
+
+  @ApiModelProperty({ example: examplePersonalData.phone, required: false })
+  public readonly phone?: string
 }
