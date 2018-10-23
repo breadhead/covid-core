@@ -11,18 +11,19 @@ import {
   ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
+
+import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand'
 import CurrentUser from '../request/CurrentUser'
 import SendRequest from '../request/verification/SendRequest'
 import VerificateRequest from '../request/verification/VerificateRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
-import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand';
 
 @Controller('verification')
 @ApiUseTags('verification')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export default class VerificationController {
-  public constructor (
+  public constructor(
     private readonly commandBus: CommandBus,
   ) {}
 
@@ -39,7 +40,7 @@ export default class VerificationController {
       new SendVerificationCommand(request.number, user.login),
     )
     /* TODO: генерация кода подтверждения */
-    /* TODO: отпражка смс по номеру телефона */
+    /* TODO: отправка смс по номеру телефона */
     return
   }
 
