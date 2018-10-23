@@ -1,0 +1,32 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>Ваша заявка поставлена в очередь на бесплатную консультацию</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Мы получили вашу заявку, но просим вас подождать пока мы сможем выделить средства на вашу консультацию. Как только это произойдет, мы вышлем вам эл. письмо.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Надеемся на ваше понимание.
+                </div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

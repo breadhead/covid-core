@@ -71,7 +71,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
-    const html = await this.templating.render('email/new-short-claim-message', {
+    const html = await this.templating.render('email/short-claim-message-approved', {
       name,
       status,
       date: new Date().toLocaleString(), // TODO: change to real date

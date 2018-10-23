@@ -1,0 +1,31 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>{{ name }}, к сожалению ваша заявка отклонена</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>К сожалению, нам пришлось отклонить вашу заявку.</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Причиной может быть либо то, что ваш вопрос не касается онкологии, либо то, что мы не получали от вам ответа слишком долго.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Если у вас есть вопросы, напишите в <a class="link" href="#">форму обратной связи</a>.
+                </div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

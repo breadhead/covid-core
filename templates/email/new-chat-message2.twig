@@ -4,22 +4,12 @@
     <table class="inner__table">
         <tr>
             <td class="text__p">
-                <div>Здравствуйте,
-                    {{ name }}!</div>
+                <div>{{ name }}, посмотрите новое сообщение по вашей заявке</div>
             </td>
         </tr>
         <tr>
             <td class="text__h1">
-                <div>В чат по заявке №{{ number }}
-                    со статусом
-                    {{ status }}
-                    пришло новое сообщение
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="text__p">
-                <div><br/>{{ text }}</div>
+                <div>Специалист, занимающийся вашей заявкой, отправил вам сообщение.</div>
             </td>
         </tr>
         <tr>
@@ -28,7 +18,7 @@
                     <tr>
                         <td class="btn btn__td">
                             <a target="_blank" href="{{link}}">
-                                <nobr>Перейти в чат</nobr>
+                                <nobr>Посмотреть сообщение</nobr>
                             </a>
                         </td>
                     </tr>
