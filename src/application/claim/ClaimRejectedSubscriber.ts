@@ -3,9 +3,9 @@ import { Inject } from '@nestjs/common'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
-import ShortClaimApprovedEvent, { NAME } from './ShortClaimApprovedEvent'
+import ClaimRejectedEvent, { NAME } from './ClaimRejectedEvent'
 
-export default class ShortClaimApprovedSubscriber implements EventSubscriber {
+export default class ClaimRejectedSubscriber implements EventSubscriber {
   public constructor(
     @Inject(NotificatorSymbol) private readonly notificator: Notificator,
   ) { }
@@ -15,8 +15,7 @@ export default class ShortClaimApprovedSubscriber implements EventSubscriber {
       { key: NAME, handler: this.notify.bind(this) },
     ]
   }
-
-  private notify({ payload }: ShortClaimApprovedEvent) {
-    return this.notificator.shortClaimApproved(payload)
+  private notify({ payload }: ClaimRejectedEvent) {
+    return this.notificator.claimRejected(payload)
   }
 }
