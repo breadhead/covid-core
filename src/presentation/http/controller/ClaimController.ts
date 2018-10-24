@@ -1,14 +1,18 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags,
+} from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
+import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
 import Role from '@app/domain/user/Role'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -29,13 +33,14 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
+    private readonly statusMover: StatusMover,
   ) { }
 
   @Get(':id/short')
   @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
+  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided' })
   public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
 
@@ -96,4 +101,17 @@ export default class ClaimController {
 
     return
   }
+
+  @Post(':id/next-status')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Set next staus' })
+  @ApiOkResponse({ description: 'Next Status' })
+  public async setNextStatus(@Query('id') id: string): Promise<void> {
+    await this.bus.execute(
+      new MoveToNextStatusCommand(id),
+    )
+
+    return
+  }
+
 }
