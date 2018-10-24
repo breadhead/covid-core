@@ -9,10 +9,10 @@ import Draft from '@app/domain/draft/Draft.entity'
 import DraftRepository from '@app/domain/draft/DraftRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
-import CurrentUser from '../request/CurrentUser'
 import DraftRequest from '../request/DraftRequest'
 import DraftResponse from '../response/DraftResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import CurrentUser from './decorator/CurrentUser'
 
 @UseGuards(JwtAuthGuard)
 @Controller('draft')

@@ -1,5 +1,5 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
   ApiOkResponse, ApiOperation, ApiUseTags,
@@ -12,8 +12,9 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
-import CurrentUser from '../request/CurrentUser'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import CurrentUser from './decorator/CurrentUser'
+import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -30,7 +31,7 @@ export default class ClaimController {
   @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
+  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
   public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
 
@@ -58,5 +59,14 @@ export default class ClaimController {
     ))
 
     return ShortClaimData.fromEntity(claim)
+  }
+
+  @Post('/close')
+  @HttpCodeNoContent()
+  @ApiOperation({ title: 'Close quota' })
+  @ApiOkResponse({ description: 'Quota closed' })
+  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided'})
+  public async closeClaim(): Promise<void> {
+    return
   }
 }
