@@ -10,6 +10,7 @@ import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import Role from '@app/domain/user/Role'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
@@ -17,6 +18,7 @@ import ShortClaimData from '../io/claim/ShortClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 
@@ -43,6 +45,7 @@ export default class ClaimController {
   }
 
   @Post('short')
+  @Roles(Role.Client)
   @ApiOperation({ title: 'Send short claim' })
   @ApiOkResponse({ description: 'Saved', type: ShortClaimData })
   public async sendShortClaim(
@@ -66,6 +69,7 @@ export default class ClaimController {
   }
 
   @Post('close')
+  @Roles(Role.CaseManager, Role.Admin)
   @HttpCodeNoContent()
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
