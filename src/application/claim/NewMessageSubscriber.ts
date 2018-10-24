@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common'
 
+import Role from '@app/domain/user/Role'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
@@ -23,9 +24,10 @@ export default class NewMessageSubscriber implements EventSubscriber {
   }
 
   private notify({ payload }: NewMessageEvent) {
-    return Promise.all([
-      this.notificator.newChatMessageToClient(payload),
-      this.notificator.newChatMessageToSpecialist(payload), // TODO: Игорь, разрули пожалуйста что-то с ролями
-    ])
+    const isClient = payload.user.roles.includes(Role.Client)
+
+    return isClient
+      ? this.notificator.newChatMessageToClient(payload)
+      : this.notificator.newChatMessageToSpecialist(payload)
   }
 }
