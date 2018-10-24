@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import PostMessageCommand from '@app/application/claim/PostMessageCommand'
+import PostMessageCommand from '@app/application/claim/chat/PostMessageCommand'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -15,9 +15,9 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
-import CurrentUser from '../request/CurrentUser'
 import ChatMessageResponse from '../response/ChatMessageResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import CurrentUser from './decorator/CurrentUser'
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
@@ -35,8 +35,13 @@ export default class ChatController {
   @ApiOkResponse({ description: 'Success', type: ChatMessageResponse, isArray: true })
   @ApiNotFoundResponse({ description: 'Chat for claim with the provided id not found' })
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
-  public async showChat(@Param('id') id: string): Promise<ChatMessageResponse[]> {
+  public async showChat(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ChatMessageResponse[]> {
     const messages = await this.messageRepo.findByClaimId(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, messages, user)
 
     return messages.map(ChatMessageResponse.fromEntity)
   }

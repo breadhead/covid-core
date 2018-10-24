@@ -8,6 +8,7 @@ import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import InvalidCredentialsException from '../../exception/InvalidCredentialsException'
 import SignInProvider, { SignInProviders } from './providers/SignInProvider'
+import tokenFromUser from './tokenFromUser'
 
 @Injectable()
 export default class Authenticator {
@@ -18,18 +19,20 @@ export default class Authenticator {
   ) { }
 
   public async signIn(login: string, credential: string): Promise<string> {
-    let payload: TokenPayload
+    let user: User | null
     for (const provider of this.signInProviders) {
       const supports = await provider.supports(login, credential)
       if (supports) {
-        payload = await provider.signIn(login, credential)
+        user = await provider.signIn(login, credential)
         break
       }
     }
 
-    if (!payload) {
+    if (!user) {
       throw new InvalidCredentialsException({ login, password: credential })
     }
+
+    const payload = tokenFromUser(user)
 
     return this.jwtService.sign(payload)
   }

@@ -1,5 +1,5 @@
-import Feedback from 'domain/feedback/Feedback.entity'
-import Event from 'infrastructure/events/Event'
+import Feedback from '@app/domain/feedback/Feedback.entity'
+import Event from '@app/infrastructure/events/Event'
 
 export const NAME = 'new-feedback'
 

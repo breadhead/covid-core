@@ -1,6 +1,7 @@
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import { Inject } from '@nestjs/common'
 
+import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EmailSender, {
@@ -9,7 +10,7 @@ import EmailSender, {
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
-import Claim from 'domain/claim/Claim.entity'
+
 import Notificator from './Notificator'
 
 export default class EmailNotificator implements Notificator {
@@ -25,22 +26,35 @@ export default class EmailNotificator implements Notificator {
       .get('ONCOHELP_SENDER_EMAIL')
       .getOrElse('oncohelp@email.com')
 
-    this.send = (from, subject, content) =>
-      sender.send(senderEmail, from, subject, content)
+    this.send = (to, subject, content) =>
+      sender.send(senderEmail, to, subject, content)
 
     this.siteUrl = config
       .get('SITE_URL')
       .getOrElse('localhost')
   }
 
-  public async newChatMessage(message: Message): Promise<void> {
-    const { id, applicantName, status } = message.claim
+  public async newChatMessageFromSpecialist(message: Message): Promise<void> {
+    const { id } = message.claim
+    const { name } = message.claim.applicant
+    const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
-    const subject = `Новое сообщение в заявке N ${id}, ${applicantName}`
+    const html = await this.templating.render('email/new-chat-message-from-specialist', {
+      name,
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
 
-    const html = await this.templating.render('email/new-chat-message', {
-      name: applicantName,
-      number: id,
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async newChatMessageFromClient(message: Message): Promise<void> {
+    const { id, status } = message.claim
+    const { name } = message.claim.applicant
+    const subject = `Новое сообщение в заявке ${id}, ${name}`
+
+    const html = await this.templating.render('email/new-chat-message-from-client', {
+      name,
+      id,
       status,
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
       text: message.content,
@@ -49,8 +63,8 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newFeedbackMessage(message: Feedback): Promise<void> {
-    const { content, name, theme, email, phone } = message
+  public async newFeedbackMessage(feedback: Feedback): Promise<void> {
+    const { content, name, theme, email, phone } = feedback
 
     const subject = `Сообщение "${theme}" от ${name}`
 
@@ -65,14 +79,60 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async shortClaimApprovedEvent(claim: Claim): Promise<void> {
-    const { id, applicantName, status } = claim
-    const subject = `${applicantName}, пожалуйста, продолжите заполнение заявки на консультацию`
+  public async shortClaimApproved(claim: Claim): Promise<void> {
+    const { id, status } = claim
+    const { name } = claim.applicant
 
-    const html = await this.templating.render('email/new-short-claim-message', {
-      name: applicantName,
+    const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
+
+    const html = await this.templating.render('email/short-claim-message-approved', {
+      name,
       status,
       date: new Date().toLocaleString(), // TODO: change to real date
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async shortClaimQueued(claim: Claim): Promise<void> {
+    const { id, status } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
+
+    const html = await this.templating.render('email/short-claim-message-queued', {
+      name,
+      status,
+      date: new Date().toLocaleString(), // TODO: change to real date
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async claimRejected(claim: Claim): Promise<void> {
+    const { id } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, к сожалению, ваша заявка отклонена`
+
+    const html = await this.templating.render('email/claim-rejected', {
+      name,
+      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+    })
+
+    return this.send('igor@kamyshev.me', subject, { html })
+  }
+
+  public async doctorAnswer(claim: Claim): Promise<void> {
+    const { id } = claim
+    const { name } = claim.applicant
+
+    const subject = `${name}, готов ответ специалиста по вашей консультации`
+
+    const html = await this.templating.render('email/doctor-answer', {
+      name,
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
     })
 

@@ -6,20 +6,35 @@ import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
+import StatusMover from '@app/domain/claim/StatusMover'
+import Allocator from '@app/domain/quota/Allocator'
 import UserRepository from '@app/domain/user/UserRepository'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import NewClaimCommand from './NewClaimCommand'
+import CreateClaimCommand from './CreateClaimCommand'
 
-@CommandHandler(NewClaimCommand)
-export default class NewClaimHandler implements ICommandHandler<NewClaimCommand> {
+@CommandHandler(CreateClaimCommand)
+export default class CreateClaimHandler implements ICommandHandler<CreateClaimCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly allocator: Allocator,
+    private readonly statusMover: StatusMover,
   ) { }
 
-  public async execute(command: NewClaimCommand, resolve: (value?) => void) {
+  public async execute(command: CreateClaimCommand, resolve: (value?) => void) {
+    const claim = await this.createClaim(command)
+
+    await this.allocator.allocateAuto(claim)
+      .catch(() => { /* ok, common quota not found */ })
+
+    await this.statusMover.next(claim) // Move to next status after qouta allocating
+
+    resolve(claim as Claim)
+  }
+
+  private async createClaim(command: CreateClaimCommand): Promise<Claim> {
     const {
       userLogin, email, phone,
       name, age, gender, region,
@@ -30,7 +45,7 @@ export default class NewClaimHandler implements ICommandHandler<NewClaimCommand>
     const id = this.idGenerator.get()
     const user = await this.userRepo.getOne(userLogin)
 
-    const [ claim, ...rest ] = await this.em.transaction((em) => {
+    return this.em.transaction(async (em) => {
       user.newContacts({ email, phone })
 
       const applicant = new Applicant(name, age, gender, region)
@@ -41,14 +56,12 @@ export default class NewClaimHandler implements ICommandHandler<NewClaimCommand>
         { company, position },
       )
 
-      return em.save([
+      const [ savedClaim, ...rest ] = await em.save([
         shortClaim,
         user,
       ])
+
+      return savedClaim as Claim
     })
-
-    // TODO: emit event!
-
-    resolve(claim as Claim)
   }
 }

@@ -84,7 +84,7 @@ export default class Claim {
 
   public bindQuota(quota: Quota): void {
     if (this._quota) {
-      throw new InvariantViolationException(Quota.name, 'Try to rebind quota')
+      throw new InvariantViolationException(Claim.name, 'Try to rebind quota')
     }
 
     this._quota = quota
@@ -92,7 +92,7 @@ export default class Claim {
 
   public unbindQuota(): void {
     if (!this._quota) {
-      throw new InvariantViolationException(Quota.name, 'Try to unbind empty quota')
+      throw new InvariantViolationException(Claim.name, 'Try to unbind empty quota')
     }
 
     this._quota = null

@@ -14,6 +14,7 @@ import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
+import Role from '@app/domain/user/Role'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
@@ -25,6 +26,7 @@ import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
 import TransactionRepsonse from '../response/TransactionResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import Roles from '../security/Roles'
 
 @Controller('quotas')
 @UseGuards(JwtAuthGuard)
@@ -39,6 +41,7 @@ export default class QuotaController {
   ) {}
 
   @Get()
+  @Roles(Role.CaseManager, Role.Admin)
   @ApiOperation({ title: 'List of quotas' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse, isArray: true })
   @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
@@ -49,6 +52,7 @@ export default class QuotaController {
   }
 
   @Get('history')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Transaction\'s history' })
   @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success', type: TransactionRepsonse, isArray: true })
@@ -61,6 +65,7 @@ export default class QuotaController {
 
   @Post('transfer')
   @HttpCode(200)
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Transfer quota' })
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
@@ -77,6 +82,7 @@ export default class QuotaController {
   }
 
   @Post('create')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Create the new quota' })
   @ApiCreatedResponse({ description: 'Created', type: QuotaResponse })
   @ApiBadRequestResponse({ description: 'Quota with the provided name already exists' })
@@ -102,6 +108,7 @@ export default class QuotaController {
 
   @Post('edit')
   @HttpCode(200)
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Edit the existing quota'})
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })

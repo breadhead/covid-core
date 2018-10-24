@@ -1,12 +1,12 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus/dist'
 import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import Feedback from 'domain/feedback/Feedback.entity'
-import EventEmitter from 'infrastructure/events/EventEmitter'
-import IdGenerator, { IdGenerator as IdGeneratorSymbol } from 'infrastructure/IdGenerator/IdGenerator'
+import Feedback from '@app/domain/feedback/Feedback.entity'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import NewFeedbackEvent from './NewFeedbackEvent'
 import PostFeedbackCommand from './PostFeedbackCommand'
