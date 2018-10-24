@@ -14,10 +14,13 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
+import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
@@ -70,9 +73,6 @@ import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEnc
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
-import ClaimRejectedSubscriber from 'application/claim/ClaimRejectedSubscriber'
-import DoctorAnswerSubscriber from 'application/claim/DoctorAnswerSubscriber'
-import ShortClaimQueuedSubscriber from 'application/claim/ShortClaimQueuedSubscriber'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,

@@ -4,10 +4,12 @@ import {
   ApiImplicitFile, ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 
+import Role from '@app/domain/user/Role'
 import FileSaver, { FileSaver as  FileSaverSymbol } from '@app/infrastructure/FileSaver/FileSaver'
 
 import FileResponse from '../response/FileResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import Roles from '../security/Roles'
 
 @Controller('file')
 @UseGuards(JwtAuthGuard)
@@ -19,6 +21,7 @@ export default class FileController {
   ) { }
 
   @Post('upload')
+  @Roles(Role.Admin)
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ title: 'Upload file' })
   @ApiConsumes('multipart/form-data')

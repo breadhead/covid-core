@@ -19,7 +19,7 @@ export default class Message {
   public readonly claim: Claim
 
   @JoinColumn()
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, { eager: true })
   public readonly user: User
 
   public constructor(id: string, date: Date, content: string, claim: Claim, user: User) {

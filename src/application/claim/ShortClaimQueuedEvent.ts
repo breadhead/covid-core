@@ -1,5 +1,5 @@
+import Claim from '@app/domain/claim/Claim.entity'
 import Event from '@app/infrastructure/events/Event'
-import Claim from 'domain/claim/Claim.entity'
 
 export const NAME = 'claim/new-short-queued-event'
 

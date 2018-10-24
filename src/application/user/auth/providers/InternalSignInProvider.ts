@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
+import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import PasswordEncoder,
 { PasswordEncoder as PasswordEncoderSymbol } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
-import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import SignInProvider from './SignInProvider'
 
@@ -26,7 +26,7 @@ export default class InternalSignInProvider implements SignInProvider {
     return user.passwordCredentials.nonEmpty()
   }
 
-  public async signIn(login: string, password: string): Promise<TokenPayload> {
+  public async signIn(login: string, password: string): Promise<User> {
     const user = await this.userRepo.getOne(login)
 
     const valid = await user.passwordCredentials
@@ -38,8 +38,6 @@ export default class InternalSignInProvider implements SignInProvider {
       throw new InvalidCredentialsException({ login, password })
     }
 
-    const payload: TokenPayload = { login: user.login }
-
-    return payload
+    return user
   }
 }

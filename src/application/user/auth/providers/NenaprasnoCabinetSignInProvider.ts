@@ -6,7 +6,6 @@ import InvalidCredentialsException from '@app/application/exception/InvalidCrede
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
-import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import CreateUserFromCabinetCommand from '../../createUser/CreateUserFromCabinetCommand'
 import SignInProvider from './SignInProvider'
@@ -25,7 +24,7 @@ export default class NenaprasnoCabinetSignInProvider implements SignInProvider {
     return !!id
   }
 
-  public async signIn(login: string, password: string): Promise<TokenPayload> {
+  public async signIn(login: string, password: string): Promise<User> {
     const id = await this.nenaprasno.signIn(login, password)
 
     const valid = !!id
@@ -40,8 +39,6 @@ export default class NenaprasnoCabinetSignInProvider implements SignInProvider {
       user = await this.bus.execute(new CreateUserFromCabinetCommand(id))
     }
 
-    const payload: TokenPayload = { login: user.login }
-
-    return payload
+    return user
   }
 }
