@@ -3,8 +3,8 @@ import Message from '@app/domain/claim/Message.entity'
 import Feedback from '@app/domain/feedback/Feedback.entity'
 
 export default interface Notificator {
-  newChatMessageToClient(message: Message): Promise<void>
-  newChatMessageToSpecialist(message: Message): Promise<void>
+  newChatMessageFromClient(message: Message): Promise<void>
+  newChatMessageFromSpecialist(message: Message): Promise<void>
   newFeedbackMessage(feedback: Feedback): Promise<void>
   shortClaimApproved(claim: Claim): Promise<void>
   shortClaimQueued(claim: Claim): Promise<void>

@@ -26,20 +26,20 @@ export default class EmailNotificator implements Notificator {
       .get('ONCOHELP_SENDER_EMAIL')
       .getOrElse('oncohelp@email.com')
 
-    this.send = (from, subject, content) =>
-      sender.send(senderEmail, from, subject, content)
+    this.send = (to, subject, content) =>
+      sender.send(senderEmail, to, subject, content)
 
     this.siteUrl = config
       .get('SITE_URL')
       .getOrElse('localhost')
   }
 
-  public async newChatMessageToClient(message: Message): Promise<void> {
+  public async newChatMessageFromSpecialist(message: Message): Promise<void> {
     const { id } = message.claim
     const { name } = message.claim.applicant
     const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
-    const html = await this.templating.render('email/new-chat-message-to-client', {
+    const html = await this.templating.render('email/new-chat-message-from-specialist', {
       name,
       link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
     })
@@ -47,12 +47,12 @@ export default class EmailNotificator implements Notificator {
     return this.send('igor@kamyshev.me', subject, { html })
   }
 
-  public async newChatMessageToSpecialist(message: Message): Promise<void> {
+  public async newChatMessageFromClient(message: Message): Promise<void> {
     const { id, status } = message.claim
     const { name } = message.claim.applicant
     const subject = `Новое сообщение в заявке ${id}, ${name}`
 
-    const html = await this.templating.render('email/new-chat-message-to-specialist', {
+    const html = await this.templating.render('email/new-chat-message-from-client', {
       name,
       id,
       status,

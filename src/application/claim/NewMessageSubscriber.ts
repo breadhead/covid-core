@@ -27,7 +27,7 @@ export default class NewMessageSubscriber implements EventSubscriber {
     const { user } = payload
 
     return user.isClient
-      ? this.notificator.newChatMessageToClient(payload)
-      : this.notificator.newChatMessageToSpecialist(payload)
+      ? this.notificator.newChatMessageFromClient(payload)
+      : this.notificator.newChatMessageFromSpecialist(payload)
   }
 }
