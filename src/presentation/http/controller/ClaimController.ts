@@ -31,14 +31,14 @@ export default class ClaimController {
   @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
+  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided ' })
   public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
 
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('/short')
+  @Post('short')
   @ApiOperation({ title: 'Send short claim' })
   @ApiOkResponse({ description: 'Saved', type: ShortClaimData })
   public async sendShortClaim(
@@ -51,7 +51,7 @@ export default class ClaimController {
 
     const { companyName = null, companyPosition = null } = company
       ? { companyName: company.name, companyPosition: company.position }
-      : { }
+      : {}
 
     const claim: Claim = await this.bus.execute(new NewClaimCommand(
       login, theme, name, age, gender, region,
@@ -59,5 +59,12 @@ export default class ClaimController {
     ))
 
     return ShortClaimData.fromEntity(claim)
+  }
+
+  @Post('bind-quota')
+  @ApiOperation({ title: 'Bind quota to claim' })
+  @ApiOkResponse({ description: 'Binded' })
+  public async bindQuota(@Body() request: ShortClaimData): Promise<void> {
+    return 
   }
 }
