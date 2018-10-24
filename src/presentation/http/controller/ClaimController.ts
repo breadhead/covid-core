@@ -2,7 +2,7 @@ import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags
+  ApiOkResponse, ApiOperation, ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -14,6 +14,8 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
+import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import StatusMover from '@app/domain/claim/StatusMover'
 import ShortClaimData from '../io/claim/ShortClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
@@ -21,8 +23,6 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
-import StatusMover from '@app/domain/claim/StatusMover';
-import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -108,7 +108,7 @@ export default class ClaimController {
   @ApiOkResponse({ description: 'Next Status' })
   public async setNextStatus(@Query('id') id: string): Promise<void> {
     await this.bus.execute(
-      new MoveToNextStatusCommand(id)
+      new MoveToNextStatusCommand(id),
     )
 
     return
