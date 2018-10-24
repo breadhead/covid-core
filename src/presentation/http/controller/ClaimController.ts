@@ -6,12 +6,14 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
+import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
+import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
@@ -66,7 +68,15 @@ export default class ClaimController {
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
   @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided'})
-  public async closeClaim(): Promise<void> {
+  public async closeClaim(
+    @Body() request: CloseClaimRequest,
+  ): Promise<void> {
+    const { id, type, deallocateQuota } = request
+
+    await this.bus.execute(
+      new CloseClaimCommand(id, type, deallocateQuota),
+    )
+
     return
   }
 }
