@@ -1,19 +1,19 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
-import {
-  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags,
-} from '@nestjs/swagger'
+import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
+import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
+import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
@@ -42,7 +42,7 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('/short')
+  @Post('short')
   @Roles(Role.Client)
   @ApiOperation({ title: 'Send short claim' })
   @ApiOkResponse({ description: 'Saved', type: ShortClaimData })
@@ -56,7 +56,7 @@ export default class ClaimController {
 
     const { companyName = null, companyPosition = null } = company
       ? { companyName: company.name, companyPosition: company.position }
-      : { }
+      : {}
 
     const claim: Claim = await this.bus.execute(new CreateClaimCommand(
       login, theme, name, age, gender, region,
@@ -66,12 +66,12 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('/close')
+  @Post('close')
   @Roles(Role.CaseManager, Role.Admin)
   @HttpCodeNoContent()
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
-  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided'})
+  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided' })
   public async closeClaim(
     @Body() request: CloseClaimRequest,
   ): Promise<void> {
@@ -79,6 +79,19 @@ export default class ClaimController {
 
     await this.bus.execute(
       new CloseClaimCommand(id, type, deallocateQuota),
+    )
+
+    return
+  }
+
+  @Post('bind-quota')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Bind quota to claim' })
+  @ApiOkResponse({ description: 'Binded' })
+  public async bindQuota(@Body() request: BindQuotaRequest): Promise<void> {
+    const { claimId, quotaId } = request
+    await this.bus.execute(
+      new BindQuotaCommand(quotaId, claimId),
     )
 
     return
