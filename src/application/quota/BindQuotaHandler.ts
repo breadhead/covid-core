@@ -2,10 +2,10 @@ import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import ClaimRepository from 'domain/claim/ClaimRepository'
-import StatusMover from 'domain/claim/StatusMover'
-import Allocator from 'domain/quota/Allocator'
-import QuotaRepository from 'domain/quota/QuotaRepository'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
+import Allocator from '@app/domain/quota/Allocator'
+import QuotaRepository from '@app/domain/quota/QuotaRepository'
 
 import BindQuotaCommand from './BindQuotaCommand'
 
