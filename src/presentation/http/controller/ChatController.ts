@@ -35,8 +35,13 @@ export default class ChatController {
   @ApiOkResponse({ description: 'Success', type: ChatMessageResponse, isArray: true })
   @ApiNotFoundResponse({ description: 'Chat for claim with the provided id not found' })
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided '})
-  public async showChat(@Param('id') id: string): Promise<ChatMessageResponse[]> {
+  public async showChat(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ChatMessageResponse[]> {
     const messages = await this.messageRepo.findByClaimId(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, messages, user)
 
     return messages.map(ChatMessageResponse.fromEntity)
   }

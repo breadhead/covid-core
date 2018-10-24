@@ -11,6 +11,8 @@ import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
+import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
+import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
@@ -29,6 +31,7 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
+    private readonly votersUnity: SecurityVotersUnity,
   ) { }
 
   @Get(':id/short')
@@ -36,8 +39,13 @@ export default class ClaimController {
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
-  public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
+  public async showShort(
+    @Query('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
     return ShortClaimData.fromEntity(claim)
   }

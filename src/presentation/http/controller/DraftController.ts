@@ -7,6 +7,8 @@ import CreateDraftCommand from '@app/application/draft/CreateDraftCommand'
 import EditDraftCommand from '@app/application/draft/EditDraftCommand'
 import Draft from '@app/domain/draft/Draft.entity'
 import DraftRepository from '@app/domain/draft/DraftRepository'
+import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
+import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import DraftRequest from '../request/DraftRequest'
@@ -23,6 +25,7 @@ export default class DraftController {
   public constructor(
     @InjectRepository(DraftRepository) private readonly draftRepo: DraftRepository,
     private readonly bus: CommandBus,
+    private readonly votersUnity: SecurityVotersUnity,
   ) { }
 
   @Post('create')
@@ -49,12 +52,15 @@ export default class DraftController {
   public async update(
     @Param('id') id: string,
     @Body() request: DraftRequest,
+    @CurrentUser() user: TokenPayload,
   ): Promise<DraftResponse> {
     const { body } = request
 
-    const draft: Draft = await this.bus.execute(
-      new EditDraftCommand(id, body),
-    )
+    const command = new EditDraftCommand(id, body)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, command, user)
+
+    const draft: Draft = await this.bus.execute(command)
 
     return DraftResponse.fromEntity(draft)
   }
@@ -63,8 +69,13 @@ export default class DraftController {
   @ApiOperation({ title: 'Show the draft' })
   @ApiOkResponse({ description: 'Success', type: DraftResponse })
   @ApiNotFoundResponse({ description: 'Draft not found' })
-  public async show(@Param('id') id: string): Promise<DraftResponse> {
+  public async show(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<DraftResponse> {
     const draft = await this.draftRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, draft, user)
 
     return DraftResponse.fromEntity(draft)
   }
