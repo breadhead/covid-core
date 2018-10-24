@@ -30,7 +30,7 @@ export default class CloseClaimHandler implements ICommandHandler<CloseClaimComm
 
     // TODO: handle close type
 
-    await this.statusMover.deny(claim) // Move to next status after qouta allocating
+    await this.statusMover.deny(claim)
 
     resolve(claim)
   }

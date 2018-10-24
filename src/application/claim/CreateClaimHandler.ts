@@ -27,7 +27,7 @@ export default class CreateClaimHandler implements ICommandHandler<CreateClaimCo
     const claim = await this.createClaim(command)
 
     await this.allocator.allocateAuto(claim)
-      .catch(() => { /* ok, common quota not found */})
+      .catch(() => { /* ok, common quota not found */ })
 
     await this.statusMover.next(claim) // Move to next status after qouta allocating
 
