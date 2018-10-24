@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import PostMessageCommand from '@app/application/claim/PostMessageCommand'
+import PostMessageCommand from '@app/application/claim/chat/PostMessageCommand'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'

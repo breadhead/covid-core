@@ -14,14 +14,17 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewMessageSubscriber from '@app/application/claim/chat/NewMessageSubscriber'
+import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
+import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
+import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
 import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
-import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
-import PostMessageHandler from '@app/application/claim/PostMessageHandler'
-import PostMessageVoter from '@app/application/claim/PostMessageVoter'
 import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
+import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
+import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
@@ -90,6 +93,8 @@ const signInProviders = [
 
 const securityVoters = [
   PostMessageVoter,
+  DraftVoter,
+  ShowClaimVoter, ShowChatVoter,
 ]
 
 const eventSubscribers = [

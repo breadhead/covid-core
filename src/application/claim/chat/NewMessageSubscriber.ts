@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
-import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
+import Notificator, { Notificator as NotificatorSymbol } from '../../notifications/Notificator'
 import NewMessageEvent, { NAME } from './NewMessageEvent'
 
 export default class NewMessageSubscriber implements EventSubscriber {
