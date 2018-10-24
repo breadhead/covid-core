@@ -14,6 +14,8 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Role from '@app/domain/user/Role'
+import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
+import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
@@ -33,6 +35,7 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
+    private readonly votersUnity: SecurityVotersUnity,
     private readonly statusMover: StatusMover,
   ) { }
 
@@ -40,9 +43,14 @@ export default class ClaimController {
   @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided' })
-  public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
+  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
+  public async showShort(
+    @Query('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
     return ShortClaimData.fromEntity(claim)
   }
@@ -90,6 +98,7 @@ export default class ClaimController {
   }
 
   @Post('bind-quota')
+  @Roles(Role.CaseManager, Role.Admin)
   @HttpCode(200)
   @ApiOperation({ title: 'Bind quota to claim' })
   @ApiOkResponse({ description: 'Binded' })
@@ -103,9 +112,10 @@ export default class ClaimController {
   }
 
   @Post(':id/next-status')
+  @Roles(Role.CaseManager, Role.Admin)
   @HttpCode(200)
-  @ApiOperation({ title: 'Set next staus' })
-  @ApiOkResponse({ description: 'Next Status' })
+  @ApiOperation({ title: 'Move to next staus' })
+  @ApiOkResponse({ description: 'Moved to next' })
   public async setNextStatus(@Query('id') id: string): Promise<void> {
     await this.bus.execute(
       new MoveToNextStatusCommand(id),

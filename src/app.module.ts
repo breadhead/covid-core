@@ -14,12 +14,16 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import NewMessageSubscriber from '@app/application/claim/chat/NewMessageSubscriber'
+import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
+import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
+import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
+import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
-import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
-import PostMessageHandler from '@app/application/claim/PostMessageHandler'
-import PostMessageVoter from '@app/application/claim/PostMessageVoter'
+import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
+import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
@@ -81,7 +85,7 @@ const commandHandlers = [
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
-  CreateClaimHandler,
+  CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
   MoveToNextStatusHandler,
 ]
@@ -93,6 +97,8 @@ const signInProviders = [
 
 const securityVoters = [
   PostMessageVoter,
+  DraftVoter,
+  ShowClaimVoter, ShowChatVoter,
 ]
 
 const eventSubscribers = [

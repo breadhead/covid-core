@@ -19,15 +19,19 @@ export default class PostMessageVoter implements SecurityVoter<PostMessageComman
   }
 
   public async voteOnAttribute(
-    attribute: Attribute,
-    subject: PostMessageCommand,
-    token: TokenPayload,
+    _: Attribute,
+    { claimId }: PostMessageCommand,
+    { login }: TokenPayload,
   ): Promise<boolean> {
     const [ user, claim ] = await Promise.all([
-      this.userRepo.getOne(token.login),
-      this.claimRepo.getOne(subject.claimId),
+      this.userRepo.getOne(login),
+      this.claimRepo.getOne(claimId),
     ])
 
-    return Promise.resolve(true) // TODO: check permissions
+    if (user.isClient) {
+      return user.login === claim.author.login
+    }
+
+    return true
   }
 }

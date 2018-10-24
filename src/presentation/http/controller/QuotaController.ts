@@ -52,6 +52,7 @@ export default class QuotaController {
   }
 
   @Get('history')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Transaction\'s history' })
   @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success', type: TransactionRepsonse, isArray: true })
