@@ -36,7 +36,7 @@ export default class SendVerificationHandler implements ICommandHandler<SendVeri
 
       await this.smsSender.send(
         command.number,
-        `введите код ${verificationCode} для входа на сайт`,
+        `${verificationCode} введите этот код для входа на сайт`,
       )
     })
 
