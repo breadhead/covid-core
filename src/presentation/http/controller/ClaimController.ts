@@ -8,14 +8,18 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
+import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import StatusMover from '@app/domain/claim/StatusMover'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
+import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
@@ -32,6 +36,7 @@ export default class ClaimController {
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
+    private readonly statusMover: StatusMover,
   ) { }
 
   @Get(':id/short')
@@ -50,7 +55,7 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('/short')
+  @Post('short')
   @Roles(Role.Client)
   @ApiOperation({ title: 'Send short claim' })
   @ApiOkResponse({ description: 'Saved', type: ShortClaimData })
@@ -64,7 +69,7 @@ export default class ClaimController {
 
     const { companyName = null, companyPosition = null } = company
       ? { companyName: company.name, companyPosition: company.position }
-      : { }
+      : {}
 
     const claim: Claim = await this.bus.execute(new CreateClaimCommand(
       login, theme, name, age, gender, region,
@@ -74,12 +79,12 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('/close')
+  @Post('close')
   @Roles(Role.CaseManager, Role.Admin)
   @HttpCodeNoContent()
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
-  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided'})
+  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided' })
   public async closeClaim(
     @Body() request: CloseClaimRequest,
   ): Promise<void> {
@@ -91,4 +96,32 @@ export default class ClaimController {
 
     return
   }
+
+  @Post('bind-quota')
+  @Roles(Role.CaseManager, Role.Admin)
+  @HttpCode(200)
+  @ApiOperation({ title: 'Bind quota to claim' })
+  @ApiOkResponse({ description: 'Binded' })
+  public async bindQuota(@Body() request: BindQuotaRequest): Promise<void> {
+    const { claimId, quotaId } = request
+    await this.bus.execute(
+      new BindQuotaCommand(quotaId, claimId),
+    )
+
+    return
+  }
+
+  @Post(':id/next-status')
+  @Roles(Role.CaseManager, Role.Admin)
+  @HttpCode(200)
+  @ApiOperation({ title: 'Move to next staus' })
+  @ApiOkResponse({ description: 'Moved to next' })
+  public async setNextStatus(@Query('id') id: string): Promise<void> {
+    await this.bus.execute(
+      new MoveToNextStatusCommand(id),
+    )
+
+    return
+  }
+
 }

@@ -18,11 +18,9 @@ import NewMessageSubscriber from '@app/application/claim/chat/NewMessageSubscrib
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
-import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
-import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
-import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
+import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
@@ -57,7 +55,11 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
+import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
 import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
+import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
+import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -79,12 +81,13 @@ import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngin
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
+  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
   CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
+  MoveToNextStatusHandler,
 ]
 
 const signInProviders = [
