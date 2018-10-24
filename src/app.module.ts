@@ -19,6 +19,7 @@ import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
 import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
+import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
 import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
@@ -82,7 +83,7 @@ const commandHandlers = [
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,
-  CreateClaimHandler,
+  CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
 ]
 
