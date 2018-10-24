@@ -77,5 +77,50 @@ describe('StatusMover', () => {
 
       expect(claim.status).toBe(ClaimStatus.QuestionnaireWaiting)
     })
+
+    test('should move from QuestionnaireWaiting to QuestionnaireValidation claim', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.QuestionnaireWaiting)
+
+      await statusMover.next(claim)
+
+      expect(claim.status).toBe(ClaimStatus.QuestionnaireValidation)
+    })
+
+    test('should move from QuestionnaireValidation to AtTheDoctor claim', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.QuestionnaireValidation)
+
+      await statusMover.next(claim)
+
+      expect(claim.status).toBe(ClaimStatus.AtTheDoctor)
+    })
+
+    test('should move from AtTheDoctor to AnswerValidation claim', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.AtTheDoctor)
+
+      await statusMover.next(claim)
+
+      expect(claim.status).toBe(ClaimStatus.AnswerValidation)
+    })
+
+    test('should move from AnswerValidation to DeliveredToCustomer claim', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.AnswerValidation)
+
+      await statusMover.next(claim)
+
+      expect(claim.status).toBe(ClaimStatus.DeliveredToCustomer)
+    })
+
+    test('should move from DeliveredToCustomer to ClosedSuccessfully claim', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.DeliveredToCustomer)
+
+      await statusMover.next(claim)
+
+      expect(claim.status).toBe(ClaimStatus.ClosedSuccessfully)
+    })
   })
 })

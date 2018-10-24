@@ -86,12 +86,10 @@ export default class StatusMover {
     })
   }
 
-  private async getNextStatus(claim: Claim): Promise<ClaimStatus> {
+  private getNextStatus(claim: Claim): Promise<ClaimStatus> {
     const getNextStatus: (cliam: Claim) => Promise<ClaimStatus> =
       this.getNextStatusMap[claim.status] || this.fromUnknown
 
-    const nextStatus = await getNextStatus(claim)
-
-    return nextStatus
+    return getNextStatus(claim)
   }
 }
