@@ -1,7 +1,9 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags
+} from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
@@ -19,6 +21,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
+import StatusMover from '@app/domain/claim/StatusMover';
+import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -29,13 +33,14 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
+    private readonly statusMover: StatusMover,
   ) { }
 
   @Get(':id/short')
   @ApiOperation({ title: 'Claim\'s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
+  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided' })
   public async showShort(@Query('id') id: string): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
 
@@ -96,4 +101,17 @@ export default class ClaimController {
 
     return
   }
+
+  @Post(':id/next-status')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Set next staus' })
+  @ApiOkResponse({ description: 'Next Status' })
+  public async setNextStatus(@Query('id') id: string): Promise<void> {
+    await this.bus.execute(
+      new MoveToNextStatusCommand(id)
+    )
+
+    return
+  }
+
 }

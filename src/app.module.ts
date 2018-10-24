@@ -14,13 +14,10 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
-import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
 import NewMessageSubscriber from '@app/application/claim/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/PostMessageVoter'
-import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
@@ -33,6 +30,7 @@ import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
+import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 
@@ -85,6 +83,7 @@ const commandHandlers = [
   PostFeedbackHandler,
   CreateClaimHandler,
   CreateDraftHandler, EditDraftHandler,
+  MoveToNextStatusHandler,
 ]
 
 const signInProviders = [
