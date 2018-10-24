@@ -1,18 +1,16 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
-import {
-  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags,
-} from '@nestjs/swagger'
+import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
+  ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
+import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
-import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
