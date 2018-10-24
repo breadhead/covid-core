@@ -15,9 +15,9 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ChatMessageRequest from '../request/ChatMessageRequest'
-import CurrentUser from '../request/CurrentUser'
 import ChatMessageResponse from '../response/ChatMessageResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import CurrentUser from './decorator/CurrentUser'
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
