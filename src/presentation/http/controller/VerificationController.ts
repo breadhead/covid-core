@@ -13,10 +13,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand'
-import CurrentUser from '../request/CurrentUser'
 import SendRequest from '../request/verification/SendRequest'
 import VerificateRequest from '../request/verification/VerificateRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
+import CurrentUser from './decorator/CurrentUser'
 
 @Controller('verification')
 @ApiUseTags('verification')
@@ -39,8 +39,7 @@ export default class VerificationController {
     await this.commandBus.execute(
       new SendVerificationCommand(request.number, user.login),
     )
-    /* TODO: генерация кода подтверждения */
-    /* TODO: отправка смс по номеру телефона */
+
     return
   }
 
