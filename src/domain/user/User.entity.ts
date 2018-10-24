@@ -7,6 +7,7 @@ import InvariantViolationException from '../exception/InvariantViolationExceptio
 import Contacts, { Params as ContactsParams } from './Contacts.vo'
 import NenaprasnoCabinetCredentials from './credentials/NenaprasnoCabinetCredentials.vo'
 import PasswordCredentials from './credentials/PasswordCredentials.vo'
+import Role from './Role'
 
 @Entity()
 export default class User {
@@ -27,6 +28,8 @@ export default class User {
 
   public get conatcts(): Contacts { return this._contacts }
 
+  public get roles(): Role[] { return this._roles }
+
   @Column((type) => Contacts)
   public _contacts: Contacts
 
@@ -36,6 +39,9 @@ export default class User {
   @Column((type) => NenaprasnoCabinetCredentials)
   private _nenaprasnoCabinetCredentials: NenaprasnoCabinetCredentials
 
+  @Column({ type: 'simple-array' })
+  private _roles: Role[]
+
   public constructor(login: string, contacts?: Contacts) {
     this.login = login
 
@@ -43,6 +49,7 @@ export default class User {
 
     this._passwordCredentials = new PasswordCredentials()
     this._nenaprasnoCabinetCredentials = new NenaprasnoCabinetCredentials()
+    this._roles = []
   }
 
   public newContacts({ email, phone }: ContactsParams) {
