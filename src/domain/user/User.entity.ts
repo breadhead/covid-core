@@ -28,7 +28,7 @@ export default class User {
 
   public get conatcts(): Contacts { return this._contacts }
 
-  public get roles(): Role[] { return [Role.Admin, Role.Client] }
+  public get roles(): Role[] { return this._roles }
 
   public get isClient(): boolean {
     return this.roles.includes(Role.Client)
