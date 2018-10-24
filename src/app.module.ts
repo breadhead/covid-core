@@ -50,7 +50,11 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
+import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
 import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
+import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
+import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -70,12 +74,9 @@ import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEnc
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
-import ClaimRejectedSubscriber from 'application/claim/ClaimRejectedSubscriber'
-import DoctorAnswerSubscriber from 'application/claim/DoctorAnswerSubscriber'
-import ShortClaimQueuedSubscriber from 'application/claim/ShortClaimQueuedSubscriber'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler,
+  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
   PostFeedbackHandler,

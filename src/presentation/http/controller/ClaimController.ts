@@ -12,7 +12,9 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
+import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import ShortClaimData from '../io/claim/ShortClaimData'
+import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import CurrentUser from './decorator/CurrentUser'
@@ -81,9 +83,15 @@ export default class ClaimController {
   }
 
   @Post('bind-quota')
+  @HttpCode(200)
   @ApiOperation({ title: 'Bind quota to claim' })
   @ApiOkResponse({ description: 'Binded' })
-  public async bindQuota(@Body() request: ShortClaimData): Promise<void> {
+  public async bindQuota(@Body() request: BindQuotaRequest): Promise<void> {
+    const { claimId, quotaId } = request
+    await this.bus.execute(
+      new BindQuotaCommand(quotaId, claimId),
+    )
+
     return
   }
 }
