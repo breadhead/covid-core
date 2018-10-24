@@ -11,8 +11,8 @@ import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
-
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
+
 import ShortClaimData from '../io/claim/ShortClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
