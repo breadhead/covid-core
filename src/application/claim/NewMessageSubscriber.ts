@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common'
 
-import Role from '@app/domain/user/Role'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
