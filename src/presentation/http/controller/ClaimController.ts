@@ -17,7 +17,6 @@ import ShortClaimData from '../io/claim/ShortClaimData'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
-import RolesAuthGuard from '../security/RolesAuthGuard'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 
