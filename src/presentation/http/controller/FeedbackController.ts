@@ -2,9 +2,9 @@ import { CommandBus } from '@breadhead/nest-throwable-bus/dist'
 import { Body, Controller, Post } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 
-import Feedback from 'domain/feedback/Feedback.entity'
+import PostFeedbackCommand from '@app/application/feedback/PostFeedbackCommand'
+import Feedback from '@app/domain/feedback/Feedback.entity'
 
-import PostFeedbackCommand from 'application/feedback/PostFeedbackCommand'
 import FeedbackRequest from '../request/FeedbackRequest'
 import FeedbackResponse from '../response/FeedbackResponse'
 

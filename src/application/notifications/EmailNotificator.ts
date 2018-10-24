@@ -1,6 +1,7 @@
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import { Inject } from '@nestjs/common'
 
+import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EmailSender, {
@@ -9,7 +10,7 @@ import EmailSender, {
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
-import Claim from 'domain/claim/Claim.entity'
+
 import Notificator from './Notificator'
 
 export default class EmailNotificator implements Notificator {

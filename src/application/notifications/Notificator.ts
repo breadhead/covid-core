@@ -1,6 +1,6 @@
+import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import Feedback from '@app/domain/feedback/Feedback.entity'
-import Claim from 'domain/claim/Claim.entity'
 
 export default interface Notificator {
   newChatMessageToClient(message: Message): Promise<void>

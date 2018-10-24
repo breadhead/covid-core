@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common'
 
-import EventSubscriber from 'infrastructure/events/EventSubscriber'
+import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
 import NewFeedbackEvent, { NAME } from './NewFeedbackEvent'
