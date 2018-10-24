@@ -1,6 +1,6 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { APP_GUARD, APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
+import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
@@ -176,10 +176,6 @@ const eventSubscribers = [
       provide: FileSaver,
       useClass: LocalFileSaver,
     },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: RolesAuthGuard,
-    // },
     CommandBus,
     StatusMover,
     Allocator,

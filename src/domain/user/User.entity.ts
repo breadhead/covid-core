@@ -30,6 +30,10 @@ export default class User {
 
   public get roles(): Role[] { return this._roles }
 
+  public get isClient(): boolean {
+    return this.roles.includes(Role.Client)
+  }
+
   @Column((type) => Contacts)
   public _contacts: Contacts
 
