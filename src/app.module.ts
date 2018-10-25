@@ -21,18 +21,18 @@ import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
-import NewMessageSubscriber from '@app/application/claim/subscriber/NewMessageSubscriber'
-import NotifySubscriber from '@app/application/claim/subscriber/NotifySubscriber'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
-import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
+import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
+import BoardSubscriber from '@app/application/subscriber/BoardSubscriber'
+import NotifySubscriber from '@app/application/subscriber/NotifySubscriber'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
@@ -56,9 +56,6 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import ClaimRejectedSubscriber from '@app/application/claim/subscriber/ClaimRejectedSubscriber'
-import DoctorAnswerSubscriber from '@app/application/claim/subscriber/DoctorAnswerSubscriber'
-import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -101,10 +98,7 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber,
-  NewFeedbackSubscriber,
-  ClaimRejectedSubscriber,
-  DoctorAnswerSubscriber,
+  BoardSubscriber,
   NotifySubscriber,
 ]
 

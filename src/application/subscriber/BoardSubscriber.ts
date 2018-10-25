@@ -1,7 +1,7 @@
 import NewMessageEvent, { NAME } from '@app/domain/claim/event/NewMessageEvent'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
-export default class NewMessageSubscriber implements EventSubscriber {
+export default class BoardSubscriber implements EventSubscriber {
   public subscribedEvents() {
     return [
       { key: NAME, handler: this.addLabelOnBoard.bind(this) },
