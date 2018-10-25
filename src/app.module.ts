@@ -14,7 +14,6 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import NewMessageSubscriber from '@app/application/claim/chat/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
@@ -22,6 +21,8 @@ import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
+import NewMessageSubscriber from '@app/application/claim/subscriber/NewMessageSubscriber'
+import NotifySubscriber from '@app/application/claim/subscriber/NotifySubscriber'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
@@ -55,10 +56,8 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
-import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
-import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
-import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
+import ClaimRejectedSubscriber from '@app/application/claim/subscriber/ClaimRejectedSubscriber'
+import DoctorAnswerSubscriber from '@app/application/claim/subscriber/DoctorAnswerSubscriber'
 import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
@@ -104,10 +103,9 @@ const securityVoters = [
 const eventSubscribers = [
   NewMessageSubscriber,
   NewFeedbackSubscriber,
-  ShortClaimApprovedSubscriber,
-  ShortClaimQueuedSubscriber,
   ClaimRejectedSubscriber,
   DoctorAnswerSubscriber,
+  NotifySubscriber,
 ]
 
 @Module({

@@ -1,9 +1,9 @@
 import { Inject } from '@nestjs/common'
 
+import ClaimRejectedEvent, { NAME } from '@app/domain/claim/event/ClaimRejectedEvent'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
-import Notificator, { Notificator as NotificatorSymbol } from '../notifications/Notificator'
-import ClaimRejectedEvent, { NAME } from './ClaimRejectedEvent'
+import Notificator, { Notificator as NotificatorSymbol } from '../../notifications/Notificator'
 
 export default class ClaimRejectedSubscriber implements EventSubscriber {
   public constructor(
