@@ -1,5 +1,5 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
+import { HttpModule, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
@@ -56,6 +56,8 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
+import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -176,6 +178,10 @@ const eventSubscribers = [
     {
       provide: FileSaver,
       useClass: LocalFileSaver,
+    },
+    {
+      provide: BoardManager,
+      useClass: VoidBoardManager,
     },
     CommandBus,
     StatusMover,

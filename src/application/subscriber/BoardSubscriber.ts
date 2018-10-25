@@ -1,7 +1,14 @@
+import { Inject } from '@nestjs/common'
+
 import NewMessageEvent, { NAME as NewMessageName } from '@app/domain/claim/event/NewMessageEvent'
+import BoardManager, { BoardManager as BoardManagerSymbol } from '@app/infrastructure/BoardManager/BoardManager'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 export default class BoardSubscriber implements EventSubscriber {
+  public constructor(
+    @Inject(BoardManagerSymbol) private readonly board: BoardManager,
+  ) { }
+
   public subscribedEvents() {
     return [
       { key: NewMessageName, handler: this.addLabelNewMessage.bind(this) },
@@ -9,7 +16,6 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private async addLabelNewMessage({ payload }: NewMessageEvent) {
-    // TODO: Added call board manager to add label for claim
-    console.log('LABEL ADDED') // tslint:disable-line
+    return this.board.addLabel('ds', 'dsd', 'ds')
   }
 }
