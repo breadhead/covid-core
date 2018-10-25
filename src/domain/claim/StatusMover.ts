@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import { matches } from 'z'
+import Event from '@app/infrastructure/events/Event'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
+
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
-
-type GetStatus = (claim: Claim) => Promise<ClaimStatus>
+import ClaimRejectedEvent from './event/ClaimRejectedEvent'
+import DoctorAnswerEvent from './event/DoctorAnswerEvent'
+import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
+import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
 @Injectable()
 export default class StatusMover {
@@ -22,6 +26,7 @@ export default class StatusMover {
 
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
+    private readonly eventEmitter: EventEmitter,
   ) { }
 
   public async deny(claim: Claim): Promise<void> {
@@ -77,13 +82,15 @@ export default class StatusMover {
   }
 
   private async changeStatus(claim: Claim, newStatus: ClaimStatus): Promise<void> {
-    return this.em.transaction(async (em) => {
-      claim.changeStatus(newStatus)
+    claim.changeStatus(newStatus)
 
-      // TODO: emit event by status
+    await this.em.save(claim)
 
-      await em.save(claim)
-    })
+    // Push events
+    const event = this.getEvent(claim)
+    if (event) {
+      this.eventEmitter.emit(event)
+    }
   }
 
   private getNextStatus(claim: Claim): Promise<ClaimStatus> {
@@ -91,5 +98,20 @@ export default class StatusMover {
       this.getNextStatusMap[claim.status] || this.fromUnknown
 
     return getNextStatus(claim)
+  }
+
+  private getEvent(claim: Claim): Event | null {
+    switch (claim.status) {
+    case ClaimStatus.Denied:
+      return new ClaimRejectedEvent(claim)
+    case ClaimStatus.DeliveredToCustomer:
+      return new DoctorAnswerEvent(claim)
+    case ClaimStatus.QuestionnaireWaiting:
+      return new ShortClaimApprovedEvent(claim)
+    case ClaimStatus.QueueForQuota:
+      return new ShortClaimQueuedEvent(claim)
+    default:
+      return null
+    }
   }
 }
