@@ -1,6 +1,7 @@
 import StatusMover from '../StatusMover'
 
 import MockEntityManager from '../../../__mocks__/EnitityManager'
+import MockEventEmitter from '../../../__mocks__/EventEmitter'
 import Gender from '../../../infrastructure/customTypes/Gender'
 import Quota from '../../quota/Quota.entity'
 import User from '../../user/User.entity'
@@ -18,6 +19,7 @@ describe('StatusMover', () => {
 
     statusMover = new StatusMover(
       new MockEntityManager() as any,
+      new MockEventEmitter() as any,
     )
   })
 

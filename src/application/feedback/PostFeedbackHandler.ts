@@ -4,11 +4,11 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
+import NewFeedbackEvent from '@app/domain/feedback/event/NewFeedbackEvent'
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import NewFeedbackEvent from './NewFeedbackEvent'
 import PostFeedbackCommand from './PostFeedbackCommand'
 
 @CommandHandler(PostFeedbackCommand)
