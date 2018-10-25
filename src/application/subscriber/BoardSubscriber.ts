@@ -16,6 +16,6 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private async addLabelNewMessage({ payload }: NewMessageEvent) {
-    return this.board.addLabel('ds', 'dsd', 'ds')
+    return this.board.addLabel('dsd', 'Новое сообщение')
   }
 }
