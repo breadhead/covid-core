@@ -48,6 +48,12 @@ export default class Claim {
       : new None()
   }
 
+  public get due(): Option<Date> {
+    return this._due
+      ? new Some(this._due)
+      : new None()
+  }
+
   @JoinColumn()
   @ManyToOne((type) => Quota, { eager: true, nullable: true })
   private _quota?: Quota
@@ -57,6 +63,9 @@ export default class Claim {
 
   @Column((type) => CorporateInfo)
   private _corporateInfo: CorporateInfo
+
+  @Column({ nullable: true })
+  private _due?: Date
 
   public constructor(
     id: string, applicant: Applicant, author: User,
@@ -100,5 +109,9 @@ export default class Claim {
 
   public changeStatus(newStatus: ClaimStatus) {
     this._status = newStatus
+  }
+
+  public changeDue(newDue: Date) {
+    this._due = newDue
   }
 }
