@@ -1,5 +1,5 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
   ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
@@ -38,7 +38,7 @@ export default class QuotaController {
     @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
     private readonly historian: Historian,
     private readonly commandBus: CommandBus,
-  ) {}
+  ) { }
 
   @Get()
   @Roles(Role.CaseManager, Role.Admin)
@@ -49,6 +49,17 @@ export default class QuotaController {
     const quotas = await this.quotaRepo.findAll()
 
     return quotas.map(QuotaResponse.fromEntity)
+  }
+
+  @Get(':id')
+  @Roles(Role.CaseManager, Role.Admin)
+  @ApiOperation({ title: 'Quota' })
+  @ApiOkResponse({ description: 'Success', type: QuotaResponse })
+  @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
+  public async show(@Param('id') id: string): Promise<QuotaResponse> {
+    const quota = await this.quotaRepo.getOne(id)
+
+    return QuotaResponse.fromEntity(quota)
   }
 
   @Get('history')
@@ -71,7 +82,7 @@ export default class QuotaController {
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   public async transfer(@Body() request: QuotaTransferRequest) {
-    const [ sourceQuota, targetQuota ] = await this.commandBus.execute(
+    const [sourceQuota, targetQuota] = await this.commandBus.execute(
       new TransferQuotaCommand(request.sourceId, request.targetId, request.count),
     )
 
@@ -109,7 +120,7 @@ export default class QuotaController {
   @Post('edit')
   @HttpCode(200)
   @Roles(Role.Admin)
-  @ApiOperation({ title: 'Edit the existing quota'})
+  @ApiOperation({ title: 'Edit the existing quota' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({ description: 'Quota with the provided id doesn\'t exist' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
