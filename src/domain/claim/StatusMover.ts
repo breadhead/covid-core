@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
+import { Option } from 'tsoption'
 import { EntityManager } from 'typeorm'
 
+import Configuration from '@app/infrastructure/Configuration/Configuration'
 import Event from '@app/infrastructure/events/Event'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import { add } from '@app/infrastructure/utils/date'
 
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
@@ -11,6 +14,8 @@ import ClaimRejectedEvent from './event/ClaimRejectedEvent'
 import DoctorAnswerEvent from './event/DoctorAnswerEvent'
 import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
+
+const DEFAULT_DURATION = '2d'
 
 @Injectable()
 export default class StatusMover {
@@ -24,10 +29,19 @@ export default class StatusMover {
     [ClaimStatus.DeliveredToCustomer]: this.fromDeliveredToCustomer,
   }
 
+  private readonly maxDurations: { [key in ClaimStatus]?: Option<string> }
+
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+    config: Configuration,
+  ) {
+    this.maxDurations = {
+      [ClaimStatus.QuestionnaireWaiting]: config.get('DUARTION_QUESTIONNAIRE_WAITING'),
+      [ClaimStatus.AtTheDoctor]: config.get('DURATION_AT_THE_DOCTOR'),
+      [ClaimStatus.DeliveredToCustomer]: config.get('DURATION_DELIVERED_TO_CUSTOMER'),
+    }
+  }
 
   public async deny(claim: Claim): Promise<void> {
     const newStatus = ClaimStatus.Denied
@@ -84,12 +98,26 @@ export default class StatusMover {
   private async changeStatus(claim: Claim, newStatus: ClaimStatus): Promise<void> {
     claim.changeStatus(newStatus)
 
+    this.setDue(claim, newStatus)
+
     await this.em.save(claim)
 
     // Push events
     const event = this.getEvent(claim)
     if (event) {
       this.eventEmitter.emit(event)
+    }
+  }
+
+  private setDue(claim: Claim, newStatus: ClaimStatus): void {
+    const statusDuration = this.maxDurations[newStatus]
+    if (statusDuration) {
+      const due = add(
+        new Date(),
+        statusDuration.getOrElse(DEFAULT_DURATION),
+      )
+
+      claim.changeDue(due)
     }
   }
 

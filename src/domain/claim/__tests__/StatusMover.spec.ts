@@ -1,5 +1,6 @@
 import StatusMover from '../StatusMover'
 
+import MockConfiguration from '../../../__mocks__/Configuration'
 import MockEntityManager from '../../../__mocks__/EnitityManager'
 import MockEventEmitter from '../../../__mocks__/EventEmitter'
 import Gender from '../../../infrastructure/customTypes/Gender'
@@ -20,6 +21,11 @@ describe('StatusMover', () => {
     statusMover = new StatusMover(
       new MockEntityManager() as any,
       new MockEventEmitter() as any,
+      new MockConfiguration({
+        DUARTION_QUESTIONNAIRE_WAITING: '2d',
+        DURATION_AT_THE_DOCTOR: '3d',
+        DURATION_DELIVERED_TO_CUSTOMER: '4d',
+      }),
     )
   })
 
@@ -123,6 +129,49 @@ describe('StatusMover', () => {
       await statusMover.next(claim)
 
       expect(claim.status).toBe(ClaimStatus.ClosedSuccessfully)
+    })
+
+    test('should add due date for QuestionnaireWaiting', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.New)
+      claim.bindQuota(new Quota('1', 'first'))
+
+      await statusMover.next(claim)
+
+      expect(claim.due.nonEmpty()).toBeTruthy()
+      if (claim.due.nonEmpty()) {
+        expect(
+          claim.due.get().getDate() - new Date().getDate(),
+        ).toBe(2)
+      }
+    })
+
+    test('should add due date for AtTheDoctor', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.QuestionnaireValidation)
+
+      await statusMover.next(claim)
+
+      expect(claim.due.nonEmpty()).toBeTruthy()
+      if (claim.due.nonEmpty()) {
+        expect(
+          claim.due.get().getDate() - new Date().getDate(),
+        ).toBe(3)
+      }
+    })
+
+    test('should add due date for AtTheDoctor', async () => {
+      const claim = new Claim('1', applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.AnswerValidation)
+
+      await statusMover.next(claim)
+
+      expect(claim.due.nonEmpty()).toBeTruthy()
+      if (claim.due.nonEmpty()) {
+        expect(
+          claim.due.get().getDate() - new Date().getDate(),
+        ).toBe(4)
+      }
     })
   })
 })
