@@ -16,6 +16,7 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
 
+import IncomeQuotaCommand from '@app/application/quota/IncomeQuotaCommand'
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
 import DateRangeRequest from '../request/dateRange/DateRangeRequest'
@@ -152,7 +153,10 @@ export default class QuotaController {
   @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
   @ApiNotFoundResponse({ description: 'Quota or company with the provided id doesn\'t exist' })
   public async income(@Body() request: QuotaIncomeRequest): Promise<QuotaResponse> {
+    const command = new IncomeQuotaCommand(request.amount, request.companyName, request.quotaId)
 
-    return {} as QuotaResponse
+    const quota: Quota = await this.commandBus.execute(command)
+
+    return QuotaResponse.fromEntity(quota)
   }
 }

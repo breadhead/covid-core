@@ -80,6 +80,7 @@ import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
+import IncomeQuotaHandler from './application/quota/IncomeQuotaHandler'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
@@ -89,6 +90,7 @@ const commandHandlers = [
   CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
   MoveToNextStatusHandler,
+  IncomeQuotaHandler,
 ]
 
 const signInProviders = [
