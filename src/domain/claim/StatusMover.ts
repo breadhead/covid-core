@@ -12,6 +12,7 @@ import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
 import ClaimRejectedEvent from './event/ClaimRejectedEvent'
 import DoctorAnswerEvent from './event/DoctorAnswerEvent'
+import DueDateUpdatedEvent from './event/DueDateUpdatedEvent'
 import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
@@ -103,10 +104,8 @@ export default class StatusMover {
     await this.em.save(claim)
 
     // Push events
-    const event = this.getEvent(claim)
-    if (event) {
-      this.eventEmitter.emit(event)
-    }
+    this.getEvents(claim)
+      .forEach((event) => this.eventEmitter.emit(event))
   }
 
   private setDue(claim: Claim, newStatus: ClaimStatus): void {
@@ -128,18 +127,21 @@ export default class StatusMover {
     return getNextStatus(claim)
   }
 
-  private getEvent(claim: Claim): Event | null {
-    switch (claim.status) {
-    case ClaimStatus.Denied:
-      return new ClaimRejectedEvent(claim)
-    case ClaimStatus.DeliveredToCustomer:
-      return new DoctorAnswerEvent(claim)
-    case ClaimStatus.QuestionnaireWaiting:
-      return new ShortClaimApprovedEvent(claim)
-    case ClaimStatus.QueueForQuota:
-      return new ShortClaimQueuedEvent(claim)
-    default:
-      return null
-    }
+  private getEvents(claim: Claim): Event[] {
+    const statusEvent = {
+      [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
+      [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
+      [ClaimStatus.QuestionnaireWaiting]: new ShortClaimApprovedEvent(claim),
+      [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
+    }[claim.status]
+
+    const dueDateEvents = Object
+      .keys(this.maxDurations)
+      .filter((key) => key === claim.status)
+      .map(() => new DueDateUpdatedEvent(claim))
+
+    const events = [statusEvent, ...dueDateEvents].filter(Boolean)
+
+    return events
   }
 }
