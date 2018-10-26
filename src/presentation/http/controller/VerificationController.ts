@@ -1,18 +1,11 @@
-import Message from '@app/domain/claim/Message.entity'
-import MessageRepository from '@app/domain/claim/MessageRepository'
-import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
-import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
-import {
-  ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse,
-  ApiForbiddenResponse, ApiGoneResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags,
-} from '@nestjs/swagger'
-import { InjectRepository } from '@nestjs/typeorm'
+import { Body, Controller, HttpCode, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger'
 
 import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand'
+import VerificateCommand from '@app/application/user/verification/VerificateCommand'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
+
 import SendRequest from '../request/verification/SendRequest'
 import VerificateRequest from '../request/verification/VerificateRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
@@ -25,7 +18,7 @@ import CurrentUser from './decorator/CurrentUser'
 export default class VerificationController {
   public constructor(
     private readonly commandBus: CommandBus,
-  ) {}
+  ) { }
 
   @Post('send')
   @HttpCode(200)
@@ -51,8 +44,12 @@ export default class VerificationController {
     @CurrentUser() user: TokenPayload,
     @Body() request: VerificateRequest,
   ): Promise<void> {
+    const { login } = user
+    const { code } = request
 
-    /* TODO: функционал верификации кода подтерждения */
+    await this.commandBus.execute(
+      new VerificateCommand(login, code),
+    )
 
     return
   }

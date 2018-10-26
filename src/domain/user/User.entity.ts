@@ -35,6 +35,8 @@ export default class User {
     return this.roles.includes(Role.Client)
   }
 
+  public get valid(): boolean { return this._valid }
+
   @Column((type) => Contacts)
   public _contacts: Contacts
 
@@ -44,11 +46,14 @@ export default class User {
   @Column((type) => NenaprasnoCabinetCredentials)
   private _nenaprasnoCabinetCredentials: NenaprasnoCabinetCredentials
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   private _verificationCode?: string
 
   @Column({ type: 'simple-array' })
   private _roles: Role[]
+
+  @Column({ default: false })
+  private _valid: boolean = false
 
   public constructor(login: string, contacts?: Contacts) {
     this.login = login
@@ -82,5 +87,9 @@ export default class User {
     }
 
     this._nenaprasnoCabinetCredentials = new NenaprasnoCabinetCredentials(cabinetId)
+  }
+
+  public becomeValide(): void {
+    this._valid = true
   }
 }
