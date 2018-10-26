@@ -38,8 +38,8 @@ export default class VerificationController {
 
   @Post('verificate')
   @HttpCode(200)
-  @ApiOkResponse({ description: 'write text' })
-  @ApiBadRequestResponse({ description: 'write text' })
+  @ApiOkResponse({ description: 'verificated' })
+  @ApiBadRequestResponse({ description: 'Invalid code' })
   public async verificate(
     @CurrentUser() user: TokenPayload,
     @Body() request: VerificateRequest,
