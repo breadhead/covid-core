@@ -17,6 +17,7 @@
   "dependencies": {
     "@breadhead/detil-ts": "^1.0.1",
     "@breadhead/nest-throwable-bus": "^1.0.5",
+    "@breadhead/red-sms-client": "^1.0.1",
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
     "@nestjs/cqrs": "^5.1.1",
@@ -26,6 +27,8 @@
     "@nestjs/typeorm": "^5.2.2",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.1",
+    "class-transformer": "^0.1.10",
+    "class-validator": "^0.9.1",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "inline-css": "^2.4.1",

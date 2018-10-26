@@ -38,6 +38,7 @@ import InternalSignInProvider from '@app/application/user/auth/providers/Interna
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
 import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
+import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -75,13 +76,15 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
+import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
+import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
   CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
   PostMessageHandler,
-  CreateUserFromCabinetHandler,
+  CreateUserFromCabinetHandler, SendVerificationHandler,
   PostFeedbackHandler,
   CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
@@ -158,6 +161,10 @@ const eventSubscribers = [
     {
       provide: EmailSender,
       useClass: NodemailerEmailSender,
+    },
+    {
+      provide: SmsSender,
+      useClass: RedSmsSender,
     },
     {
       provide: TemplateEngine,
