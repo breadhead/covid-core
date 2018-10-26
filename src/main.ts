@@ -1,9 +1,26 @@
 import { NestFactory } from '@nestjs/core'
-import * as cors from 'cors'
 import { join } from 'path'
 
 import { AppModule } from '@app/app.module'
+import corsMiddleware from '@app/corsMiddleware'
 import setupSwagger from '@app/infrastructure/swagger'
+
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  allowHeaders: [
+    'DNT',
+    'User-Agent',
+    'X-Requested-With',
+    'If-Modified-Since',
+    'Cache-Control',
+    'Content-Type',
+    'Range',
+    'Authorization',
+    'Cookie',
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -12,23 +29,7 @@ async function bootstrap() {
 
   app.useStaticAssets(join(__dirname, '..', 'public'))
 
-  const corsOptions = {
-    origin: '*',
-    credentials: true,
-    allowHeaders: [
-      'DNT',
-      'User-Agent',
-      'X-Requested-With',
-      'If-Modified-Since',
-      'Cache-Control',
-      'Content-Type',
-      'Range',
-      'Authorization',
-      'Cookie',
-    ],
-    methods: ['GET', 'POST', 'OPTIONS'],
-  }
-  app.use(cors(corsOptions))
+  app.use(corsMiddleware())
 
   await app.listen(3000)
 }
