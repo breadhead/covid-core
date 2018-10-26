@@ -38,7 +38,7 @@ export default class VerificationController {
 
   @Post('verificate')
   @HttpCode(200)
-  @ApiOkResponse({ description: 'verificated' })
+  @ApiOkResponse({ description: 'Verificated' })
   @ApiBadRequestResponse({ description: 'Invalid code' })
   public async verificate(
     @CurrentUser() user: TokenPayload,
