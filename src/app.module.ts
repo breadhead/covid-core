@@ -78,7 +78,7 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import FakeSmsSender from '@app/infrastructure/SmsSender/FakeSmsSender'
+import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
@@ -170,7 +170,7 @@ const eventSubscribers = [
     },
     {
       provide: SmsSender,
-      useClass: FakeSmsSender,
+      useClass: RedSmsSender,
     },
     {
       provide: TemplateEngine,
