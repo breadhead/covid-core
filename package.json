@@ -29,6 +29,7 @@
     "chalk": "^2.4.1",
     "class-transformer": "^0.1.10",
     "class-validator": "^0.9.1",
+    "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "inline-css": "^2.4.1",
     "lodash": "^4.17.11",

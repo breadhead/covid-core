@@ -1,5 +1,5 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
+import { HttpModule, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
@@ -14,7 +14,6 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import NewMessageSubscriber from '@app/application/claim/chat/NewMessageSubscriber'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
@@ -25,13 +24,15 @@ import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
-import NewFeedbackSubscriber from '@app/application/feedback/NewFeedbackSubscriber'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
+import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
+import BoardSubscriber from '@app/application/subscriber/BoardSubscriber'
+import NotifySubscriber from '@app/application/subscriber/NotifySubscriber'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
@@ -56,11 +57,8 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import ClaimRejectedSubscriber from '@app/application/claim/ClaimRejectedSubscriber'
-import DoctorAnswerSubscriber from '@app/application/claim/DoctorAnswerSubscriber'
-import ShortClaimApprovedSubscriber from '@app/application/claim/ShortClaimApprovedSubscriber'
-import ShortClaimQueuedSubscriber from '@app/application/claim/ShortClaimQueuedSubscriber'
-import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
+import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
+import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -105,12 +103,8 @@ const securityVoters = [
 ]
 
 const eventSubscribers = [
-  NewMessageSubscriber,
-  NewFeedbackSubscriber,
-  ShortClaimApprovedSubscriber,
-  ShortClaimQueuedSubscriber,
-  ClaimRejectedSubscriber,
-  DoctorAnswerSubscriber,
+  BoardSubscriber,
+  NotifySubscriber,
 ]
 
 @Module({
@@ -191,6 +185,10 @@ const eventSubscribers = [
     {
       provide: FileSaver,
       useClass: LocalFileSaver,
+    },
+    {
+      provide: BoardManager,
+      useClass: VoidBoardManager,
     },
     CommandBus,
     StatusMover,
