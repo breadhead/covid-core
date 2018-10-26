@@ -160,7 +160,7 @@ describe('StatusMover', () => {
       }
     })
 
-    test('should add due date for AtTheDoctor', async () => {
+    test('should add due date for DeliveredToCustomer', async () => {
       const claim = new Claim('1', applicant, user, 'theme')
       claim.changeStatus(ClaimStatus.AnswerValidation)
 
