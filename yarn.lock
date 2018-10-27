@@ -149,6 +149,12 @@
     eventemitter2 "^4.1.0"
     ws "^3.0.0"
 
+"@solid-soda/tslint-config@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@solid-soda/tslint-config/-/tslint-config-2.5.0.tgz#e947721009c686e2c3c41eb7c30d9678b1a943c4"
+  dependencies:
+    tslint-eslint-rules "^5.4.0"
+
 "@types/bcryptjs@^2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
@@ -5320,7 +5326,7 @@ tslint-eslint-rules@^5.4.0:
     tslib "1.9.0"
     tsutils "^3.0.0"
 
-tslint@5.11.0:
+tslint@^5.11.0:
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.11.0.tgz#98f30c02eae3cde7006201e4c33cb08b48581eed"
   dependencies:
