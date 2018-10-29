@@ -10,6 +10,7 @@ import { add } from '@app/infrastructure/utils/date'
 
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
+import ChangeStatusEvent from './event/ChangeStatusEvent'
 import ClaimRejectedEvent from './event/ClaimRejectedEvent'
 import DoctorAnswerEvent from './event/DoctorAnswerEvent'
 import DueDateUpdatedEvent from './event/DueDateUpdatedEvent'
@@ -128,19 +129,21 @@ export default class StatusMover {
   }
 
   private getEvents(claim: Claim): Event[] {
-    const statusEvent = {
+    const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
       [ClaimStatus.QuestionnaireWaiting]: new ShortClaimApprovedEvent(claim),
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
     }[claim.status]
 
+    const statusEvent = new ChangeStatusEvent(claim)
+
     const dueDateEvents = Object
       .keys(this.maxDurations)
       .filter((key) => key === claim.status)
       .map(() => new DueDateUpdatedEvent(claim))
 
-    const events = [statusEvent, ...dueDateEvents].filter(Boolean)
+    const events = [actionEvent, statusEvent, ...dueDateEvents].filter(Boolean)
 
     return events
   }
