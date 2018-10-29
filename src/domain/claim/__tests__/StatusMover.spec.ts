@@ -1,3 +1,5 @@
+import * as moment from 'moment'
+
 import StatusMover from '../StatusMover'
 
 import MockConfiguration from '../../../__mocks__/Configuration'
@@ -141,8 +143,8 @@ describe('StatusMover', () => {
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
         expect(
-          claim.due.get().getDate() - new Date().getDate(),
-        ).toBe(2)
+          moment(claim.due.get()).toNow(),
+        ).toBe('2 days ago')
       }
     })
 
@@ -155,8 +157,8 @@ describe('StatusMover', () => {
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
         expect(
-          claim.due.get().getDate() - new Date().getDate(),
-        ).toBe(3)
+          moment(claim.due.get()).toNow(),
+        ).toBe('3 days ago')
       }
     })
 
@@ -169,8 +171,8 @@ describe('StatusMover', () => {
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
         expect(
-          claim.due.get().getDate() - new Date().getDate(),
-        ).toBe(4)
+          moment(claim.due.get()).toNow(),
+        ).toBe('4 days ago')
       }
     })
   })
