@@ -51,17 +51,6 @@ export default class QuotaController {
     return quotas.map(QuotaResponse.fromEntity)
   }
 
-  @Get(':id')
-  @Roles(Role.CaseManager, Role.Admin)
-  @ApiOperation({ title: 'Quota' })
-  @ApiOkResponse({ description: 'Success', type: QuotaResponse })
-  @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
-  public async show(@Param('id') id: string): Promise<QuotaResponse> {
-    const quota = await this.quotaRepo.getOne(id)
-
-    return QuotaResponse.fromEntity(quota)
-  }
-
   @Get('history')
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Transaction\'s history' })
@@ -72,6 +61,17 @@ export default class QuotaController {
     const history = await this.historian.getHistory(request.from, request.to)
 
     return history.map(TransactionRepsonse.fromEntity)
+  }
+
+  @Get(':id')
+  @Roles(Role.CaseManager, Role.Admin)
+  @ApiOperation({ title: 'Quota' })
+  @ApiOkResponse({ description: 'Success', type: QuotaResponse })
+  @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
+  public async show(@Param('id') id: string): Promise<QuotaResponse> {
+    const quota = await this.quotaRepo.getOne(id)
+
+    return QuotaResponse.fromEntity(quota)
   }
 
   @Post('transfer')
