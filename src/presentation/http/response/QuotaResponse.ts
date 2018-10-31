@@ -15,6 +15,7 @@ export default class QuotaResponse {
       constraints: quota.constraints,
       publicCompany: quota.publicCompany,
       comment: quota.comment,
+      createdAt: quota.createdAt,
     } as QuotaResponse
   }
 
@@ -41,4 +42,7 @@ export default class QuotaResponse {
 
   @ApiModelProperty({ example: 'Любой контейнер' })
   public readonly comment: string
+
+  @ApiModelProperty({ example: new Date() })
+  public readonly createdAt: Date
 }
