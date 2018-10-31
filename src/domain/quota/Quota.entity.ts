@@ -15,6 +15,9 @@ export default class Quota {
   @PrimaryColumn()
   public readonly id: string
 
+  @Column({ default: '2018-10-21 13:00:00' })
+  public readonly createdAt: Date
+
   public get name() { return this._name }
 
   public get balance() { return this._balance }
@@ -66,6 +69,7 @@ export default class Quota {
     corporate = false,
     publicCompany = true,
     comment = '',
+    createdAt = new Date(),
   ) {
     this.id = id
     this._name = name
@@ -75,6 +79,7 @@ export default class Quota {
     this._company = company
     this._publicCompany = publicCompany
     this._comment = comment
+    this.createdAt = createdAt
   }
 
   public decreaseBalance(diff: number): void {
