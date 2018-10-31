@@ -16,6 +16,7 @@ export default class QuotaResponse {
       publicCompany: quota.publicCompany,
       comment: quota.comment,
       createdAt: quota.createdAt,
+      summarizedCount: 2000,
     } as QuotaResponse
   }
 
@@ -45,4 +46,7 @@ export default class QuotaResponse {
 
   @ApiModelProperty({ example: new Date() })
   public readonly createdAt: Date
+
+  @ApiModelProperty({ example: 2000 })
+  public readonly summarizedCount: number
 }
