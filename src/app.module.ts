@@ -57,6 +57,7 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import IncomeQuotaHandler from '@app/application/quota/IncomeQuotaHandler'
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
@@ -89,6 +90,7 @@ const commandHandlers = [
   CreateClaimHandler, CloseClaimHandler,
   CreateDraftHandler, EditDraftHandler,
   MoveToNextStatusHandler,
+  IncomeQuotaHandler,
 ]
 
 const signInProviders = [

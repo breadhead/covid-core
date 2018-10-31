@@ -16,11 +16,13 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
 
+import IncomeQuotaCommand from '@app/application/quota/IncomeQuotaCommand'
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
 import DateRangeRequest from '../request/dateRange/DateRangeRequest'
 import QuotaCreateRequest from '../request/quota/QuotaCreateRequest'
 import QuotaEditRequest from '../request/quota/QuotaEditRequest'
+import QuotaIncomeRequest from '../request/quota/QuotaIncomeRequest'
 import QuotaTransferRequest from '../request/quota/QuotaTransferRequest'
 import QuotaResponse from '../response/QuotaResponse'
 import QuotaTransferResponse from '../response/QuotaTransferResponse'
@@ -139,6 +141,21 @@ export default class QuotaController {
         publicCompany, comment,
       ),
     )
+
+    return QuotaResponse.fromEntity(quota)
+  }
+
+  @Post('income')
+  @HttpCode(200)
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Increase balance of quota' })
+  @ApiOkResponse({ description: 'Balance increased' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn\'t provided' })
+  @ApiNotFoundResponse({ description: 'Quota or company with the provided id doesn\'t exist' })
+  public async income(@Body() request: QuotaIncomeRequest): Promise<QuotaResponse> {
+    const command = new IncomeQuotaCommand(request.amount, request.quotaId)
+
+    const quota: Quota = await this.commandBus.execute(command)
 
     return QuotaResponse.fromEntity(quota)
   }
