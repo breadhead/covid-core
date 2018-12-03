@@ -100,7 +100,6 @@ workflows:
             branches:
               only: 
                 - master
-    jobs:
       - dev:
           filters:
             branches:
