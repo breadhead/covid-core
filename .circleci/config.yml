@@ -56,7 +56,7 @@ jobs:
       - run:
           name: Setup Env
           command: |
-            echo 'export IMAGE_TAG=${VARIABLE:-latest}' >> $BASH_ENV
+            echo 'export IMAGE_TAG=${VERSION:-latest}' >> $BASH_ENV
             echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV 
       - run:
           name: Build and push Docker image
