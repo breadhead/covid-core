@@ -66,6 +66,19 @@ jobs:
             docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
             docker push breadheadhub/$IMAGE_NAME:$IMAGE_TAG
 
+  dev:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: ssh $SSH_USER@$SSH_HOST "cd /home/cloud-user/www/oncohelp && \
+            sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" && \
+            sudo docker pull breadheadhub/$IMAGE_NAME && \
+            sudo docker logout && \
+            sudo docker-compose down && \
+            sudo docker-compose up -d"
+
 workflows:
   version: 2
   check-pr:
@@ -83,6 +96,12 @@ workflows:
   deploy-dev:
     jobs:
       - push:
+          filters:
+            branches:
+              only: 
+                - master
+    jobs:
+      - dev:
           filters:
             branches:
               only: 
