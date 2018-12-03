@@ -49,12 +49,16 @@ jobs:
       - image: docker:17.05.0-ce-git
 
     working_directory: ~/repo
-    environment:
-      IMAGE_TAG: ${VERSION:-latest}
-      IMAGE_NAME: oncohelp-core
+
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Setup Env
+          command: |
+            echo 'export IMAGE_TAG=${VERSION:-latest}' >> $BASH_ENV
+            echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV 
+            source $BASH_ENV
       - run:
           name: Build and push Docker image
           command: |
