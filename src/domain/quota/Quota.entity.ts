@@ -5,9 +5,9 @@ import InvariantViolationException from '../exception/InvariantViolationExceptio
 import defineType from './utils/defineType'
 
 export enum QuotaType {
-  Common = 'Common',
-  Corporate = 'Corporate',
-  Special = 'Special',
+  Common = 'Общая',
+  Corporate = 'Корпоративная',
+  Special = 'Специальная',
 }
 
 @Entity()
