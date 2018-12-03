@@ -56,7 +56,6 @@ jobs:
       - run:
           name: Setup Env
           command: |
-            if ()
             echo 'export IMAGE_TAG=${VARIABLE:-latest}' >> $BASH_ENV
             echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV 
       - run:
