@@ -64,7 +64,7 @@ jobs:
             source $BASH_ENV
             docker build -t breadhead/$IMAGE_NAME:$IMAGE_TAG .
             docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-            docker push breadhead/$IMAGE_NAME:$IMAGE_TAG
+            docker push breadheadhub/$IMAGE_NAME:$IMAGE_TAG
 
 workflows:
   version: 2
