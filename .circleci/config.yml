@@ -72,11 +72,11 @@ jobs:
     steps:
       - run:
           name: Deploy Over SSH
-          command: ssh $SSH_USER@$SSH_HOST "cd /home/cloud-user/www/oncohelp && \
-            sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" && \
-            sudo docker pull breadheadhub/$IMAGE_NAME && \
-            sudo docker logout && \
-            sudo docker-compose down && \
+          command: ssh $SSH_USER@$SSH_HOST "cd /home/cloud-user/www/oncohelp &&
+            sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" &&
+            sudo docker pull breadheadhub/$IMAGE_NAME &&
+            sudo docker logout &&
+            sudo docker-compose down &&
             sudo docker-compose up -d"
 
 workflows:
