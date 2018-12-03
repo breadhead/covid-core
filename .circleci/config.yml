@@ -63,7 +63,7 @@ jobs:
           command: |
             source $BASH_ENV
             docker build -t breadhead/$IMAGE_NAME:$IMAGE_TAG .
-            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
             docker push breadhead/$IMAGE_NAME:$IMAGE_TAG
 
 workflows:
