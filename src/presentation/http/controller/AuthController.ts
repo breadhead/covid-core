@@ -6,6 +6,8 @@ import {
 
 import Authenticator from '@app/application/user/auth/Authenticator'
 
+import UserRepository from '@app/domain/user/UserRepository'
+import { InjectRepository } from '@nestjs/typeorm'
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
 import LoginRequest from '../request/LoginRequest'
 import RegistrationRequest from '../request/RegistrationRequest'
@@ -16,6 +18,7 @@ import TokenResponse from '../response/TokenResponse'
 @ApiUseTags('auth')
 export default class AuthController {
   public constructor(
+    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
   ) { }
 
@@ -37,11 +40,15 @@ export default class AuthController {
   @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   public async login(@Body() loginRequest: LoginRequest): Promise<TokenResponse> {
-    const token = await this.authenticator.signIn(
-      loginRequest.login,
-      loginRequest.password,
-    )
+    const { login, password } = loginRequest
 
-    return new TokenResponse(token)
+    const [token, user] = await Promise.all([
+      await this.authenticator.signIn(login, password),
+      await this.userRepo.getOne(login),
+    ])
+
+    const roles = user.roles.map((role) => role.toString())
+
+    return new TokenResponse(token, roles)
   }
 }
