@@ -16,6 +16,7 @@ export default class CompanyResponse {
       name: company.name,
       logo: company.logo,
       site: company.site,
+      comment: company.comment,
     } as CompanyResponse
   }
 
@@ -37,4 +38,7 @@ export default class CompanyResponse {
 
   @ApiModelProperty({ example: exampleCompanyResponse.donation, required: false })
   public readonly donation?: number
+
+  @ApiModelProperty({ example: 'Компании коммент', required: false })
+  public readonly comment?: string
 }

@@ -41,7 +41,7 @@ export default class QuotaResponse {
   @ApiModelProperty({ example: true })
   public readonly publicCompany: boolean
 
-  @ApiModelProperty({ example: 'Любой контейнер' })
+  @ApiModelProperty({ example: 'Любой коммент' })
   public readonly comment: string
 
   @ApiModelProperty({ example: new Date() })
