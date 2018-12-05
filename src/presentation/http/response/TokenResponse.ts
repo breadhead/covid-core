@@ -6,8 +6,10 @@ const exampleToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1Njg4MTE5O
 export default class TokenResponse {
   @ApiModelProperty({ example: exampleToken })
   public readonly token: string
+  public readonly roles: string[]
 
-  public constructor(token: string) {
+  public constructor(token: string, roles: string[] = []) {
     this.token = token
+    this.roles = roles
   }
 }
