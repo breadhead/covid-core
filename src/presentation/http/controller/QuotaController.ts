@@ -104,7 +104,7 @@ export default class QuotaController {
     const { count } = request
     const {
       name, constraints, corporate,
-      companyName, companyLogoUrl, companyLink,
+      companyName, companyLogoUrl, companyLink, companyComment,
       publicCompany, comment,
     } = request.quota
 
@@ -112,7 +112,7 @@ export default class QuotaController {
       new CreateQuotaCommand(
         name, count, constraints, corporate,
         companyName, companyLogoUrl, companyLink,
-        publicCompany, comment,
+        publicCompany, companyComment, comment,
       ),
     )
 

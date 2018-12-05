@@ -9,6 +9,7 @@ export const exampleQuotaRequest = {
   corporate: true,
   publicCompany: true,
   comment: 'Любой коментарий',
+  companyComment: 'Комментарий для компании',
 }
 
 export default class QuotaRequest {
@@ -32,6 +33,9 @@ export default class QuotaRequest {
 
   @ApiModelProperty({ example: exampleQuotaRequest.publicCompany, default: false, required: false })
   public readonly publicCompany?: boolean = false
+
+  @ApiModelProperty({ example: exampleQuotaRequest.companyComment, required: false })
+  public readonly companyComment?: string
 
   @ApiModelProperty({ example: exampleQuotaRequest.comment, required: false })
   public readonly comment?: string
