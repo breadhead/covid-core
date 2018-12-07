@@ -10,5 +10,5 @@ export default class CompanyData {
   public readonly name: string
 
   @ApiModelProperty({ example: exampleCompanyData.position })
-  public readonly  position: string
+  public readonly position: string
 }

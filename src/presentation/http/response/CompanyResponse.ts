@@ -36,7 +36,10 @@ export default class CompanyResponse {
   @ApiModelProperty({ example: exampleCompanyResponse.site, required: false })
   public readonly site?: string
 
-  @ApiModelProperty({ example: exampleCompanyResponse.donation, required: false })
+  @ApiModelProperty({
+    example: exampleCompanyResponse.donation,
+    required: false,
+  })
   public readonly donation?: number
 
   @ApiModelProperty({ example: 'Компании коммент', required: false })

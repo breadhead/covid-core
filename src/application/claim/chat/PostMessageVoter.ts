@@ -8,14 +8,18 @@ import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import PostMessageCommand from './PostMessageCommand'
 
-export default class PostMessageVoter implements SecurityVoter<PostMessageCommand> {
+export default class PostMessageVoter
+  implements SecurityVoter<PostMessageCommand> {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
   ) {}
 
   public supports(attribute: Attribute, subject) {
-    return attribute === Attribute.Create && subject instanceof PostMessageCommand
+    return (
+      attribute === Attribute.Create && subject instanceof PostMessageCommand
+    )
   }
 
   public async voteOnAttribute(
@@ -23,7 +27,7 @@ export default class PostMessageVoter implements SecurityVoter<PostMessageComman
     { claimId }: PostMessageCommand,
     { login }: TokenPayload,
   ): Promise<boolean> {
-    const [ user, claim ] = await Promise.all([
+    const [user, claim] = await Promise.all([
       this.userRepo.getOne(login),
       this.claimRepo.getOne(claimId),
     ])

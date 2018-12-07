@@ -7,25 +7,31 @@ import { EntityManager } from 'typeorm'
 import NewFeedbackEvent from '@app/domain/feedback/event/NewFeedbackEvent'
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
-import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
+import IdGenerator, {
+  IdGenerator as IdGeneratorSymbol,
+} from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import PostFeedbackCommand from './PostFeedbackCommand'
 
 @CommandHandler(PostFeedbackCommand)
-export default class PostFeedbackHandler implements ICommandHandler<PostFeedbackCommand> {
+export default class PostFeedbackHandler
+  implements ICommandHandler<PostFeedbackCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+  ) {}
 
-  public async execute(command: PostFeedbackCommand, resolve: (value?) => void) {
+  public async execute(
+    command: PostFeedbackCommand,
+    resolve: (value?) => void,
+  ) {
     const { name, content, theme, email, phone } = command
 
     const id = this.idGenerator.get()
     const date = new Date()
 
-    const feedback =  await this.em.save(
+    const feedback = await this.em.save(
       new Feedback(id, date, name, content, theme, email, phone),
     )
 

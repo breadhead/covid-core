@@ -4,6 +4,4 @@ export default interface FileSaver {
 
 const FileSaver = Symbol('FileSaver')
 
-export {
-  FileSaver,
-}
+export { FileSaver }

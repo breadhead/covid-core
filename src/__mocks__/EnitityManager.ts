@@ -2,7 +2,7 @@ export const mockSave = jest.fn()
 
 const mock = jest.fn().mockImplementation(() => ({
   save: mockSave,
-  transaction: (callback) => {
+  transaction: callback => {
     return callback(new mock())
   },
 }))

@@ -16,22 +16,24 @@ export default class LocalFileSaver implements FileSaver {
 
   public constructor(logger: Logger) {
     this.writeFile = (path, buffer) =>
-      promisify(writeFile)(`${PUBLIC_DIR}/${path}`, buffer)
-        .then(
-          () => logger.log(`Upload "${path}" successfully`),
-          (e) => {
-            logger.error(`Upload "${path}" failed`)
-            throw e
-          },
-        )
+      promisify(writeFile)(`${PUBLIC_DIR}/${path}`, buffer).then(
+        () => logger.log(`Upload "${path}" successfully`),
+        e => {
+          logger.error(`Upload "${path}" failed`)
+          throw e
+        },
+      )
 
-    this.ensureDir = (path) =>
-      promisify(mkdir)(`${PUBLIC_DIR}/${path}`)
-        .catch(() => { /* pass */ })
+    this.ensureDir = path =>
+      promisify(mkdir)(`${PUBLIC_DIR}/${path}`).catch(() => {
+        /* pass */
+      })
   }
 
   public async save(buffer: Buffer, originalName: string) {
-    const fileName = `upload/${this.getName(buffer)}.${this.getExtension(originalName)}`
+    const fileName = `upload/${this.getName(buffer)}.${this.getExtension(
+      originalName,
+    )}`
 
     await this.ensureDir('upload')
     await this.writeFile(fileName, buffer)

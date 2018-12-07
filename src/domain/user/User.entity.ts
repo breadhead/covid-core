@@ -20,30 +20,40 @@ export default class User {
       : new None()
   }
 
-  public get nanprasnoCabinetCredentials(): Option<NenaprasnoCabinetCredentials> {
+  public get nanprasnoCabinetCredentials(): Option<
+    NenaprasnoCabinetCredentials
+  > {
     return this._nenaprasnoCabinetCredentials.id
       ? new Some(this._nenaprasnoCabinetCredentials)
       : new None()
   }
 
-  public get conatcts(): Contacts { return this._contacts }
-  public get verificationCode(): string | null { return this._verificationCode }
+  public get conatcts(): Contacts {
+    return this._contacts
+  }
+  public get verificationCode(): string | null {
+    return this._verificationCode
+  }
 
-  public get roles(): Role[] { return this._roles }
+  public get roles(): Role[] {
+    return this._roles
+  }
 
   public get isClient(): boolean {
     return this.roles.includes(Role.Client)
   }
 
-  public get valid(): boolean { return this._valid }
+  public get valid(): boolean {
+    return this._valid
+  }
 
-  @Column((type) => Contacts)
+  @Column(type => Contacts)
   public _contacts: Contacts
 
-  @Column((type) => PasswordCredentials)
+  @Column(type => PasswordCredentials)
   private _passwordCredentials: PasswordCredentials
 
-  @Column((type) => NenaprasnoCabinetCredentials)
+  @Column(type => NenaprasnoCabinetCredentials)
   private _nenaprasnoCabinetCredentials: NenaprasnoCabinetCredentials
 
   @Column({ nullable: true })
@@ -69,13 +79,19 @@ export default class User {
     this._contacts = new Contacts({ email, phone })
   }
 
-  public async changePassword(raw: string, encoder: PasswordEncoder): Promise<void> {
+  public async changePassword(
+    raw: string,
+    encoder: PasswordEncoder,
+  ): Promise<void> {
     const password = await encoder.encodePassword(raw)
 
     this._passwordCredentials = new PasswordCredentials(password)
   }
 
-  public async changeVerificationCode(raw: string, encoder: PasswordEncoder): Promise<void> {
+  public async changeVerificationCode(
+    raw: string,
+    encoder: PasswordEncoder,
+  ): Promise<void> {
     const code = await encoder.encodePassword(raw)
 
     this._verificationCode = code
@@ -83,10 +99,15 @@ export default class User {
 
   public bindToNenaprasnoCabinet(cabinetId: number): void {
     if (this._nenaprasnoCabinetCredentials.id) {
-      throw new InvariantViolationException(User.name, 'Try to rebind nenaprasno cabinet')
+      throw new InvariantViolationException(
+        User.name,
+        'Try to rebind nenaprasno cabinet',
+      )
     }
 
-    this._nenaprasnoCabinetCredentials = new NenaprasnoCabinetCredentials(cabinetId)
+    this._nenaprasnoCabinetCredentials = new NenaprasnoCabinetCredentials(
+      cabinetId,
+    )
   }
 
   public becomeValide(): void {

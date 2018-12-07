@@ -6,7 +6,5 @@ export const NAME = 'claim/claim-rejected-event'
 export default class ClaimRejectedEvent implements Event<Claim> {
   public readonly name = NAME
 
-  public constructor(
-    public readonly payload: Claim,
-  ) { }
+  public constructor(public readonly payload: Claim) {}
 }

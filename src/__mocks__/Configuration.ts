@@ -3,9 +3,7 @@ import { Option } from 'tsoption'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 
 export default class MockConfiguration extends Configuration {
-  public constructor(
-    private readonly values: { [key: string]: string },
-  ) {
+  public constructor(private readonly values: { [key: string]: string }) {
     super()
   }
 

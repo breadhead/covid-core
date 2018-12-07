@@ -4,6 +4,4 @@ export default interface Monitor {
 
 const Monitor = Symbol('Monitor')
 
-export {
-  Monitor,
-}
+export { Monitor }

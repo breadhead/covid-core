@@ -4,7 +4,8 @@ import Quota from '../../../quota/Quota.entity'
 
 import incomesToDonators from '../incomesToDonators'
 
-const createMockQuota = (company: Company) => new Quota('1', 'mock quota', [], company)
+const createMockQuota = (company: Company) =>
+  new Quota('1', 'mock quota', [], company)
 
 describe('incomesToDonators', () => {
   test('should return empty array for empty history', () => {
@@ -14,29 +15,23 @@ describe('incomesToDonators', () => {
   })
 
   test('should return donators with total amount according to 1 transaction', () => {
-    const history = [new Income(
-      createMockQuota(new Company('Сбербанк')),
-      100, new Date(),
-    )]
+    const history = [
+      new Income(createMockQuota(new Company('Сбербанк')), 100, new Date()),
+    ]
 
     const donators = incomesToDonators(history)
 
-    expect(
-      donators.reduce((prev, cur) => prev + cur.donation, 0),
-    ).toEqual(100)
+    expect(donators.reduce((prev, cur) => prev + cur.donation, 0)).toEqual(100)
   })
 
   test('should return donators with total amount according to many transaction', () => {
-    const history = [new Income(
-      createMockQuota(new Company('Сбербанк')),
-      100, new Date(),
-    )]
+    const history = [
+      new Income(createMockQuota(new Company('Сбербанк')), 100, new Date()),
+    ]
 
     const donators = incomesToDonators(history)
 
-    expect(
-      donators.reduce((prev, cur) => prev + cur.donation, 0),
-    ).toEqual(100)
+    expect(donators.reduce((prev, cur) => prev + cur.donation, 0)).toEqual(100)
   })
 
   test('should return one donators for one transaction', () => {
@@ -50,9 +45,7 @@ describe('incomesToDonators', () => {
 
     const donators = incomesToDonators(history)
 
-    expect(
-      donators.reduce((prev, cur) => prev + cur.donation, 0),
-    ).toEqual(450)
+    expect(donators.reduce((prev, cur) => prev + cur.donation, 0)).toEqual(450)
   })
 
   test('should return one donators for many transaction from one company', () => {

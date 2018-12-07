@@ -20,13 +20,15 @@ export default class EventEmitter {
 
   public register(subscriberFunctions: Array<Type<any>>) {
     subscriberFunctions
-      .map((subcriberFunction) => this.moduleRef.get(subcriberFunction) as EventSubscriber)
-      .map((subscriber) => subscriber.subscribedEvents())
+      .map(
+        subcriberFunction =>
+          this.moduleRef.get(subcriberFunction) as EventSubscriber,
+      )
+      .map(subscriber => subscriber.subscribedEvents())
       .reduce((cur, prev) => [...cur, ...prev], []) // flatten
-      .forEach((handlerMap) => this.emitter.on(
-        handlerMap.key,
-        handlerMap.handler,
-      ))
+      .forEach(handlerMap =>
+        this.emitter.on(handlerMap.key, handlerMap.handler),
+      )
   }
 
   public emit<Payload = any>(event: Event<Payload>) {

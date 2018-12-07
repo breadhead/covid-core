@@ -8,15 +8,17 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import { InjectRepository } from '@nestjs/typeorm'
 
 @CommandHandler(IncomeQuotaCommand)
-export default class IncomeQuotaHandler implements ICommandHandler<IncomeQuotaCommand> {
+export default class IncomeQuotaHandler
+  implements ICommandHandler<IncomeQuotaCommand> {
   public constructor(
-    @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
-    @InjectRepository(CompanyRepository) private readonly companyRepo: CompanyRepository,
+    @InjectRepository(QuotaRepository)
+    private readonly quotaRepo: QuotaRepository,
+    @InjectRepository(CompanyRepository)
+    private readonly companyRepo: CompanyRepository,
     private readonly accountant: Accountant,
-  ) { }
+  ) {}
 
   public async execute(command: IncomeQuotaCommand, resolve: (value?) => void) {
-
     const quota = await this.quotaRepo.getOne(command.quotaId)
 
     await this.accountant.income(quota, command.amount)

@@ -14,8 +14,8 @@ export default class NenaprasnoCabinetClient {
 
   /** @returns nenaprasnoUserId */
   public signIn(login: string, password: string): Promise<number | null> {
-    return this.request('auth/sign-in', { login , password })
-      .then((response) => Number(response.data))
+    return this.request('auth/sign-in', { login, password })
+      .then(response => Number(response.data))
       .catch(() => null)
   }
 
@@ -24,9 +24,10 @@ export default class NenaprasnoCabinetClient {
       .get('NENAPRASNO_CABINET_URL')
       .getOrElse('https://cabinet.nenaprasno.ru')
 
-    return this.http.post(`${nenaprasnoCabinetUrl}/external/${suffix}`, data)
+    return this.http
+      .post(`${nenaprasnoCabinetUrl}/external/${suffix}`, data)
       .toPromise()
-      .catch((e) => {
+      .catch(e => {
         this.logger.error('Nenaprasno cabinet returns error')
         throw e
       })

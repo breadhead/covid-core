@@ -1,5 +1,10 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { HttpModule, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import {
+  HttpModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common'
 import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
@@ -36,7 +41,9 @@ import NotifySubscriber from '@app/application/subscriber/NotifySubscriber'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
-import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
+import SignInProvider, {
+  SignInProviders,
+} from '@app/application/user/auth/providers/SignInProvider'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 
@@ -83,12 +90,18 @@ import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngin
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
+  CreateQuotaHandler,
+  TransferQuotaHandler,
+  EditQuotaHandler,
+  BindQuotaHandler,
   PostMessageHandler,
-  CreateUserFromCabinetHandler, SendVerificationHandler,
+  CreateUserFromCabinetHandler,
+  SendVerificationHandler,
   PostFeedbackHandler,
-  CreateClaimHandler, CloseClaimHandler,
-  CreateDraftHandler, EditDraftHandler,
+  CreateClaimHandler,
+  CloseClaimHandler,
+  CreateDraftHandler,
+  EditDraftHandler,
   MoveToNextStatusHandler,
   IncomeQuotaHandler,
 ]
@@ -101,13 +114,11 @@ const signInProviders = [
 const securityVoters = [
   PostMessageVoter,
   DraftVoter,
-  ShowClaimVoter, ShowChatVoter,
+  ShowClaimVoter,
+  ShowChatVoter,
 ]
 
-const eventSubscribers = [
-  BoardSubscriber,
-  NotifySubscriber,
-]
+const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
   imports: [
@@ -125,18 +136,22 @@ const eventSubscribers = [
       useClass: DbOptionsFactory,
     }),
     TypeOrmModule.forFeature([
-      Quota, QuotaRepository,
-      Company, CompanyRepository,
-      Message, MessageRepository,
-      Claim, ClaimRepository,
-      User, UserRepository,
-      Draft, DraftRepository,
+      Quota,
+      QuotaRepository,
+      Company,
+      CompanyRepository,
+      Message,
+      MessageRepository,
+      Claim,
+      ClaimRepository,
+      User,
+      UserRepository,
+      Draft,
+      DraftRepository,
     ]),
     HttpModule,
   ],
-  controllers: [
-    ...Object.values(httpControllers),
-  ],
+  controllers: [...Object.values(httpControllers)],
   providers: [
     ...httpFilters,
     ...commandHandlers,
@@ -211,7 +226,7 @@ export class AppModule implements NestModule {
     private readonly command$: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+  ) {}
 
   public onModuleInit() {
     this.command$.setModuleRef(this.moduleRef)

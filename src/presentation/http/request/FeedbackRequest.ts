@@ -10,7 +10,10 @@ export default class FeedbackRequest {
   @ApiModelProperty({ example: '89087652763', required: false })
   public readonly phone?: string
 
-  @ApiModelProperty({ example: 'Здравствуйте, у меня вопрос!', required: false })
+  @ApiModelProperty({
+    example: 'Здравствуйте, у меня вопрос!',
+    required: false,
+  })
   public readonly theme?: string
 
   @ApiModelProperty({ example: 'Lorem ipsum dolor sit amet' })

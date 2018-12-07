@@ -25,7 +25,7 @@ export default class ShortClaimData {
     } as PersonalData
 
     const company = claim.corporateInfo
-      .map((info) => ({
+      .map(info => ({
         name: info.name,
         position: info.position,
       }))

@@ -1,15 +1,23 @@
 import { Inject } from '@nestjs/common'
 
-import ChangeStatusEvent, { NAME as ChangeStatusName } from '@app/domain/claim/event/ChangeStatusEvent'
-import DueDateUpdatedEvent, { NAME as DueDateUpdatedName } from '@app/domain/claim/event/DueDateUpdatedEvent'
-import NewMessageEvent, { NAME as NewMessageName } from '@app/domain/claim/event/NewMessageEvent'
-import BoardManager, { BoardManager as BoardManagerSymbol } from '@app/infrastructure/BoardManager/BoardManager'
+import ChangeStatusEvent, {
+  NAME as ChangeStatusName,
+} from '@app/domain/claim/event/ChangeStatusEvent'
+import DueDateUpdatedEvent, {
+  NAME as DueDateUpdatedName,
+} from '@app/domain/claim/event/DueDateUpdatedEvent'
+import NewMessageEvent, {
+  NAME as NewMessageName,
+} from '@app/domain/claim/event/NewMessageEvent'
+import BoardManager, {
+  BoardManager as BoardManagerSymbol,
+} from '@app/infrastructure/BoardManager/BoardManager'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
     @Inject(BoardManagerSymbol) private readonly board: BoardManager,
-  ) { }
+  ) {}
 
   public subscribedEvents() {
     return [

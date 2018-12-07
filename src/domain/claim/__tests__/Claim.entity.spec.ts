@@ -32,9 +32,7 @@ describe('Claim', () => {
 
       c.bindQuota(oldQ)
 
-      expect(
-        () => c.bindQuota(newQ),
-      ).toThrow(InvariantViolationException)
+      expect(() => c.bindQuota(newQ)).toThrow(InvariantViolationException)
     })
   })
 
@@ -53,9 +51,7 @@ describe('Claim', () => {
     test('should throw excaption ig try to unbind empty quota', () => {
       const c = new Claim('1', applicant, user, 'theme')
 
-      expect(
-        () => c.unbindQuota(),
-      ).toThrow(InvariantViolationException)
+      expect(() => c.unbindQuota()).toThrow(InvariantViolationException)
     })
   })
 })

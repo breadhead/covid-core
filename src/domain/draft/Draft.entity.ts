@@ -7,9 +7,11 @@ export default class Draft {
   @PrimaryColumn()
   public readonly id: string
 
-  public get body() { return this._body }
+  public get body() {
+    return this._body
+  }
 
-  @ManyToOne((type) => User, { eager: true })
+  @ManyToOne(type => User, { eager: true })
   @JoinColumn()
   public readonly author: User
 

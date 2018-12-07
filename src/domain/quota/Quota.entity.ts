@@ -18,11 +18,17 @@ export default class Quota {
   @Column({ default: '2018-10-21 13:00:00' })
   public readonly createdAt: Date
 
-  public get name() { return this._name }
+  public get name() {
+    return this._name
+  }
 
-  public get balance() { return this._balance }
+  public get balance() {
+    return this._balance
+  }
 
-  public get publicCompany() { return this._publicCompany }
+  public get publicCompany() {
+    return this._publicCompany
+  }
 
   public get type() {
     return defineType({
@@ -31,16 +37,24 @@ export default class Quota {
     }) as QuotaType
   }
 
-  public get constraints() { return this._constraints }
+  public get constraints() {
+    return this._constraints
+  }
 
-  public get corporate() { return this._corporate }
+  public get corporate() {
+    return this._corporate
+  }
 
-  public get comment() { return this._comment }
+  public get comment() {
+    return this._comment
+  }
 
-  public get company() { return this._company }
+  public get company() {
+    return this._company
+  }
 
   @JoinColumn()
-  @ManyToOne((type) => Company, { eager: true })
+  @ManyToOne(type => Company, { eager: true })
   private _company?: Company
 
   @Column()
@@ -84,7 +98,10 @@ export default class Quota {
 
   public decreaseBalance(diff: number): void {
     if (diff > this._balance) {
-      throw new InvariantViolationException(Quota.name, 'Balance must be positive')
+      throw new InvariantViolationException(
+        Quota.name,
+        'Balance must be positive',
+      )
     }
 
     this._balance = this._balance - diff

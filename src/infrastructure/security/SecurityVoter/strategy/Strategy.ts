@@ -6,8 +6,6 @@ enum Strategy {
   Unanimous = 'unanimous',
 }
 
-export {
-  StrategyType,
-}
+export { StrategyType }
 
 export default Strategy

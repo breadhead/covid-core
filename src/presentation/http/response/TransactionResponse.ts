@@ -31,24 +31,29 @@ export default class TransactionRepsonse {
   @ApiModelProperty({ example: new Date() })
   public readonly date: Date
 
-  @ApiModelProperty({ example: TransactionKind.Income, enum: Object.values(TransactionKind) })
+  @ApiModelProperty({
+    example: TransactionKind.Income,
+    enum: Object.values(TransactionKind),
+  })
   public readonly kind: TransactionKind
 }
 
-const fromTransfer = (transfer: Transfer) => ({
-  from: transfer.source.name,
-  to: transfer.target.name,
-  amount: transfer.amount,
-  date: transfer.date,
-  kind: TransactionKind.Transfer,
-} as TransactionRepsonse)
+const fromTransfer = (transfer: Transfer) =>
+  ({
+    from: transfer.source.name,
+    to: transfer.target.name,
+    amount: transfer.amount,
+    date: transfer.date,
+    kind: TransactionKind.Transfer,
+  } as TransactionRepsonse)
 
 const DEFAULT_PAYER = 'Unknown'
 
-const fromIncome = (income: Income) => ({
-  from: income.payer ? income.payer.name : DEFAULT_PAYER,
-  to: income.target.name,
-  amount: income.amount,
-  date: income.date,
-  kind: TransactionKind.Income,
-} as TransactionRepsonse)
+const fromIncome = (income: Income) =>
+  ({
+    from: income.payer ? income.payer.name : DEFAULT_PAYER,
+    to: income.target.name,
+    amount: income.amount,
+    date: income.date,
+    kind: TransactionKind.Income,
+  } as TransactionRepsonse)

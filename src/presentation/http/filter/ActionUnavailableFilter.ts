@@ -9,22 +9,16 @@ const HTTP_STATUS = 410
 
 @Catch(ActionUnavailableException)
 export default class ActionUnavailableFilter implements ExceptionFilter {
-  public constructor(
-    private readonly logger: Logger,
-  ) {}
+  public constructor(private readonly logger: Logger) {}
 
   public catch(exception: ActionUnavailableException, host: ArgumentsHost) {
-    const res = host
-      .switchToHttp()
-      .getResponse()
+    const res = host.switchToHttp().getResponse()
 
-    res
-      .status(HTTP_STATUS)
-      .json({
-        status: HTTP_STATUS,
-        message: exception.message,
-        cause: exception.cause,
-      })
+    res.status(HTTP_STATUS).json({
+      status: HTTP_STATUS,
+      message: exception.message,
+      cause: exception.cause,
+    })
 
     this.logger.log(responseToLog(res))
   }

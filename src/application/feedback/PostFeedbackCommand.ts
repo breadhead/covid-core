@@ -7,5 +7,5 @@ export default class PostFeedbackCommand implements ICommand {
     public readonly email?: string,
     public readonly phone?: string,
     public readonly theme?: string,
-  ) { }
+  ) {}
 }

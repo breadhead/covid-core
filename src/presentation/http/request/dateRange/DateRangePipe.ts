@@ -1,7 +1,11 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 import { flow } from 'lodash'
 
-import { endOfTheDay, previusMonth, startOfTheDay } from '@app/infrastructure/utils/date'
+import {
+  endOfTheDay,
+  previusMonth,
+  startOfTheDay,
+} from '@app/infrastructure/utils/date'
 
 import LogicException from '../../exception/LogicException'
 import DateRangeRequest from './DateRangeRequest'
@@ -17,8 +21,12 @@ const DEFAULT_FROM: Date = previusMonth(new Date())
 const DEFAULT_TO = new Date()
 
 @Injectable()
-export default class DateRandePipe implements PipeTransform<DateRangeQuery, DateRangeRequest> {
-  public transform(value: DateRangeQuery, metadata: ArgumentMetadata): DateRangeRequest {
+export default class DateRandePipe
+  implements PipeTransform<DateRangeQuery, DateRangeRequest> {
+  public transform(
+    value: DateRangeQuery,
+    metadata: ArgumentMetadata,
+  ): DateRangeRequest {
     if (!this.supports(metadata)) {
       throw new LogicException('Unexpected usage for DateRandePipe')
     }

@@ -16,7 +16,7 @@ export default class Authenticator {
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @Inject(SignInProviders) private readonly signInProviders: SignInProvider[],
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   public async signIn(login: string, credential: string): Promise<string> {
     let user: User | null

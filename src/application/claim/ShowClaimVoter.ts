@@ -15,7 +15,11 @@ export default class ShowClaimVoter implements SecurityVoter<Claim> {
     return attribute === Attribute.Show && subject instanceof Claim
   }
 
-  public async voteOnAttribute(_: Attribute, claim: Claim, { login }: TokenPayload): Promise<boolean> {
+  public async voteOnAttribute(
+    _: Attribute,
+    claim: Claim,
+    { login }: TokenPayload,
+  ): Promise<boolean> {
     const user = await this.userRepo.getOne(login)
 
     if (user.isClient) {

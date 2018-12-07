@@ -35,9 +35,7 @@ describe('StatusMover', () => {
     test('should change status to denied from any status', async () => {
       const claim = new Claim('1', applicant, user, 'theme')
 
-      const statuses = Object
-        .keys(ClaimStatus)
-        .map((key) => ClaimStatus[key])
+      const statuses = Object.keys(ClaimStatus).map(key => ClaimStatus[key])
 
       for (const status of statuses) {
         claim.changeStatus(status)
@@ -142,9 +140,7 @@ describe('StatusMover', () => {
 
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
-        expect(
-          moment(claim.due.get()).toNow(),
-        ).toBe('2 days ago')
+        expect(moment(claim.due.get()).toNow()).toBe('2 days ago')
       }
     })
 
@@ -156,9 +152,7 @@ describe('StatusMover', () => {
 
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
-        expect(
-          moment(claim.due.get()).toNow(),
-        ).toBe('3 days ago')
+        expect(moment(claim.due.get()).toNow()).toBe('3 days ago')
       }
     })
 
@@ -170,9 +164,7 @@ describe('StatusMover', () => {
 
       expect(claim.due.nonEmpty()).toBeTruthy()
       if (claim.due.nonEmpty()) {
-        expect(
-          moment(claim.due.get()).toNow(),
-        ).toBe('4 days ago')
+        expect(moment(claim.due.get()).toNow()).toBe('4 days ago')
       }
     })
   })

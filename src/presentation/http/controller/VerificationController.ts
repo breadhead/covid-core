@@ -1,6 +1,19 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, HttpCode, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common'
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiUseTags,
+} from '@nestjs/swagger'
 
 import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand'
 import VerificateCommand from '@app/application/user/verification/VerificateCommand'
@@ -16,9 +29,7 @@ import CurrentUser from './decorator/CurrentUser'
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export default class VerificationController {
-  public constructor(
-    private readonly commandBus: CommandBus,
-  ) { }
+  public constructor(private readonly commandBus: CommandBus) {}
 
   @Post('send')
   @HttpCode(200)
@@ -47,9 +58,7 @@ export default class VerificationController {
     const { login } = user
     const { code } = request
 
-    await this.commandBus.execute(
-      new VerificateCommand(login, code),
-    )
+    await this.commandBus.execute(new VerificateCommand(login, code))
 
     return
   }

@@ -1,7 +1,9 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common'
 import {
-  ApiBadRequestResponse, ApiOkResponse,
-  ApiOperation, ApiUseTags,
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
 } from '@nestjs/swagger'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
@@ -20,13 +22,15 @@ export default class AuthController {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
-  ) { }
+  ) {}
 
   @Post('register')
   @ApiOperation({ title: 'Create the new client' })
   @ApiOkResponse({ description: 'Registered', type: ClientResponse })
   @ApiBadRequestResponse({ description: 'Login already taken' })
-  public register(@Body() registrationRequest: RegistrationRequest): ClientResponse {
+  public register(
+    @Body() registrationRequest: RegistrationRequest,
+  ): ClientResponse {
     return {
       id: 'ffh',
       email: registrationRequest.email,
@@ -39,7 +43,9 @@ export default class AuthController {
   @ApiOperation({ title: 'Issue the new token' })
   @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
-  public async login(@Body() loginRequest: LoginRequest): Promise<TokenResponse> {
+  public async login(
+    @Body() loginRequest: LoginRequest,
+  ): Promise<TokenResponse> {
     const { login, password } = loginRequest
 
     const [token, user] = await Promise.all([
@@ -47,7 +53,7 @@ export default class AuthController {
       await this.userRepo.getOne(login),
     ])
 
-    const roles = user.roles.map((role) => role.toString())
+    const roles = user.roles.map(role => role.toString())
 
     return new TokenResponse(token, roles)
   }

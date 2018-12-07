@@ -5,6 +5,4 @@ export default interface IdGenerator {
 
 const IdGenerator = Symbol('IdGenerator')
 
-export {
-  IdGenerator,
-}
+export { IdGenerator }

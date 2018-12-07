@@ -12,35 +12,34 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import EditQuotaCommand from './EditQuotaCommand'
 
 @CommandHandler(EditQuotaCommand)
-export default class EditQuotaHandler implements ICommandHandler<EditQuotaCommand> {
+export default class EditQuotaHandler
+  implements ICommandHandler<EditQuotaCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
-  ) { }
+    @InjectRepository(QuotaRepository)
+    private readonly quotaRepo: QuotaRepository,
+  ) {}
 
   public async execute(command: EditQuotaCommand, resolve: (value?) => void) {
-    const {
-      name, constraints, corporate,
-      publicCompany, comment,
-    } = command
+    const { name, constraints, corporate, publicCompany, comment } = command
 
     const quota = await this.quotaRepo.getOne(command.id)
 
-    await this.em.transaction((em) => {
+    await this.em.transaction(em => {
       quota.editContent(name, constraints, corporate, publicCompany, comment)
 
       const company = this.ajustedCompany(quota, command)
 
-      return em.save([
-        company,
-        quota,
-      ])
+      return em.save([company, quota])
     })
 
     resolve(quota)
   }
 
-  private ajustedCompany(quota: Quota, command: EditQuotaCommand): Company | null {
+  private ajustedCompany(
+    quota: Quota,
+    command: EditQuotaCommand,
+  ): Company | null {
     const { company } = quota
     const { companyName } = command
 
@@ -50,9 +49,9 @@ export default class EditQuotaHandler implements ICommandHandler<EditQuotaComman
       needNewCompany: company && company.name !== companyName,
     })(
       (_ = { companyExist: false, newNameExist: false }) => null,
-      (_ = { companyExist: true, newNameExist: false })  => company,
-      (_ = { needNewCompany: true })                     => this.attachNewCompany(quota, command),
-      (_ = { needNewCompany: false })                    => this.editExistCompany(quota, command),
+      (_ = { companyExist: true, newNameExist: false }) => company,
+      (_ = { needNewCompany: true }) => this.attachNewCompany(quota, command),
+      (_ = { needNewCompany: false }) => this.editExistCompany(quota, command),
     )
   }
 

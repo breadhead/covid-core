@@ -9,22 +9,16 @@ const HTTP_STATUS = 403
 
 @Catch(SecurityException)
 export default class SecurityFilter implements ExceptionFilter {
-  public constructor(
-    private readonly logger: Logger,
-  ) {}
+  public constructor(private readonly logger: Logger) {}
 
   public catch(exception: SecurityException, host: ArgumentsHost) {
-    const res = host
-      .switchToHttp()
-      .getResponse()
+    const res = host.switchToHttp().getResponse()
 
-    res
-      .status(HTTP_STATUS)
-      .json({
-        status: HTTP_STATUS,
-        message: exception.message,
-        token: exception.token,
-      })
+    res.status(HTTP_STATUS).json({
+      status: HTTP_STATUS,
+      message: exception.message,
+      token: exception.token,
+    })
 
     this.logger.warn(responseToLog(res))
   }

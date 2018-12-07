@@ -17,7 +17,11 @@ export default class DraftVoter implements SecurityVoter<Draft> {
     return acceptedAttributes.includes(attribute) && subject instanceof Draft
   }
 
-  public async voteOnAttribute(_: Attribute, draft: Draft, { login }: TokenPayload): Promise<boolean> {
+  public async voteOnAttribute(
+    _: Attribute,
+    draft: Draft,
+    { login }: TokenPayload,
+  ): Promise<boolean> {
     const user = await this.userRepo.getOne(login)
 
     return user.login === draft.author.login

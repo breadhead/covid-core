@@ -4,5 +4,5 @@ export default class IncomeQuotaCommand implements ICommand {
   public constructor(
     public readonly amount: number,
     public readonly quotaId: string,
-  ) { }
+  ) {}
 }

@@ -42,13 +42,11 @@ describe('Allocator', () => {
       const claim = new Claim('1', applicant, user, 'theme')
 
       // spent all quotas
-      await allocator.allocateAuto(
-        new Claim('2', applicant, user, 'theme'),
-      )
+      await allocator.allocateAuto(new Claim('2', applicant, user, 'theme'))
 
-      await expect(allocator.allocateAuto(claim))
-        .rejects
-        .toThrow(QuotaAllocationFailedException)
+      await expect(allocator.allocateAuto(claim)).rejects.toThrow(
+        QuotaAllocationFailedException,
+      )
     })
 
     test('should throw exception if try to allocate already binded claim', async () => {
@@ -56,9 +54,9 @@ describe('Allocator', () => {
 
       claim.bindQuota(new Quota('1', 'quota'))
 
-      await expect(allocator.allocateAuto(claim))
-        .rejects
-        .toThrow(QuotaAllocationFailedException)
+      await expect(allocator.allocateAuto(claim)).rejects.toThrow(
+        QuotaAllocationFailedException,
+      )
     })
   })
 
@@ -81,9 +79,9 @@ describe('Allocator', () => {
 
       const quota = new Quota('1', 'quota')
 
-      await expect(allocator.allocate(claim, quota))
-        .rejects
-        .toThrow(QuotaAllocationFailedException)
+      await expect(allocator.allocate(claim, quota)).rejects.toThrow(
+        QuotaAllocationFailedException,
+      )
     })
   })
 

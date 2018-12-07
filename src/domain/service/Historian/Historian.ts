@@ -16,29 +16,29 @@ export default class Historian {
   public async getDonators(from: Date, to: Date): Promise<Donator[]> {
     const history = await this.getEntityHistory(from, to)(Income)
 
-    const notCorporateIncomes = history
-      .filter((income) => !income.target.corporate)
+    const notCorporateIncomes = history.filter(
+      income => !income.target.corporate,
+    )
 
     return incomesToDonators(notCorporateIncomes)
   }
 
-  public async getHistory(from: Date, to: Date): Promise<Array<Income | Transfer>> {
+  public async getHistory(
+    from: Date,
+    to: Date,
+  ): Promise<Array<Income | Transfer>> {
     const history = this.getEntityHistory(from, to)
 
-    const [ transfers, incomes ] = await Promise.all([
+    const [transfers, incomes] = await Promise.all([
       history(Transfer),
       history(Income),
     ])
 
-    return sortBy(
-      [...transfers, ...incomes],
-      (entry) => entry.date,
-    )
+    return sortBy([...transfers, ...incomes], entry => entry.date)
   }
 
   private getEntityHistory(from: Date, to: Date) {
-    return <Entity>(entity: ObjectType<Entity>) => this.em
-      .getRepository(entity)
-      .find({ where: { date: Between(from, to) } })
+    return <Entity>(entity: ObjectType<Entity>) =>
+      this.em.getRepository(entity).find({ where: { date: Between(from, to) } })
   }
 }

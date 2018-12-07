@@ -6,7 +6,7 @@ import Configuration from './Configuration/Configuration'
 export default class JwtOptionsFactory implements Factory {
   public constructor(
     @Inject(Configuration) private readonly config: Configuration,
-  ) { }
+  ) {}
 
   public createJwtOptions(): JwtModuleOptions {
     return {

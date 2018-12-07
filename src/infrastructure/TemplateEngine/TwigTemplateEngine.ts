@@ -17,7 +17,8 @@ export default class TwigTemplateEngine implements TemplateEngine {
           }
 
           resolve(html)
-        })
+        },
+      )
     })
   }
 }

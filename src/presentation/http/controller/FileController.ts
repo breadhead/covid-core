@@ -1,11 +1,26 @@
-import { Controller, FileInterceptor, Inject, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
 import {
-  ApiBearerAuth, ApiConsumes, ApiForbiddenResponse,
-  ApiImplicitFile, ApiOkResponse, ApiOperation, ApiUseTags,
+  Controller,
+  FileInterceptor,
+  Inject,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiForbiddenResponse,
+  ApiImplicitFile,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
 } from '@nestjs/swagger'
 
 import Role from '@app/domain/user/Role'
-import FileSaver, { FileSaver as  FileSaverSymbol } from '@app/infrastructure/FileSaver/FileSaver'
+import FileSaver, {
+  FileSaver as FileSaverSymbol,
+} from '@app/infrastructure/FileSaver/FileSaver'
 
 import FileResponse from '../response/FileResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
@@ -18,7 +33,7 @@ import Roles from '../security/Roles'
 export default class FileController {
   public constructor(
     @Inject(FileSaverSymbol) private readonly fileSaver: FileSaver,
-  ) { }
+  ) {}
 
   @Post('upload')
   @Roles(Role.Admin)
@@ -27,7 +42,7 @@ export default class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiImplicitFile({ name: 'file', required: true, description: 'Any file' })
   @ApiOkResponse({ description: 'Uploaded', type: FileResponse })
-  @ApiForbiddenResponse({ description: 'Admin\'s API token doesn\'t provided '})
+  @ApiForbiddenResponse({ description: 'Admin`s API token doesn`t provided ' })
   public async upload(@UploadedFile() file): Promise<FileResponse> {
     const { originalname, buffer } = file
 

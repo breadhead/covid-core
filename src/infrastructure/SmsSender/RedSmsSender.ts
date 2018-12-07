@@ -13,13 +13,9 @@ export default class RedSmsSender implements SmsSender {
     private readonly config: Configuration,
     private readonly logger: Logger,
   ) {
-    const login = this.config
-      .get('SMS_LOGIN')
-      .getOrElse('')
+    const login = this.config.get('SMS_LOGIN').getOrElse('')
 
-    const apiKey = this.config
-      .get('SMS_API_KEY')
-      .getOrElse('')
+    const apiKey = this.config.get('SMS_API_KEY').getOrElse('')
 
     this.redSmsClient = new RedSmsClient(login, apiKey)
   }

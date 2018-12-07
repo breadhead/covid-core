@@ -16,5 +16,5 @@ export default class CreateClaimCommand implements ICommand {
     public readonly phone?: string,
     public readonly company?: string,
     public readonly position?: string,
-  ) { }
+  ) {}
 }

@@ -8,11 +8,13 @@ import DraftRepository from '@app/domain/draft/DraftRepository'
 import EditDraftCommand from './EditDraftCommand'
 
 @CommandHandler(EditDraftCommand)
-export default class EditDraftHandler implements ICommandHandler<EditDraftCommand> {
+export default class EditDraftHandler
+  implements ICommandHandler<EditDraftCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(DraftRepository) private readonly draftRepo: DraftRepository,
-  ) { }
+    @InjectRepository(DraftRepository)
+    private readonly draftRepo: DraftRepository,
+  ) {}
 
   public async execute(command: EditDraftCommand, resolve: (value?) => void) {
     const { id, body } = command
@@ -21,8 +23,6 @@ export default class EditDraftHandler implements ICommandHandler<EditDraftComman
 
     draft.changeBody(body)
 
-    resolve(
-      await this.em.save(draft),
-    )
+    resolve(await this.em.save(draft))
   }
 }

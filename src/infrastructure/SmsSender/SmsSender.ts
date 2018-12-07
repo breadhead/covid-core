@@ -4,6 +4,4 @@ export default interface SmsSender {
 
 const SmsSender = Symbol('SmsSender')
 
-export {
-  SmsSender,
-}
+export { SmsSender }

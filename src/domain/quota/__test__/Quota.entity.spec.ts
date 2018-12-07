@@ -27,9 +27,7 @@ describe('Quota', () => {
       const q = new Quota('2', 'second')
       q.increaseBalance(12)
 
-      expect(
-        () => q.decreaseBalance(13),
-      ).toThrow(InvariantViolationException)
+      expect(() => q.decreaseBalance(13)).toThrow(InvariantViolationException)
     })
   })
 

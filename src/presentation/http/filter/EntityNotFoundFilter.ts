@@ -9,22 +9,16 @@ const HTTP_STATUS = 404
 
 @Catch(EntityNotFoundException)
 export default class EntityNotFoundFilter implements ExceptionFilter {
-  public constructor(
-    private readonly logger: Logger,
-  ) {}
+  public constructor(private readonly logger: Logger) {}
 
   public catch(exception: EntityNotFoundException, host: ArgumentsHost) {
-    const res = host
-      .switchToHttp()
-      .getResponse()
+    const res = host.switchToHttp().getResponse()
 
-    res
-      .status(HTTP_STATUS)
-      .json({
-        status: HTTP_STATUS,
-        message: exception.message,
-        parameters: exception.parameters,
-      })
+    res.status(HTTP_STATUS).json({
+      status: HTTP_STATUS,
+      message: exception.message,
+      parameters: exception.parameters,
+    })
 
     this.logger.warn(responseToLog(res))
   }

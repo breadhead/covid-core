@@ -14,6 +14,4 @@ export default interface Notificator {
 
 const Notificator = Symbol('Notificator')
 
-export {
-  Notificator,
-}
+export { Notificator }

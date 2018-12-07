@@ -16,9 +16,7 @@ export default class RolesAuthGuard implements CanActivate {
       return true
     }
 
-    const request = context
-      .switchToHttp()
-      .getRequest()
+    const request = context.switchToHttp().getRequest()
 
     const { user } = request
 
@@ -26,6 +24,6 @@ export default class RolesAuthGuard implements CanActivate {
   }
 
   private hasRole(user: TokenPayload, roles: string[]) {
-    return user.roles.some((role) => roles.includes(role))
+    return user.roles.some(role => roles.includes(role))
   }
 }

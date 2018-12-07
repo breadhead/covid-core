@@ -15,7 +15,12 @@ export default class Applicant {
   @Column()
   public readonly region: string
 
-  public constructor(name: string, age: number, gender: Gender, region: string) {
+  public constructor(
+    name: string,
+    age: number,
+    gender: Gender,
+    region: string,
+  ) {
     this.name = name
     this.age = age
     this.gender = gender

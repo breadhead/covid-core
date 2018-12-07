@@ -12,12 +12,14 @@ import Allocator from '@app/domain/quota/Allocator'
 import CloseClaimCommand from './CloseClaimCommand'
 
 @CommandHandler(CloseClaimCommand)
-export default class CloseClaimHandler implements ICommandHandler<CloseClaimCommand> {
+export default class CloseClaimHandler
+  implements ICommandHandler<CloseClaimCommand> {
   public constructor(
-    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
-  ) { }
+  ) {}
 
   public async execute(command: CloseClaimCommand, resolve: (value?) => void) {
     const { id, deallocateQuota } = command

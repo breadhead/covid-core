@@ -45,10 +45,12 @@ describe('ClientController', () => {
         perPage: '150',
       }
 
-      expect(() => pipe.transform(body, {
-        type: 'body',
-        metatype: PaginationRequest,
-      })).toThrow(LogicException)
+      expect(() =>
+        pipe.transform(body, {
+          type: 'body',
+          metatype: PaginationRequest,
+        }),
+      ).toThrow(LogicException)
     })
   })
 })

@@ -1,7 +1,6 @@
 import { splitNumbersAndLetters, strip } from '../string'
 
 describe('strip', () => {
-
   test('should strip symbols from start', () => {
     const input = 'hhhhhhhhhYo'
     expect(strip(/h+/g)(input)).toBe('Yo')

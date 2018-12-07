@@ -25,15 +25,16 @@ export default class SecurityVotersUnity {
 
   public constructor(
     @Inject(Configuration) private readonly config: Configuration,
-  ) { }
+  ) {}
 
   public setModuleRef(ref: ModuleRef): void {
     this.moduleRef = ref
   }
 
   public register(voterFunctions: Array<Type<any>>): void {
-    this.voters = voterFunctions
-      .map((voterFunction) => this.moduleRef.get(voterFunction))
+    this.voters = voterFunctions.map(voterFunction =>
+      this.moduleRef.get(voterFunction),
+    )
   }
 
   public async denyAccessUnlessGranted<Subject = any>(
@@ -43,8 +44,8 @@ export default class SecurityVotersUnity {
   ): Promise<void> {
     const votes = await Promise.all(
       this.voters
-        .filter((voter) => voter.supports(attribute, subject))
-        .map((voter) => voter.voteOnAttribute(attribute, subject, token)),
+        .filter(voter => voter.supports(attribute, subject))
+        .map(voter => voter.voteOnAttribute(attribute, subject, token)),
     )
 
     if (!this.legitimacy(votes)) {
@@ -63,14 +64,14 @@ export default class SecurityVotersUnity {
       .map(Boolean)
       .getOrElse(false)
 
-    return (votes.length !== 0 || allowIfAllAbstain)
+    return votes.length !== 0 || allowIfAllAbstain
   }
 
   private votesResult(votes: boolean[]): boolean {
     const strategy: StrategyType = this.config
       .get('SECURITY_STRATEGY')
-      .map((str) => str as Strategy)
-      .map((str) => STRATEGY_MAP[str])
+      .map(str => str as Strategy)
+      .map(str => STRATEGY_MAP[str])
       .getOrElse(unanimousStrategy)
 
     return strategy(votes)

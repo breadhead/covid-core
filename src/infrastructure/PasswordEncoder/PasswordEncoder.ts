@@ -5,6 +5,4 @@ export default interface PasswordEncoder {
 
 const PasswordEncoder = Symbol('PasswordEncoder')
 
-export {
-  PasswordEncoder,
-}
+export { PasswordEncoder }

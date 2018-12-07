@@ -7,6 +7,4 @@ export default interface SignInProvider {
 
 const SignInProviders = Symbol('SignInProviders')
 
-export {
-  SignInProviders,
-}
+export { SignInProviders }

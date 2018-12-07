@@ -4,5 +4,5 @@ export default class CreateDraftCommand implements ICommand {
   public constructor(
     public readonly userLogin: string,
     public readonly body: any,
-  ) { }
+  ) {}
 }

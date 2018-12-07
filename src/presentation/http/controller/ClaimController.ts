@@ -1,8 +1,20 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -31,19 +43,22 @@ import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 @ApiUseTags('claims')
 @ApiBearerAuth()
 export default class ClaimController {
-
   public constructor(
-    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
     private readonly statusMover: StatusMover,
-  ) { }
+  ) {}
 
   @Get(':id/short')
-  @ApiOperation({ title: 'Claim\'s short data' })
+  @ApiOperation({ title: 'Claim`s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({ description: 'Claim\'s owner, case-manager or doctor API token doesn\'t provided'})
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
   public async showShort(
     @Query('id') id: string,
     @CurrentUser() user: TokenPayload,
@@ -71,10 +86,21 @@ export default class ClaimController {
       ? { companyName: company.name, companyPosition: company.position }
       : {}
 
-    const claim: Claim = await this.bus.execute(new CreateClaimCommand(
-      login, theme, name, age, gender, region,
-      diagnosis, email, phone, companyName, companyPosition,
-    ))
+    const claim: Claim = await this.bus.execute(
+      new CreateClaimCommand(
+        login,
+        theme,
+        name,
+        age,
+        gender,
+        region,
+        diagnosis,
+        email,
+        phone,
+        companyName,
+        companyPosition,
+      ),
+    )
 
     return ShortClaimData.fromEntity(claim)
   }
@@ -84,15 +110,13 @@ export default class ClaimController {
   @HttpCodeNoContent()
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
-  @ApiForbiddenResponse({ description: 'Admin or case-manager API token doesn\'t provided' })
-  public async closeClaim(
-    @Body() request: CloseClaimRequest,
-  ): Promise<void> {
+  @ApiForbiddenResponse({
+    description: 'Admin or case-manager API token doesn`t provided',
+  })
+  public async closeClaim(@Body() request: CloseClaimRequest): Promise<void> {
     const { id, type, deallocateQuota } = request
 
-    await this.bus.execute(
-      new CloseClaimCommand(id, type, deallocateQuota),
-    )
+    await this.bus.execute(new CloseClaimCommand(id, type, deallocateQuota))
 
     return
   }
@@ -104,9 +128,7 @@ export default class ClaimController {
   @ApiOkResponse({ description: 'Binded' })
   public async bindQuota(@Body() request: BindQuotaRequest): Promise<void> {
     const { claimId, quotaId } = request
-    await this.bus.execute(
-      new BindQuotaCommand(quotaId, claimId),
-    )
+    await this.bus.execute(new BindQuotaCommand(quotaId, claimId))
 
     return
   }
@@ -117,11 +139,8 @@ export default class ClaimController {
   @ApiOperation({ title: 'Move to next staus' })
   @ApiOkResponse({ description: 'Moved to next' })
   public async setNextStatus(@Query('id') id: string): Promise<void> {
-    await this.bus.execute(
-      new MoveToNextStatusCommand(id),
-    )
+    await this.bus.execute(new MoveToNextStatusCommand(id))
 
     return
   }
-
 }

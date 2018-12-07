@@ -1,7 +1,11 @@
 import BoardManager, { Label, Member } from './BoardManager'
 
 export default class VoidBoardManager implements BoardManager {
-  public createCard(name: string, content: string, listId: string): Promise<string> {
+  public createCard(
+    name: string,
+    content: string,
+    listId: string,
+  ): Promise<string> {
     throw new Error('Method not implemented.')
   }
 

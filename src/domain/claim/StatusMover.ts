@@ -39,9 +39,13 @@ export default class StatusMover {
     config: Configuration,
   ) {
     this.maxDurations = {
-      [ClaimStatus.QuestionnaireWaiting]: config.get('DUARTION_QUESTIONNAIRE_WAITING'),
+      [ClaimStatus.QuestionnaireWaiting]: config.get(
+        'DUARTION_QUESTIONNAIRE_WAITING',
+      ),
       [ClaimStatus.AtTheDoctor]: config.get('DURATION_AT_THE_DOCTOR'),
-      [ClaimStatus.DeliveredToCustomer]: config.get('DURATION_DELIVERED_TO_CUSTOMER'),
+      [ClaimStatus.DeliveredToCustomer]: config.get(
+        'DURATION_DELIVERED_TO_CUSTOMER',
+      ),
     }
   }
 
@@ -77,7 +81,9 @@ export default class StatusMover {
     return ClaimStatus.QuestionnaireValidation
   }
 
-  private async fromQuestionnaireValidation(cliam: Claim): Promise<ClaimStatus> {
+  private async fromQuestionnaireValidation(
+    cliam: Claim,
+  ): Promise<ClaimStatus> {
     return ClaimStatus.AtTheDoctor
   }
 
@@ -94,10 +100,16 @@ export default class StatusMover {
   }
 
   private async fromUnknown(claim: Claim) {
-    throw new ActionUnavailableException(Claim.name, `Unknown status in claim #${claim.id}`)
+    throw new ActionUnavailableException(
+      Claim.name,
+      `Unknown status in claim #${claim.id}`,
+    )
   }
 
-  private async changeStatus(claim: Claim, newStatus: ClaimStatus): Promise<void> {
+  private async changeStatus(
+    claim: Claim,
+    newStatus: ClaimStatus,
+  ): Promise<void> {
     claim.changeStatus(newStatus)
 
     this.setDue(claim, newStatus)
@@ -105,17 +117,13 @@ export default class StatusMover {
     await this.em.save(claim)
 
     // Push events
-    this.getEvents(claim)
-      .forEach((event) => this.eventEmitter.emit(event))
+    this.getEvents(claim).forEach(event => this.eventEmitter.emit(event))
   }
 
   private setDue(claim: Claim, newStatus: ClaimStatus): void {
     const statusDuration = this.maxDurations[newStatus]
     if (statusDuration) {
-      const due = add(
-        new Date(),
-        statusDuration.getOrElse(DEFAULT_DURATION),
-      )
+      const due = add(new Date(), statusDuration.getOrElse(DEFAULT_DURATION))
 
       claim.changeDue(due)
     }
@@ -138,9 +146,8 @@ export default class StatusMover {
 
     const statusEvent = new ChangeStatusEvent(claim)
 
-    const dueDateEvents = Object
-      .keys(this.maxDurations)
-      .filter((key) => key === claim.status)
+    const dueDateEvents = Object.keys(this.maxDurations)
+      .filter(key => key === claim.status)
       .map(() => new DueDateUpdatedEvent(claim))
 
     const events = [actionEvent, statusEvent, ...dueDateEvents].filter(Boolean)

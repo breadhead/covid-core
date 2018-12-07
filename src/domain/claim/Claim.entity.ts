@@ -25,16 +25,20 @@ export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
-  @Column((type) => Applicant)
+  @Column(type => Applicant)
   public readonly applicant: Applicant
 
-  @ManyToOne((type) => User, { eager: true })
+  @ManyToOne(type => User, { eager: true })
   @JoinColumn()
   public readonly author: User
 
-  public get status(): ClaimStatus { return this._status }
+  public get status(): ClaimStatus {
+    return this._status
+  }
 
-  public get quota(): Quota | null { return this._quota }
+  public get quota(): Quota | null {
+    return this._quota
+  }
 
   @Column()
   public readonly theme: string
@@ -49,27 +53,28 @@ export default class Claim {
   }
 
   public get due(): Option<Date> {
-    return this._due
-      ? new Some(this._due)
-      : new None()
+    return this._due ? new Some(this._due) : new None()
   }
 
   @JoinColumn()
-  @ManyToOne((type) => Quota, { eager: true, nullable: true })
+  @ManyToOne(type => Quota, { eager: true, nullable: true })
   private _quota?: Quota
 
   @Column({ type: 'enum', enum: ClaimStatus })
   private _status: ClaimStatus
 
-  @Column((type) => CorporateInfo)
+  @Column(type => CorporateInfo)
   private _corporateInfo: CorporateInfo
 
   @Column({ nullable: true })
   private _due?: Date
 
   public constructor(
-    id: string, applicant: Applicant, author: User,
-    theme: string, diagnosis?: string,
+    id: string,
+    applicant: Applicant,
+    author: User,
+    theme: string,
+    diagnosis?: string,
     { company, position }: CorporateParams = {},
   ) {
     this.id = id
@@ -83,7 +88,8 @@ export default class Claim {
     this._status = ClaimStatus.New
   }
 
-  public isActive() { // TODO: check claim is active
+  public isActive() {
+    // TODO: check claim is active
     return Math.random() > 0.2
   }
 
@@ -101,7 +107,10 @@ export default class Claim {
 
   public unbindQuota(): void {
     if (!this._quota) {
-      throw new InvariantViolationException(Claim.name, 'Try to unbind empty quota')
+      throw new InvariantViolationException(
+        Claim.name,
+        'Try to unbind empty quota',
+      )
     }
 
     this._quota = null

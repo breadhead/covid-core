@@ -6,7 +6,5 @@ export const NAME = 'new-feedback'
 export default class NewFeedbackEvent implements Event<Feedback> {
   public readonly name = NAME
 
-  public constructor(
-    public readonly payload: Feedback,
-  ) { }
+  public constructor(public readonly payload: Feedback) {}
 }
