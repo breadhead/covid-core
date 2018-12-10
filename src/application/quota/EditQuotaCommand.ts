@@ -9,6 +9,7 @@ export default class EditQuotaCommand implements ICommand {
     public readonly companyName?: string,
     public readonly companyLogoUrl?: string,
     public readonly companyLink?: string,
+    public readonly companyComment?: string,
     public readonly publicCompany?: boolean,
     public readonly comment?: string,
   ) {}

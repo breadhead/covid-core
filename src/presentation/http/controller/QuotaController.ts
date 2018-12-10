@@ -185,6 +185,7 @@ export default class QuotaController {
       companyLogoUrl,
       companyLink,
       publicCompany,
+      companyComment,
       comment,
     } = request.quota
 
@@ -197,6 +198,7 @@ export default class QuotaController {
         companyName,
         companyLogoUrl,
         companyLink,
+        companyComment,
         publicCompany,
         comment,
       ),

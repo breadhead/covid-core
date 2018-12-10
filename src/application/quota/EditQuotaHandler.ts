@@ -67,10 +67,11 @@ export default class EditQuotaHandler
 
   private editExistCompany(quota: Quota, command: EditQuotaCommand) {
     const { company } = quota
-    const { companyLink, companyLogoUrl } = command
+    const { companyLink, companyLogoUrl, companyComment } = command
 
     company.changeSite(companyLink)
     company.changeLogo(companyLogoUrl)
+    company.changeComment(companyComment)
 
     return company
   }
