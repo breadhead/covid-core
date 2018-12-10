@@ -8,6 +8,7 @@ export const exampleCompanyResponse = {
   donation: 12233,
   logo: '/path/to/logo.png',
   site: 'google.com',
+  comment: 'Пример комментария о компании',
 }
 
 export default class CompanyResponse {
@@ -42,6 +43,9 @@ export default class CompanyResponse {
   })
   public readonly donation?: number
 
-  @ApiModelProperty({ example: 'Компании коммент', required: false })
+  @ApiModelProperty({
+    example: exampleCompanyResponse.comment,
+    required: false,
+  })
   public readonly comment?: string
 }
