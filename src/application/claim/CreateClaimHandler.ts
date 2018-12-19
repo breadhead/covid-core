@@ -61,10 +61,18 @@ export default class CreateClaimHandler
 
       const applicant = new Applicant(name, age, gender, region)
 
-      const shortClaim = new Claim(id, applicant, user, theme, diagnosis, {
-        company,
-        position,
-      })
+      const shortClaim = new Claim(
+        id,
+        new Date(),
+        applicant,
+        user,
+        theme,
+        diagnosis,
+        {
+          company,
+          position,
+        },
+      )
 
       const [savedClaim, ...rest] = await em.save([shortClaim, user])
 

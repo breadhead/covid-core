@@ -25,12 +25,18 @@ export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
+  @Column(type => Date)
+  public readonly createdAt: Date
+
   @Column(type => Applicant)
   public readonly applicant: Applicant
 
   @ManyToOne(type => User, { eager: true })
   @JoinColumn()
   public readonly author: User
+
+  @Column()
+  public readonly personal: boolean = true
 
   public get status(): ClaimStatus {
     return this._status
@@ -71,17 +77,21 @@ export default class Claim {
 
   public constructor(
     id: string,
+    createdAt: Date,
     applicant: Applicant,
     author: User,
     theme: string,
     diagnosis?: string,
     { company, position }: CorporateParams = {},
+    personal: boolean = true,
   ) {
     this.id = id
+    this.createdAt = createdAt
     this.applicant = applicant
     this.author = author
     this.theme = theme
     this.diagnosis = diagnosis
+    this.personal = personal
 
     this._corporateInfo = new CorporateInfo({ company, position })
 

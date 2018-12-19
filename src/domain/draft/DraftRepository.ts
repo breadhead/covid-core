@@ -14,4 +14,12 @@ export default class DraftRepository extends AbstractRepository<Draft> {
 
     return draft
   }
+
+  public async getByLogin(login: string): Promise<Draft[]> {
+    const claims = await this.repository.find({
+      author: { login },
+    })
+
+    return claims
+  }
 }
