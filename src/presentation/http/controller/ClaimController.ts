@@ -17,6 +17,7 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
+import { sortBy } from 'lodash'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
@@ -24,7 +25,7 @@ import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusComm
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
-import StatusMover from '@app/domain/claim/StatusMover'
+import DraftRepository from '@app/domain/draft/DraftRepository'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -33,6 +34,7 @@ import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import ShortClaimData from '../io/claim/ShortClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
+import ClaimForListResponse from '../response/ClaimForListResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
@@ -46,10 +48,31 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
+    @InjectRepository(DraftRepository)
+    private readonly draftRepo: DraftRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
-    private readonly statusMover: StatusMover,
   ) {}
+
+  @Get('/')
+  public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
+    ClaimForListResponse[]
+  > {
+    const [claims, drafts] = await Promise.all([
+      this.claimRepo.getByLogin(login),
+      this.draftRepo.getByLogin(login),
+    ])
+
+    const responseItems = sortBy(
+      [
+        ...claims.map(ClaimForListResponse.fromClaim),
+        ...drafts.map(ClaimForListResponse.fromDraft),
+      ],
+      (claim: ClaimForListResponse) => claim.createdAt,
+    )
+
+    return responseItems
+  }
 
   @Get(':id/short')
   @ApiOperation({ title: 'Claim`s short data' })

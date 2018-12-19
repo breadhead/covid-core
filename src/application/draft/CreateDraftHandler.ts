@@ -28,7 +28,7 @@ export default class CreateDraftHandler
 
     const id = this.idGenerator.get()
 
-    const draft = await this.em.save(new Draft(id, body, user))
+    const draft = await this.em.save(new Draft(id, new Date(), body, user))
 
     resolve(draft)
   }
