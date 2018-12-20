@@ -25,7 +25,6 @@ import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusComm
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
-import DraftRepository from '@app/domain/draft/DraftRepository'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -48,8 +47,6 @@ export default class ClaimController {
   public constructor(
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
-    @InjectRepository(DraftRepository)
-    private readonly draftRepo: DraftRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
   ) {}
@@ -58,16 +55,10 @@ export default class ClaimController {
   public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
     ClaimForListResponse[]
   > {
-    const [claims, drafts] = await Promise.all([
-      this.claimRepo.getByLogin(login),
-      this.draftRepo.getByLogin(login),
-    ])
+    const claims = await this.claimRepo.getByLogin(login)
 
     const responseItems = sortBy(
-      [
-        ...claims.map(ClaimForListResponse.fromClaim),
-        ...drafts.map(ClaimForListResponse.fromDraft),
-      ],
+      claims.map(ClaimForListResponse.fromClaim),
       (claim: ClaimForListResponse) => claim.createdAt,
     )
 

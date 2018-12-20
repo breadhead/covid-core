@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import Claim from '@app/domain/claim/Claim.entity'
+import Claim, { ClaimTarget } from '@app/domain/claim/Claim.entity'
 
 import CompanyData, { exampleCompanyData } from './CompanyData'
 import PersonalData, { examplePersonalData } from './PersonalData'
@@ -11,6 +11,7 @@ const exampleShortClaim = {
   diagnosis: 'На руке',
   theme: 'Рак кожи',
   company: exampleCompanyData,
+  target: ClaimTarget.Self,
 }
 
 export default class ShortClaimData {
@@ -37,7 +38,8 @@ export default class ShortClaimData {
       diagnosis: claim.diagnosis,
       theme: claim.theme,
       company,
-    } as ShortClaimData
+      target: claim.target,
+    }
   }
 
   @ApiModelProperty({ example: exampleShortClaim.id })
@@ -54,4 +56,10 @@ export default class ShortClaimData {
 
   @ApiModelProperty({ required: false, example: exampleShortClaim.company })
   public readonly company?: CompanyData
+
+  @ApiModelProperty({
+    example: ClaimTarget.Self,
+    enum: Object.values(ClaimTarget),
+  })
+  public readonly target: ClaimTarget
 }

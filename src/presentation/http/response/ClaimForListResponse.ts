@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
+import Claim, { ClaimStatus, ClaimTarget } from '@app/domain/claim/Claim.entity'
 import Draft from '@app/domain/draft/Draft.entity'
 
 export enum Status {
@@ -34,16 +34,7 @@ export default class ClaimForListResponse {
       status: defineStatus(claim.status),
       expireAt: claim.due.getOrElse(undefined),
       email: claim.author.conatcts.email,
-      personal: claim.personal,
-    }
-  }
-
-  public static fromDraft(draft: Draft): ClaimForListResponse {
-    return {
-      id: draft.id,
-      createdAt: draft.createdAt || new Date(),
-      status: Status.Draft,
-      personal: draft.personal,
+      target: claim.target,
     }
   }
 
@@ -65,6 +56,9 @@ export default class ClaimForListResponse {
   @ApiModelProperty({ example: 'email@mail.com', required: false })
   public readonly email?: string
 
-  @ApiModelProperty({ example: true })
-  public readonly personal: boolean
+  @ApiModelProperty({
+    example: ClaimTarget.Self,
+    enum: Object.values(ClaimTarget),
+  })
+  public readonly target: ClaimTarget
 }

@@ -1,8 +1,8 @@
 enum Gender {
-  male = 'male',
-  female = 'female',
-  nonbinary = 'nonbinary',
-  unknown = 'unknown',
+  male = 'Мужской',
+  female = 'Женский',
+  nonbinary = 'Небинарный',
+  unknown = 'Неизвестный',
 }
 
 export default Gender

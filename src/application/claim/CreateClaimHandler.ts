@@ -51,6 +51,7 @@ export default class CreateClaimHandler
       diagnosis,
       company,
       position,
+      target,
     } = command
 
     const id = this.idGenerator.get()
@@ -72,6 +73,7 @@ export default class CreateClaimHandler
           company,
           position,
         },
+        target,
       )
 
       const [savedClaim, ...rest] = await em.save([shortClaim, user])
