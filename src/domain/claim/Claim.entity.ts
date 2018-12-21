@@ -20,6 +20,12 @@ export enum ClaimStatus {
   Denied = 'denied',
 }
 
+export enum ClaimTarget {
+  Self = 'Для себя',
+  Other = 'Для близкого человека',
+  Found = 'Для подопечного Фонда',
+}
+
 @Entity()
 export default class Claim {
   @PrimaryColumn()
@@ -35,8 +41,8 @@ export default class Claim {
   @JoinColumn()
   public readonly author: User
 
-  @Column()
-  public readonly personal: boolean = true
+  @Column({ type: 'enum', enum: ClaimTarget, default: ClaimTarget.Self })
+  public readonly target: ClaimTarget = ClaimTarget.Self
 
   public get status(): ClaimStatus {
     return this._status
@@ -83,7 +89,7 @@ export default class Claim {
     theme: string,
     diagnosis?: string,
     { company, position }: CorporateParams = {},
-    personal: boolean = true,
+    target: ClaimTarget = ClaimTarget.Self,
   ) {
     this.id = id
     this.createdAt = createdAt
@@ -91,7 +97,7 @@ export default class Claim {
     this.author = author
     this.theme = theme
     this.diagnosis = diagnosis
-    this.personal = personal
+    this.target = target
 
     this._corporateInfo = new CorporateInfo({ company, position })
 

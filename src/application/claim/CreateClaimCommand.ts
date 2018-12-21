@@ -1,8 +1,8 @@
 import { ICommand } from '@nestjs/cqrs'
 
+import { ClaimTarget } from '@app/domain/claim/Claim.entity'
 import Gender from '@app/infrastructure/customTypes/Gender'
 
-// TODO: add "Для кого это консультация, консультируемый — родственник, я, клиент"
 export default class CreateClaimCommand implements ICommand {
   public constructor(
     public readonly userLogin: string,
@@ -16,5 +16,6 @@ export default class CreateClaimCommand implements ICommand {
     public readonly phone?: string,
     public readonly company?: string,
     public readonly position?: string,
+    public readonly target: ClaimTarget = ClaimTarget.Self,
   ) {}
 }
