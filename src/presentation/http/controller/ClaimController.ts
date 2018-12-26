@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -74,7 +75,7 @@ export default class ClaimController {
       'Claim`s owner, case-manager or doctor API token doesn`t provided',
   })
   public async showShort(
-    @Query('id') id: string,
+    @Param('id') id: string,
     @CurrentUser() user: TokenPayload,
   ): Promise<ShortClaimData> {
     const claim = await this.claimRepo.getOne(id)
