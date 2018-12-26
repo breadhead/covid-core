@@ -28,6 +28,7 @@ export default class EditSituationHandler
 
     const editedClaim = await this.em.transaction(em => {
       this.updateAnlysis(command, claim)
+      this.updateRelativesDiseases(command, claim)
 
       return em.save(claim)
     })
@@ -42,5 +43,12 @@ export default class EditSituationHandler
     claim.addNewHisotlogy(histology.url)
     claim.addNewDischarge(discharge.url)
     claim.addNewAnalysis(otherFiles)
+  }
+
+  private updateRelativesDiseases(
+    { relativesDiseases }: EditSituationCommand,
+    claim: Claim,
+  ): void {
+    claim.addNewRelativesDiseases(relativesDiseases)
   }
 }

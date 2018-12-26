@@ -8,6 +8,7 @@ import Analysis from './analysis/Analysis.vo'
 import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
 import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
+import RelativesDisease from './RelativesDisease.vo'
 
 export enum ClaimStatus {
   New = 'new',
@@ -31,6 +32,12 @@ export enum ClaimTarget {
 interface AnalysisData {
   title: string
   url: string
+}
+
+interface DiseaseData {
+  relative: string
+  localization: string
+  diagnosisAge: number
 }
 
 @Entity()
@@ -79,6 +86,10 @@ export default class Claim {
     return this._analysis
   }
 
+  public get relativesDiseases(): RelativesDisease[] {
+    return this._relativesDiseases
+  }
+
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
   private _quota?: Quota
@@ -94,6 +105,9 @@ export default class Claim {
 
   @Column(type => Analysis)
   private _analysis: Analysis
+
+  @Column({ type: 'json' })
+  private _relativesDiseases: RelativesDisease[] = []
 
   public constructor(
     id: string,
@@ -117,6 +131,7 @@ export default class Claim {
 
     this._status = ClaimStatus.New
     this._analysis = new Analysis({})
+    this._relativesDiseases = []
   }
 
   public isActive() {
@@ -207,5 +222,12 @@ export default class Claim {
         other,
       })
     })
+  }
+
+  public addNewRelativesDiseases(diseases: DiseaseData[]) {
+    this._relativesDiseases = diseases.map(
+      ({ relative, localization, diagnosisAge }) =>
+        new RelativesDisease(relative, localization, diagnosisAge),
+    )
   }
 }
