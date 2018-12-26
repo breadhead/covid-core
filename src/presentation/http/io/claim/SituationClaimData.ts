@@ -35,9 +35,15 @@ const situationExample: SituationClaimData = {
 
 export default class SituationClaimData {
   public static fromEntity(claim: Claim): SituationClaimData {
+    const { analysis } = claim
+    const { histology, discharge, other } = analysis
+
     return {
       ...situationExample,
       id: claim.id,
+      histology: FileData.fromFileLink(histology),
+      discharge: FileData.fromFileLink(discharge),
+      otherFiles: other.map(file => FileData.fromFileLink(file)),
     }
   }
 

@@ -28,6 +28,11 @@ export enum ClaimTarget {
   Found = 'Для подопечного Фонда',
 }
 
+interface AnalysisData {
+  title: string
+  url: string
+}
+
 @Entity()
 export default class Claim {
   @PrimaryColumn()
@@ -174,24 +179,33 @@ export default class Claim {
     })
   }
 
-  public addNewAnalysis(title: string, url: string) {
-    if (title === 'histology') {
-      return this.addNewHisotlogy(url)
-    } else if (title === 'discharge') {
-      return this.addNewDischarge(url)
-    }
-
-    const other = [
-      ...this._analysis.other.filter(file => file.title !== title),
-      new FileLink({
-        title,
-        url,
-      }),
-    ]
+  public addNewAnalysis(analysis: AnalysisData[]) {
+    const titles = analysis.map(({ title }) => title)
 
     this._analysis = new Analysis({
       ...this._analysis,
-      other,
+      other: this.analysis.other.filter(file => titles.includes(file.title)),
+    })
+
+    analysis.forEach(({ title, url }) => {
+      if (title === 'histology') {
+        return this.addNewHisotlogy(url)
+      } else if (title === 'discharge') {
+        return this.addNewDischarge(url)
+      }
+
+      const other = [
+        ...this._analysis.other.filter(file => file.title !== title),
+        new FileLink({
+          title,
+          url,
+        }),
+      ]
+
+      this._analysis = new Analysis({
+        ...this._analysis,
+        other,
+      })
     })
   }
 }

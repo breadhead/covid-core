@@ -41,7 +41,6 @@ export default class EditSituationHandler
   ): void {
     claim.addNewHisotlogy(histology.url)
     claim.addNewDischarge(discharge.url)
-
-    otherFiles.forEach(file => claim.addNewAnalysis(file.title, file.url))
+    claim.addNewAnalysis(otherFiles)
   }
 }
