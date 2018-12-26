@@ -70,7 +70,7 @@ export default class Claim {
   public readonly theme: string
 
   @Column({ nullable: true })
-  public readonly diagnosis?: string
+  public readonly localization?: string
 
   public get corporateInfo(): Option<CorporateInfo> {
     return this._corporateInfo.name && this._corporateInfo.position
@@ -89,6 +89,30 @@ export default class Claim {
   public get relativesDiseases(): RelativesDisease[] {
     return this._relativesDiseases
   }
+
+  @Column()
+  public description?: string
+
+  @Column()
+  public diagnosis?: string
+
+  @Column()
+  public stage?: string
+
+  @Column()
+  public otherDisease?: string
+
+  @Column()
+  public feeling?: string
+
+  @Column()
+  public worst?: string
+
+  @Column()
+  public complaint?: string
+
+  @Column()
+  public nowTreatment?: string
 
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
@@ -115,7 +139,7 @@ export default class Claim {
     applicant: Applicant,
     author: User,
     theme: string,
-    diagnosis?: string,
+    localization?: string,
     { company, position }: CorporateParams = {},
     target: ClaimTarget = ClaimTarget.Self,
   ) {
@@ -124,7 +148,7 @@ export default class Claim {
     this.applicant = applicant
     this.author = author
     this.theme = theme
-    this.diagnosis = diagnosis
+    this.localization = localization
     this.target = target
 
     this._corporateInfo = new CorporateInfo({ company, position })

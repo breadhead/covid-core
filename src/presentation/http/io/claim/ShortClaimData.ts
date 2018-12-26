@@ -35,7 +35,7 @@ export default class ShortClaimData {
     return {
       id: claim.id,
       personalData,
-      diagnosis: claim.diagnosis,
+      diagnosis: claim.localization,
       theme: claim.theme,
       company,
       target: claim.target,

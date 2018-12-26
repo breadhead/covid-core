@@ -11,7 +11,7 @@ export default class CreateClaimCommand implements ICommand {
     public readonly age: number,
     public readonly gender: Gender,
     public readonly region: string,
-    public readonly diagnosis?: string,
+    public readonly localization?: string,
     public readonly email?: string,
     public readonly phone?: string,
     public readonly company?: string,

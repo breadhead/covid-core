@@ -27,6 +27,7 @@ export default class EditSituationHandler
     const claim = await this.claimRepo.getOne(id)
 
     const editedClaim = await this.em.transaction(em => {
+      this.updateMainInfo(command, claim)
       this.updateAnlysis(command, claim)
       this.updateRelativesDiseases(command, claim)
 
@@ -50,5 +51,28 @@ export default class EditSituationHandler
     claim: Claim,
   ): void {
     claim.addNewRelativesDiseases(relativesDiseases)
+  }
+
+  private updateMainInfo(
+    {
+      description,
+      diagnosis,
+      stage,
+      otherDisease,
+      feeling,
+      worst,
+      complaint,
+      nowTreatment,
+    }: EditSituationCommand,
+    claim: Claim,
+  ) {
+    claim.description = description
+    claim.diagnosis = diagnosis
+    claim.stage = stage
+    claim.otherDisease = otherDisease
+    claim.feeling = feeling
+    claim.worst = worst
+    claim.complaint = complaint
+    claim.nowTreatment = nowTreatment
   }
 }
