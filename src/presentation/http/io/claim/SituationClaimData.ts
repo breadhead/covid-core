@@ -86,6 +86,6 @@ export default class SituationClaimData {
   @ApiModelProperty({ example: situationExample.discharge, required: false })
   public readonly discharge?: FileData
 
-  @ApiModelProperty({ example: situationExample.otherDisease })
+  @ApiModelProperty({ example: situationExample.otherFiles })
   public readonly otherFiles: FileData[]
 }

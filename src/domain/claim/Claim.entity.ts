@@ -4,6 +4,8 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
 import User from '../user/User.entity'
+import Analysis from './analysis/Analysis.vo'
+import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
 import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
 
@@ -68,6 +70,10 @@ export default class Claim {
     return this._due ? new Some(this._due) : new None()
   }
 
+  public get analysis(): Analysis {
+    return this._analysis
+  }
+
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
   private _quota?: Quota
@@ -80,6 +86,9 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _due?: Date
+
+  @Column(type => Analysis)
+  private _analysis: Analysis
 
   public constructor(
     id: string,
@@ -102,6 +111,7 @@ export default class Claim {
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
+    this._analysis = new Analysis({})
   }
 
   public isActive() {
@@ -138,5 +148,50 @@ export default class Claim {
 
   public changeDue(newDue: Date) {
     this._due = newDue
+  }
+
+  public addNewHisotlogy(url: string) {
+    const histology = new FileLink({
+      title: 'histology',
+      url,
+    })
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      histology,
+    })
+  }
+
+  public addNewDischarge(url: string) {
+    const discharge = new FileLink({
+      title: 'discharge',
+      url,
+    })
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      discharge,
+    })
+  }
+
+  public addNewAnalysis(title: string, url: string) {
+    if (title === 'histology') {
+      return this.addNewHisotlogy(url)
+    } else if (title === 'discharge') {
+      return this.addNewDischarge(url)
+    }
+
+    const other = [
+      ...this._analysis.other.filter(file => file.title !== title),
+      new FileLink({
+        title,
+        url,
+      }),
+    ]
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      other,
+    })
   }
 }

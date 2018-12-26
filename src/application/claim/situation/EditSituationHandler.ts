@@ -1,7 +1,9 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { EntityManager } from 'typeorm'
 
+import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 
 import EditSituationCommand from './EditSituationCommand'
@@ -12,6 +14,8 @@ export default class EditSituationHandler
   public constructor(
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
+    @InjectEntityManager()
+    private readonly em: EntityManager,
   ) {}
 
   public async execute(
@@ -22,6 +26,22 @@ export default class EditSituationHandler
 
     const claim = await this.claimRepo.getOne(id)
 
-    resolve(claim)
+    const editedClaim = await this.em.transaction(em => {
+      this.updateAnlysis(command, claim)
+
+      return em.save(claim)
+    })
+
+    resolve(editedClaim)
+  }
+
+  private updateAnlysis(
+    { histology, discharge, otherFiles }: EditSituationCommand,
+    claim: Claim,
+  ): void {
+    claim.addNewHisotlogy(histology.url)
+    claim.addNewDischarge(discharge.url)
+
+    otherFiles.forEach(file => claim.addNewAnalysis(file.title, file.url))
   }
 }
