@@ -24,8 +24,10 @@ import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
+import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
+import EditSituationHandler from '@app/application/claim/situation/EditSituationHandler'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
@@ -88,7 +90,6 @@ import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
-import EditClaimVoter from './application/claim/EditClaimVoter'
 
 const commandHandlers = [
   CreateQuotaHandler,
@@ -105,6 +106,7 @@ const commandHandlers = [
   EditDraftHandler,
   MoveToNextStatusHandler,
   IncomeQuotaHandler,
+  EditSituationHandler,
 ]
 
 const signInProviders = [
