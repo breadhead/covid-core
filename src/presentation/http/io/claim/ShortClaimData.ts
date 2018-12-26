@@ -15,7 +15,7 @@ const exampleShortClaim = {
 }
 
 export default class ShortClaimData {
-  public static fromEntity(claim: Claim) {
+  public static fromEntity(claim: Claim): ShortClaimData {
     const personalData = {
       name: claim.applicant.name,
       gender: claim.applicant.gender,
@@ -39,6 +39,7 @@ export default class ShortClaimData {
       theme: claim.theme,
       company,
       target: claim.target,
+      quotaAllocated: !!claim.quota,
     }
   }
 
@@ -62,4 +63,7 @@ export default class ShortClaimData {
     enum: Object.values(ClaimTarget),
   })
   public readonly target: ClaimTarget
+
+  @ApiModelProperty({ example: true })
+  public readonly quotaAllocated: boolean
 }
