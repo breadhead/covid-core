@@ -9,6 +9,9 @@ import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
 import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
 import RelativesDisease from './RelativesDisease.vo'
+import MedicinalTreatment from './treatment/MedicinalTreatment'
+import RadiationTreatment from './treatment/RadiationTreatment'
+import SurgicalTreatment from './treatment/SurgicalTreatment'
 
 export enum ClaimStatus {
   New = 'new',
@@ -32,12 +35,6 @@ export enum ClaimTarget {
 interface AnalysisData {
   title: string
   url: string
-}
-
-interface DiseaseData {
-  relative: string
-  localization: string
-  diagnosisAge: number
 }
 
 @Entity()
@@ -90,6 +87,18 @@ export default class Claim {
     return this._relativesDiseases
   }
 
+  public get medicinalTreatments() {
+    return this._medicinalTreatments
+  }
+
+  public get radiationTreatments() {
+    return this._radiationTreatments
+  }
+
+  public get surgicalTreatments() {
+    return this._surgicalTreatments
+  }
+
   @Column()
   public description?: string
 
@@ -133,6 +142,15 @@ export default class Claim {
   @Column({ type: 'json' })
   private _relativesDiseases: RelativesDisease[] = []
 
+  @Column({ type: 'json' })
+  private _medicinalTreatments: MedicinalTreatment[] = []
+
+  @Column({ type: 'json' })
+  private _radiationTreatments: RadiationTreatment[] = []
+
+  @Column({ type: 'json' })
+  private _surgicalTreatments: SurgicalTreatment[] = []
+
   public constructor(
     id: string,
     createdAt: Date,
@@ -155,7 +173,6 @@ export default class Claim {
 
     this._status = ClaimStatus.New
     this._analysis = new Analysis({})
-    this._relativesDiseases = []
   }
 
   public isActive() {
@@ -248,10 +265,19 @@ export default class Claim {
     })
   }
 
-  public addNewRelativesDiseases(diseases: DiseaseData[]) {
-    this._relativesDiseases = diseases.map(
-      ({ relative, localization, diagnosisAge }) =>
-        new RelativesDisease(relative, localization, diagnosisAge),
-    )
+  public addNewRelativesDiseases(diseases: RelativesDisease[]) {
+    this._relativesDiseases = diseases
+  }
+
+  public newMedicinalTreatments(treatments: MedicinalTreatment[]): void {
+    this._medicinalTreatments = treatments
+  }
+
+  public newRadiationTreatments(treatments: RadiationTreatment[]): void {
+    this._radiationTreatments = treatments
+  }
+
+  public newSurgicalTreatments(treatments: SurgicalTreatment[]): void {
+    this._surgicalTreatments = treatments
   }
 }

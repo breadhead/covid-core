@@ -1,5 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
+import Vo from '@app/domain/claim/treatment/MedicinalTreatment'
+
 import MonthYear, { monthYearExample } from './MonthYear'
 import Treatment, { exampleTreatment } from './Treatment'
 
@@ -11,6 +13,18 @@ export const exampleMidicalTreatment: MedicinalTreatment = {
 }
 
 export default class MedicinalTreatment extends Treatment {
+  public static fromVo(vo: Vo) {
+    return {
+      region: vo.region,
+      when: MonthYear.fromDate(vo.when),
+      clinic: vo.clinic,
+      doctor: vo.doctor,
+      end: MonthYear.fromDate(vo.end),
+      cyclesCount: vo.cyclesCount,
+      schema: vo.schema,
+    }
+  }
+
   @ApiModelProperty({ example: exampleMidicalTreatment.end, required: false })
   public readonly end?: MonthYear
 
