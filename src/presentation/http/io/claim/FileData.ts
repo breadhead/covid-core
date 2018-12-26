@@ -10,12 +10,7 @@ export const fileDataExample: FileData = {
 export default class FileData {
   public static fromFileLink(link: FileLink): FileData | undefined {
     const file: FileData | undefined =
-      link.title && link.url
-        ? {
-            title: link.title,
-            url: link.url,
-          }
-        : undefined
+      link.title && link.url ? (link as FileData) : undefined
 
     return file
   }
