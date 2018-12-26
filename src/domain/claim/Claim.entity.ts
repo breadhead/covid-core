@@ -4,8 +4,14 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
 import User from '../user/User.entity'
+import Analysis from './analysis/Analysis.vo'
+import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
 import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
+import RelativesDisease from './RelativesDisease.vo'
+import MedicinalTreatment from './treatment/MedicinalTreatment'
+import RadiationTreatment from './treatment/RadiationTreatment'
+import SurgicalTreatment from './treatment/SurgicalTreatment'
 
 export enum ClaimStatus {
   New = 'new',
@@ -24,6 +30,11 @@ export enum ClaimTarget {
   Self = 'Для себя',
   Other = 'Для близкого человека',
   Found = 'Для подопечного Фонда',
+}
+
+interface AnalysisData {
+  title: string
+  url: string
 }
 
 @Entity()
@@ -56,7 +67,7 @@ export default class Claim {
   public readonly theme: string
 
   @Column({ nullable: true })
-  public readonly diagnosis?: string
+  public readonly localization?: string
 
   public get corporateInfo(): Option<CorporateInfo> {
     return this._corporateInfo.name && this._corporateInfo.position
@@ -67,6 +78,50 @@ export default class Claim {
   public get due(): Option<Date> {
     return this._due ? new Some(this._due) : new None()
   }
+
+  public get analysis(): Analysis {
+    return this._analysis
+  }
+
+  public get relativesDiseases(): RelativesDisease[] {
+    return this._relativesDiseases
+  }
+
+  public get medicinalTreatments() {
+    return this._medicinalTreatments
+  }
+
+  public get radiationTreatments() {
+    return this._radiationTreatments
+  }
+
+  public get surgicalTreatments() {
+    return this._surgicalTreatments
+  }
+
+  @Column()
+  public description?: string
+
+  @Column()
+  public diagnosis?: string
+
+  @Column()
+  public stage?: string
+
+  @Column()
+  public otherDisease?: string
+
+  @Column()
+  public feeling?: string
+
+  @Column()
+  public worst?: string
+
+  @Column()
+  public complaint?: string
+
+  @Column()
+  public nowTreatment?: string
 
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
@@ -81,13 +136,28 @@ export default class Claim {
   @Column({ nullable: true })
   private _due?: Date
 
+  @Column(type => Analysis)
+  private _analysis: Analysis
+
+  @Column({ type: 'json' })
+  private _relativesDiseases: RelativesDisease[] = []
+
+  @Column({ type: 'json' })
+  private _medicinalTreatments: MedicinalTreatment[] = []
+
+  @Column({ type: 'json' })
+  private _radiationTreatments: RadiationTreatment[] = []
+
+  @Column({ type: 'json' })
+  private _surgicalTreatments: SurgicalTreatment[] = []
+
   public constructor(
     id: string,
     createdAt: Date,
     applicant: Applicant,
     author: User,
     theme: string,
-    diagnosis?: string,
+    localization?: string,
     { company, position }: CorporateParams = {},
     target: ClaimTarget = ClaimTarget.Self,
   ) {
@@ -96,12 +166,13 @@ export default class Claim {
     this.applicant = applicant
     this.author = author
     this.theme = theme
-    this.diagnosis = diagnosis
+    this.localization = localization
     this.target = target
 
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
+    this._analysis = new Analysis({})
   }
 
   public isActive() {
@@ -138,5 +209,75 @@ export default class Claim {
 
   public changeDue(newDue: Date) {
     this._due = newDue
+  }
+
+  public addNewHisotlogy(url: string) {
+    const histology = new FileLink({
+      title: 'histology',
+      url,
+    })
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      histology,
+    })
+  }
+
+  public addNewDischarge(url: string) {
+    const discharge = new FileLink({
+      title: 'discharge',
+      url,
+    })
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      discharge,
+    })
+  }
+
+  public addNewAnalysis(analysis: AnalysisData[]) {
+    const titles = analysis.map(({ title }) => title)
+
+    this._analysis = new Analysis({
+      ...this._analysis,
+      other: this.analysis.other.filter(file => titles.includes(file.title)),
+    })
+
+    analysis.forEach(({ title, url }) => {
+      if (title === 'histology') {
+        return this.addNewHisotlogy(url)
+      } else if (title === 'discharge') {
+        return this.addNewDischarge(url)
+      }
+
+      const other = [
+        ...this._analysis.other.filter(file => file.title !== title),
+        new FileLink({
+          title,
+          url,
+        }),
+      ]
+
+      this._analysis = new Analysis({
+        ...this._analysis,
+        other,
+      })
+    })
+  }
+
+  public addNewRelativesDiseases(diseases: RelativesDisease[]) {
+    this._relativesDiseases = diseases
+  }
+
+  public newMedicinalTreatments(treatments: MedicinalTreatment[]): void {
+    this._medicinalTreatments = treatments
+  }
+
+  public newRadiationTreatments(treatments: RadiationTreatment[]): void {
+    this._radiationTreatments = treatments
+  }
+
+  public newSurgicalTreatments(treatments: SurgicalTreatment[]): void {
+    this._surgicalTreatments = treatments
   }
 }

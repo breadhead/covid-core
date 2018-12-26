@@ -35,9 +35,40 @@ const situationExample: SituationClaimData = {
 
 export default class SituationClaimData {
   public static fromEntity(claim: Claim): SituationClaimData {
+    const {
+      analysis,
+      relativesDiseases,
+      description,
+      diagnosis,
+      stage,
+      otherDisease,
+      feeling,
+      worst,
+      complaint,
+      nowTreatment,
+      radiationTreatments,
+      surgicalTreatments,
+      medicinalTreatments,
+    } = claim
+    const { histology, discharge, other } = analysis
+
     return {
-      ...situationExample,
+      radiationTreatments: radiationTreatments.map(RadiationTreatment.fromVo),
+      medicalsTreatments: medicinalTreatments.map(MedicinalTreatment.fromVo),
+      surgicalTreatments: surgicalTreatments.map(SurgicalTreatment.fromVo),
+      otherFiles: other.map(file => FileData.fromFileLink(file)),
+      histology: FileData.fromFileLink(histology),
+      discharge: FileData.fromFileLink(discharge),
+      relativesDiseases,
       id: claim.id,
+      otherDisease,
+      nowTreatment,
+      description,
+      diagnosis,
+      complaint,
+      feeling,
+      stage,
+      worst,
     }
   }
 
@@ -86,6 +117,6 @@ export default class SituationClaimData {
   @ApiModelProperty({ example: situationExample.discharge, required: false })
   public readonly discharge?: FileData
 
-  @ApiModelProperty({ example: situationExample.otherDisease })
+  @ApiModelProperty({ example: situationExample.otherFiles })
   public readonly otherFiles: FileData[]
 }

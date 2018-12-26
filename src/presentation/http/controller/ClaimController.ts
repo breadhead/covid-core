@@ -23,6 +23,7 @@ import { sortBy } from 'lodash'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import EditSituationCommand from '@app/application/claim/situation/EditSituationCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -122,16 +123,52 @@ export default class ClaimController {
   }
 
   @Post('sutiation')
+  @ApiOperation({ title: 'Send situation to claim' })
+  @ApiOkResponse({ description: 'Saved', type: SituationClaimData })
   public async sendSituation(
     @Body() request: SituationClaimData,
     @CurrentUser() user: TokenPayload,
   ): Promise<SituationClaimData> {
-    const { id } = request
+    const {
+      id,
+      description,
+      feeling,
+      diagnosis,
+      stage,
+      otherDisease,
+      worst,
+      complaint,
+      nowTreatment,
+      relativesDiseases,
+      surgicalTreatments,
+      medicalsTreatments,
+      radiationTreatments,
+      histology,
+      discharge,
+      otherFiles,
+    } = request
     const claim = await this.claimRepo.getOne(id)
-
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
-    const editiedClaim = await this.claimRepo.getOne(id)
+    const command: EditSituationCommand = new EditSituationCommand(
+      id,
+      description,
+      feeling,
+      diagnosis,
+      stage,
+      otherDisease,
+      worst,
+      complaint,
+      nowTreatment,
+      relativesDiseases,
+      surgicalTreatments,
+      medicalsTreatments,
+      radiationTreatments,
+      histology,
+      discharge,
+      otherFiles,
+    )
+    const editiedClaim: Claim = await this.bus.execute(command)
 
     return SituationClaimData.fromEntity(editiedClaim)
   }

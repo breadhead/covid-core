@@ -48,7 +48,7 @@ export default class CreateClaimHandler
       gender,
       region,
       theme,
-      diagnosis,
+      localization,
       company,
       position,
       target,
@@ -68,7 +68,7 @@ export default class CreateClaimHandler
         applicant,
         user,
         theme,
-        diagnosis,
+        localization,
         {
           company,
           position,
