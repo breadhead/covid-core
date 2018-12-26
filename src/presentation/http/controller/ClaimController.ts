@@ -32,6 +32,7 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import ShortClaimData from '../io/claim/ShortClaimData'
+import SituationClaimData from '../io/claim/SituationClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import ClaimForListResponse from '../response/ClaimForListResponse'
@@ -118,6 +119,21 @@ export default class ClaimController {
     )
 
     return ShortClaimData.fromEntity(claim)
+  }
+
+  @Post('sutiation')
+  public async sendSituation(
+    @Body() request: SituationClaimData,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<SituationClaimData> {
+    const { id } = request
+    const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    const editiedClaim = await this.claimRepo.getOne(id)
+
+    return SituationClaimData.fromEntity(editiedClaim)
   }
 
   @Post('close')
