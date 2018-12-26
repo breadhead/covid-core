@@ -123,6 +123,8 @@ export default class ClaimController {
   }
 
   @Post('sutiation')
+  @ApiOperation({ title: 'Send situation to claim' })
+  @ApiOkResponse({ description: 'Saved', type: SituationClaimData })
   public async sendSituation(
     @Body() request: SituationClaimData,
     @CurrentUser() user: TokenPayload,
