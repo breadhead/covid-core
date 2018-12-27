@@ -7,6 +7,7 @@ import RelativeDiseaseData, { relativeExampleData } from './RelativeDiseaseData'
 import MedicinalTreatment, {
   exampleMidicalTreatment,
 } from './treatment/MedicinalTreatment'
+import MonthYear, { monthYearExample } from './treatment/MonthYear'
 import RadiationTreatment, {
   exampleRadiationTreatment,
 } from './treatment/RadiationTreatment'
@@ -31,21 +32,23 @@ const situationExample: SituationClaimData = {
   histology: fileDataExample,
   discharge: fileDataExample,
   otherFiles: [fileDataExample],
+  diagnosisDate: monthYearExample,
 }
 
 export default class SituationClaimData {
   public static fromEntity(claim: Claim): SituationClaimData {
     const {
-      analysis,
-      relativesDiseases,
-      description,
-      diagnosis,
-      stage,
-      otherDisease,
-      feeling,
       worst,
+      stage,
+      feeling,
+      analysis,
       complaint,
+      diagnosis,
+      description,
       nowTreatment,
+      otherDisease,
+      diagnosisDate,
+      relativesDiseases,
       radiationTreatments,
       surgicalTreatments,
       medicinalTreatments,
@@ -57,6 +60,7 @@ export default class SituationClaimData {
       medicalsTreatments: medicinalTreatments.map(MedicinalTreatment.fromVo),
       surgicalTreatments: surgicalTreatments.map(SurgicalTreatment.fromVo),
       otherFiles: other.map(file => FileData.fromFileLink(file)),
+      diagnosisDate: MonthYear.fromDate(diagnosisDate),
       histology: FileData.fromFileLink(histology),
       discharge: FileData.fromFileLink(discharge),
       relativesDiseases,
@@ -119,4 +123,10 @@ export default class SituationClaimData {
 
   @ApiModelProperty({ example: situationExample.otherFiles })
   public readonly otherFiles: FileData[]
+
+  @ApiModelProperty({
+    example: situationExample.diagnosisDate,
+    required: false,
+  })
+  public readonly diagnosisDate?: MonthYear
 }

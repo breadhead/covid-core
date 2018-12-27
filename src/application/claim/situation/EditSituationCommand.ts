@@ -2,6 +2,7 @@ import { ICommand } from '@nestjs/cqrs'
 
 import File from './dto/File'
 import MedicinalTreatment from './dto/MedicinalTreatment'
+import MonthYear from './dto/MonthYear'
 import RadiationTreatment from './dto/RadiationTreatment'
 import RelativeDisease from './dto/RelativeDisease'
 import SurgicalTreatment from './dto/SurgicalTreatment'
@@ -24,5 +25,6 @@ export default class EditSituationCommand implements ICommand {
     public readonly histology?: File,
     public readonly discharge?: File,
     public readonly otherFiles: File[] = [],
+    public readonly diagnosisDate?: MonthYear,
   ) {}
 }

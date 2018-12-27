@@ -131,21 +131,22 @@ export default class ClaimController {
   ): Promise<SituationClaimData> {
     const {
       id,
-      description,
+      stage,
+      worst,
       feeling,
       diagnosis,
-      stage,
-      otherDisease,
-      worst,
       complaint,
+      histology,
+      discharge,
+      otherFiles,
+      description,
       nowTreatment,
+      otherDisease,
+      diagnosisDate,
       relativesDiseases,
       surgicalTreatments,
       medicalsTreatments,
       radiationTreatments,
-      histology,
-      discharge,
-      otherFiles,
     } = request
     const claim = await this.claimRepo.getOne(id)
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)

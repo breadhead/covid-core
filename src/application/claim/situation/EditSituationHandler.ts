@@ -60,25 +60,27 @@ export default class EditSituationHandler
 
   private updateMainInfo(
     {
-      description,
-      diagnosis,
       stage,
-      otherDisease,
-      feeling,
       worst,
+      feeling,
+      diagnosis,
       complaint,
+      description,
+      otherDisease,
       nowTreatment,
+      diagnosisDate,
     }: EditSituationCommand,
     claim: Claim,
   ): void {
-    claim.description = description
-    claim.diagnosis = diagnosis
     claim.stage = stage
-    claim.otherDisease = otherDisease
-    claim.feeling = feeling
     claim.worst = worst
+    claim.feeling = feeling
+    claim.diagnosis = diagnosis
     claim.complaint = complaint
+    claim.description = description
     claim.nowTreatment = nowTreatment
+    claim.otherDisease = otherDisease
+    claim.diagnosisDate = this.monthYearToDate(diagnosisDate)
   }
 
   private updateTreatments(

@@ -123,6 +123,9 @@ export default class Claim {
   @Column({ nullable: true })
   public nowTreatment?: string
 
+  @Column({ nullable: true })
+  public diagnosisDate?: Date
+
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
   private _quota?: Quota
