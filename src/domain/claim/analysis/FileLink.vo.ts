@@ -6,10 +6,10 @@ interface FileLinkParams {
 }
 
 export default class FileLink {
-  @Column()
+  @Column({ nullable: true })
   public readonly title?: string
 
-  @Column()
+  @Column({ nullable: true })
   public readonly url?: string
 
   public constructor(params: FileLinkParams) {
