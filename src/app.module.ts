@@ -22,7 +22,6 @@ import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 import AskQuestionsHandler from '@app/application/claim/AskQuestionsHandler'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
-import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import EditClaimVoter from '@app/application/claim/EditClaimVoter'
@@ -121,7 +120,6 @@ const securityVoters = [
   DraftVoter,
   ShowClaimVoter,
   EditClaimVoter,
-  ShowChatVoter,
 ]
 
 const eventSubscribers = [BoardSubscriber, NotifySubscriber]
