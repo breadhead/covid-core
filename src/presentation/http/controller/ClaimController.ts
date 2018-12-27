@@ -20,6 +20,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
+import AskQuestionsCommand from '@app/application/claim/AskQuestionsCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
@@ -192,12 +193,16 @@ export default class ClaimController {
     @Body() request: QuestionsClaimData,
     @CurrentUser() user: TokenPayload,
   ): Promise<QuestionsClaimData> {
-    const { id } = request
+    const { id, defaultQuestions, additionalQuestions } = request
 
     const claim = await this.claimRepo.getOne(id)
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, claim, user)
 
-    return {} as QuestionsClaimData
+    const editedClaim: Claim = await this.bus.execute(
+      new AskQuestionsCommand(id, defaultQuestions, additionalQuestions),
+    )
+
+    return QuestionsClaimData.fromEntity(editedClaim)
   }
 
   @Post('close')
