@@ -168,6 +168,7 @@ export default class ClaimController {
       histology,
       discharge,
       otherFiles,
+      diagnosisDate,
     )
     const editiedClaim: Claim = await this.bus.execute(command)
 
