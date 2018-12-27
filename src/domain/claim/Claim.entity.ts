@@ -99,28 +99,28 @@ export default class Claim {
     return this._surgicalTreatments
   }
 
-  @Column()
+  @Column({ nullable: true })
   public description?: string
 
-  @Column()
+  @Column({ nullable: true })
   public diagnosis?: string
 
-  @Column()
+  @Column({ nullable: true })
   public stage?: string
 
-  @Column()
+  @Column({ nullable: true })
   public otherDisease?: string
 
-  @Column()
+  @Column({ nullable: true })
   public feeling?: string
 
-  @Column()
+  @Column({ nullable: true })
   public worst?: string
 
-  @Column()
+  @Column({ nullable: true })
   public complaint?: string
 
-  @Column()
+  @Column({ nullable: true })
   public nowTreatment?: string
 
   @JoinColumn()
