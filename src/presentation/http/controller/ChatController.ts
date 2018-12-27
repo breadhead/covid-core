@@ -13,6 +13,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import PostMessageCommand from '@app/application/claim/chat/PostMessageCommand'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -32,6 +33,8 @@ export default class ChatController {
   public constructor(
     @InjectRepository(MessageRepository)
     private readonly messageRepo: MessageRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
   ) {}
@@ -54,15 +57,14 @@ export default class ChatController {
     @Param('id') id: string,
     @CurrentUser() user: TokenPayload,
   ): Promise<ChatMessageResponse[]> {
-    const messages = await this.messageRepo.findByClaimId(id)
+    const [messages, claim] = await Promise.all([
+      this.messageRepo.findByClaimId(id),
+      this.claimRepo.getOne(id),
+    ])
 
-    await this.votersUnity.denyAccessUnlessGranted(
-      Attribute.Show,
-      messages,
-      user,
-    )
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
-    return messages.map(ChatMessageResponse.fromEntity)
+    return messages.map(ChatMessageResponse.fromEntity(user))
   }
 
   @Post(':id')
@@ -101,6 +103,6 @@ export default class ChatController {
 
     const message: Message = await this.bus.execute(command)
 
-    return ChatMessageResponse.fromEntity(message)
+    return ChatMessageResponse.fromEntity(user)(message)
   }
 }

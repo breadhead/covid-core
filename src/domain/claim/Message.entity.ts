@@ -16,7 +16,7 @@ export default class Message {
 
   @JoinColumn()
   @ManyToOne(type => Claim)
-  public readonly claim: Claim
+  public readonly claim: Promise<Claim>
 
   @JoinColumn()
   @ManyToOne(type => User, { eager: true })
@@ -32,7 +32,7 @@ export default class Message {
     this.id = id
     this.date = date
     this.content = content
-    this.claim = claim
+    this.claim = Promise.resolve(claim)
     this.user = user
   }
 }
