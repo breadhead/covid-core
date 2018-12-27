@@ -46,8 +46,14 @@ export default class EditSituationHandler
     { histology, discharge, otherFiles }: EditSituationCommand,
     claim: Claim,
   ): void {
-    claim.addNewHisotlogy(histology.url)
-    claim.addNewDischarge(discharge.url)
+    if (histology) {
+      claim.addNewHisotlogy(histology.url)
+    }
+
+    if (discharge) {
+      claim.addNewDischarge(discharge.url)
+    }
+
     claim.addNewAnalysis(otherFiles)
   }
 
