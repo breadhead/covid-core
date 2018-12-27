@@ -55,6 +55,15 @@ export default class ClaimController {
   ) {}
 
   @Get('/')
+  @ApiOperation({ title: 'Show list of quotas' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: ClaimForListResponse,
+    isArray: true,
+  })
+  @ApiForbiddenResponse({
+    description: 'Client, case-manager or doctor API token doesn`t provided',
+  })
   public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
     ClaimForListResponse[]
   > {
