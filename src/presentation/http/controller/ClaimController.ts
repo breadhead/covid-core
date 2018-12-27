@@ -20,6 +20,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
+import AskQuestionsCommand from '@app/application/claim/AskQuestionsCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
@@ -32,6 +33,7 @@ import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
+import QuestionsClaimData from '../io/claim/QuestionsClaimData'
 import ShortClaimData from '../io/claim/ShortClaimData'
 import SituationClaimData from '../io/claim/SituationClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
@@ -55,6 +57,15 @@ export default class ClaimController {
   ) {}
 
   @Get('/')
+  @ApiOperation({ title: 'Show list of quotas' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: ClaimForListResponse,
+    isArray: true,
+  })
+  @ApiForbiddenResponse({
+    description: 'Client, case-manager or doctor API token doesn`t provided',
+  })
   public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
     ClaimForListResponse[]
   > {
@@ -149,7 +160,7 @@ export default class ClaimController {
       radiationTreatments,
     } = request
     const claim = await this.claimRepo.getOne(id)
-    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, claim, user)
 
     const command: EditSituationCommand = new EditSituationCommand(
       id,
@@ -173,6 +184,25 @@ export default class ClaimController {
     const editiedClaim: Claim = await this.bus.execute(command)
 
     return SituationClaimData.fromEntity(editiedClaim)
+  }
+
+  @Post('questions')
+  @ApiOperation({ title: 'Ask questions for claim' })
+  @ApiOkResponse({ description: 'Saved', type: QuestionsClaimData })
+  public async askQuestions(
+    @Body() request: QuestionsClaimData,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<QuestionsClaimData> {
+    const { id, defaultQuestions, additionalQuestions } = request
+
+    const claim = await this.claimRepo.getOne(id)
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, claim, user)
+
+    const editedClaim: Claim = await this.bus.execute(
+      new AskQuestionsCommand(id, defaultQuestions, additionalQuestions),
+    )
+
+    return QuestionsClaimData.fromEntity(editedClaim)
   }
 
   @Post('close')

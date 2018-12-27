@@ -99,6 +99,13 @@ export default class Claim {
     return this._surgicalTreatments
   }
 
+  public get questions() {
+    return {
+      defaultQuestions: this._defaultQuestions,
+      additionalQuestions: this._additionalQuestions,
+    }
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -153,6 +160,12 @@ export default class Claim {
 
   @Column({ type: 'json' })
   private _surgicalTreatments: SurgicalTreatment[] = []
+
+  @Column({ type: 'json' })
+  private _defaultQuestions: string[] = []
+
+  @Column({ type: 'json' })
+  private _additionalQuestions: string[] = []
 
   public constructor(
     id: string,
@@ -282,5 +295,13 @@ export default class Claim {
 
   public newSurgicalTreatments(treatments: SurgicalTreatment[]): void {
     this._surgicalTreatments = treatments
+  }
+
+  public newQuestions(
+    defaultQuestions: string[],
+    additionalQuestions: string[],
+  ): void {
+    this._defaultQuestions = defaultQuestions
+    this._additionalQuestions = additionalQuestions
   }
 }

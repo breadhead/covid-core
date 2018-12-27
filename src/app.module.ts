@@ -19,6 +19,7 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import AskQuestionsHandler from '@app/application/claim/AskQuestionsHandler'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
@@ -92,6 +93,7 @@ import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngin
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
+  AskQuestionsHandler,
   CreateQuotaHandler,
   TransferQuotaHandler,
   EditQuotaHandler,

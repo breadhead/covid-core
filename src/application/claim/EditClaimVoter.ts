@@ -17,7 +17,7 @@ export default class EditClaimVoter implements SecurityVoter<Claim> {
   ) {}
 
   public supports(attribute: Attribute, subject) {
-    return attribute === Attribute.Show && subject instanceof Claim
+    return attribute === Attribute.Edit && subject instanceof Claim
   }
 
   public async voteOnAttribute(
