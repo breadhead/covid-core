@@ -107,7 +107,7 @@ export default class ClaimController {
     @CurrentUser() user: TokenPayload,
   ): Promise<ShortClaimData> {
     const { login } = user
-    const { theme, diagnosis, company } = request
+    const { theme, localization, company } = request
     const { name, age, gender, region, email, phone } = request.personalData
 
     const { companyName = null, companyPosition = null } = company
@@ -122,7 +122,7 @@ export default class ClaimController {
         age,
         gender,
         region,
-        diagnosis,
+        localization,
         email,
         phone,
         companyName,
@@ -133,7 +133,7 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
-  @Post('sutiation')
+  @Post('situation')
   @ApiOperation({ title: 'Send situation to claim' })
   @ApiOkResponse({ description: 'Saved', type: SituationClaimData })
   public async sendSituation(
