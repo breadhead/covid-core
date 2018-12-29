@@ -39,6 +39,7 @@ import SituationClaimData from '../io/claim/SituationClaimData'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import ClaimForListResponse from '../response/ClaimForListResponse'
+import ClaimQuotaResponse from '../response/ClaimQuotaResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
@@ -261,5 +262,23 @@ export default class ClaimController {
     await this.bus.execute(new MoveToNextStatusCommand(id))
 
     return
+  }
+
+  @Get(':id/quota')
+  @ApiOperation({ title: 'Claim`s quota data' })
+  @ApiOkResponse({ description: 'Success', type: ShortClaimData })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
+  public async showInfoForClaim(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ClaimQuotaResponse> {
+    const claim = await this.claimRepo.getOne(id)
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    return ClaimQuotaResponse.fromEntity(claim.quota)
   }
 }
