@@ -98,6 +98,25 @@ export default class ClaimController {
     return ShortClaimData.fromEntity(claim)
   }
 
+  @Get(':id/situation')
+  @ApiOperation({ title: 'Claim`s situations data' })
+  @ApiOkResponse({ description: 'Success', type: ShortClaimData })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
+  public async showSituation(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<SituationClaimData> {
+    const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    return SituationClaimData.fromEntity(claim)
+  }
+
   @Post('short')
   @Roles(Role.Client)
   @ApiOperation({ title: 'Send short claim' })
