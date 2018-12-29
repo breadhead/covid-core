@@ -42,7 +42,7 @@ export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
-  @Column(type => Date)
+  @Column({ nullable: true })
   public readonly createdAt: Date
 
   @Column(type => Applicant)
