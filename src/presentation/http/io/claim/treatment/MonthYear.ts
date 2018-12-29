@@ -11,6 +11,11 @@ export default class MonthYear {
       return undefined
     }
 
+    // TODO: это костыль. Почему то из базы читается дата строкой, а не датой. Нужно исправть как будет время.
+    if (typeof date === 'string') {
+      date = new Date(date)
+    }
+
     return {
       month: date.getMonth() + 1,
       year: date.getFullYear(),
