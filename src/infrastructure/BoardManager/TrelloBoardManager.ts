@@ -1,25 +1,26 @@
+import { Injectable } from '@nestjs/common'
 import * as Trello from 'trello'
-import BoardManager, { Label, List, Member } from './BoardManager'
-import BoardManagerExceprion from './BoardManagerException'
 import Configuration from '../Configuration/Configuration'
+import BoardManager, { Label, List, Member } from './BoardManager'
+import BoardManagerException from './BoardManagerException'
 
 const tapOrThrow = response => {
   if (typeof response === 'string') {
-    throw new BoardManagerExceprion(response)
+    throw new BoardManagerException(response)
   }
-
   return response
 }
 
+@Injectable()
 export default class TrelloBoardManager implements BoardManager {
   private trello: any
 
-  public constructor(config: Configuration) {
+  public constructor(private readonly config: Configuration) {
     this.trello = new Trello(
-      config
+      this.config
         .get('TRELLO_APP_KEY')
         .getOrElse('f3e15111456e6b40e7276b58c3ac5a33'),
-      config
+      this.config
         .get('TRELLO_USER_TOKEN')
         .getOrElse(
           '6d7cfc89e7d946b852fc749fd996493482cb17ea895c6c086e6a586657168001',
