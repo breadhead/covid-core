@@ -2,6 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 import User from './User.entity'
+import NenaprasnoCabinetCredentials from '@app/domain/user/credentials/NenaprasnoCabinetCredentials.vo'
 
 @EntityRepository(User)
 export default class UserRepository extends AbstractRepository<User> {
@@ -22,7 +23,7 @@ export default class UserRepository extends AbstractRepository<User> {
   public findOneByCabinetId(id: number): Promise<User | null> {
     return this.repository.findOne({
       where: {
-        '_nenaprasnoCabinetCredentials.id': id,
+        NenaprasnoCabinetCredentials: id,
       },
     })
   }
