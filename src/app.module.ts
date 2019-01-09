@@ -90,6 +90,7 @@ import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
+import TrelloBoardManager from "@app/infrastructure/BoardManager/TrelloBoardManager";
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -209,7 +210,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     },
     {
       provide: BoardManager,
-      useClass: VoidBoardManager,
+      useClass: TrelloBoardManager,
     },
     CommandBus,
     StatusMover,

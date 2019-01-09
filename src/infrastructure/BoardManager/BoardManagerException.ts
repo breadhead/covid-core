@@ -1,1 +1,1 @@
-export default class BoardManagerExceprion extends Error {}
+export default class BoardManagerException extends Error {}
