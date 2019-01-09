@@ -15,9 +15,7 @@ const tapOrThrow = response => {
 export default class TrelloBoardManager implements BoardManager {
   private trello: any
 
-  private async getCardId(claimId: string) {
-
-  }
+  private async getCardId(claimId: string) {}
 
   public constructor(private readonly config: Configuration) {
     this.trello = new Trello(
