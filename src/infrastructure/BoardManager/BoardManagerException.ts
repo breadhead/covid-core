@@ -1,3 +1,1 @@
-export default class BoardManagerExceprion extends Error {
-
-}
+export default class BoardManagerExceprion extends Error {}

@@ -17,7 +17,6 @@ export default interface BoardManager {
   createCard(name: string, content: string, listId: string): Promise<string>
   moveCard(cardId: string, listId: string): Promise<void>
 
-  createLabel(cardId: string, labelText: string): Promise<void>
   addLabel(cardId: string, labelText: string): Promise<void>
 
   setDueDate(cardId: string, due: Date): Promise<void>
