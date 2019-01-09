@@ -28,14 +28,20 @@ export default class AuthController {
   @ApiOperation({ title: 'Create the new client' })
   @ApiOkResponse({ description: 'Registered', type: ClientResponse })
   @ApiBadRequestResponse({ description: 'Login already taken' })
-  public register(
+  public async register(
     @Body() registrationRequest: RegistrationRequest,
-  ): ClientResponse {
-    return {
-      id: 'ffh',
-      email: registrationRequest.email,
-      phone: registrationRequest.phone,
-    }
+  ): Promise<TokenResponse> {
+    const { email, password, confirm } = registrationRequest
+
+    const { token, user } = await this.authenticator.signUp(
+      email,
+      password,
+      confirm,
+    )
+
+    const roles = user.roles.map(role => role.toString())
+
+    return new TokenResponse(token, roles)
   }
 
   @Post('login')
