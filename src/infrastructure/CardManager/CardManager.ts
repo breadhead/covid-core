@@ -6,6 +6,4 @@ export default interface CardManager {
 
 const CardManager = Symbol('CardManager')
 
-export {
-  CardManager,
-}
+export { CardManager }
