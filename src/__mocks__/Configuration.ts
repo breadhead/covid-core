@@ -1,9 +1,17 @@
-import { Option } from "tsoption"
+import { Option } from 'tsoption'
 
-const mock = jest.fn().mockImplementation(() => ({
-  get: (key) => {
-    return Option.of(key)
-  },
-}))
+import Configuration from '@app/infrastructure/Configuration/Configuration'
 
-export default mock
+export default class MockConfiguration extends Configuration {
+    public constructor(private readonly values: { [key: string]: string }) {
+        super()
+    }
+
+    public get(key: string): Option<string> {
+        return Option.of(this.values[key])
+    }
+
+    public isDev() {
+        return false
+    }
+}
