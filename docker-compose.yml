@@ -28,8 +28,6 @@ services:
       SMTP_PASSWORD: "D1EBHkyHV7nhkuQJA7"
       ONCOHELP_SENDER_EMAIL: "hello@breadhead.ru"
       SITE_URL: "localhost:3332"
-      TRELLO_APP_KEY: "f3e15111456e6b40e7276b58c3ac5a33"
-      TRELLO_USER_TOKEN: "6d7cfc89e7d946b852fc749fd996493482cb17ea895c6c086e6a586657168001"
   mysql:
     image: mysql:5.7
     volumes:
