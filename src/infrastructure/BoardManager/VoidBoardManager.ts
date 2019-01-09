@@ -32,8 +32,8 @@ export default class VoidBoardManager implements BoardManager {
   public getBoardMembers(boardId: string): Promise<Member[]> {
     return Promise.resolve(1 as any)
   }
-
-  public getBoardLists(boardId: string): Promise<Label[]> {
+  // TODO: fix types
+  public getBoardLists(boardId: any): Promise<any[]> {
     return Promise.resolve(1 as any)
   }
 }
