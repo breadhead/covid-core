@@ -8,6 +8,11 @@ export interface Label {
   readonly text: string
 }
 
+export interface List {
+  readonly id: string
+  readonly name: string
+}
+
 export default interface BoardManager {
   createCard(name: string, content: string, listId: string): Promise<string>
   moveCard(cardId: string, listId: string): Promise<void>
