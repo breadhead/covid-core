@@ -6,4 +6,10 @@ export default class RegistrationRequest {
 
   @ApiModelProperty({ required: false, example: '79999999999' })
   public readonly phone?: string
+
+  @ApiModelProperty({ example: 'password' })
+  public readonly password: string
+
+  @ApiModelProperty({ example: 'password' })
+  public readonly confirm: string
 }

@@ -13,6 +13,17 @@ export default class NenaprasnoCabinetClient {
   ) {}
 
   /** @returns nenaprasnoUserId */
+  public signUp(
+    login: string,
+    password: string,
+    confirm: string,
+  ): Promise<number | null> {
+    return this.request('auth/sign-up', { login, password, confirm })
+      .then(response => Number(response.data))
+      .catch(() => null)
+  }
+
+  /** @returns nenaprasnoUserId */
   public signIn(login: string, password: string): Promise<number | null> {
     return this.request('auth/sign-in', { login, password })
       .then(response => Number(response.data))
