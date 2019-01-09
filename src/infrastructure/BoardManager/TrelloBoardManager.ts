@@ -15,6 +15,10 @@ const tapOrThrow = response => {
 export default class TrelloBoardManager implements BoardManager {
   private trello: any
 
+  private async getCardId(claimId: string) {
+
+  }
+
   public constructor(private readonly config: Configuration) {
     this.trello = new Trello(
       this.config
@@ -33,6 +37,7 @@ export default class TrelloBoardManager implements BoardManager {
     content: string,
     listId: string,
   ): Promise<string> {
+    console.log('create card')
     const response = await this.trello
       .addCard(name, content, listId)
       .then(tapOrThrow)
@@ -40,17 +45,20 @@ export default class TrelloBoardManager implements BoardManager {
   }
 
   public async moveCard(cardId: string, listId: string): Promise<void> {
+    console.log('move card')
     const response = await this.trello
       .updateCardList(cardId, listId)
       .then(tapOrThrow)
   }
 
   public async addLabel(cardId: string, labelText: string): Promise<void> {
+    console.log('label card')
     const card = await this.getCard(cardId)
     const label = await this.createOrGetLabel(card.idBoard, labelText)
     const result = this.trello.addLabelToCard(cardId, label.id).then(tapOrThrow)
   }
   public async setDueDate(cardId: string, due: Date): Promise<void> {
+    console.log('set due card')
     const result = await this.trello
       .addDueDateToCard(cardId, due)
       .then(tapOrThrow)
@@ -59,6 +67,7 @@ export default class TrelloBoardManager implements BoardManager {
     cardId: string,
     memberId: string,
   ): Promise<void> {
+    console.log('add member')
     const result = await this.trello
       .addMemberToCard(cardId, memberId)
       .then(tapOrThrow)
@@ -67,6 +76,7 @@ export default class TrelloBoardManager implements BoardManager {
     const result = await this.trello.getBoardMembers(boardId).then(tapOrThrow)
     return result
   }
+
   public async getBoardLists(boardId: string): Promise<List[]> {
     const result = await this.trello.getListsOnBoard(boardId).then(tapOrThrow)
     return result

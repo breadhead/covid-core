@@ -14,6 +14,9 @@ import IdGenerator, {
 } from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import CreateClaimCommand from './CreateClaimCommand'
+import EventEmitter from "@app/infrastructure/events/EventEmitter";
+import ClaimRejectedEvent from "@app/domain/claim/event/ClaimRejectedEvent";
+import CreateClaimEvent from "@app/domain/claim/event/CreateClaimEvent";
 
 @CommandHandler(CreateClaimCommand)
 export default class CreateClaimHandler
@@ -22,6 +25,7 @@ export default class CreateClaimHandler
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    @Inject(EventEmitter) private readonly eventEmitter: EventEmitter,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
   ) {}
@@ -77,7 +81,9 @@ export default class CreateClaimHandler
       )
 
       const [savedClaim, ...rest] = await em.save([shortClaim, user])
-
+        
+      await this.eventEmitter.emit(new CreateClaimEvent(savedClaim))
+        
       return savedClaim as Claim
     })
   }
