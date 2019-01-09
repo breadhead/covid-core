@@ -1,4 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 
 import Company from '../company/Company.entity'
 
@@ -10,7 +16,7 @@ export default class Income {
   public readonly id
 
   @JoinColumn()
-  @ManyToOne((type) => Quota, { eager: true })
+  @ManyToOne(type => Quota, { eager: true })
   public readonly target: Quota
 
   @Column()
@@ -20,7 +26,7 @@ export default class Income {
   public readonly date: Date
 
   @JoinColumn()
-  @ManyToOne((type) => Company, { eager: true })
+  @ManyToOne(type => Company, { eager: true })
   public readonly payer?: Company
 
   public constructor(target: Quota, amount: number, date: Date) {
@@ -28,7 +34,8 @@ export default class Income {
     this.amount = amount
     this.date = date
 
-    if (target) { // because TypeORM call contructor with empty args
+    if (target) {
+      // because TypeORM call contructor with empty args
       this.payer = target.company
     }
   }

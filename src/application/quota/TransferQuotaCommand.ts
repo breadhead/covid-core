@@ -5,5 +5,5 @@ export default class TransferQuotaCommand implements ICommand {
     public readonly sourceId: string,
     public readonly targetId: string,
     public readonly count: number,
-  ) { }
+  ) {}
 }

@@ -6,7 +6,5 @@ export const NAME = 'claim/new-message'
 export default class NewMessageEvent implements Event<Message> {
   public readonly name = NAME
 
-  public constructor(
-    public readonly payload: Message,
-  ) { }
+  public constructor(public readonly payload: Message) {}
 }

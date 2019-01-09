@@ -14,4 +14,12 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
 
     return claim
   }
+
+  public async getByLogin(login: string): Promise<Claim[]> {
+    const claims = await this.repository.find({
+      author: { login },
+    })
+
+    return claims
+  }
 }

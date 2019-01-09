@@ -1,5 +1,10 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { HttpModule, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import {
+  HttpModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common'
 import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core'
 import { CQRSModule } from '@nestjs/cqrs'
 import { JwtModule } from '@nestjs/jwt'
@@ -14,13 +19,15 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import AskQuestionsHandler from '@app/application/claim/AskQuestionsHandler'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
-import ShowChatVoter from '@app/application/claim/chat/ShowChatVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
+import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
+import EditSituationHandler from '@app/application/claim/situation/EditSituationHandler'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
@@ -36,8 +43,11 @@ import NotifySubscriber from '@app/application/subscriber/NotifySubscriber'
 import Authenticator from '@app/application/user/auth/Authenticator'
 import InternalSignInProvider from '@app/application/user/auth/providers/InternalSignInProvider'
 import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/providers/NenaprasnoCabinetSignInProvider'
-import SignInProvider, { SignInProviders } from '@app/application/user/auth/providers/SignInProvider'
+import SignInProvider, {
+  SignInProviders,
+} from '@app/application/user/auth/providers/SignInProvider'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
+import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -56,6 +66,7 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
+import IncomeQuotaHandler from '@app/application/quota/IncomeQuotaHandler'
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
@@ -75,17 +86,28 @@ import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCa
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
+import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
+import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 const commandHandlers = [
-  CreateQuotaHandler, TransferQuotaHandler, EditQuotaHandler, BindQuotaHandler,
+  AskQuestionsHandler,
+  CreateQuotaHandler,
+  TransferQuotaHandler,
+  EditQuotaHandler,
+  BindQuotaHandler,
   PostMessageHandler,
   CreateUserFromCabinetHandler,
+  SendVerificationHandler,
   PostFeedbackHandler,
-  CreateClaimHandler, CloseClaimHandler,
-  CreateDraftHandler, EditDraftHandler,
+  CreateClaimHandler,
+  CloseClaimHandler,
+  CreateDraftHandler,
+  EditDraftHandler,
   MoveToNextStatusHandler,
+  IncomeQuotaHandler,
+  EditSituationHandler,
 ]
 
 const signInProviders = [
@@ -96,13 +118,11 @@ const signInProviders = [
 const securityVoters = [
   PostMessageVoter,
   DraftVoter,
-  ShowClaimVoter, ShowChatVoter,
+  ShowClaimVoter,
+  EditClaimVoter,
 ]
 
-const eventSubscribers = [
-  BoardSubscriber,
-  NotifySubscriber,
-]
+const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
   imports: [
@@ -120,18 +140,22 @@ const eventSubscribers = [
       useClass: DbOptionsFactory,
     }),
     TypeOrmModule.forFeature([
-      Quota, QuotaRepository,
-      Company, CompanyRepository,
-      Message, MessageRepository,
-      Claim, ClaimRepository,
-      User, UserRepository,
-      Draft, DraftRepository,
+      Quota,
+      QuotaRepository,
+      Company,
+      CompanyRepository,
+      Message,
+      MessageRepository,
+      Claim,
+      ClaimRepository,
+      User,
+      UserRepository,
+      Draft,
+      DraftRepository,
     ]),
     HttpModule,
   ],
-  controllers: [
-    ...Object.values(httpControllers),
-  ],
+  controllers: [...Object.values(httpControllers)],
   providers: [
     ...httpFilters,
     ...commandHandlers,
@@ -158,6 +182,10 @@ const eventSubscribers = [
     {
       provide: EmailSender,
       useClass: NodemailerEmailSender,
+    },
+    {
+      provide: SmsSender,
+      useClass: RedSmsSender,
     },
     {
       provide: TemplateEngine,
@@ -202,7 +230,7 @@ export class AppModule implements NestModule {
     private readonly command$: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+  ) {}
 
   public onModuleInit() {
     this.command$.setModuleRef(this.moduleRef)

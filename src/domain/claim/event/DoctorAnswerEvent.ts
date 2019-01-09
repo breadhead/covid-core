@@ -6,7 +6,5 @@ export const NAME = 'claim/doctor-answer-event'
 export default class DoctorAnswerEvent implements Event<Claim> {
   public readonly name = NAME
 
-  public constructor(
-    public readonly payload: Claim,
-  ) { }
+  public constructor(public readonly payload: Claim) {}
 }

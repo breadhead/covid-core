@@ -8,6 +8,4 @@ export default interface TemplateEngine {
 
 const TemplateEngine = Symbol('TemplateEngine')
 
-export {
-  TemplateEngine,
-}
+export { TemplateEngine }

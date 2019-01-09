@@ -11,14 +11,14 @@ import FeedbackResponse from '../response/FeedbackResponse'
 @Controller('feedback')
 @ApiUseTags('feedback')
 export default class FeedbackController {
-  public constructor(
-    private readonly bus: CommandBus,
-  ) { }
+  public constructor(private readonly bus: CommandBus) {}
 
   @Post('send')
   @ApiOperation({ title: 'Send feedback' })
   @ApiCreatedResponse({ description: 'Success', type: FeedbackResponse })
-  public async sendFeedback(@Body() request: FeedbackRequest): Promise<FeedbackResponse> {
+  public async sendFeedback(
+    @Body() request: FeedbackRequest,
+  ): Promise<FeedbackResponse> {
     const command = new PostFeedbackCommand(
       request.name,
       request.content,

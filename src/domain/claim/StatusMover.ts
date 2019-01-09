@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
+import { Option } from 'tsoption'
 import { EntityManager } from 'typeorm'
 
+import Configuration from '@app/infrastructure/Configuration/Configuration'
 import Event from '@app/infrastructure/events/Event'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import { add } from '@app/infrastructure/utils/date'
 
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
+import ChangeStatusEvent from './event/ChangeStatusEvent'
 import ClaimRejectedEvent from './event/ClaimRejectedEvent'
 import DoctorAnswerEvent from './event/DoctorAnswerEvent'
+import DueDateUpdatedEvent from './event/DueDateUpdatedEvent'
 import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
+
+const DEFAULT_DURATION = '2d'
 
 @Injectable()
 export default class StatusMover {
@@ -24,10 +31,23 @@ export default class StatusMover {
     [ClaimStatus.DeliveredToCustomer]: this.fromDeliveredToCustomer,
   }
 
+  private readonly maxDurations: { [key in ClaimStatus]?: Option<string> }
+
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+    config: Configuration,
+  ) {
+    this.maxDurations = {
+      [ClaimStatus.QuestionnaireWaiting]: config.get(
+        'DUARTION_QUESTIONNAIRE_WAITING',
+      ),
+      [ClaimStatus.AtTheDoctor]: config.get('DURATION_AT_THE_DOCTOR'),
+      [ClaimStatus.DeliveredToCustomer]: config.get(
+        'DURATION_DELIVERED_TO_CUSTOMER',
+      ),
+    }
+  }
 
   public async deny(claim: Claim): Promise<void> {
     const newStatus = ClaimStatus.Denied
@@ -61,7 +81,9 @@ export default class StatusMover {
     return ClaimStatus.QuestionnaireValidation
   }
 
-  private async fromQuestionnaireValidation(cliam: Claim): Promise<ClaimStatus> {
+  private async fromQuestionnaireValidation(
+    cliam: Claim,
+  ): Promise<ClaimStatus> {
     return ClaimStatus.AtTheDoctor
   }
 
@@ -78,18 +100,32 @@ export default class StatusMover {
   }
 
   private async fromUnknown(claim: Claim) {
-    throw new ActionUnavailableException(Claim.name, `Unknown status in claim #${claim.id}`)
+    throw new ActionUnavailableException(
+      Claim.name,
+      `Unknown status in claim #${claim.id}`,
+    )
   }
 
-  private async changeStatus(claim: Claim, newStatus: ClaimStatus): Promise<void> {
+  private async changeStatus(
+    claim: Claim,
+    newStatus: ClaimStatus,
+  ): Promise<void> {
     claim.changeStatus(newStatus)
+
+    this.setDue(claim, newStatus)
 
     await this.em.save(claim)
 
     // Push events
-    const event = this.getEvent(claim)
-    if (event) {
-      this.eventEmitter.emit(event)
+    this.getEvents(claim).forEach(event => this.eventEmitter.emit(event))
+  }
+
+  private setDue(claim: Claim, newStatus: ClaimStatus): void {
+    const statusDuration = this.maxDurations[newStatus]
+    if (statusDuration) {
+      const due = add(new Date(), statusDuration.getOrElse(DEFAULT_DURATION))
+
+      claim.changeDue(due)
     }
   }
 
@@ -100,18 +136,22 @@ export default class StatusMover {
     return getNextStatus(claim)
   }
 
-  private getEvent(claim: Claim): Event | null {
-    switch (claim.status) {
-    case ClaimStatus.Denied:
-      return new ClaimRejectedEvent(claim)
-    case ClaimStatus.DeliveredToCustomer:
-      return new DoctorAnswerEvent(claim)
-    case ClaimStatus.QuestionnaireWaiting:
-      return new ShortClaimApprovedEvent(claim)
-    case ClaimStatus.QueueForQuota:
-      return new ShortClaimQueuedEvent(claim)
-    default:
-      return null
-    }
+  private getEvents(claim: Claim): Event[] {
+    const actionEvent = {
+      [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
+      [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
+      [ClaimStatus.QuestionnaireWaiting]: new ShortClaimApprovedEvent(claim),
+      [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
+    }[claim.status]
+
+    const statusEvent = new ChangeStatusEvent(claim)
+
+    const dueDateEvents = Object.keys(this.maxDurations)
+      .filter(key => key === claim.status)
+      .map(() => new DueDateUpdatedEvent(claim))
+
+    const events = [actionEvent, statusEvent, ...dueDateEvents].filter(Boolean)
+
+    return events
   }
 }

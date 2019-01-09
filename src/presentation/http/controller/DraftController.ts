@@ -1,6 +1,20 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
-import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
+} from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import CreateDraftCommand from '@app/application/draft/CreateDraftCommand'
@@ -21,12 +35,12 @@ import CurrentUser from './decorator/CurrentUser'
 @ApiBearerAuth()
 @ApiUseTags('draft')
 export default class DraftController {
-
   public constructor(
-    @InjectRepository(DraftRepository) private readonly draftRepo: DraftRepository,
+    @InjectRepository(DraftRepository)
+    private readonly draftRepo: DraftRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
-  ) { }
+  ) {}
 
   @Post('create')
   @ApiOperation({ title: 'Create the new draft' })
@@ -58,7 +72,11 @@ export default class DraftController {
 
     const command = new EditDraftCommand(id, body)
 
-    await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, command, user)
+    await this.votersUnity.denyAccessUnlessGranted(
+      Attribute.Edit,
+      command,
+      user,
+    )
 
     const draft: Draft = await this.bus.execute(command)
 

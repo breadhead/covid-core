@@ -10,6 +10,7 @@ export default class CreateQuotaCommand implements ICommand {
     public readonly companyLogoUrl?: string,
     public readonly companyLink?: string,
     public readonly publicCompany?: boolean,
+    public readonly companyComment?: string,
     public readonly comment?: string,
   ) {}
 }

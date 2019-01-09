@@ -4,8 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import PasswordEncoder,
-{ PasswordEncoder as PasswordEncoderSymbol } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
+import PasswordEncoder, {
+  PasswordEncoder as PasswordEncoderSymbol,
+} from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 
 import SignInProvider from './SignInProvider'
 
@@ -30,8 +31,10 @@ export default class InternalSignInProvider implements SignInProvider {
     const user = await this.userRepo.getOne(login)
 
     const valid = await user.passwordCredentials
-      .map((userCredentials) => userCredentials.password)
-      .map((encodedPassword) => this.encoder.isPasswordValid(encodedPassword, password ))
+      .map(userCredentials => userCredentials.password)
+      .map(encodedPassword =>
+        this.encoder.isPasswordValid(encodedPassword, password),
+      )
       .getOrElse(Promise.resolve(false))
 
     if (!valid) {

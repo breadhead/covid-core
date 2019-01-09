@@ -7,7 +7,5 @@ import RolesAuthGuard, { ROLES_KEY } from './RolesAuthGuard'
 
 const AddRoles = (...roles: Role[]) => ReflectMetadata(ROLES_KEY, roles)
 
-export default (...roles: Role[]) => ComposeMethodDecorators([
-  UseGuards(RolesAuthGuard),
-  AddRoles(...roles),
-])
+export default (...roles: Role[]) =>
+  ComposeMethodDecorators([UseGuards(RolesAuthGuard), AddRoles(...roles)])

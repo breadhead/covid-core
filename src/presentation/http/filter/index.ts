@@ -6,6 +6,7 @@ import InvariantViolationFilter from './InvariantViolationFilter'
 import QueryFailedFilter from './QueryFailedFilter'
 import QuotaAllocationFailedFilter from './QuotaAllocationFailedFilter'
 import SecurityFilter from './SecurityFilter'
+import VerificationFailedFilter from './VerificationFailedFilter'
 
 export default FilterProviderFactory.providers(
   ActionUnavailableFilter,
@@ -15,4 +16,5 @@ export default FilterProviderFactory.providers(
   InvalidCredentialsFilter,
   SecurityFilter,
   QuotaAllocationFailedFilter,
+  VerificationFailedFilter,
 )

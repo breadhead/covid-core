@@ -13,24 +13,29 @@ import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import PostMessageCommand from './PostMessageCommand'
 
 @CommandHandler(PostMessageCommand)
-export default class PostMessageHandler implements ICommandHandler<PostMessageCommand> {
+export default class PostMessageHandler
+  implements ICommandHandler<PostMessageCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly eventEmitter: EventEmitter,
-  ) { }
+  ) {}
 
   public async execute(command: PostMessageCommand, resolve: (value?) => void) {
     const { id, date, content, claimId, userLogin } = command
 
-    const [ claim, user ] = await Promise.all([
+    const [claim, user] = await Promise.all([
       this.claimRepo.getOne(claimId),
       this.userRepo.getOne(userLogin),
     ])
 
     if (claim.isInactive()) {
-      throw new ActionUnavailableException('Post message', 'Inactive claim messaging')
+      throw new ActionUnavailableException(
+        'Post message',
+        'Inactive claim messaging',
+      )
     }
 
     const message = await this.em.save(

@@ -7,5 +7,5 @@ export default class PostMessageCommand implements ICommand {
     public readonly content: string,
     public readonly claimId: string,
     public readonly userLogin: string,
-  ) { }
+  ) {}
 }

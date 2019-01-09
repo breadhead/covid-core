@@ -9,25 +9,29 @@ import Claim from '@app/domain/claim/Claim.entity'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 import UserRepository from '@app/domain/user/UserRepository'
-import IdGenerator, { IdGenerator as IdGeneratorSymbol } from '@app/infrastructure/IdGenerator/IdGenerator'
+import IdGenerator, {
+  IdGenerator as IdGeneratorSymbol,
+} from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import CreateClaimCommand from './CreateClaimCommand'
 
 @CommandHandler(CreateClaimCommand)
-export default class CreateClaimHandler implements ICommandHandler<CreateClaimCommand> {
+export default class CreateClaimHandler
+  implements ICommandHandler<CreateClaimCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
-  ) { }
+  ) {}
 
   public async execute(command: CreateClaimCommand, resolve: (value?) => void) {
     const claim = await this.createClaim(command)
 
-    await this.allocator.allocateAuto(claim)
-      .catch(() => { /* ok, common quota not found */ })
+    await this.allocator.allocateAuto(claim).catch(() => {
+      /* ok, common quota not found */
+    })
 
     await this.statusMover.next(claim) // Move to next status after qouta allocating
 
@@ -36,30 +40,43 @@ export default class CreateClaimHandler implements ICommandHandler<CreateClaimCo
 
   private async createClaim(command: CreateClaimCommand): Promise<Claim> {
     const {
-      userLogin, email, phone,
-      name, age, gender, region,
-      theme, diagnosis,
-      company, position,
+      userLogin,
+      email,
+      phone,
+      name,
+      age,
+      gender,
+      region,
+      theme,
+      localization,
+      company,
+      position,
+      target,
     } = command
 
     const id = this.idGenerator.get()
     const user = await this.userRepo.getOne(userLogin)
 
-    return this.em.transaction(async (em) => {
+    return this.em.transaction(async em => {
       user.newContacts({ email, phone })
 
       const applicant = new Applicant(name, age, gender, region)
 
       const shortClaim = new Claim(
-        id, applicant, user,
-        theme, diagnosis,
-        { company, position },
+        id,
+        new Date(),
+        applicant,
+        user,
+        theme,
+        localization,
+        {
+          company,
+          position,
+        },
+        target,
       )
 
-      const [ savedClaim, ...rest ] = await em.save([
-        shortClaim,
-        user,
-      ])
+      const [savedClaim, ...rest] = await em.save([shortClaim, user])
 
       return savedClaim as Claim
     })

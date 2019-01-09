@@ -16,14 +16,8 @@ export default class ConsoleLogger extends Logger {
     super(monitor)
 
     this.logger = winston.createLogger({
-      format: combine(
-        label({ label: 'ohcohelp' }),
-        timestamp(),
-        format,
-      ),
-      transports: [
-        new winston.transports.Console(),
-      ],
+      format: combine(label({ label: 'ohcohelp' }), timestamp(), format),
+      transports: [new winston.transports.Console()],
     })
   }
 
@@ -42,18 +36,20 @@ export default class ConsoleLogger extends Logger {
   }
 }
 
-const format = printf((info) => {
+const format = printf(info => {
   const mainColor = matches(info)(
-    (_ = { level: 'info'  }) => chalk.green,
-    (_ = { level: 'warn'  }) => chalk.yellow,
+    (_ = { level: 'info' }) => chalk.green,
+    (_ = { level: 'warn' }) => chalk.yellow,
     (_ = { level: 'error' }) => chalk.red,
-    (_)                      => chalk.black,
+    _ => chalk.black,
   )
 
   const helpColor = chalk.grey
 
   const infoLabel = mainColor(`[${info.label}]`)
-  const infoTimestamp = helpColor(new Date(info.timestamp).toLocaleString('ru-RU'))
+  const infoTimestamp = helpColor(
+    new Date(info.timestamp).toLocaleString('ru-RU'),
+  )
   const infoLevel = mainColor(`[${info.level}]`)
   const infoMessage = helpColor(info.message)
 

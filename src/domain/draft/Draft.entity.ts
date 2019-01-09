@@ -7,19 +7,35 @@ export default class Draft {
   @PrimaryColumn()
   public readonly id: string
 
-  public get body() { return this._body }
+  @Column(type => Date)
+  public readonly createdAt: Date
 
-  @ManyToOne((type) => User, { eager: true })
+  public get body() {
+    return this._body
+  }
+
+  @ManyToOne(type => User, { eager: true })
   @JoinColumn()
   public readonly author: User
+
+  @Column()
+  public readonly personal: boolean = true
 
   @Column({ type: 'json' })
   private _body: any
 
-  public constructor(id: string, body: any, author: User) {
+  public constructor(
+    id: string,
+    createdAt: Date,
+    body: any,
+    author: User,
+    personal: boolean = true,
+  ) {
     this.id = id
+    this.createdAt = createdAt
     this._body = body
     this.author = author
+    this.personal = true
   }
 
   public changeBody(body: any): void {

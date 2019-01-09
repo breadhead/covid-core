@@ -10,11 +10,15 @@ export default class QuotaResponse {
       id: quota.id,
       name: quota.name,
       count: quota.balance,
-      company: quota.company ? CompanyResponse.fromEntity(quota.company) : undefined,
+      company: quota.company
+        ? CompanyResponse.fromEntity(quota.company)
+        : undefined,
       type: quota.type,
       constraints: quota.constraints,
       publicCompany: quota.publicCompany,
       comment: quota.comment,
+      createdAt: quota.createdAt,
+      summarizedCount: 2000,
     } as QuotaResponse
   }
 
@@ -30,7 +34,10 @@ export default class QuotaResponse {
   @ApiModelProperty({ example: exampleCompanyResponse, required: false })
   public readonly company?: CompanyResponse
 
-  @ApiModelProperty({ example: QuotaType.Special, enum: Object.values(QuotaType) })
+  @ApiModelProperty({
+    example: QuotaType.Special,
+    enum: Object.values(QuotaType),
+  })
   public readonly type: QuotaType
 
   @ApiModelProperty({ example: ['Красноярский край'] })
@@ -39,6 +46,12 @@ export default class QuotaResponse {
   @ApiModelProperty({ example: true })
   public readonly publicCompany: boolean
 
-  @ApiModelProperty({ example: 'Любой контейнер' })
+  @ApiModelProperty({ example: 'Любой коммент' })
   public readonly comment: string
+
+  @ApiModelProperty({ example: new Date() })
+  public readonly createdAt: Date
+
+  @ApiModelProperty({ example: 2000 })
+  public readonly summarizedCount: number
 }

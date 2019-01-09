@@ -16,25 +16,40 @@ export default class NodemailerEmailSender implements EmailSender {
     private readonly logger: Logger,
   ) {
     const host = this.config.get('SMTP_HOST').getOrElse('localhost')
-    const port = this.config.get('SMTP_PORT').map(Number).getOrElse(587)
+    const port = this.config
+      .get('SMTP_PORT')
+      .map(Number)
+      .getOrElse(587)
     const auth = {
       user: this.config.get('SMTP_USER').getOrElse('admin'),
       pass: this.config.get('SMTP_PASSWORD').getOrElse('admin'),
     }
 
     this.transporter = createTransport({
-      host, port, auth,
+      host,
+      port,
+      auth,
       secure: this.config.isProd() && port === SECURE_PORT,
     })
   }
 
-  public async send(from: string, to: string, subject: string, content: MessageContent): Promise<void> {
+  public async send(
+    from: string,
+    to: string,
+    subject: string,
+    content: MessageContent,
+  ): Promise<void> {
     const result = await this.transporter.sendMail({
-      from, to, subject, ...content,
+      from,
+      to,
+      subject,
+      ...content,
     })
 
     if (this.config.isDev()) {
-      this.logger.log(`Email sent to test server, url: ${getTestMessageUrl(result)}`)
+      this.logger.log(
+        `Email sent to test server, url: ${getTestMessageUrl(result)}`,
+      )
     } else {
       this.logger.log(`Email sent to "${to}"`)
     }

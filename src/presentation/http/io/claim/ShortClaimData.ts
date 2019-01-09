@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import Claim from '@app/domain/claim/Claim.entity'
+import Claim, { ClaimTarget } from '@app/domain/claim/Claim.entity'
 
 import CompanyData, { exampleCompanyData } from './CompanyData'
 import PersonalData, { examplePersonalData } from './PersonalData'
@@ -8,13 +8,14 @@ import PersonalData, { examplePersonalData } from './PersonalData'
 const exampleShortClaim = {
   id: 'fdsjf3k3k',
   personalData: examplePersonalData,
-  diagnosis: 'На руке',
+  localization: 'На руке',
   theme: 'Рак кожи',
   company: exampleCompanyData,
+  target: ClaimTarget.Self,
 }
 
 export default class ShortClaimData {
-  public static fromEntity(claim: Claim) {
+  public static fromEntity(claim: Claim): ShortClaimData {
     const personalData = {
       name: claim.applicant.name,
       gender: claim.applicant.gender,
@@ -25,7 +26,7 @@ export default class ShortClaimData {
     } as PersonalData
 
     const company = claim.corporateInfo
-      .map((info) => ({
+      .map(info => ({
         name: info.name,
         position: info.position,
       }))
@@ -34,10 +35,12 @@ export default class ShortClaimData {
     return {
       id: claim.id,
       personalData,
-      diagnosis: claim.diagnosis,
+      localization: claim.localization,
       theme: claim.theme,
       company,
-    } as ShortClaimData
+      target: claim.target,
+      quotaAllocated: !!claim.quota,
+    }
   }
 
   @ApiModelProperty({ example: exampleShortClaim.id })
@@ -46,12 +49,21 @@ export default class ShortClaimData {
   @ApiModelProperty({ example: exampleShortClaim.personalData })
   public readonly personalData: PersonalData
 
-  @ApiModelProperty({ example: exampleShortClaim.diagnosis })
-  public readonly diagnosis?: string
+  @ApiModelProperty({ example: exampleShortClaim.localization })
+  public readonly localization?: string
 
   @ApiModelProperty({ example: exampleShortClaim.theme })
   public readonly theme: string
 
   @ApiModelProperty({ required: false, example: exampleShortClaim.company })
   public readonly company?: CompanyData
+
+  @ApiModelProperty({
+    example: ClaimTarget.Self,
+    enum: Object.values(ClaimTarget),
+  })
+  public readonly target: ClaimTarget
+
+  @ApiModelProperty({ example: true })
+  public readonly quotaAllocated: boolean
 }

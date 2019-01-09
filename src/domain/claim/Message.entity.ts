@@ -15,14 +15,20 @@ export default class Message {
   public readonly content: string
 
   @JoinColumn()
-  @ManyToOne((type) => Claim)
+  @ManyToOne(type => Claim)
   public readonly claim: Claim
 
   @JoinColumn()
-  @ManyToOne((type) => User, { eager: true })
+  @ManyToOne(type => User, { eager: true })
   public readonly user: User
 
-  public constructor(id: string, date: Date, content: string, claim: Claim, user: User) {
+  public constructor(
+    id: string,
+    date: Date,
+    content: string,
+    claim: Claim,
+    user: User,
+  ) {
     this.id = id
     this.date = date
     this.content = content

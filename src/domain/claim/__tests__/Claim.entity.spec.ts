@@ -16,7 +16,7 @@ describe('Claim', () => {
 
   describe('bindQuota', () => {
     test('should bind quota correctly', () => {
-      const c = new Claim('1', applicant, user, 'theme')
+      const c = new Claim('1', new Date(), applicant, user, 'theme')
       const q = new Quota('1', 'quota first')
 
       c.bindQuota(q)
@@ -26,21 +26,19 @@ describe('Claim', () => {
     })
 
     test('should throw exception if quota already binded', () => {
-      const c = new Claim('1', applicant, user, 'theme')
+      const c = new Claim('1', new Date(), applicant, user, 'theme')
       const oldQ = new Quota('1', 'quota first')
       const newQ = new Quota('2', 'quota second')
 
       c.bindQuota(oldQ)
 
-      expect(
-        () => c.bindQuota(newQ),
-      ).toThrow(InvariantViolationException)
+      expect(() => c.bindQuota(newQ)).toThrow(InvariantViolationException)
     })
   })
 
   describe('unbindQuota', () => {
     test('should unbind quota correctly', () => {
-      const c = new Claim('1', applicant, user, 'theme')
+      const c = new Claim('1', new Date(), applicant, user, 'theme')
       const q = new Quota('1', 'quota first')
 
       c.bindQuota(q)
@@ -51,11 +49,9 @@ describe('Claim', () => {
     })
 
     test('should throw excaption ig try to unbind empty quota', () => {
-      const c = new Claim('1', applicant, user, 'theme')
+      const c = new Claim('1', new Date(), applicant, user, 'theme')
 
-      expect(
-        () => c.unbindQuota(),
-      ).toThrow(InvariantViolationException)
+      expect(() => c.unbindQuota()).toThrow(InvariantViolationException)
     })
   })
 })

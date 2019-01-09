@@ -10,13 +10,16 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import BindQuotaCommand from './BindQuotaCommand'
 
 @CommandHandler(BindQuotaCommand)
-export default class BindQuotaHandler implements ICommandHandler<BindQuotaCommand> {
+export default class BindQuotaHandler
+  implements ICommandHandler<BindQuotaCommand> {
   public constructor(
-    @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
-    @InjectRepository(ClaimRepository) private readonly claimRepo: ClaimRepository,
+    @InjectRepository(QuotaRepository)
+    private readonly quotaRepo: QuotaRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
-  ) { }
+  ) {}
 
   public async execute(command: BindQuotaCommand, resolve: (value?) => void) {
     const { quotaId, claimId } = command

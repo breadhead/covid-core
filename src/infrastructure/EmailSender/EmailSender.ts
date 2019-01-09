@@ -4,11 +4,14 @@ export interface MessageContent {
 }
 
 export default interface EmailSender {
-  send(from: string, to: string, subject: string, content: MessageContent): Promise<void>
+  send(
+    from: string,
+    to: string,
+    subject: string,
+    content: MessageContent,
+  ): Promise<void>
 }
 
 const EmailSender = Symbol('EmailSender')
 
-export {
-  EmailSender,
-}
+export { EmailSender }

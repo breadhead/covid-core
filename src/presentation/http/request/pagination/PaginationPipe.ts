@@ -10,8 +10,12 @@ interface PaginationQuery {
 }
 
 @Injectable()
-export default class PaginationPipe implements PipeTransform<PaginationQuery, PaginationRequest> {
-  public transform(value: PaginationQuery, metadata: ArgumentMetadata): PaginationRequest {
+export default class PaginationPipe
+  implements PipeTransform<PaginationQuery, PaginationRequest> {
+  public transform(
+    value: PaginationQuery,
+    metadata: ArgumentMetadata,
+  ): PaginationRequest {
     if (!this.supports(metadata)) {
       throw new LogicException('Unexpected usage for PaginationPipe')
     }

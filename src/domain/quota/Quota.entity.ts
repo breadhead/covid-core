@@ -5,9 +5,9 @@ import InvariantViolationException from '../exception/InvariantViolationExceptio
 import defineType from './utils/defineType'
 
 export enum QuotaType {
-  Common = 'Common',
-  Corporate = 'Corporate',
-  Special = 'Special',
+  Common = 'Общая',
+  Corporate = 'Корпоративная',
+  Special = 'Специальная',
 }
 
 @Entity()
@@ -15,11 +15,20 @@ export default class Quota {
   @PrimaryColumn()
   public readonly id: string
 
-  public get name() { return this._name }
+  @Column({ default: '2018-10-21 13:00:00' })
+  public readonly createdAt: Date
 
-  public get balance() { return this._balance }
+  public get name() {
+    return this._name
+  }
 
-  public get publicCompany() { return this._publicCompany }
+  public get balance() {
+    return this._balance
+  }
+
+  public get publicCompany() {
+    return this._publicCompany
+  }
 
   public get type() {
     return defineType({
@@ -28,16 +37,24 @@ export default class Quota {
     }) as QuotaType
   }
 
-  public get constraints() { return this._constraints }
+  public get constraints() {
+    return this._constraints
+  }
 
-  public get corporate() { return this._corporate }
+  public get corporate() {
+    return this._corporate
+  }
 
-  public get comment() { return this._comment }
+  public get comment() {
+    return this._comment
+  }
 
-  public get company() { return this._company }
+  public get company() {
+    return this._company
+  }
 
   @JoinColumn()
-  @ManyToOne((type) => Company, { eager: true })
+  @ManyToOne(type => Company, { eager: true })
   private _company?: Company
 
   @Column()
@@ -66,6 +83,7 @@ export default class Quota {
     corporate = false,
     publicCompany = true,
     comment = '',
+    createdAt = new Date(),
   ) {
     this.id = id
     this._name = name
@@ -75,11 +93,15 @@ export default class Quota {
     this._company = company
     this._publicCompany = publicCompany
     this._comment = comment
+    this.createdAt = createdAt
   }
 
   public decreaseBalance(diff: number): void {
     if (diff > this._balance) {
-      throw new InvariantViolationException(Quota.name, 'Balance must be positive')
+      throw new InvariantViolationException(
+        Quota.name,
+        'Balance must be positive',
+      )
     }
 
     this._balance = this._balance - diff

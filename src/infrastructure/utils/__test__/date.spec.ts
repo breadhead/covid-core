@@ -1,4 +1,4 @@
-import { previusMonth } from '../date'
+import { add, previusMonth } from '../date'
 
 describe('previusMonth', () => {
   test('should return date in previous month simple date', () => {
@@ -20,5 +20,13 @@ describe('previusMonth', () => {
     expect(previusMonth(input).getDate()).toBe(28)
     expect(previusMonth(input).getMonth()).toBe(1)
     expect(previusMonth(input).getFullYear()).toBe(2018)
+  })
+})
+
+describe('add', () => {
+  test('should add days', () => {
+    const date = add(new Date(), '2d')
+
+    expect(date.getDate() - new Date().getDate()).toBe(2)
   })
 })

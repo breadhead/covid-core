@@ -12,45 +12,52 @@ import QuotaRepository from './QuotaRepository'
 export default class Allocator {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(QuotaRepository) private readonly quotaRepo: QuotaRepository,
-  ) { }
+    @InjectRepository(QuotaRepository)
+    private readonly quotaRepo: QuotaRepository,
+  ) {}
 
   public allocateAuto(claim: Claim): Promise<void> {
-    return this.em.transaction(async (em) => {
-      const commonQuotas = (await this.quotaRepo.findCommon())
-        .filter((commonQuota) => commonQuota.balance > 0)
+    return this.em
+      .transaction(async em => {
+        const commonQuotas = (await this.quotaRepo.findCommon()).filter(
+          commonQuota => commonQuota.balance > 0,
+        )
 
-      if (commonQuotas.length === 0) {
-        throw new QuotaAllocationFailedException(null, 'Common quota not found')
-      }
+        if (commonQuotas.length === 0) {
+          throw new QuotaAllocationFailedException(
+            null,
+            'Common quota not found',
+          )
+        }
 
-      const quota = sample(commonQuotas)
+        const quota = sample(commonQuotas)
 
-      claim.bindQuota(quota)
-      quota.decreaseBalance(1)
+        claim.bindQuota(quota)
+        quota.decreaseBalance(1)
 
-      await em.save([
-        claim,
-        quota,
-      ])
-    }).catch(this.throwAllocatorException())
+        await em.save([claim, quota])
+      })
+      .catch(this.throwAllocatorException())
   }
 
   public allocate(claim: Claim, quota: Quota): Promise<void> {
-    return this.em.transaction(async (em) => {
-      claim.bindQuota(quota)
-      quota.decreaseBalance(1)
+    return this.em
+      .transaction(async em => {
+        claim.bindQuota(quota)
+        quota.decreaseBalance(1)
 
-      await em.save([
-        claim,
-        quota,
-      ])
-    }).catch(this.throwAllocatorException(quota))
+        await em.save([claim, quota])
+      })
+      .catch(this.throwAllocatorException(quota))
   }
 
-  public deallocate(claim: Claim, restoreQuota: boolean = false): Promise<void> {
-    return this.em.transaction(async (em) => {
-      if (restoreQuota) { // restore quota if needed
+  public deallocate(
+    claim: Claim,
+    restoreQuota: boolean = false,
+  ): Promise<void> {
+    return this.em.transaction(async em => {
+      if (restoreQuota) {
+        // restore quota if needed
         const quota = claim.quota
         quota.increaseBalance(1)
 

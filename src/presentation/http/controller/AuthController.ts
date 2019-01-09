@@ -1,11 +1,15 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common'
 import {
-  ApiBadRequestResponse, ApiOkResponse,
-  ApiOperation, ApiUseTags,
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
 } from '@nestjs/swagger'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
 
+import UserRepository from '@app/domain/user/UserRepository'
+import { InjectRepository } from '@nestjs/typeorm'
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
 import LoginRequest from '../request/LoginRequest'
 import RegistrationRequest from '../request/RegistrationRequest'
@@ -16,14 +20,17 @@ import TokenResponse from '../response/TokenResponse'
 @ApiUseTags('auth')
 export default class AuthController {
   public constructor(
+    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
-  ) { }
+  ) {}
 
   @Post('register')
   @ApiOperation({ title: 'Create the new client' })
   @ApiOkResponse({ description: 'Registered', type: ClientResponse })
   @ApiBadRequestResponse({ description: 'Login already taken' })
-  public register(@Body() registrationRequest: RegistrationRequest): ClientResponse {
+  public register(
+    @Body() registrationRequest: RegistrationRequest,
+  ): ClientResponse {
     return {
       id: 'ffh',
       email: registrationRequest.email,
@@ -36,12 +43,18 @@ export default class AuthController {
   @ApiOperation({ title: 'Issue the new token' })
   @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
-  public async login(@Body() loginRequest: LoginRequest): Promise<TokenResponse> {
-    const token = await this.authenticator.signIn(
-      loginRequest.login,
-      loginRequest.password,
-    )
+  public async login(
+    @Body() loginRequest: LoginRequest,
+  ): Promise<TokenResponse> {
+    const { login, password } = loginRequest
 
-    return new TokenResponse(token)
+    const [token, user] = await Promise.all([
+      await this.authenticator.signIn(login, password),
+      await this.userRepo.getOne(login),
+    ])
+
+    const roles = user.roles.map(role => role.toString())
+
+    return new TokenResponse(token, roles)
   }
 }

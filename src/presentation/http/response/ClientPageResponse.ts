@@ -9,6 +9,10 @@ const itemsExample = [
 ]
 
 export default class ClientPageReponse extends PageResponse<ClientResponse> {
-  @ApiModelProperty({ example: itemsExample, type: ClientResponse, isArray: true })
+  @ApiModelProperty({
+    example: itemsExample,
+    type: ClientResponse,
+    isArray: true,
+  })
   public readonly items: ClientResponse[]
 }

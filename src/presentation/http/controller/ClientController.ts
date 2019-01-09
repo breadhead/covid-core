@@ -1,7 +1,10 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
-  ApiBearerAuth, ApiForbiddenResponse,
-  ApiOkResponse, ApiOperation, ApiUseTags,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
 } from '@nestjs/swagger'
 
 import Role from '@app/domain/user/Role'
@@ -17,12 +20,13 @@ import Roles from '../security/Roles'
 @ApiUseTags('clients')
 @ApiBearerAuth()
 export default class ClientController {
-
   @Get()
   @Roles(Role.CaseManager, Role.Admin)
   @ApiOperation({ title: 'List of clients' })
   @ApiOkResponse({ description: 'Success', type: ClientPageResponse })
-  @ApiForbiddenResponse({ description: 'Case-manager or Admin API token doesn\'t provided' })
+  @ApiForbiddenResponse({
+    description: 'Case-manager or Admin API token doesn`t provided',
+  })
   public showList(
     @Query(PaginationPipe) pagination: PaginationRequest,
   ): ClientPageResponse {

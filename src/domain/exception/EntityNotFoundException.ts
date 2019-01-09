@@ -3,7 +3,6 @@ interface Params {
 }
 
 export default class EntityNotFoundException extends Error {
-
   public readonly parameters: Params
 
   public constructor(name: string, parameters: Params = {}) {

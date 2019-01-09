@@ -21,7 +21,10 @@ export default class PersonalData {
   @ApiModelProperty({ example: examplePersonalData.age })
   public readonly age: number
 
-  @ApiModelProperty({ example: examplePersonalData.gender, enum: Object.values(Gender) })
+  @ApiModelProperty({
+    example: examplePersonalData.gender,
+    enum: Object.values(Gender),
+  })
   public readonly gender: Gender
 
   @ApiModelProperty({ example: examplePersonalData.email, required: false })

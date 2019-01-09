@@ -27,8 +27,6 @@ export default interface BoardManager {
   getBoardLists(boardId: string): Promise<List[]>
 }
 
-const BoardManager  = Symbol('BoardManager')
+const BoardManager = Symbol('BoardManager')
 
-export {
-  BoardManager,
-}
+export { BoardManager }
