@@ -38,10 +38,7 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private setDueDate({ payload }: DueDateUpdatedEvent) {
-    console.log(payload)
-    // if (payload.due.nonEmpty()) {
-    //   return this.board.setDueDate('dfds', payload.due.get())
-    // }
+    return
   }
 
   private createClaim({ payload }: CreateClaimEvent) {
@@ -60,7 +57,6 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private changeStatus({ payload }: ChangeStatusEvent) {
-    console.log('status changed!')
     // TODO: change status after Trello service
   }
 }

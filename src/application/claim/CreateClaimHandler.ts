@@ -13,10 +13,10 @@ import IdGenerator, {
   IdGenerator as IdGeneratorSymbol,
 } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import CreateClaimCommand from './CreateClaimCommand'
-import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import ClaimRejectedEvent from '@app/domain/claim/event/ClaimRejectedEvent'
 import CreateClaimEvent from '@app/domain/claim/event/CreateClaimEvent'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import CreateClaimCommand from './CreateClaimCommand'
 
 @CommandHandler(CreateClaimCommand)
 export default class CreateClaimHandler
