@@ -68,7 +68,7 @@ import UserRepository from '@app/domain/user/UserRepository'
 
 import IncomeQuotaHandler from '@app/application/quota/IncomeQuotaHandler'
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
-import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
+import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -209,7 +209,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     },
     {
       provide: BoardManager,
-      useClass: TrelloBoardManager,
+      useClass: VoidBoardManager,
     },
     CommandBus,
     StatusMover,
