@@ -7,8 +7,9 @@ import {
 } from '@nestjs/swagger'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
-
 import UserRepository from '@app/domain/user/UserRepository'
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
+import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
 import LoginRequest from '../request/LoginRequest'
@@ -22,6 +23,7 @@ export default class AuthController {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('register')
@@ -54,10 +56,11 @@ export default class AuthController {
   ): Promise<TokenResponse> {
     const { login, password } = loginRequest
 
-    const [token, user] = await Promise.all([
-      await this.authenticator.signIn(login, password),
-      await this.userRepo.getOne(login),
-    ])
+    const token = await this.authenticator.signIn(login, password)
+
+    const payload = this.jwtService.decode(token, {}) as TokenPayload
+
+    const user = await this.userRepo.getOne(payload.login)
 
     const roles = user.roles.map(role => role.toString())
 
