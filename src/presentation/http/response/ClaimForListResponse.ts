@@ -1,7 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 import Claim, { ClaimStatus, ClaimTarget } from '@app/domain/claim/Claim.entity'
-import Draft from '@app/domain/draft/Draft.entity'
 
 export enum Status {
   Draft = 'Черновик',
@@ -9,6 +8,7 @@ export enum Status {
   QuotaAllocation = 'Распределение квоты',
   QuestionnaireWaiting = 'Ожидание анкеты',
   QuestionnaireValidation = 'Проверка анкеты',
+  AnswerWaiting = 'Ожидание ответа',
   DeliveredToCustomer = 'Передано заказчику',
 }
 
@@ -19,8 +19,8 @@ const defineStatus = (originalStatus: ClaimStatus) =>
     [ClaimStatus.QueueForQuota]: Status.QuotaAllocation,
     [ClaimStatus.QuestionnaireWaiting]: Status.QuestionnaireWaiting,
     [ClaimStatus.QuestionnaireValidation]: Status.QuestionnaireValidation,
-    [ClaimStatus.AtTheDoctor]: Status.QuestionnaireValidation,
-    [ClaimStatus.AnswerValidation]: Status.QuestionnaireValidation,
+    [ClaimStatus.AtTheDoctor]: Status.AnswerWaiting,
+    [ClaimStatus.AnswerValidation]: Status.AnswerWaiting,
     [ClaimStatus.DeliveredToCustomer]: Status.DeliveredToCustomer,
     [ClaimStatus.ClosedSuccessfully]: Status.Closed,
     [ClaimStatus.Denied]: Status.Closed,
