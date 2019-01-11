@@ -80,6 +80,25 @@ export default class ClaimController {
     return responseItems
   }
 
+  @Get(':id/main')
+  @ApiOperation({ title: 'Claim`s main data' })
+  @ApiOkResponse({ description: 'Success', type: ClaimForListResponse })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
+  public async showMain(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ClaimForListResponse> {
+    const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    return ClaimForListResponse.fromClaim(claim)
+  }
+
   @Get(':id/short')
   @ApiOperation({ title: 'Claim`s short data' })
   @ApiOkResponse({ description: 'Success', type: ShortClaimData })
