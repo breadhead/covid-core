@@ -3,10 +3,15 @@ import { ApiModelProperty } from '@nestjs/swagger'
 import Quota from '@app/domain/quota/Quota.entity'
 
 export default class ClaimQuotaResponse {
-  public static fromEntity({
-    company,
-    publicCompany,
-  }: Quota): ClaimQuotaResponse {
+  public static fromEntity(quota: Quota): ClaimQuotaResponse {
+    if (!quota) {
+      return {
+        empty: true,
+      }
+    }
+
+    const { company, publicCompany } = quota
+
     if (!company || !publicCompany) {
       return {}
     }
@@ -20,6 +25,9 @@ export default class ClaimQuotaResponse {
       site,
     }
   }
+
+  @ApiModelProperty({ example: false, required: false })
+  public readonly empty?: boolean
 
   @ApiModelProperty({ example: 'Google' })
   public readonly name?: string
