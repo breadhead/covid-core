@@ -154,6 +154,15 @@ export default class ClaimController {
       ? { companyName: company.name, companyPosition: company.position }
       : {}
 
+    if (id) {
+      const claim = await this.claimRepo.getOne(id)
+      await this.votersUnity.denyAccessUnlessGranted(
+        Attribute.Edit,
+        claim,
+        user,
+      )
+    }
+
     const command = !!id
       ? new EditShortClaimCommand(
           id,
@@ -183,9 +192,9 @@ export default class ClaimController {
           companyPosition,
         )
 
-    const claim: Claim = await this.bus.execute(command)
+    const editedClaim: Claim = await this.bus.execute(command)
 
-    return ShortClaimData.fromEntity(claim)
+    return ShortClaimData.fromEntity(editedClaim)
   }
 
   @Post('situation')
