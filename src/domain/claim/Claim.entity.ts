@@ -45,15 +45,17 @@ export default class Claim {
   @Column({ nullable: true })
   public readonly createdAt: Date
 
-  @Column(type => Applicant)
-  public readonly applicant: Applicant
+  public get applicant() {
+    return this._applicant
+  }
 
   @ManyToOne(type => User, { eager: true })
   @JoinColumn()
   public readonly author: User
 
-  @Column({ type: 'enum', enum: ClaimTarget, default: ClaimTarget.Self })
-  public readonly target: ClaimTarget = ClaimTarget.Self
+  public get target() {
+    return this._target
+  }
 
   public get status(): ClaimStatus {
     return this._status
@@ -63,11 +65,13 @@ export default class Claim {
     return this._quota
   }
 
-  @Column()
-  public readonly theme: string
+  public get theme(): string {
+    return this._theme
+  }
 
-  @Column({ nullable: true })
-  public readonly localization?: string
+  public get localization(): string {
+    return this._localization
+  }
 
   public get corporateInfo(): Option<CorporateInfo> {
     return this._corporateInfo.name && this._corporateInfo.position
@@ -137,6 +141,18 @@ export default class Claim {
   @ManyToOne(type => Quota, { eager: true, nullable: true })
   private _quota?: Quota
 
+  @Column(type => Applicant)
+  private _applicant: Applicant
+
+  @Column()
+  private _theme: string
+
+  @Column({ nullable: true })
+  private _localization?: string
+
+  @Column({ type: 'enum', enum: ClaimTarget, default: ClaimTarget.Self })
+  private _target: ClaimTarget = ClaimTarget.Self
+
   @Column({ type: 'enum', enum: ClaimStatus })
   private _status: ClaimStatus
 
@@ -179,11 +195,11 @@ export default class Claim {
   ) {
     this.id = id
     this.createdAt = createdAt
-    this.applicant = applicant
+    this._applicant = applicant
     this.author = author
-    this.theme = theme
-    this.localization = localization
-    this.target = target
+    this._theme = theme
+    this._localization = localization
+    this._target = target
 
     this._corporateInfo = new CorporateInfo({ company, position })
 
@@ -303,5 +319,23 @@ export default class Claim {
   ): void {
     this._defaultQuestions = defaultQuestions
     this._additionalQuestions = additionalQuestions
+  }
+
+  public newApplicant(newApplicant: Applicant): void {
+    this._applicant = newApplicant
+  }
+
+  public newCorporateInfo(newCorporateInfo: CorporateInfo): void {
+    this._corporateInfo = newCorporateInfo
+  }
+
+  public changeShortDiseasesInfo(
+    newTheme: string,
+    newLocalization: string,
+    newTarget: ClaimTarget,
+  ): void {
+    this._theme = newTheme
+    this._localization = newLocalization
+    this._target = newTarget
   }
 }

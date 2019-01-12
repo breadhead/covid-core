@@ -22,8 +22,9 @@ import { sortBy } from 'lodash'
 
 import AskQuestionsCommand from '@app/application/claim/AskQuestionsCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
-import CreateClaimCommand from '@app/application/claim/CreateClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import CreateClaimCommand from '@app/application/claim/short/CreateClaimCommand'
+import EditShortClaimCommand from '@app/application/claim/short/EditShortClaimCommand'
 import EditSituationCommand from '@app/application/claim/situation/EditSituationCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
@@ -120,7 +121,7 @@ export default class ClaimController {
 
   @Get(':id/situation')
   @ApiOperation({ title: 'Claim`s situations data' })
-  @ApiOkResponse({ description: 'Success', type: ShortClaimData })
+  @ApiOkResponse({ description: 'Success', type: SituationClaimData })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({
     description:
@@ -146,30 +147,54 @@ export default class ClaimController {
     @CurrentUser() user: TokenPayload,
   ): Promise<ShortClaimData> {
     const { login } = user
-    const { theme, localization, company } = request
+    const { id, theme, localization, company } = request
     const { name, age, gender, region, email, phone } = request.personalData
 
     const { companyName = null, companyPosition = null } = company
       ? { companyName: company.name, companyPosition: company.position }
       : {}
 
-    const claim: Claim = await this.bus.execute(
-      new CreateClaimCommand(
-        login,
-        theme,
-        name,
-        age,
-        gender,
-        region,
-        localization,
-        email,
-        phone,
-        companyName,
-        companyPosition,
-      ),
-    )
+    if (id) {
+      const claim = await this.claimRepo.getOne(id)
+      await this.votersUnity.denyAccessUnlessGranted(
+        Attribute.Edit,
+        claim,
+        user,
+      )
+    }
 
-    return ShortClaimData.fromEntity(claim)
+    const command = !!id
+      ? new EditShortClaimCommand(
+          id,
+          login,
+          theme,
+          name,
+          age,
+          gender,
+          region,
+          localization,
+          email,
+          phone,
+          companyName,
+          companyPosition,
+        )
+      : new CreateClaimCommand(
+          login,
+          theme,
+          name,
+          age,
+          gender,
+          region,
+          localization,
+          email,
+          phone,
+          companyName,
+          companyPosition,
+        )
+
+    const editedClaim: Claim = await this.bus.execute(command)
+
+    return ShortClaimData.fromEntity(editedClaim)
   }
 
   @Post('situation')

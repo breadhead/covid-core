@@ -3,7 +3,7 @@ import { ICommand } from '@nestjs/cqrs'
 import { ClaimTarget } from '@app/domain/claim/Claim.entity'
 import Gender from '@app/infrastructure/customTypes/Gender'
 
-export default class CreateClaimCommand implements ICommand {
+export default class BaseShortClaimCommand implements ICommand {
   public constructor(
     public readonly userLogin: string,
     public readonly theme: string,
