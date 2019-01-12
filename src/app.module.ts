@@ -23,9 +23,10 @@ import AskQuestionsHandler from '@app/application/claim/AskQuestionsHandler'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
-import CreateClaimHandler from '@app/application/claim/CreateClaimHandler'
 import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
+import CreateClaimHandler from '@app/application/claim/short/CreateClaimHandler'
+import EditShortClaimHandler from '@app/application/claim/short/EditShortClaimHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import EditSituationHandler from '@app/application/claim/situation/EditSituationHandler'
 import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
@@ -37,6 +38,7 @@ import { Notificator } from '@app/application/notifications/Notificator'
 import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
+import IncomeQuotaHandler from '@app/application/quota/IncomeQuotaHandler'
 import TransferQuotaHandler from '@app/application/quota/TransferQuotaHandler'
 import BoardSubscriber from '@app/application/subscriber/BoardSubscriber'
 import NotifySubscriber from '@app/application/subscriber/NotifySubscriber'
@@ -66,7 +68,6 @@ import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 
-import IncomeQuotaHandler from '@app/application/quota/IncomeQuotaHandler'
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
 import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
@@ -109,6 +110,7 @@ const commandHandlers = [
   MoveToNextStatusHandler,
   IncomeQuotaHandler,
   EditSituationHandler,
+  EditShortClaimHandler,
 ]
 
 const signInProviders = [
