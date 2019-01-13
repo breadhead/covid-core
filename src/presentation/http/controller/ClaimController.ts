@@ -20,14 +20,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
-import AskQuestionsCommand from '@app/application/claim/AskQuestionsCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import AnswerQuestionsCommand from '@app/application/claim/questions/AnswerQuestionsCommand'
+import AskQuestionsCommand from '@app/application/claim/questions/AskQuestionsCommand'
 import CreateClaimCommand from '@app/application/claim/short/CreateClaimCommand'
 import EditShortClaimCommand from '@app/application/claim/short/EditShortClaimCommand'
 import EditSituationCommand from '@app/application/claim/situation/EditSituationCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
-import Claim from '@app/domain/claim/Claim.entity'
+import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -37,9 +38,11 @@ import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import QuestionsClaimData from '../io/claim/QuestionsClaimData'
 import ShortClaimData from '../io/claim/ShortClaimData'
 import SituationClaimData from '../io/claim/SituationClaimData'
+import AnswerQuestionsRequest from '../request/AnswerQuestionsRequest'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import ClaimForListResponse from '../response/ClaimForListResponse'
+import ClaimQuestionsResponse from '../response/ClaimQuestionsResponse'
 import ClaimQuotaResponse from '../response/ClaimQuotaResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
@@ -136,6 +139,44 @@ export default class ClaimController {
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
     return SituationClaimData.fromEntity(claim)
+  }
+
+  @Get(':id/questions')
+  @ApiOperation({ title: 'Claim`s questions data' })
+  @ApiOkResponse({ description: 'Success', type: SituationClaimData })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
+  public async showQuestions(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ClaimQuestionsResponse> {
+    const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    return ClaimQuestionsResponse.fromEntity(false)(claim)
+  }
+
+  @Get(':id/answers')
+  @ApiOperation({ title: 'Claim`s answers data' })
+  @ApiOkResponse({ description: 'Success', type: SituationClaimData })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description:
+      'Claim`s owner, case-manager or doctor API token doesn`t provided',
+  })
+  public async showAnswers(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ClaimQuestionsResponse> {
+    const claim = await this.claimRepo.getOne(id)
+
+    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+
+    return ClaimQuestionsResponse.fromEntity(true)(claim)
   }
 
   @Post('short')
@@ -267,6 +308,22 @@ export default class ClaimController {
     )
 
     return QuestionsClaimData.fromEntity(editedClaim)
+  }
+
+  @Roles(Role.Doctor)
+  @Post('answer')
+  @ApiOperation({ title: 'Answer questions for claim' })
+  @ApiOkResponse({ description: 'Answered' })
+  @ApiForbiddenResponse({ description: 'Doctor API token doesn`t provided' })
+  public async answerQuestions(
+    @Body() request: AnswerQuestionsRequest,
+  ): Promise<any> {
+    const { claimId, answers } = request
+    const command = new AnswerQuestionsCommand(claimId, answers)
+
+    await this.bus.execute(command)
+
+    return
   }
 
   @Post('close')

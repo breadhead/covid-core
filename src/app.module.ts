@@ -19,12 +19,13 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
-import AskQuestionsHandler from '@app/application/claim/AskQuestionsHandler'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
+import AnswerQuestionsHandler from '@app/application/claim/questions/AnswerQuestionsHandler'
+import AskQuestionsHandler from '@app/application/claim/questions/AskQuestionsHandler'
 import CreateClaimHandler from '@app/application/claim/short/CreateClaimHandler'
 import EditShortClaimHandler from '@app/application/claim/short/EditShortClaimHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
@@ -111,6 +112,7 @@ const commandHandlers = [
   IncomeQuotaHandler,
   EditSituationHandler,
   EditShortClaimHandler,
+  AnswerQuestionsHandler,
 ]
 
 const signInProviders = [
