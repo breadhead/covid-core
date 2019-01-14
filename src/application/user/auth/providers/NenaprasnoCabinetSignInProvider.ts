@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
+import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 
 import CreateUserFromCabinetCommand from '../../createUser/CreateUserFromCabinetCommand'
 import SignInProvider from './SignInProvider'
@@ -14,7 +14,7 @@ import SignInProvider from './SignInProvider'
 export default class NenaprasnoCabinetSignInProvider implements SignInProvider {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    private readonly nenaprasno: NenaprasnoCabinetClient,
+    private readonly nenaprasno: NenaprasnoBackendClient,
     private readonly bus: CommandBus,
   ) {}
 

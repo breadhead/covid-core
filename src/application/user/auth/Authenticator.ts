@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
+import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import InvalidCredentialsException from '../../exception/InvalidCredentialsException'
@@ -21,7 +21,7 @@ export default class Authenticator {
   constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @Inject(SignInProviders) private readonly signInProviders: SignInProvider[],
-    private readonly nenaprasno: NenaprasnoCabinetClient,
+    private readonly nenaprasno: NenaprasnoBackendClient,
     private readonly jwtService: JwtService,
   ) {}
 

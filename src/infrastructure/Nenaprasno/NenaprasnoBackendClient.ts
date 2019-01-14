@@ -5,7 +5,7 @@ import Configuration from '../Configuration/Configuration'
 import Logger from '../Logger/Logger'
 
 @Injectable()
-export default class NenaprasnoCabinetClient {
+export default class NenaprasnoBackendClient {
   public constructor(
     private readonly http: HttpService,
     private readonly config: Configuration,
@@ -18,28 +18,32 @@ export default class NenaprasnoCabinetClient {
     password: string,
     confirm: string,
   ): Promise<number | null> {
-    return this.request('auth/sign-up', { login, password, confirm })
-      .then(response => Number(response.data))
+    if (confirm !== password) {
+      return Promise.resolve(null)
+    }
+
+    return this.request('users', { username: login, password })
+      .then(response => Number(response.data.id))
       .catch(() => null)
   }
 
   /** @returns nenaprasnoUserId */
   public signIn(login: string, password: string): Promise<number | null> {
-    return this.request('auth/sign-in', { login, password })
-      .then(response => Number(response.data))
+    return this.request('login', { username: login, password })
+      .then(response => Number(response.data.userId))
       .catch(() => null)
   }
 
   private request(suffix: string, data: object): Promise<AxiosResponse<any>> {
-    const nenaprasnoCabinetUrl = this.config
-      .get('NENAPRASNO_CABINET_URL')
-      .getOrElse('https://cabinet.nenaprasno.ru')
+    const nenaprasnoBackendUrl = this.config
+      .get('NENAPRASNO_BACKEND_URL')
+      .getOrElse('https://appercode.nenaprasno.ru/v1/notnap/')
 
     return this.http
-      .post(`${nenaprasnoCabinetUrl}/external/${suffix}`, data)
+      .post(`${nenaprasnoBackendUrl}/${suffix}`, data)
       .toPromise()
       .catch(e => {
-        this.logger.error('Nenaprasno cabinet returns error')
+        this.logger.error('Nenaprasno backend returns error')
         throw e
       })
   }

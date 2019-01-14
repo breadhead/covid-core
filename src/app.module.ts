@@ -86,7 +86,7 @@ import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
 import Logger from '@app/infrastructure/Logger/Logger'
 import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
 import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
-import NenaprasnoCabinetClient from '@app/infrastructure/Nenaprasno/NenaprasnoCabinetClient'
+import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
 import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -227,7 +227,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     JwtStrategy,
     JwtAuthGuard,
     SecurityVotersUnity,
-    NenaprasnoCabinetClient,
+    NenaprasnoBackendClient,
     EventEmitter,
   ],
 })
