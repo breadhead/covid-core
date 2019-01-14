@@ -35,7 +35,7 @@ export default class AnswerQuestionsHandler
 
       claim.answerQuestions(answeredQuestions)
 
-      // await this.statusMover.next(claim)
+      await this.statusMover.next(claim)
 
       return em.save(claim)
     })
