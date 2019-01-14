@@ -2,6 +2,7 @@ import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { random } from 'lodash'
 import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
@@ -17,8 +18,6 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import CreateClaimEvent from '@app/domain/claim/event/CreateClaimEvent'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import CreateClaimCommand from './CreateClaimCommand'
-
-import _ from 'lodash'
 
 @CommandHandler(CreateClaimCommand)
 export default class CreateClaimHandler
@@ -63,9 +62,11 @@ export default class CreateClaimHandler
     } = command
 
     const id = this.idGenerator.get()
-    const number = (await this.claimRepository.count()) * 10 + _.random(0, 9)
 
-    const user = await this.userRepo.getOne(userLogin)
+    const [user, number] = await Promise.all([
+      this.userRepo.getOne(userLogin),
+      this.generateNextNumber(),
+    ])
 
     return this.em.transaction(async em => {
       user.newContacts({ email, phone })
@@ -93,5 +94,9 @@ export default class CreateClaimHandler
 
       return savedClaim as Claim
     })
+  }
+
+  private async generateNextNumber(): Promise<number> {
+    return (await this.claimRepository.count()) * 10 + random(0, 9)
   }
 }
