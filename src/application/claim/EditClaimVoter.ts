@@ -27,8 +27,12 @@ export default class EditClaimVoter implements SecurityVoter<Claim> {
   ): Promise<boolean> {
     const user = await this.userRepo.getOne(login)
 
-    if (user.isClient && user.login === claim.author.login) {
-      return this.statusesForEditingByClient.includes(claim.status)
+    if (user.isClient) {
+      const isAuthor = user.login === claim.author.login
+      const editingAllowed = this.statusesForEditingByClient.includes(
+        claim.status,
+      )
+      return isAuthor && editingAllowed
     }
 
     return true
