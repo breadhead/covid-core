@@ -145,7 +145,7 @@ export default class ClaimController {
 
   @Get(':id/questions')
   @ApiOperation({ title: 'Claim`s questions data' })
-  @ApiOkResponse({ description: 'Success', type: SituationClaimData })
+  @ApiOkResponse({ description: 'Success', type: ClaimQuestionsResponse })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({
     description:
