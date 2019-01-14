@@ -24,6 +24,7 @@ import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
+import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
 import AnswerQuestionsHandler from '@app/application/claim/questions/AnswerQuestionsHandler'
 import AskQuestionsHandler from '@app/application/claim/questions/AskQuestionsHandler'
 import CreateClaimHandler from '@app/application/claim/short/CreateClaimHandler'
@@ -216,6 +217,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       provide: BoardManager,
       useClass: TrelloBoardManager,
     },
+    AnswerAccessManager,
     CommandBus,
     StatusMover,
     Allocator,
