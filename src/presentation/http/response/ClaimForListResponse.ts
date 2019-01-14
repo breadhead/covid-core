@@ -30,16 +30,20 @@ export default class ClaimForListResponse {
   public static fromClaim(claim: Claim): ClaimForListResponse {
     return {
       id: claim.id,
+      number: claim.number,
       createdAt: claim.createdAt || new Date(),
       status: defineStatus(claim.status),
       expireAt: claim.due.getOrElse(undefined),
-      email: claim.author.conatcts.email,
+      email: claim.author.contacts.email,
       target: claim.target,
     }
   }
 
   @ApiModelProperty({ example: 'dsflkdj2' })
   public readonly id: string
+
+  @ApiModelProperty({ example: 1003 })
+  public readonly number: number
 
   @ApiModelProperty({ example: new Date() })
   public readonly createdAt: Date

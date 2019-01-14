@@ -21,8 +21,8 @@ export default class ShortClaimData {
       gender: claim.applicant.gender,
       age: claim.applicant.age,
       region: claim.applicant.region,
-      email: claim.author.conatcts.email,
-      phone: claim.author.conatcts.phone,
+      email: claim.author.contacts.email,
+      phone: claim.author.contacts.phone,
     } as PersonalData
 
     const company = claim.corporateInfo
