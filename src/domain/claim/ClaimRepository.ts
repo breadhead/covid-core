@@ -2,6 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 import Claim from './Claim.entity'
+import Question from './Question.vo'
 
 @EntityRepository(Claim)
 export default class ClaimRepository extends AbstractRepository<Claim> {

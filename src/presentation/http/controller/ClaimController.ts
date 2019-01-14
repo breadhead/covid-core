@@ -22,6 +22,7 @@ import { sortBy } from 'lodash'
 
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
+import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
 import AnswerQuestionsCommand from '@app/application/claim/questions/AnswerQuestionsCommand'
 import AskQuestionsCommand from '@app/application/claim/questions/AskQuestionsCommand'
 import CreateClaimCommand from '@app/application/claim/short/CreateClaimCommand'
@@ -59,6 +60,7 @@ export default class ClaimController {
     private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
+    private readonly answerAccess: AnswerAccessManager,
   ) {}
 
   @Get('/')
@@ -155,28 +157,12 @@ export default class ClaimController {
   ): Promise<ClaimQuestionsResponse> {
     const claim = await this.claimRepo.getOne(id)
 
-    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
+    const [answerAvailable, _] = await Promise.all([
+      this.answerAccess.accessIsGranted(user.login, claim),
+      this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user),
+    ])
 
-    return ClaimQuestionsResponse.fromEntity(false)(claim)
-  }
-
-  @Get(':id/answers')
-  @ApiOperation({ title: 'Claim`s answers data' })
-  @ApiOkResponse({ description: 'Success', type: SituationClaimData })
-  @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({
-    description:
-      'Claim`s owner, case-manager or doctor API token doesn`t provided',
-  })
-  public async showAnswers(
-    @Param('id') id: string,
-    @CurrentUser() user: TokenPayload,
-  ): Promise<ClaimQuestionsResponse> {
-    const claim = await this.claimRepo.getOne(id)
-
-    await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
-
-    return ClaimQuestionsResponse.fromEntity(true)(claim)
+    return ClaimQuestionsResponse.fromEntity(answerAvailable)(claim)
   }
 
   @Post('short')
