@@ -28,7 +28,7 @@ export default class User {
       : new None()
   }
 
-  public get conatcts(): Contacts {
+  public get contacts(): Contacts {
     return this._contacts
   }
   public get verificationCode(): string | null {

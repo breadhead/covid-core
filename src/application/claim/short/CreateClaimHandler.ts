@@ -13,10 +13,12 @@ import IdGenerator, {
   IdGenerator as IdGeneratorSymbol,
 } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import ClaimRejectedEvent from '@app/domain/claim/event/ClaimRejectedEvent'
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import CreateClaimEvent from '@app/domain/claim/event/CreateClaimEvent'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import CreateClaimCommand from './CreateClaimCommand'
+
+import _ from 'lodash'
 
 @CommandHandler(CreateClaimCommand)
 export default class CreateClaimHandler
@@ -25,6 +27,8 @@ export default class CreateClaimHandler
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepository: ClaimRepository,
     @Inject(EventEmitter) private readonly eventEmitter: EventEmitter,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
@@ -59,6 +63,8 @@ export default class CreateClaimHandler
     } = command
 
     const id = this.idGenerator.get()
+    const number = (await this.claimRepository.count()) * 10 + _.random(0, 9)
+
     const user = await this.userRepo.getOne(userLogin)
 
     return this.em.transaction(async em => {
@@ -68,6 +74,7 @@ export default class CreateClaimHandler
 
       const shortClaim = new Claim(
         id,
+        number,
         new Date(),
         applicant,
         user,

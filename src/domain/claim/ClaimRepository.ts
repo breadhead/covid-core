@@ -22,4 +22,8 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
 
     return claims
   }
+
+  public async count(): Promise<number> {
+    return this.repository.count()
+  }
 }

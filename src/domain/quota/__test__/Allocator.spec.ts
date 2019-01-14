@@ -30,7 +30,7 @@ describe('Allocator', () => {
 
   describe('allocateAuto', () => {
     test('should allocate common quota', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       await allocator.allocateAuto(claim)
 
@@ -39,11 +39,11 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if no common quota found', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       // spent all quotas
       await allocator.allocateAuto(
-        new Claim('2', new Date(), applicant, user, 'theme'),
+        new Claim('2', 2, new Date(), applicant, user, 'theme'),
       )
 
       await expect(allocator.allocateAuto(claim)).rejects.toThrow(
@@ -52,7 +52,7 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if try to allocate already binded claim', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       claim.bindQuota(new Quota('1', 'quota'))
 
@@ -64,7 +64,7 @@ describe('Allocator', () => {
 
   describe('allocate', () => {
     test('shloud allocate quota', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
@@ -77,7 +77,7 @@ describe('Allocator', () => {
     })
 
     test('should throw exception if try to allocate empty quota', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
 
@@ -89,7 +89,7 @@ describe('Allocator', () => {
 
   describe('deallocate', () => {
     test('shloud deallocate quota without restore', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
@@ -103,7 +103,7 @@ describe('Allocator', () => {
     })
 
     test('shloud deallocate quota with restore', async () => {
-      const claim = new Claim('1', new Date(), applicant, user, 'theme')
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)

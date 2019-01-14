@@ -43,6 +43,9 @@ export default class Claim {
   @PrimaryColumn()
   public readonly id: string
 
+  @Column()
+  public readonly number: number
+
   @Column({ nullable: true })
   public readonly createdAt: Date
 
@@ -193,6 +196,7 @@ export default class Claim {
 
   public constructor(
     id: string,
+    number: number,
     createdAt: Date,
     applicant: Applicant,
     author: User,
@@ -202,6 +206,7 @@ export default class Claim {
     target: ClaimTarget = ClaimTarget.Self,
   ) {
     this.id = id
+    this.number = number
     this.createdAt = createdAt
     this._applicant = applicant
     this.author = author
