@@ -6,6 +6,11 @@ import UserRepository from '@app/domain/user/UserRepository'
 
 @Injectable()
 export default class AnswerAccessManager {
+  private statusesWhenCllientHaveAccess = [
+    ClaimStatus.DeliveredToCustomer,
+    ClaimStatus.ClosedSuccessfully,
+  ]
+
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
   ) {}
@@ -14,7 +19,7 @@ export default class AnswerAccessManager {
     const user = await this.userRepo.getOne(login)
 
     if (user.isClient) {
-      return claim.status === ClaimStatus.DeliveredToCustomer
+      return this.statusesWhenCllientHaveAccess.includes(claim.status)
     }
 
     return true
