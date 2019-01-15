@@ -1,4 +1,4 @@
-import BoardManager, { Label, Member } from './BoardManager'
+import BoardManager, { Card, Label, Member } from './BoardManager'
 
 export default class VoidBoardManager implements BoardManager {
   public createCard(
@@ -27,6 +27,10 @@ export default class VoidBoardManager implements BoardManager {
 
   public addMemberToCard(cardId: string, memberId: string): Promise<void> {
     return Promise.resolve()
+  }
+
+  public getCardsOnBoard(boardId: string): Promise<Card[]> {
+    return Promise.resolve([])
   }
 
   public getBoardMembers(boardId: string): Promise<Member[]> {

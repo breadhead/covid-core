@@ -180,7 +180,7 @@ export default class ClaimController {
     @Param('id') id: string,
     @CurrentUser() user: TokenPayload,
   ): Promise<ClaimBoardCardUrlResponse> {
-    return new ClaimBoardCardUrlResponse(
+    return ClaimBoardCardUrlResponse.fromUrl(
       await this.claimBoardCardFinder.getCardUrlById(id),
     )
   }

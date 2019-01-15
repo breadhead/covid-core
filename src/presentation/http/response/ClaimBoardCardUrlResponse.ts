@@ -1,8 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export default class ClaimBoardCardUrlResponse {
-  public constructor(url: string) {
-    this.url = url
+  public static fromUrl(url: string) {
+    return {
+      url,
+    }
   }
 
   @ApiModelProperty({ example: 'https://trello.com/c/aaAAAAaa' })
