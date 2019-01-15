@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import * as Trello from 'trello'
 import Configuration from '../Configuration/Configuration'
-import BoardManager, { Label, List, Member } from './BoardManager'
+import BoardManager, { Card, Label, List, Member } from './BoardManager'
 import BoardManagerException from './BoardManagerException'
 
 const tapOrThrow = response => {
@@ -78,6 +78,10 @@ export default class TrelloBoardManager implements BoardManager {
       .makeRequest('GET', '/1/card/' + cardId)
       .then(tapOrThrow)
     return card
+  }
+
+  public async getCardsOnBoard(listId: string): Promise<Card[]> {
+    return this.trello.getCardsOnBoard(listId).then(tapOrThrow)
   }
 
   private async getCardId(claimId: string) {
