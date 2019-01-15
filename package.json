@@ -27,6 +27,7 @@
     "@nestjs/passport": "^5.1.0",
     "@nestjs/swagger": "^2.5.1",
     "@nestjs/typeorm": "^5.2.2",
+    "@solid-soda/voters": "^1.0.0",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.1",
     "class-transformer": "^0.1.10",

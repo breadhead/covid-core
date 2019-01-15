@@ -1,11 +1,6 @@
-import TokenPayload from '../TokenPayload'
-import Attribute from './Attribute'
+import { SecutiryVoter } from '@solid-soda/voters'
 
-export default interface SecurityVoter<Subject = any> {
-  supports(attribute: Attribute, subject: any): boolean
-  voteOnAttribute(
-    attribute: Attribute,
-    subject: Subject,
-    token: TokenPayload,
-  ): Promise<boolean>
-}
+import TokenPayload from '../TokenPayload'
+
+export default interface SecurityVoterWrapper<Subject = any>
+  extends SecutiryVoter<Subject, TokenPayload> {}

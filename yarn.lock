@@ -337,6 +337,11 @@
   dependencies:
     tslint-eslint-rules "^5.4.0"
 
+"@solid-soda/voters@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@solid-soda/voters/-/voters-1.0.0.tgz#c85ab4cf94f1c435f08e431df99e6b16fc6a9cf3"
+  integrity sha512-fiHRUmd0HS4p2080+AYeEyQnZYzULtO2yDCKdn75rEpsSP9V+/m8Qdtixw3HnxAK1iiV38/A033hgvCM5dUSTA==
+
 "@types/bcryptjs@^2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
