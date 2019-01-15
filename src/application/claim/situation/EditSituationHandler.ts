@@ -148,6 +148,6 @@ export default class EditSituationHandler
 
     const { month, year } = monthYear
 
-    return new Date(`01-${month}-${year}`)
+    return new Date(year, month - 1)
   }
 }
