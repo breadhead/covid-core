@@ -8,6 +8,12 @@ export interface Label {
   readonly text: string
 }
 
+export interface Card {
+  desc: string
+  name: string
+  shortUrl: string
+}
+
 export interface List {
   readonly id: string
   readonly name: string
@@ -22,6 +28,8 @@ export default interface BoardManager {
   setDueDate(cardId: string, due: Date): Promise<void>
 
   addMemberToCard(cardId: string, memberId: string): Promise<void>
+
+  getCardsOnBoard(listId: string): Promise<Card[]>
 
   getBoardMembers(boardId: string): Promise<Member[]>
   getBoardLists(boardId: string): Promise<Label[]>

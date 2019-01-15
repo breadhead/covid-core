@@ -30,6 +30,7 @@ import EditShortClaimCommand from '@app/application/claim/short/EditShortClaimCo
 import EditSituationCommand from '@app/application/claim/situation/EditSituationCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
+import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -42,6 +43,7 @@ import SituationClaimData from '../io/claim/SituationClaimData'
 import AnswerQuestionsRequest from '../request/AnswerQuestionsRequest'
 import BindQuotaRequest from '../request/BindQuotaRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
+import ClaimBoardCardUrlResponse from '../response/ClaimBoardCardUrlResponse'
 import ClaimForListResponse from '../response/ClaimForListResponse'
 import ClaimQuestionsResponse from '../response/ClaimQuestionsResponse'
 import ClaimQuotaResponse from '../response/ClaimQuotaResponse'
@@ -61,6 +63,7 @@ export default class ClaimController {
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
     private readonly answerAccess: AnswerAccessManager,
+    private readonly claimBoardCardFinder: ClaimBoardCardFinder,
   ) {}
 
   @Get('/')
@@ -163,6 +166,23 @@ export default class ClaimController {
     ])
 
     return ClaimQuestionsResponse.fromEntity(answerAvailable)(claim)
+  }
+
+  @Get(':id/trelloUrl')
+  @Roles(Role.Admin, Role.CaseManager)
+  @ApiOperation({ title: 'Claim`s trello card url' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiNotFoundResponse({ description: 'Card not found' })
+  @ApiForbiddenResponse({
+    description: 'Admin or case-manager API token isn`t provided',
+  })
+  public async getTrelloUrl(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<ClaimBoardCardUrlResponse> {
+    return ClaimBoardCardUrlResponse.fromUrl(
+      await this.claimBoardCardFinder.getCardUrlById(id),
+    )
   }
 
   @Post('short')
