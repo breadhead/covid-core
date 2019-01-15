@@ -54,6 +54,7 @@ import CreateUserFromCabinetHandler from '@app/application/user/createUser/Creat
 import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
+import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
@@ -168,6 +169,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...securityVoters,
     ...eventSubscribers,
     ...signInProviders,
+    ClaimBoardCardFinder,
     {
       provide: SignInProviders,
       useFactory: (...providers: SignInProvider[]) => providers,
