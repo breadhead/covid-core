@@ -40,6 +40,7 @@ describe('TrelloBoardManager', () => {
   beforeAll(() => {
     trelloBoardManager = new TrelloBoardManager(new MockConfiguration(
       {},
+      '',
     ) as any)
   })
 

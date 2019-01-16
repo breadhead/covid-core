@@ -1,19 +1,18 @@
 import { Provider } from '@nestjs/common'
+import { DotEnvConfiguration, EnvConfiguration } from '@solid-soda/config'
 import * as path from 'path'
 
 import Configuration from './Configuration'
-import DevConfiguration from './DevConfiguration'
-import ProdConfiguration from './ProdConfiguration'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
 export default class ConfigurationFactory {
   public static create(): Configuration {
     if (isDev()) {
-      return new DevConfiguration(path.resolve(__dirname, '../../../.env'))
+      return new DotEnvConfiguration(path.resolve(__dirname, '../../../.env'))
     }
 
-    return new ProdConfiguration()
+    return new EnvConfiguration()
   }
 
   public static provider(): Provider {
