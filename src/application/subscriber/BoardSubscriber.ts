@@ -49,8 +49,8 @@ export default class BoardSubscriber implements EventSubscriber {
       const siteUrl = this.config
         .get('SITE_URL')
         .getOrElse('oncohelp.breadhead.ru')
-      const listId = '5bab6a391071c087cc9b4e45'
-      const cardTitle = 'Заявка #' + payload.id
+      const listId = this.getListIdForClaimStatus(ClaimStatus.QuotaAllocation)
+      const cardTitle = 'Заявка #' + payload.number
       const trelloCardText = `[Перейти к заявке](http://${siteUrl}/manager/consultation/${
         payload.id
       })`
@@ -60,6 +60,20 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private async changeStatus({ payload }: ChangeStatusEvent) {
+    const boardId = this.config.get('BOARD_ID').getOrElse('ppy28Io5')
+
+    const lists = await this.board.getBoardLists(boardId)
+
+    const listForStatus = lists.find(l =>
+      l.name.includes(this.getListIdForClaimStatus(payload.status)),
+    )
+
+    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
+
+    this.board.moveCard(claimCard.id, listForStatus.id)
+  }
+
+  private getListIdForClaimStatus(status: ClaimStatus): string {
     const statusListNameTable = {
       [ClaimStatus.QuotaAllocation]: 'Распределение квоты',
       [ClaimStatus.QueueForQuota]: 'В очереди на квоту',
@@ -72,16 +86,6 @@ export default class BoardSubscriber implements EventSubscriber {
       [ClaimStatus.Denied]: 'Отказ',
     }
 
-    const boardId = this.config.get('BOARD_ID').getOrElse('ppy28Io5')
-
-    const lists = await this.board.getBoardLists(boardId)
-
-    const listForStatus = lists.find(l =>
-      l.name.includes(statusListNameTable[payload.status]),
-    )
-
-    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
-
-    this.board.moveCard(claimCard.id, listForStatus.id)
+    return statusListNameTable[status]
   }
 }
