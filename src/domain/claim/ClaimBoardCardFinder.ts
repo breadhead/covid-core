@@ -18,7 +18,7 @@ export default class BoardCardFinder {
       this.config.get('BOARD_ID').getOrElse('ppy28Io5'),
     )
 
-    const idRe = new RegExp(`${id}\\)$`)
+    const idRe = new RegExp(`${id}\\)`)
 
     const claimCard = cards.find(card => idRe.test(card.desc))
 
