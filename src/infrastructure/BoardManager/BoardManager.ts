@@ -9,6 +9,7 @@ export interface Label {
 }
 
 export interface Card {
+  id: string
   desc: string
   name: string
   shortUrl: string
@@ -32,7 +33,7 @@ export default interface BoardManager {
   getCardsOnBoard(listId: string): Promise<Card[]>
 
   getBoardMembers(boardId: string): Promise<Member[]>
-  getBoardLists(boardId: string): Promise<Label[]>
+  getBoardLists(boardId: string): Promise<List[]>
 }
 
 const BoardManager = Symbol('BoardManager')

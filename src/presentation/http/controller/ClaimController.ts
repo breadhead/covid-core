@@ -181,7 +181,9 @@ export default class ClaimController {
     @CurrentUser() user: TokenPayload,
   ): Promise<ClaimBoardCardUrlResponse> {
     return ClaimBoardCardUrlResponse.fromUrl(
-      await this.claimBoardCardFinder.getCardUrlById(id),
+      await this.claimBoardCardFinder
+        .getCardById(id)
+        .then(card => card.shortUrl),
     )
   }
 
