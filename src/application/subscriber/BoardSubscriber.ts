@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 
+import { ClaimStatus } from '@app/domain/claim/Claim.entity'
+import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ChangeStatusEvent, {
   NAME as ChangeStatusName,
 } from '@app/domain/claim/event/ChangeStatusEvent'
@@ -17,8 +19,6 @@ import BoardManager, {
 } from '@app/infrastructure/BoardManager/BoardManager'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
-import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
-import { ClaimStatus } from '@app/domain/claim/Claim.entity'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
