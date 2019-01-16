@@ -1,6 +1,7 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
+import Role from './Role'
 import User from './User.entity'
 
 @EntityRepository(User)
@@ -25,5 +26,13 @@ export default class UserRepository extends AbstractRepository<User> {
         _nenaprasnoCabinetCredentials: { id },
       },
     })
+  }
+
+  public findDoctors(): Promise<User[]> {
+    return this.createQueryBuilder('user')
+      .where('user._roles like :role', {
+        role: `%${Role.Doctor}%`,
+      })
+      .getMany()
   }
 }
