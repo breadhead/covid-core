@@ -14,6 +14,9 @@ export default class User {
   @PrimaryColumn()
   public readonly login: string
 
+  @Column({ nullable: true })
+  public readonly fullName?: string = null
+
   public get passwordCredentials(): Option<PasswordCredentials> {
     return this._passwordCredentials.password
       ? new Some(this._passwordCredentials)
