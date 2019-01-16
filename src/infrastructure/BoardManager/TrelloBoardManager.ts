@@ -68,7 +68,7 @@ export default class TrelloBoardManager implements BoardManager {
     return result
   }
   // TODO: fix types
-  public async getBoardLists(boardId: string): Promise<any[]> {
+  public async getBoardLists(boardId: string): Promise<List[]> {
     const result = await this.trello.getListsOnBoard(boardId).then(tapOrThrow)
     return result
   }

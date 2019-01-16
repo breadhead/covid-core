@@ -17,10 +17,13 @@ import BoardManager, {
 } from '@app/infrastructure/BoardManager/BoardManager'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
+import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
+import { ClaimStatus } from '@app/domain/claim/Claim.entity'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
     @Inject(BoardManagerSymbol) private readonly board: BoardManager,
+    private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly config: Configuration,
   ) {}
 
@@ -56,7 +59,29 @@ export default class BoardSubscriber implements EventSubscriber {
     }
   }
 
-  private changeStatus({ payload }: ChangeStatusEvent) {
-    // TODO: change status after Trello service
+  private async changeStatus({ payload }: ChangeStatusEvent) {
+    const statusListNameTable = {
+      [ClaimStatus.QuotaAllocation]: 'Распределение квоты',
+      [ClaimStatus.QueueForQuota]: 'В очереди на квоту',
+      [ClaimStatus.QuestionnaireWaiting]: 'Ожидание анкеты',
+      [ClaimStatus.QuestionnaireValidation]: 'Проверка анкеты',
+      [ClaimStatus.AtTheDoctor]: 'В работе у врача',
+      [ClaimStatus.AnswerValidation]: 'Проверка ответа врача',
+      [ClaimStatus.DeliveredToCustomer]: 'Передано заказчику',
+      [ClaimStatus.ClosedSuccessfully]: 'Успешно',
+      [ClaimStatus.Denied]: 'Отказ',
+    }
+
+    const boardId = this.config.get('BOARD_ID').getOrElse('ppy28Io5')
+
+    const lists = await this.board.getBoardLists(boardId)
+
+    const listForStatus = lists.find(l =>
+      l.name.includes(statusListNameTable[payload.status]),
+    )
+
+    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
+
+    this.board.moveCard(claimCard.id, listForStatus.id)
   }
 }
