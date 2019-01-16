@@ -53,7 +53,7 @@ export default class UserController {
     }
   }
 
-  @Get('users/current')
+  @Get('current')
   @ApiOperation({ title: 'Current user' })
   @ApiOkResponse({
     description: 'Success',
