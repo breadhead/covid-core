@@ -2,6 +2,7 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
@@ -12,12 +13,15 @@ import Role from '@app/domain/user/Role'
 
 import UserRepository from '@app/domain/user/UserRepository'
 
+import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import PaginationPipe from '../request/pagination/PaginationPipe'
 import PaginationRequest from '../request/pagination/PaginationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
+import CurrentUserResponse from '../response/CurrentUserResponse'
 import DoctorResponse from '../response/DoctorResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
+import CurrentUser from './decorator/CurrentUser'
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +51,22 @@ export default class UserController {
         { id: 'ffh', email: 'ann@gmail.com', phone: '79999999999' },
       ],
     }
+  }
+
+  @Get('users/current')
+  @ApiOperation({ title: 'Current user' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: CurrentUserResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'API token doesn`t provided',
+  })
+  public async showCurrentUser(
+    @CurrentUser() tokenPayload: TokenPayload,
+  ): Promise<CurrentUserResponse> {
+    const user = await this.userRepo.getOne(tokenPayload.login)
+    return CurrentUserResponse.fromUser(user)
   }
 
   @Get('doctors')
