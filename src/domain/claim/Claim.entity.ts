@@ -57,6 +57,10 @@ export default class Claim {
   @JoinColumn()
   public readonly author: User
 
+  public get doctor() {
+    return this._doctor
+  }
+
   public get target() {
     return this._target
   }
@@ -147,6 +151,10 @@ export default class Claim {
 
   @Column({ nullable: true })
   public diagnosisDate?: Date
+
+  @ManyToOne(type => User, { eager: true, nullable: true })
+  @JoinColumn()
+  private _doctor?: User = null
 
   @JoinColumn()
   @ManyToOne(type => Quota, { eager: true, nullable: true })
@@ -364,5 +372,9 @@ export default class Claim {
       additionalQuestions.includes(question),
     )
     this._additionalQuestions = additionalAnsweredQuestions
+  }
+
+  public attachDoctor(doctor: User): void {
+    this._doctor = doctor
   }
 }

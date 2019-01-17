@@ -20,6 +20,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
+import ChooseDoctorCommand from '@app/application/claim/ChooseDoctorCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
 import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
@@ -29,7 +30,7 @@ import CreateClaimCommand from '@app/application/claim/short/CreateClaimCommand'
 import EditShortClaimCommand from '@app/application/claim/short/EditShortClaimCommand'
 import EditSituationCommand from '@app/application/claim/situation/EditSituationCommand'
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
-import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
+import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
@@ -42,6 +43,7 @@ import ShortClaimData from '../io/claim/ShortClaimData'
 import SituationClaimData from '../io/claim/SituationClaimData'
 import AnswerQuestionsRequest from '../request/AnswerQuestionsRequest'
 import BindQuotaRequest from '../request/BindQuotaRequest'
+import ChooseDoctorRequest from '../request/ChooseDoctorRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import ClaimBoardCardUrlResponse from '../response/ClaimBoardCardUrlResponse'
 import ClaimForListResponse from '../response/ClaimForListResponse'
@@ -389,5 +391,23 @@ export default class ClaimController {
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
     return ClaimQuotaResponse.fromEntity(claim.quota)
+  }
+
+  @Post('choose-doctor')
+  @Roles(Role.CaseManager)
+  @ApiOperation({ title: 'Attach doctor to claim' })
+  @ApiOkResponse({ description: 'Attached', type: ShortClaimData })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description: 'Case-manager API token doesn`t provided',
+  })
+  public async chooseDoctor(@Body()
+  {
+    claimId,
+    doctorLogin,
+  }: ChooseDoctorRequest): Promise<void> {
+    await this.bus.execute(new ChooseDoctorCommand(claimId, doctorLogin))
+
+    return
   }
 }
