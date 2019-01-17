@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject } from '@nestjs/common'
 
-import { ClaimStatus } from '@app/domain/claim/Claim.entity'
+import { ClaimStatus, default as Claim } from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ChangeStatusEvent, {
   NAME as ChangeStatusName,
@@ -54,20 +54,32 @@ export default class BoardSubscriber implements EventSubscriber {
       const siteUrl = this.config
         .get('SITE_URL')
         .getOrElse('oncohelp.breadhead.ru')
-      const list = await this.getListIdForClaimStatus(
-        ClaimStatus.QuotaAllocation,
-      )
+
       const cardTitle = 'Заявка #' + payload.number
       const trelloCardText = await this.templating.render('trello/card', {
         siteUrl,
         id: payload.id,
       })
 
-      return this.board.createCard(cardTitle, trelloCardText, list.id)
+      const [list, idLabels] = await Promise.all([
+        this.getListIdForClaimStatus(ClaimStatus.QuotaAllocation),
+        this.createClaimLabels(payload),
+      ])
+
+      return this.board.createCardWithExtraParams(
+        cardTitle,
+        { desc: trelloCardText, idLabels },
+        list.id,
+      )
     }
   }
 
   private async changeStatus({ payload }: ChangeStatusEvent) {
+    if (payload.status === ClaimStatus.QuotaAllocation) {
+      // Don't move card if its being created
+      return
+    }
+
     const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
 
     const list = await this.getListIdForClaimStatus(payload.status)
@@ -88,10 +100,27 @@ export default class BoardSubscriber implements EventSubscriber {
       [ClaimStatus.Denied]: 'Отказ',
     }
 
-    const boardId = this.config.get('BOARD_ID').getOrElse('ppy28Io5')
+    const boardId = this.config
+      .get('BOARD_ID')
+      .getOrElse('5baa59a6648f9b2166d65935')
 
     const lists = await this.board.getBoardLists(boardId)
 
     return lists.find(l => l.name.includes(statusListNameTable[status]))
+  }
+
+  private async createClaimLabels(claim: Claim): Promise<string[]> {
+    const boardId = this.config
+      .get('BOARD_ID')
+      .getOrElse('5baa59a6648f9b2166d65935')
+
+    const labels = await Promise.all([
+      this.board.createOrGetLabel(boardId, claim.applicant.region),
+      this.board.createOrGetLabel(boardId, claim.applicant.gender),
+      this.board.createOrGetLabel(boardId, claim.localization),
+      this.board.createOrGetLabel(boardId, claim.theme),
+    ])
+
+    return labels.map(label => label.id)
   }
 }

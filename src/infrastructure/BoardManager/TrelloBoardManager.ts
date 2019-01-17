@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import * as Trello from 'trello'
 import Configuration from '../Configuration/Configuration'
-import BoardManager, { Card, Label, List, Member } from './BoardManager'
+import BoardManager, {
+  Card,
+  CreateCardParams,
+  Label,
+  List,
+  Member,
+} from './BoardManager'
 import BoardManagerException from './BoardManagerException'
 
 const tapOrThrow = response => {
@@ -35,6 +41,17 @@ export default class TrelloBoardManager implements BoardManager {
   ): Promise<string> {
     const response = await this.trello
       .addCard(name, content, listId)
+      .then(tapOrThrow)
+    return response.id
+  }
+
+  public async createCardWithExtraParams(
+    name: string,
+    params: CreateCardParams,
+    listId: string,
+  ): Promise<string> {
+    const response = await this.trello
+      .addCardWithExtraParams(name, params, listId)
       .then(tapOrThrow)
     return response.id
   }
@@ -84,18 +101,19 @@ export default class TrelloBoardManager implements BoardManager {
     return this.trello.getCardsOnBoard(listId).then(tapOrThrow)
   }
 
-  private async getCardId(claimId: string) {
-    return
-  }
-
-  private async createOrGetLabel(
+  public async createOrGetLabel(
     boardId: string,
     labelText: string,
   ): Promise<any> {
     const labels = await this.trello.getLabelsForBoard(boardId).then(tapOrThrow)
-    const label =
+
+    return (
       labels.find(({ name }) => name === labelText) ||
       (await this.trello.addLabelOnBoard(boardId, labelText).then(tapOrThrow))
-    return label
+    )
+  }
+
+  private async getCardId(claimId: string) {
+    return
   }
 }
