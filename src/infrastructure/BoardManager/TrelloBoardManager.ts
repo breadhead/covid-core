@@ -65,8 +65,18 @@ export default class TrelloBoardManager implements BoardManager {
   public async addLabel(cardId: string, labelText: string): Promise<void> {
     const card = await this.getCard(cardId)
     const label = await this.createOrGetLabel(card.idBoard, labelText)
-    const result = this.trello.addLabelToCard(cardId, label.id).then(tapOrThrow)
+    return this.trello.addLabelToCard(cardId, label.id).then(tapOrThrow)
   }
+
+  public async deleteLabelFromCard(
+    cardId: string,
+    labelText: string,
+  ): Promise<void> {
+    const card = await this.getCard(cardId)
+    const label = await this.createOrGetLabel(card.idBoard, labelText)
+    return this.trello.deleteLabelFromCard(cardId, label.id)
+  }
+
   public async setDueDate(cardId: string, due: Date): Promise<void> {
     const result = await this.trello
       .addDueDateToCard(cardId, due)
@@ -74,12 +84,30 @@ export default class TrelloBoardManager implements BoardManager {
   }
   public async addMemberToCard(
     cardId: string,
-    memberId: string,
+    username: string,
   ): Promise<void> {
-    const result = await this.trello
-      .addMemberToCard(cardId, memberId)
-      .then(tapOrThrow)
+    const card = await this.getCard(cardId)
+    const member = await this.getBoardMemberByUsername(card.idBoard, username)
+
+    return this.trello.addMemberToCard(cardId, member.id).then(tapOrThrow)
   }
+  public async removeMemberFromCard(
+    cardId: string,
+    username: string,
+  ): Promise<void> {
+    const card = await this.getCard(cardId)
+    const member = await this.getBoardMemberByUsername(card.idBoard, username)
+
+    return this.trello.makeRequest(
+      'delete',
+      `/1/cards/${cardId}/idMembers/${member.id}`,
+    )
+  }
+
+  public async getCardMembers(cardId: string): Promise<Member[]> {
+    return this.trello.makeRequest('get', `/1/cards/${cardId}/members`)
+  }
+
   public async getBoardMembers(boardId: string): Promise<Member[]> {
     const result = await this.trello.getBoardMembers(boardId).then(tapOrThrow)
     return result
@@ -115,5 +143,11 @@ export default class TrelloBoardManager implements BoardManager {
 
   private async getCardId(claimId: string) {
     return
+  }
+
+  private async getBoardMemberByUsername(boardId: string, username: string) {
+    const boardMembers = await this.getBoardMembers(boardId)
+
+    return boardMembers.find(member => member.username === username)
   }
 }
