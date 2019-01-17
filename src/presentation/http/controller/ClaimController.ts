@@ -126,7 +126,7 @@ export default class ClaimController {
 
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Show, claim, user)
 
-    return ShortClaimData.fromEntity(claim)
+    return ShortClaimData.fromEntity(claim, this.hideSensitiveData(user))
   }
 
   @Get(':id/situation')
@@ -245,7 +245,7 @@ export default class ClaimController {
 
     const editedClaim: Claim = await this.bus.execute(command)
 
-    return ShortClaimData.fromEntity(editedClaim)
+    return ShortClaimData.fromEntity(editedClaim, this.hideSensitiveData(user))
   }
 
   @Post('situation')
@@ -410,4 +410,7 @@ export default class ClaimController {
 
     return
   }
+
+  private hideSensitiveData = ({ roles }: TokenPayload) =>
+    roles.includes(Role.Doctor)
 }

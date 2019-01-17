@@ -14,15 +14,22 @@ const exampleShortClaim = {
   target: ClaimTarget.Self,
 }
 
+const withHiding = (hide: boolean) => (str: string): string => (hide ? '' : str)
+
 export default class ShortClaimData {
-  public static fromEntity(claim: Claim): ShortClaimData {
+  public static fromEntity(
+    claim: Claim,
+    hideSensitiveData: boolean = false,
+  ): ShortClaimData {
+    const hide = withHiding(hideSensitiveData)
+
     const personalData = {
-      name: claim.applicant.name,
+      name: hide(claim.applicant.name),
       gender: claim.applicant.gender,
       age: claim.applicant.age,
       region: claim.applicant.region,
-      email: claim.author.contacts.email,
-      phone: claim.author.contacts.phone,
+      email: hide(claim.author.contacts.email),
+      phone: hide(claim.author.contacts.phone),
     } as PersonalData
 
     const company = claim.corporateInfo
