@@ -396,7 +396,7 @@ export default class ClaimController {
   @Post('choose-doctor')
   @Roles(Role.CaseManager)
   @ApiOperation({ title: 'Attach doctor to claim' })
-  @ApiOkResponse({ description: 'Attached', type: ShortClaimData })
+  @ApiOkResponse({ description: 'Attached' })
   @ApiNotFoundResponse({ description: 'Claim not found' })
   @ApiForbiddenResponse({
     description: 'Case-manager API token doesn`t provided',
