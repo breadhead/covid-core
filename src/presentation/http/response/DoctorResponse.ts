@@ -5,6 +5,7 @@ import User from '@app/domain/user/User.entity'
 export const exampleDoctor = {
   login: 'chepuhov@oncohelp.core',
   fullName: 'Чепухов Николай Аворорович',
+  descirpion: 'Лучший специлист эвер',
 }
 
 export default class DoctorResponse {
@@ -12,6 +13,7 @@ export default class DoctorResponse {
     return {
       login: user.login,
       fullName: user.fullName,
+      description: user.decription,
     }
   }
 
@@ -20,4 +22,7 @@ export default class DoctorResponse {
 
   @ApiModelProperty({ example: exampleDoctor.fullName, required: false })
   public readonly fullName?: string
+
+  @ApiModelProperty({ example: exampleDoctor.description, required: false })
+  public readonly descirpion?: string
 }
