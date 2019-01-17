@@ -43,10 +43,16 @@ export default class Allocator {
   public allocate(claim: Claim, quota: Quota): Promise<void> {
     return this.em
       .transaction(async em => {
+        const oldQuota = claim.quota
+
+        if (oldQuota) {
+          oldQuota.increaseBalance(1)
+        }
+
         claim.bindQuota(quota)
         quota.decreaseBalance(1)
 
-        await em.save([claim, quota])
+        await em.save([claim, quota, oldQuota])
       })
       .catch(this.throwAllocatorException(quota))
   }

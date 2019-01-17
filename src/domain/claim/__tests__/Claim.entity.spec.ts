@@ -24,16 +24,6 @@ describe('Claim', () => {
       expect(c.quota.id).toBe(q.id)
       expect(c.quota.name).toBe(q.name)
     })
-
-    test('should throw exception if quota already binded', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
-      const oldQ = new Quota('1', 'quota first')
-      const newQ = new Quota('2', 'quota second')
-
-      c.bindQuota(oldQ)
-
-      expect(() => c.bindQuota(newQ)).toThrow(InvariantViolationException)
-    })
   })
 
   describe('unbindQuota', () => {

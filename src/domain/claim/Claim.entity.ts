@@ -238,10 +238,6 @@ export default class Claim {
   }
 
   public bindQuota(quota: Quota): void {
-    if (this._quota) {
-      throw new InvariantViolationException(Claim.name, 'Try to rebind quota')
-    }
-
     this._quota = quota
   }
 

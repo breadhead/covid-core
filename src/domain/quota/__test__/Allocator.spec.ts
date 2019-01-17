@@ -50,16 +50,6 @@ describe('Allocator', () => {
         QuotaAllocationFailedException,
       )
     })
-
-    test('should throw exception if try to allocate already binded claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
-
-      claim.bindQuota(new Quota('1', 'quota'))
-
-      await expect(allocator.allocateAuto(claim)).rejects.toThrow(
-        QuotaAllocationFailedException,
-      )
-    })
   })
 
   describe('allocate', () => {
