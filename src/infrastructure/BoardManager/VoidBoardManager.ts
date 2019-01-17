@@ -35,11 +35,23 @@ export default class VoidBoardManager implements BoardManager {
     return Promise.resolve()
   }
 
+  public deleteLabelFromCard(cardId: string, labelText: string): Promise<void> {
+    return Promise.resolve()
+  }
+
   public setDueDate(cardId: string, due: Date): Promise<void> {
     return Promise.resolve()
   }
 
-  public addMemberToCard(cardId: string, memberId: string): Promise<void> {
+  public addMemberToCard(cardId: string, username: string): Promise<void> {
+    return Promise.resolve()
+  }
+
+  public getCardMembers(cardId: string): Promise<Member[]> {
+    return Promise.resolve([])
+  }
+
+  public removeMemberFromCard(cardId: string, username: string): Promise<void> {
     return Promise.resolve()
   }
 

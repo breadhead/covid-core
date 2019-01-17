@@ -20,6 +20,9 @@ export default class User {
   @Column({ nullable: true })
   public readonly description?: string = null
 
+  @Column({ nullable: true })
+  public readonly boardUsername?: string
+
   public get passwordCredentials(): Option<PasswordCredentials> {
     return this._passwordCredentials.password
       ? new Some(this._passwordCredentials)

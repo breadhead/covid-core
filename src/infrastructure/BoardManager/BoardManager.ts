@@ -1,6 +1,6 @@
 export interface Member {
   readonly id: string
-  readonly login: string
+  readonly username: string
 }
 
 export interface Label {
@@ -40,7 +40,9 @@ export default interface BoardManager {
 
   setDueDate(cardId: string, due: Date): Promise<void>
 
-  addMemberToCard(cardId: string, memberId: string): Promise<void>
+  addMemberToCard(cardId: string, username: string): Promise<void>
+  getCardMembers(cardId: string): Promise<Member[]>
+  removeMemberFromCard(cardId: string, username: string): Promise<void>
 
   getCardsOnBoard(listId: string): Promise<Card[]>
 
@@ -48,6 +50,8 @@ export default interface BoardManager {
   getBoardLists(boardId: string): Promise<List[]>
 
   createOrGetLabel(boardId: string, name: string): Promise<Label>
+
+  deleteLabelFromCard(cardId: string, labelText: string): Promise<void>
 }
 
 const BoardManager = Symbol('BoardManager')
