@@ -100,7 +100,27 @@ jobs:
             sudo docker logout &&
             sudo docker-compose down &&
             sudo docker-compose up -d &&
-            sudo docker image prune"
+            sudo docker image prune -f"
+  
+  prod:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Setup Env
+          command: |
+            echo 'export IMAGE_TAG=${CIRCLE_TAG:-latest}' >> $BASH_ENV
+      - run:
+          name: Deploy Over SSH
+          command: |
+            source $BASH_ENV
+            ssh $SSH_PROD_USER@$SSH_PROD_HOST "cd /var/www/oncohelp &&
+            sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" &&
+            sudo docker pull breadheadhub/oncohelp-core:$IMAGE_TAG &&
+            sudo docker logout &&
+            sudo docker-compose down &&
+            sudo docker-compose up -d &&
+            sudo docker image prune -f"
 
 workflows:
   version: 2
@@ -133,5 +153,21 @@ workflows:
             branches:
               only: 
                 - master
+          requires:
+            - push
+  deploy-prod:
+    jobs:
+      - push:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - prod:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - push
