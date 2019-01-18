@@ -13,5 +13,12 @@
 ### Docker
 `docker-compose up` to run docker container
 
+### Evolutions
+
+If app production ready you must use `evolutions` for preparing DB.
+
++ `yarn evolutions --init` to init db at first time
++ `yarn evolutions` to upgrade db after every changing
+
 ### Docs
 `localhost:3000/docs`
