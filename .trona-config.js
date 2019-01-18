@@ -1,9 +1,7 @@
 const { createConnection } = require('mysql')
 
-try {
+if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
-} catch (e) {
-  console.log('PRODUCTION!')
 }
 
 const con = createConnection({
@@ -16,7 +14,6 @@ const con = createConnection({
 
 con.connect(err => {
   if (err) {
-    console.log('Failed!')
     throw err
   }
 
