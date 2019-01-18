@@ -89,23 +89,23 @@ export default class BoardSubscriber implements EventSubscriber {
         this.createClaimLabels(payload),
       ])
 
-      return this.board.createCardWithExtraParams(
+      const cardId = await this.board.createCardWithExtraParams(
         cardTitle,
         { desc: trelloCardText, idLabels },
         list.id,
       )
+
+      const caseManager = await this.userRepo.findCaseManager()
+
+      return this.board.addMemberToCard(cardId, caseManager.boardUsername)
     }
   }
 
   private async changeStatus({ payload }: ChangeStatusEvent) {
-    if (payload.status === ClaimStatus.QuotaAllocation) {
-      // Don't move card if its being created
-      return
-    }
-
-    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
-
-    const list = await this.getListIdForClaimStatus(payload.status)
+    const [claimCard, list] = await Promise.all([
+      this.claimBoardCardFinder.getCardById(payload.id, 50),
+      this.getListIdForClaimStatus(payload.status),
+    ])
 
     return this.board.moveCard(claimCard.id, list.id)
   }
@@ -148,12 +148,22 @@ export default class BoardSubscriber implements EventSubscriber {
       .get('BOARD_ID')
       .getOrElse('5baa59a6648f9b2166d65935')
 
-    const labels = await Promise.all([
-      this.board.createOrGetLabel(boardId, claim.applicant.region),
-      this.board.createOrGetLabel(boardId, claim.applicant.gender),
-      this.board.createOrGetLabel(boardId, claim.localization),
-      this.board.createOrGetLabel(boardId, claim.theme),
-    ])
+    const propertiesToLabel = [
+      claim.applicant.region,
+      claim.applicant.gender,
+      claim.localization,
+      claim.theme,
+    ].filter(property => !!property)
+
+    if (claim.corporateInfo.nonEmpty()) {
+      propertiesToLabel.push('Проверка корпоративности')
+    }
+
+    const labels = await Promise.all(
+      propertiesToLabel.map(property =>
+        this.board.createOrGetLabel(boardId, property),
+      ),
+    )
 
     return labels.map(label => label.id)
   }
@@ -171,7 +181,10 @@ export default class BoardSubscriber implements EventSubscriber {
 
     await Promise.all(
       doctorsOnCard.map(doctorOnCard =>
-        this.board.removeMemberFromCard(cardId, doctorOnCard.username),
+        this.board.removeMemberFromCardByUsername(
+          cardId,
+          doctorOnCard.username,
+        ),
       ),
     )
   }
