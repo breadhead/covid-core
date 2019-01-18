@@ -102,12 +102,8 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private async changeStatus({ payload }: ChangeStatusEvent) {
-    if (payload.status === ClaimStatus.QuotaAllocation) {
-      return // Don't move card if its being created
-    }
-
     const [claimCard, list] = await Promise.all([
-      this.claimBoardCardFinder.getCardById(payload.id),
+      this.claimBoardCardFinder.getCardById(payload.id, 50),
       this.getListIdForClaimStatus(payload.status),
     ])
 
