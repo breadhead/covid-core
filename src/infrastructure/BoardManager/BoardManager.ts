@@ -42,7 +42,12 @@ export default interface BoardManager {
 
   addMemberToCard(cardId: string, username: string): Promise<void>
   getCardMembers(cardId: string): Promise<Member[]>
-  removeMemberFromCard(cardId: string, username: string): Promise<void>
+  removeMemberFromCardByUsername(
+    cardId: string,
+    username: string,
+  ): Promise<void>
+  removeMemberFromCard(cardId: string, userId: string): Promise<void>
+  removeAllMembersFromCard(cardId: string): Promise<void>
 
   getCardsOnBoard(listId: string): Promise<Card[]>
 

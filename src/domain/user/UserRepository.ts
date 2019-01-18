@@ -28,6 +28,14 @@ export default class UserRepository extends AbstractRepository<User> {
     })
   }
 
+  public findCaseManager(): Promise<User> {
+    return this.createQueryBuilder('user')
+      .where('user._roles like :role', {
+        role: `%${Role.CaseManager}%`,
+      })
+      .getOne()
+  }
+
   public findDoctors(): Promise<User[]> {
     return this.createQueryBuilder('user')
       .where('user._roles like :role', {
