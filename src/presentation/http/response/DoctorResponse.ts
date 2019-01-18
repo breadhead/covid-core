@@ -6,6 +6,7 @@ export const exampleDoctor = {
   login: 'chepuhov@oncohelp.core',
   fullName: 'Чепухов Николай Аворорович',
   description: 'Лучший специлист эвер',
+  assigned: false,
 }
 
 export default class DoctorResponse {
@@ -14,6 +15,7 @@ export default class DoctorResponse {
       login: user.login,
       fullName: user.fullName,
       description: user.description,
+      assigned: false,
     }
   }
 
@@ -25,4 +27,7 @@ export default class DoctorResponse {
 
   @ApiModelProperty({ example: exampleDoctor.description, required: false })
   public readonly description?: string
+
+  @ApiModelProperty({ example: exampleDoctor.assigned, required: false })
+  public readonly assigned: boolean
 }

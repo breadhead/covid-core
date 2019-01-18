@@ -1,19 +1,20 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
+import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 
 import UserRepository from '@app/domain/user/UserRepository'
 
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
+
 import PaginationPipe from '../request/pagination/PaginationPipe'
 import PaginationRequest from '../request/pagination/PaginationRequest'
 import ClientPageResponse from '../response/ClientPageResponse'
@@ -30,6 +31,8 @@ import CurrentUser from './decorator/CurrentUser'
 export default class UserController {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    @InjectRepository(ClaimRepository)
+    private readonly claimRepo: ClaimRepository,
   ) {}
 
   @Get()
@@ -69,7 +72,7 @@ export default class UserController {
     return CurrentUserResponse.fromUser(user)
   }
 
-  @Get('doctors')
+  @Get('doctors/:claimId')
   @Roles(Role.CaseManager, Role.Admin)
   @ApiOperation({ title: 'List of doctors' })
   @ApiOkResponse({
@@ -80,9 +83,21 @@ export default class UserController {
   @ApiForbiddenResponse({
     description: 'Case-manager or Admin API token doesn`t provided',
   })
-  public async showDoctors(): Promise<any> {
-    const doctors = await this.userRepo.findDoctors()
+  public async showDoctors(
+    @Param('claimId') claimId: string,
+  ): Promise<DoctorResponse[]> {
+    const [doctors, claim] = await Promise.all([
+      this.userRepo.findDoctors(),
+      this.claimRepo.getOne(claimId),
+    ])
 
-    return doctors.map(DoctorResponse.fromEntity)
+    const assignedDoctorLogin = claim.doctor && claim.doctor.login
+
+    const mapAssigned = (response: DoctorResponse): DoctorResponse => ({
+      ...response,
+      assigned: response.login === assignedDoctorLogin,
+    })
+
+    return doctors.map(DoctorResponse.fromEntity).map(mapAssigned)
   }
 }
