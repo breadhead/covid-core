@@ -23,13 +23,13 @@ con.connect(err => {
 module.exports = {
   evolutionsFolderPath: ['evolutions'],
   runQuery: query =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve, reject) =>
       con.query(query, (err, result) => {
         if (err) {
           reject(err)
         }
 
         resolve(result)
-      })
-    }),
+      }),
+    ),
 }
