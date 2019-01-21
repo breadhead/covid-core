@@ -14,7 +14,8 @@
     "test:cov": "jest --config ./jest.json --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "types": "tsc --noEmit",
-    "pretty": "prettier --write \"{,!(dist|coverage)/**/}*.{ts,tsx,js}\""
+    "pretty": "prettier --write \"{,!(dist|coverage)/**/}*.{ts,tsx,js}\"",
+    "cmd": "ts-node -r tsconfig-paths/register ./src/console.ts"
   },
   "dependencies": {
     "@breadhead/detil-ts": "^1.0.1",
@@ -28,6 +29,7 @@
     "@nestjs/swagger": "^2.5.1",
     "@nestjs/typeorm": "^5.2.2",
     "@solid-soda/config": "^1.1.0",
+    "@solid-soda/console": "^1.0.0",
     "@solid-soda/evolutions": "^0.0.6",
     "@solid-soda/voters": "^1.0.0",
     "bcryptjs": "^2.4.3",

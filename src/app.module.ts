@@ -13,6 +13,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import ConfigModule from '@app/config.module'
 
+import DoctorCommand from '@app/presentation/cli/command/DoctorCommand'
+import CommandRunner from '@app/presentation/cli/CommandRunner'
 import * as httpControllers from '@app/presentation/http/controller'
 import httpFilters from '@app/presentation/http/filter'
 import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
@@ -51,8 +53,10 @@ import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/provider
 import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
+import CreateDoctorHandler from '@app/application/user/createUser/CreateDoctorHandler'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
+import VerificateHandler from '@app/application/user/verification/VerificateHandler'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
@@ -97,6 +101,8 @@ import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
+const cliCommands = [DoctorCommand]
+
 const commandHandlers = [
   AskQuestionsHandler,
   CreateQuotaHandler,
@@ -117,6 +123,8 @@ const commandHandlers = [
   EditShortClaimHandler,
   AnswerQuestionsHandler,
   ChooseDoctorHandler,
+  VerificateHandler,
+  CreateDoctorHandler,
 ]
 
 const signInProviders = [
@@ -166,6 +174,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
   ],
   controllers: [...Object.values(httpControllers)],
   providers: [
+    ...cliCommands,
     ...httpFilters,
     ...commandHandlers,
     ...securityVoters,
@@ -233,6 +242,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     SecurityVotersUnity,
     NenaprasnoBackendClient,
     EventEmitter,
+    CommandRunner,
   ],
 })
 export class AppModule implements NestModule {
@@ -240,6 +250,7 @@ export class AppModule implements NestModule {
     private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,
+    private readonly commandRunner: CommandRunner,
     private readonly eventEmitter: EventEmitter,
   ) {}
 
@@ -252,6 +263,9 @@ export class AppModule implements NestModule {
 
     this.eventEmitter.setModuleRef(this.moduleRef)
     this.eventEmitter.register(eventSubscribers)
+
+    this.commandRunner.setModuleRef(this.moduleRef)
+    this.commandRunner.register(cliCommands)
   }
 
   public configure(consumer: MiddlewareConsumer) {
