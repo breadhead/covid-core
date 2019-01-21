@@ -1,3 +1,5 @@
+import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
+import SignUpException from '@app/application/exception/SignUpException'
 import { HttpService, Injectable } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 
@@ -19,12 +21,21 @@ export default class NenaprasnoBackendClient {
     confirm: string,
   ): Promise<number | null> {
     if (confirm !== password) {
-      return Promise.resolve(null)
+      throw new SignUpException(
+        { password, confirm },
+        'Пароли должны совпадать',
+      )
     }
 
     return this.request('users', { username: login, password })
       .then(response => Number(response.data.id))
-      .catch(() => null)
+      .catch(e => {
+        if (e.message.includes('409')) {
+          throw new SignUpException({ login }, 'Email уже занят')
+        } else {
+          throw new SignUpException({}, 'Ошибка при регистрации')
+        }
+      })
   }
 
   /** @returns nenaprasnoUserId */
