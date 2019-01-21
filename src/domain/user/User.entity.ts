@@ -15,13 +15,13 @@ export default class User {
   public readonly login: string
 
   @Column({ nullable: true })
-  public readonly fullName?: string = null
+  public fullName?: string = null
 
   @Column({ nullable: true })
-  public readonly description?: string = null
+  public description?: string = null
 
   @Column({ nullable: true })
-  public readonly boardUsername?: string
+  public boardUsername?: string
 
   public get passwordCredentials(): Option<PasswordCredentials> {
     return this._passwordCredentials.password
