@@ -51,10 +51,6 @@ export default class Authenticator {
   ): Promise<SignUpResult> {
     const id = await this.nenaprasno.signUp(login, password, confirm)
 
-    if (!id) {
-      throw new InvalidCredentialsException({ login, password, confirm })
-    }
-
     const token = await this.signIn(login, password)
     const user = await this.userRepo.findOneByCabinetId(id)
 

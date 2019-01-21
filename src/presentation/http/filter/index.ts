@@ -1,3 +1,4 @@
+import SignUpFilter from '@app/presentation/http/filter/SignUpFilter'
 import ActionUnavailableFilter from './ActionUnavailableFilter'
 import EntityNotFoundFilter from './EntityNotFoundFilter'
 import FilterProviderFactory from './FilterProviderFactory'
@@ -15,6 +16,7 @@ export default FilterProviderFactory.providers(
   QueryFailedFilter,
   InvalidCredentialsFilter,
   SecurityFilter,
+  SignUpFilter,
   QuotaAllocationFailedFilter,
   VerificationFailedFilter,
 )
