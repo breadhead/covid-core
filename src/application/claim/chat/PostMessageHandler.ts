@@ -31,7 +31,7 @@ export default class PostMessageHandler
       this.userRepo.getOne(userLogin),
     ])
 
-    if (claim.isInactive()) {
+    if (claim.isInactive() && user.isClient) {
       throw new ActionUnavailableException(
         'Post message',
         'Inactive claim messaging',
