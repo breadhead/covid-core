@@ -8,7 +8,7 @@ import Treatment, { exampleTreatment } from './Treatment'
 export const exampleMidicalTreatment: MedicinalTreatment = {
   ...exampleTreatment,
   end: monthYearExample,
-  cyclesCount: 12,
+  cyclesCount: '12',
   schema: 'Пил таблетки разноцветные',
 }
 
@@ -32,7 +32,7 @@ export default class MedicinalTreatment extends Treatment {
     example: exampleMidicalTreatment.cyclesCount,
     required: false,
   })
-  public readonly cyclesCount?: number
+  public readonly cyclesCount?: string
 
   @ApiModelProperty({
     example: exampleMidicalTreatment.schema,
