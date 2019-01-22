@@ -229,8 +229,9 @@ export default class Claim {
   }
 
   public isActive() {
-    // TODO: check claim is active
-    return Math.random() > 0.2
+    return [ClaimStatus.Denied, ClaimStatus.ClosedSuccessfully].includes(
+      this.status,
+    )
   }
 
   public isInactive() {
