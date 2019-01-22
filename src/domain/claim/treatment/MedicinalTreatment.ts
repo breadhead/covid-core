@@ -7,8 +7,8 @@ export default class MedicinalTreatment {
     @Column({ nullable: true, type: 'text' }) public readonly clinic?: string,
     @Column({ nullable: true, type: 'text' }) public readonly doctor?: string,
     @Column({ nullable: true, type: 'date' }) public readonly end?: Date,
-    @Column({ nullable: true, type: 'int' })
-    public readonly cyclesCount?: number,
+    @Column({ nullable: true, type: 'text' })
+    public readonly cyclesCount?: string,
     @Column({ nullable: true, type: 'text' }) public readonly schema?: string,
   ) {}
 }

@@ -7,7 +7,7 @@ export default class MedicinalTreatment {
     public readonly clinic?: string,
     public readonly doctor?: string,
     public readonly end?: MonthYear,
-    public readonly cyclesCount?: number,
+    public readonly cyclesCount?: string,
     public readonly schema?: string,
   ) {}
 }
