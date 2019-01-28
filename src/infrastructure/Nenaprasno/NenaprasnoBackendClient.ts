@@ -31,7 +31,7 @@ export default class NenaprasnoBackendClient {
       .then(response => Number(response.data.id))
       .catch(e => {
         if (e.message.includes('409')) {
-          throw new SignUpException({ login }, 'Email уже занят')
+          throw new SignUpException({ login }, 'Email уже занят', 409)
         } else {
           throw new SignUpException({}, 'Ошибка при регистрации')
         }
