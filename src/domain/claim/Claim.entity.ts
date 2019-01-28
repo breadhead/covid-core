@@ -113,8 +113,10 @@ export default class Claim {
 
   public get questions() {
     return {
-      defaultQuestions: this._defaultQuestions.map(q => q.question),
-      additionalQuestions: this._additionalQuestions.map(q => q.question),
+      defaultQuestions: (this._defaultQuestions || []).map(q => q.question),
+      additionalQuestions: (this._additionalQuestions || []).map(
+        q => q.question,
+      ),
     }
   }
 
@@ -335,8 +337,10 @@ export default class Claim {
     defaultQuestions: string[],
     additionalQuestions: string[],
   ): void {
-    this._defaultQuestions = defaultQuestions.map(q => new Question(q))
-    this._additionalQuestions = additionalQuestions.map(q => new Question(q))
+    this._defaultQuestions = (defaultQuestions || []).map(q => new Question(q))
+    this._additionalQuestions = (additionalQuestions || []).map(
+      q => new Question(q),
+    )
   }
 
   public newApplicant(newApplicant: Applicant): void {
@@ -358,13 +362,15 @@ export default class Claim {
   }
 
   public answerQuestions(answers: Question[]) {
-    const defaultQuestions = this._defaultQuestions.map(q => q.question)
+    const defaultQuestions = (this._defaultQuestions || []).map(q => q.question)
     const defaultAnsweredQuestions = answers.filter(({ question }) =>
       defaultQuestions.includes(question),
     )
     this._defaultQuestions = defaultAnsweredQuestions
 
-    const additionalQuestions = this._additionalQuestions.map(q => q.question)
+    const additionalQuestions = (this._additionalQuestions || []).map(
+      q => q.question,
+    )
     const additionalAnsweredQuestions = answers.filter(({ question }) =>
       additionalQuestions.includes(question),
     )
