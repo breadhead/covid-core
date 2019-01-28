@@ -56,10 +56,16 @@ export default class SituationClaimData {
     const { histology, discharge, other } = analysis
 
     return {
-      radiationTreatments: radiationTreatments.map(RadiationTreatment.fromVo),
-      medicalsTreatments: medicinalTreatments.map(MedicinalTreatment.fromVo),
-      surgicalTreatments: surgicalTreatments.map(SurgicalTreatment.fromVo),
-      otherFiles: other.map(file => FileData.fromFileLink(file)),
+      radiationTreatments: (radiationTreatments || []).map(
+        RadiationTreatment.fromVo,
+      ),
+      medicalsTreatments: (medicinalTreatments || []).map(
+        MedicinalTreatment.fromVo,
+      ),
+      surgicalTreatments: (surgicalTreatments || []).map(
+        SurgicalTreatment.fromVo,
+      ),
+      otherFiles: (other || []).map(file => FileData.fromFileLink(file)),
       diagnosisDate: MonthYear.fromDate(diagnosisDate),
       histology: FileData.fromFileLink(histology),
       discharge: FileData.fromFileLink(discharge),
