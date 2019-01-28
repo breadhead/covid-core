@@ -18,6 +18,7 @@ export default class SignUpFilter implements ExceptionFilter {
       status: HTTP_STATUS,
       message: exception.message,
       fields: exception.fields,
+      code: exception.code,
     })
 
     this.logger.log(responseToLog(res))
