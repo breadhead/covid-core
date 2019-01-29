@@ -192,4 +192,4 @@ workflows:
             branches:
               ignore: /.*/
           requires:
-            - push
+            - push_stable
