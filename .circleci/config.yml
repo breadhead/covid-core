@@ -109,7 +109,7 @@ jobs:
       - run:
           name: Setup Env
           command: |
-            echo 'export IMAGE_TAG=${CIRCLE_TAG:-latest}' >> $BASH_ENV
+            echo 'export IMAGE_TAG=stable' >> $BASH_ENV
       - run:
           name: Deploy Over SSH
           command: |
