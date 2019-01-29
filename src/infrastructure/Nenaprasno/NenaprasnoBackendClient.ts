@@ -6,6 +6,8 @@ import { AxiosResponse } from 'axios'
 import Configuration from '../Configuration/Configuration'
 import Logger from '../Logger/Logger'
 
+const ACCOUNT_EXISTS_STATUS = 409
+
 @Injectable()
 export default class NenaprasnoBackendClient {
   public constructor(
@@ -30,8 +32,12 @@ export default class NenaprasnoBackendClient {
     return this.request('users', { username: login, password })
       .then(response => Number(response.data.id))
       .catch(e => {
-        if (e.message.includes('409')) {
-          throw new SignUpException({ login }, 'Email уже занят')
+        if (e.message.includes(ACCOUNT_EXISTS_STATUS)) {
+          throw new SignUpException(
+            { login },
+            'Email уже занят',
+            ACCOUNT_EXISTS_STATUS,
+          )
         } else {
           throw new SignUpException({}, 'Ошибка при регистрации')
         }
