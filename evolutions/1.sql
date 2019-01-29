@@ -73,7 +73,10 @@ CREATE TABLE user
     ContactsPhone VARCHAR(255),
     ContactsEmail VARCHAR(255),
     PasswordCredentialsPassword VARCHAR(255),
-    NenaprasnoCabinetCredentialsId INT(11)
+    NenaprasnoCabinetCredentialsId INT(11),
+    fullName VARCHAR(255),
+    description VARCHAR(255),
+    boardUsername VARCHAR(255)
 );
 
 
@@ -91,9 +94,6 @@ CREATE INDEX FK_DRAFT_USER ON draft (authorLogin);
 CREATE TABLE claim
 (
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    target ENUM('Для себя', 'Для близкого человека', 'Для подопечного Фонда') DEFAULT 'Для себя' NOT NULL,
-    theme VARCHAR(255) NOT NULL,
-    localization VARCHAR(255),
     description VARCHAR(255),
     diagnosis VARCHAR(255),
     stage VARCHAR(255),
@@ -110,10 +110,6 @@ CREATE TABLE claim
     `_surgicalTreatments` JSON NOT NULL,
     authorLogin VARCHAR(255),
     QuotaId VARCHAR(255),
-    applicantName VARCHAR(255) NOT NULL,
-    applicantAge INT(11) NOT NULL,
-    applicantGender ENUM('Мужской', 'Женский', 'Небинарный', 'Неизвестный') DEFAULT 'Неизвестный' NOT NULL,
-    applicantRegion VARCHAR(255) NOT NULL,
     CorporateInfoName VARCHAR(255),
     CorporateInfoPosition VARCHAR(255),
     AnalysisOther JSON NOT NULL,
@@ -125,11 +121,22 @@ CREATE TABLE claim
     `_defaultQuestions` JSON NOT NULL,
     `_additionalQuestions` JSON NOT NULL,
     createdAt DATETIME,
+    `_theme` VARCHAR(255) NOT NULL,
+    `_localization` VARCHAR(255),
+    `_target` ENUM('Для себя', 'Для близкого человека', 'Для подопечного Фонда') DEFAULT 'Для себя' NOT NULL,
+    ApplicantName VARCHAR(255) NOT NULL,
+    ApplicantAge INT(11) NOT NULL,
+    ApplicantGender ENUM('Мужской', 'Женский', 'Небинарный', 'Неизвестный') DEFAULT 'Неизвестный' NOT NULL,
+    ApplicantRegion VARCHAR(255) NOT NULL,
+    number INT(11) NOT NULL,
+    DoctorLogin VARCHAR(255),
     CONSTRAINT FK_CLAIM_USER FOREIGN KEY (authorLogin) REFERENCES user (login),
-    CONSTRAINT FK_CLAIM_QUOTA FOREIGN KEY (QuotaId) REFERENCES quota (id)
+    CONSTRAINT FK_CLAIM_QUOTA FOREIGN KEY (QuotaId) REFERENCES quota (id),
+    CONSTRAINT FK_CLAIM_DOCTOR FOREIGN KEY (DoctorLogin) REFERENCES user (login)
 );
 CREATE INDEX FK_CLAIM_QUOTA ON claim (QuotaId);
 CREATE INDEX FK_CLAIM_USER ON claim (authorLogin);
+CREATE INDEX FK_CLAIM_DOCTOR ON claim (DoctorLogin);
 
 
 CREATE TABLE message
