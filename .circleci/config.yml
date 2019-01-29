@@ -87,6 +87,28 @@ jobs:
             docker build -t breadheadhub/$IMAGE_NAME:$IMAGE_TAG .
             docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
             docker push breadheadhub/$IMAGE_NAME:$IMAGE_TAG
+  
+  push_stable:
+    docker:
+      - image: docker:17.05.0-ce-git
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Setup Env
+          command: |
+            echo 'export IMAGE_TAG=stable' >> $BASH_ENV
+            echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV
+      - run:
+          name: Build and push Docker image
+          command: |
+            source $BASH_ENV
+            docker build -t breadheadhub/$IMAGE_NAME:$IMAGE_TAG .
+            docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+            docker push breadheadhub/$IMAGE_NAME:$IMAGE_TAG
 
   dev:
     machine:
@@ -157,7 +179,7 @@ workflows:
             - push
   deploy-prod:
     jobs:
-      - push:
+      - push_stable:
           filters:
             tags:
               only: /^v.*/
