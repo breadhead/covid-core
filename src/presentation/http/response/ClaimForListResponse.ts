@@ -5,6 +5,7 @@ import Claim, { ClaimStatus, ClaimTarget } from '@app/domain/claim/Claim.entity'
 export enum Status {
   Draft = 'Черновик',
   Closed = 'Закрыта',
+  Denied = 'Отказ',
   QuotaAllocation = 'Распределение квоты',
   QueueForQuota = 'В очереди на квоту',
   QuestionnaireWaiting = 'Ожидание анкеты',
@@ -25,7 +26,7 @@ const defineStatus = (originalStatus: ClaimStatus) =>
     [ClaimStatus.AnswerValidation]: Status.AnswerWaiting,
     [ClaimStatus.DeliveredToCustomer]: Status.DeliveredToCustomer,
     [ClaimStatus.ClosedSuccessfully]: Status.Closed,
-    [ClaimStatus.Denied]: Status.Closed,
+    [ClaimStatus.Denied]: Status.Denied,
   }[originalStatus])
 
 export default class ClaimForListResponse {
