@@ -47,12 +47,13 @@ export default class Allocator {
 
         if (oldQuota) {
           oldQuota.increaseBalance(1)
+          await em.save(oldQuota)
         }
 
         claim.bindQuota(quota)
         quota.decreaseBalance(1)
 
-        await em.save([claim, quota, oldQuota])
+        await em.save([claim, quota])
       })
       .catch(this.throwAllocatorException(quota))
   }
