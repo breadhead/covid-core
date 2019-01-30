@@ -231,7 +231,7 @@ export default class Claim {
   }
 
   public isActive() {
-    return [ClaimStatus.Denied, ClaimStatus.ClosedSuccessfully].includes(
+    return ![ClaimStatus.Denied, ClaimStatus.ClosedSuccessfully].includes(
       this.status,
     )
   }
