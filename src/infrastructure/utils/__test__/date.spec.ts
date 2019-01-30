@@ -28,7 +28,8 @@ describe('add', () => {
   test('should add days', () => {
     const date = add(new Date(), '2d')
 
-    const MS_IN_2_DAYS = 172800000
-    expect(moment(date).diff(moment(new Date()))).toBe(MS_IN_2_DAYS)
+    const TWO_DAYS = Math.round(172800000 / 86400000)
+    const recived = Math.round(moment(date).diff(moment()) / 86400000)
+    expect(recived).toBe(TWO_DAYS)
   })
 })
