@@ -6,6 +6,7 @@ export enum Status {
   Draft = 'Черновик',
   Closed = 'Закрыта',
   QuotaAllocation = 'Распределение квоты',
+  QueueForQuota = 'В очереди на квоту',
   QuestionnaireWaiting = 'Ожидание анкеты',
   QuestionnaireValidation = 'Проверка анкеты',
   AtTheDoctor = 'У врача',
@@ -17,7 +18,7 @@ const defineStatus = (originalStatus: ClaimStatus) =>
   ({
     [ClaimStatus.New]: Status.Draft,
     [ClaimStatus.QuotaAllocation]: Status.QuotaAllocation,
-    [ClaimStatus.QueueForQuota]: Status.QuotaAllocation,
+    [ClaimStatus.QueueForQuota]: Status.QueueForQuota,
     [ClaimStatus.QuestionnaireWaiting]: Status.QuestionnaireWaiting,
     [ClaimStatus.QuestionnaireValidation]: Status.QuestionnaireValidation,
     [ClaimStatus.AtTheDoctor]: Status.AtTheDoctor,
