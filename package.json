@@ -15,7 +15,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "types": "tsc --noEmit",
     "pretty": "prettier --write \"{,!(dist|coverage)/**/}*.{ts,tsx,js}\"",
-    "cmd": "ts-node -r tsconfig-paths/register ./src/console.ts",
+    "cmd:dev": "ts-node -r tsconfig-paths/register ./src/console.ts",
+    "cmd": "node ./tsconfig-paths-bootstrap.js ./dist/console.js",
     "evolutions:init": "evolutions --init",
     "evolutions:run": "evolutions"
   },

@@ -1,3 +1,4 @@
+import * as moment from 'moment'
 import { add, previusMonth } from '../date'
 
 describe('previusMonth', () => {
@@ -27,6 +28,7 @@ describe('add', () => {
   test('should add days', () => {
     const date = add(new Date(), '2d')
 
-    expect(date.getDate() - new Date().getDate()).toBe(2)
+    const MS_IN_2_DAYS = 172800000
+    expect(moment(date).diff(moment(new Date()))).toBe(MS_IN_2_DAYS)
   })
 })
