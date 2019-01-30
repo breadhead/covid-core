@@ -38,14 +38,14 @@ export default class SendVerificationHandler
 
     const user = await this.userRepo.getOne(command.login)
 
-    await this.em.transaction(async em => {
+    await this.em.transaction(async (em) => {
       await user.changeVerificationCode(verificationCode, this.encoder)
 
       await em.save(user)
 
       await this.smsSender.send(
         command.number,
-        `${verificationCode} введите этот код для входа на сайт`,
+        `${verificationCode} введите этот код для входа на сайт Просто спросить`,
       )
     })
 
