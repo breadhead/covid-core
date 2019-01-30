@@ -10,9 +10,9 @@ export default class ClaimQuotaResponse {
       }
     }
 
-    const { company, publicCompany } = quota
+    const { company } = quota
 
-    if (!company || !publicCompany) {
+    if (!company) {
       return {}
     }
 
