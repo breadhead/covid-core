@@ -10,27 +10,39 @@ export default class ClaimQuotaResponse {
       }
     }
 
-    const { company, publicCompany } = quota
+    const { company, name, comment, id } = quota
 
-    if (!company || !publicCompany) {
-      return {}
+    if (!company) {
+      return {
+        id,
+        name,
+        comment,
+      }
     }
 
-    const { name, logo, site, comment } = company
+    const { logo, site } = company
 
     return {
+      id,
       name,
       comment,
       logo,
       site,
+      companyName: company.name,
     }
   }
+
+  @ApiModelProperty({ example: 'Jt7KlhWjrPb416', required: true })
+  public readonly id?: string
 
   @ApiModelProperty({ example: false, required: false })
   public readonly empty?: boolean
 
-  @ApiModelProperty({ example: 'Google' })
+  @ApiModelProperty({ example: 'Google quota' })
   public readonly name?: string
+
+  @ApiModelProperty({ example: 'Google' })
+  public readonly companyName?: string
 
   @ApiModelProperty({ example: 'Гуляем на деньги гугла' })
   public readonly comment?: string
