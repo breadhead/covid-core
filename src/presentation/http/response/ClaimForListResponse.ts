@@ -11,7 +11,7 @@ export enum Status {
   QuestionnaireWaiting = 'Ожидание анкеты',
   QuestionnaireValidation = 'Проверка анкеты',
   AtTheDoctor = 'У врача',
-  AnswerWaiting = 'Ожидание ответа',
+  AnswerValidation = 'Проверка ответа эксперта',
   DeliveredToCustomer = 'Передано заказчику',
 }
 
@@ -23,7 +23,7 @@ const defineStatus = (originalStatus: ClaimStatus) =>
     [ClaimStatus.QuestionnaireWaiting]: Status.QuestionnaireWaiting,
     [ClaimStatus.QuestionnaireValidation]: Status.QuestionnaireValidation,
     [ClaimStatus.AtTheDoctor]: Status.AtTheDoctor,
-    [ClaimStatus.AnswerValidation]: Status.AnswerWaiting,
+    [ClaimStatus.AnswerValidation]: Status.AnswerValidation,
     [ClaimStatus.DeliveredToCustomer]: Status.DeliveredToCustomer,
     [ClaimStatus.ClosedSuccessfully]: Status.Closed,
     [ClaimStatus.Denied]: Status.Denied,
