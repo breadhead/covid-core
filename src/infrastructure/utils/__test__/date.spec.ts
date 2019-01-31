@@ -13,7 +13,7 @@ describe('previusMonth', () => {
     const input = new Date('2019-01-11')
     expect(previusMonth(input).getDate()).toBe(11)
     expect(previusMonth(input).getMonth()).toBe(11)
-    expect(previusMonth(input).getFullYear()).toBe(2017)
+    expect(previusMonth(input).getFullYear()).toBe(2018)
   })
 
   test('should return date in previous month from strange month', () => {
