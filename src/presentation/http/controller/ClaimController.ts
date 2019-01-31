@@ -339,7 +339,7 @@ export default class ClaimController {
   }
 
   @Post('close')
-  @Roles(Role.CaseManager, Role.Admin)
+  @Roles(Role.Client, Role.CaseManager, Role.Admin)
   @HttpCodeNoContent()
   @ApiOperation({ title: 'Close quota' })
   @ApiOkResponse({ description: 'Quota closed' })
