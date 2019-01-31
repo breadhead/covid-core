@@ -10,10 +10,11 @@ export default class ClaimQuotaResponse {
       }
     }
 
-    const { company, name, comment } = quota
+    const { company, name, comment, id } = quota
 
     if (!company) {
       return {
+        id,
         name,
         comment,
       }
@@ -22,6 +23,7 @@ export default class ClaimQuotaResponse {
     const { logo, site } = company
 
     return {
+      id,
       name,
       comment,
       logo,
@@ -29,6 +31,9 @@ export default class ClaimQuotaResponse {
       companyName: company.name,
     }
   }
+
+  @ApiModelProperty({ example: 'Jt7KlhWjrPb416', required: true })
+  public readonly id?: string
 
   @ApiModelProperty({ example: false, required: false })
   public readonly empty?: boolean
