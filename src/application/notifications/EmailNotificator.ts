@@ -49,7 +49,7 @@ export default class EmailNotificator implements Notificator {
       'email/new-chat-message-from-specialist',
       {
         name,
-        link: `${this.siteUrl}/consultation/redirect/${id}`, // TODO: check url after frontend
+        link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
 
