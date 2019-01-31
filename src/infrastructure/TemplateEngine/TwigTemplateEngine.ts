@@ -2,12 +2,19 @@ import { Injectable } from '@nestjs/common'
 import * as path from 'path'
 import * as Twig from 'twig'
 
+import Processor from './processors/Processor'
 import TemplateEngine, { Context } from './TemplateEngine'
 
 @Injectable()
 export default class TwigTemplateEngine implements TemplateEngine {
-  public render(name: string, context: Context): Promise<string> {
-    return new Promise((resolve, reject) => {
+  private processors: Processor[] = []
+
+  public addProcessor(processor: Processor): void {
+    this.processors = [...new Set([...this.processors, processor])]
+  }
+
+  public async render(name: string, context: Context): Promise<string> {
+    const rawHtml = (await new Promise((resolve, reject) => {
       Twig.renderFile(
         path.resolve(__dirname, `../../../templates/${name}.twig`),
         context,
@@ -19,6 +26,11 @@ export default class TwigTemplateEngine implements TemplateEngine {
           resolve(html)
         },
       )
-    })
+    })) as Promise<string>
+
+    return await this.processors.reduce(
+      (currentPromise, processor) => currentPromise.then(processor.process),
+      Promise.resolve(rawHtml),
+    )
   }
 }

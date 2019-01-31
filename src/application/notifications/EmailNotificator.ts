@@ -14,6 +14,7 @@ import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
+import StyleInlinerProcessor from '@app/infrastructure/TemplateEngine/processors/StyleInlinerProcessor'
 import Notificator from './Notificator'
 
 export default class EmailNotificator implements Notificator {
@@ -38,6 +39,8 @@ export default class EmailNotificator implements Notificator {
       sender.send(senderEmail, to, subject, content)
 
     this.siteUrl = config.get('SITE_URL').getOrElse('localhost')
+
+    this.templating.addProcessor(new StyleInlinerProcessor())
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
@@ -48,6 +51,7 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render(
       'email/new-chat-message-from-specialist',
       {
+        siteUrl: this.siteUrl,
         name,
         link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
@@ -65,6 +69,7 @@ export default class EmailNotificator implements Notificator {
 
     const [html, caseManager] = await Promise.all([
       this.templating.render('email/new-chat-message-from-client', {
+        siteUrl: this.siteUrl,
         name,
         id,
         status,
@@ -86,6 +91,7 @@ export default class EmailNotificator implements Notificator {
 
     const [html, caseManager] = await Promise.all([
       this.templating.render('email/new-feedback-message', {
+        siteUrl: this.siteUrl,
         name,
         email,
         phone,
@@ -109,9 +115,10 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render(
       'email/short-claim-message-approved',
       {
+        siteUrl: this.siteUrl,
         name,
         status,
-        date: due.toLocaleString(),
+        date: due.getOrElse(new Date()).toLocaleString(),
         link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
@@ -130,9 +137,10 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render(
       'email/short-claim-message-queued',
       {
+        siteUrl: this.siteUrl,
         name,
         status,
-        date: due.toLocaleString(),
+        date: due.getOrElse(new Date()).toLocaleString(),
         link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
@@ -149,6 +157,7 @@ export default class EmailNotificator implements Notificator {
     const subject = `${name}, к сожалению, ваша заявка отклонена`
 
     const html = await this.templating.render('email/claim-rejected', {
+      siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/consultation/redirect/${id}`,
     })
@@ -165,6 +174,7 @@ export default class EmailNotificator implements Notificator {
     const subject = `${name}, готов ответ специалиста по вашей консультации`
 
     const html = await this.templating.render('email/doctor-answer', {
+      siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/consultation/redirect/${id}`,
     })
