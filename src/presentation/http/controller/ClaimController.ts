@@ -414,5 +414,5 @@ export default class ClaimController {
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>
-    roles.includes(Role.Doctor)
+    roles.includes(Role.Doctor) && roles.length === 1
 }
