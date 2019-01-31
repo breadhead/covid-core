@@ -9,7 +9,7 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
-import CloseClaimCommand from './CloseClaimCommand'
+import CloseClaimCommand, { CloseType } from './CloseClaimCommand'
 
 @CommandHandler(CloseClaimCommand)
 export default class CloseClaimHandler
@@ -22,7 +22,7 @@ export default class CloseClaimHandler
   ) {}
 
   public async execute(command: CloseClaimCommand, resolve: (value?) => void) {
-    const { id, deallocateQuota } = command
+    const { id, deallocateQuota, type } = command
 
     const claim = await this.claimRepo.getOne(id)
 
@@ -30,9 +30,11 @@ export default class CloseClaimHandler
       await this.allocator.deallocate(claim)
     }
 
-    // TODO: handle close type
-
-    await this.statusMover.deny(claim)
+    if (type === CloseType.Successful) {
+      await this.statusMover.next(claim)
+    } else {
+      await this.statusMover.deny(claim)
+    }
 
     resolve(claim)
   }
