@@ -49,7 +49,7 @@ export default class User {
   }
 
   public get isClient(): boolean {
-    return this.roles.includes(Role.Client)
+    return this.roles.includes(Role.Client) && this.roles.length === 1
   }
 
   public get valid(): boolean {
