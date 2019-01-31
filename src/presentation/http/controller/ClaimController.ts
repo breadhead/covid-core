@@ -198,7 +198,7 @@ export default class ClaimController {
     @CurrentUser() user: TokenPayload,
   ): Promise<ShortClaimData> {
     const { login } = user
-    const { id, theme, localization, company } = request
+    const { id, theme, localization, company, target } = request
     const { name, age, gender, region, email, phone } = request.personalData
 
     const { companyName = null, companyPosition = null } = company
@@ -228,6 +228,7 @@ export default class ClaimController {
           phone,
           companyName,
           companyPosition,
+          target,
         )
       : new CreateClaimCommand(
           login,
@@ -241,6 +242,7 @@ export default class ClaimController {
           phone,
           companyName,
           companyPosition,
+          target,
         )
 
     const editedClaim: Claim = await this.bus.execute(command)
