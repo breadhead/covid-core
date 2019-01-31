@@ -15,7 +15,7 @@ export default class Quota {
   @PrimaryColumn()
   public readonly id: string
 
-  @Column({ default: '2018-10-21 13:00:00' })
+  @Column({ default: '2019-10-21 13:00:00' })
   public readonly createdAt: Date
 
   public get name() {

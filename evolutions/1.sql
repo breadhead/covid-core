@@ -22,7 +22,7 @@ CREATE TABLE feedback
 CREATE TABLE quota
 (
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    createdAt DATETIME DEFAULT '2018-10-21 13:00:00' NOT NULL,
+    createdAt DATETIME DEFAULT '2019-10-21 13:00:00' NOT NULL,
     `_publicCompany` TINYINT(4) NOT NULL,
     `_comment` VARCHAR(255) NOT NULL,
     `_balance` INT(11) NOT NULL,
