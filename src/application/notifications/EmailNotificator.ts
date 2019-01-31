@@ -1,8 +1,10 @@
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import { Inject } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
+import UserRepository from '@app/domain/user/UserRepository'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EmailSender, {
   EmailSender as EmailSenderSymbol,
@@ -16,7 +18,7 @@ import Notificator from './Notificator'
 
 export default class EmailNotificator implements Notificator {
   private readonly send: (
-    from: string,
+    to: string,
     subject: string,
     content: MessageContent,
   ) => Promise<void>
@@ -25,6 +27,7 @@ export default class EmailNotificator implements Notificator {
   public constructor(
     @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
     @Inject(EmailSenderSymbol) sender: EmailSender,
+    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     config: Configuration,
   ) {
     const senderEmail = config
@@ -38,7 +41,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
-    const { id } = message.claim
+    const { id, author } = message.claim
     const { name } = message.claim.applicant
     const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
@@ -46,11 +49,13 @@ export default class EmailNotificator implements Notificator {
       'email/new-chat-message-from-specialist',
       {
         name,
-        link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+        link: `${this.siteUrl}/consultation/redirect/${id}`, // TODO: check url after frontend
       },
     )
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
   }
 
   public async newChatMessageFromClient(message: Message): Promise<void> {
@@ -58,18 +63,20 @@ export default class EmailNotificator implements Notificator {
     const { name } = message.claim.applicant
     const subject = `Новое сообщение в заявке ${id}, ${name}`
 
-    const html = await this.templating.render(
-      'email/new-chat-message-from-client',
-      {
+    const [html, caseManager] = await Promise.all([
+      this.templating.render('email/new-chat-message-from-client', {
         name,
         id,
         status,
-        link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+        link: `${this.siteUrl}/consultation/redirect/${id}`,
         text: message.content,
-      },
-    )
+      }),
+      this.userRepo.findCaseManager(),
+    ])
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (caseManager.contacts.email) {
+      return this.send(caseManager.contacts.email, subject, { html })
+    }
   }
 
   public async newFeedbackMessage(feedback: Feedback): Promise<void> {
@@ -77,19 +84,24 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Сообщение "${theme}" от ${name}`
 
-    const html = await this.templating.render('email/new-feedback-message', {
-      name,
-      email,
-      phone,
-      theme,
-      content,
-    })
+    const [html, caseManager] = await Promise.all([
+      this.templating.render('email/new-feedback-message', {
+        name,
+        email,
+        phone,
+        theme,
+        content,
+      }),
+      this.userRepo.findCaseManager(),
+    ])
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (caseManager.contacts.email) {
+      return this.send(caseManager.contacts.email, subject, { html })
+    }
   }
 
   public async shortClaimApproved(claim: Claim): Promise<void> {
-    const { id, status } = claim
+    const { id, status, author, due } = claim
     const { name } = claim.applicant
 
     const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
@@ -99,16 +111,18 @@ export default class EmailNotificator implements Notificator {
       {
         name,
         status,
-        date: new Date().toLocaleString(), // TODO: change to real date
-        link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+        date: due.toLocaleString(),
+        link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
-    const { id, status } = claim
+    const { id, status, author, due } = claim
     const { name } = claim.applicant
 
     const subject = `${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
@@ -118,39 +132,45 @@ export default class EmailNotificator implements Notificator {
       {
         name,
         status,
-        date: new Date().toLocaleString(), // TODO: change to real date
-        link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+        date: due.toLocaleString(),
+        link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
   }
 
   public async claimRejected(claim: Claim): Promise<void> {
-    const { id } = claim
+    const { id, author } = claim
     const { name } = claim.applicant
 
     const subject = `${name}, к сожалению, ваша заявка отклонена`
 
     const html = await this.templating.render('email/claim-rejected', {
       name,
-      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+      link: `${this.siteUrl}/consultation/redirect/${id}`,
     })
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { id } = claim
+    const { id, author } = claim
     const { name } = claim.applicant
 
     const subject = `${name}, готов ответ специалиста по вашей консультации`
 
     const html = await this.templating.render('email/doctor-answer', {
       name,
-      link: `${this.siteUrl}/claim/${id}`, // TODO: check url after frontend
+      link: `${this.siteUrl}/consultation/redirect/${id}`,
     })
 
-    return this.send('igor@kamyshev.me', subject, { html })
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
   }
 }
