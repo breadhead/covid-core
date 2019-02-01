@@ -74,7 +74,7 @@ export default class EmailNotificator implements Notificator {
         name,
         id,
         status,
-        link: `${this.siteUrl}/client/consultation/${id}`,
+        link: `${this.siteUrl}/manager/consultation/${id}`,
         text: message.content,
       }),
       this.userRepo.findCaseManager(),
