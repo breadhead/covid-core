@@ -43,17 +43,25 @@ export default class Allocator {
   public allocate(claim: Claim, quota: Quota): Promise<void> {
     return this.em
       .transaction(async em => {
+        const entitiesForSave = []
+
         const oldQuota = claim.quota
 
-        if (oldQuota) {
+        if (oldQuota && oldQuota.id !== quota.id) {
           oldQuota.increaseBalance(1)
-          await em.save(oldQuota)
+          entitiesForSave.push(oldQuota)
+        }
+
+        if (!oldQuota || oldQuota.id !== quota.id) {
+          quota.decreaseBalance(1)
         }
 
         claim.bindQuota(quota)
-        quota.decreaseBalance(1)
 
-        await em.save([claim, quota])
+        entitiesForSave.push(claim)
+        entitiesForSave.push(quota)
+
+        await em.save(entitiesForSave)
       })
       .catch(this.throwAllocatorException(quota))
   }
@@ -63,17 +71,20 @@ export default class Allocator {
     restoreQuota: boolean = false,
   ): Promise<void> {
     return this.em.transaction(async em => {
+      const entitiesForSave = []
+
       if (restoreQuota) {
         // restore quota if needed
         const quota = claim.quota
         quota.increaseBalance(1)
 
-        await em.save(quota)
+        entitiesForSave.push(quota)
       }
 
       claim.unbindQuota()
+      entitiesForSave.push(claim)
 
-      await em.save(claim)
+      await em.save(entitiesForSave)
     })
   }
 
