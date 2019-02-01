@@ -73,16 +73,18 @@ export default class Allocator {
     return this.em.transaction(async em => {
       const entitiesForSave = []
 
-      if (restoreQuota) {
-        // restore quota if needed
-        const quota = claim.quota
-        quota.increaseBalance(1)
+      if (claim.quota) {
+        if (restoreQuota) {
+          // restore quota if needed
+          const quota = claim.quota
+          quota.increaseBalance(1)
 
-        entitiesForSave.push(quota)
+          entitiesForSave.push(quota)
+        }
+
+        claim.unbindQuota()
+        entitiesForSave.push(claim)
       }
-
-      claim.unbindQuota()
-      entitiesForSave.push(claim)
 
       await em.save(entitiesForSave)
     })
