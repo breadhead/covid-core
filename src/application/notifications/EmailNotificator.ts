@@ -17,6 +17,7 @@ import TemplateEngine, {
 import StyleInlinerProcessor from '@app/infrastructure/TemplateEngine/processors/StyleInlinerProcessor'
 import Notificator from './Notificator'
 
+import { formatDate } from './helpers'
 export default class EmailNotificator implements Notificator {
   private readonly send: (
     to: string,
@@ -73,7 +74,7 @@ export default class EmailNotificator implements Notificator {
         name,
         id,
         status,
-        link: `${this.siteUrl}/doctor/consultation/${id}`,
+        link: `${this.siteUrl}/manager/consultation/${id}`,
         text: message.content,
       }),
       this.userRepo.findCaseManager(),
@@ -118,7 +119,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         status,
-        date: due.getOrElse(new Date()).toLocaleString(),
+        date: formatDate(due),
         link: `${this.siteUrl}/client/claim/${id}/situation`,
       },
     )
@@ -140,8 +141,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         status,
-        date: due.getOrElse(new Date()).toLocaleString(),
-        link: `${this.siteUrl}/consultation/redirect/${id}`,
+        date: formatDate(due),
       },
     )
 
@@ -176,7 +176,7 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
-      link: `${this.siteUrl}/client/consultation/${id}`,
+      link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
     })
 
     if (author.contacts.email) {
