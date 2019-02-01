@@ -69,6 +69,10 @@ export default class Claim {
     return this._status
   }
 
+  public get previousStatus(): ClaimStatus {
+    return this._previousStatus
+  }
+
   public get quota(): Quota | null {
     return this._quota
   }
@@ -177,6 +181,9 @@ export default class Claim {
   @Column({ type: 'enum', enum: ClaimStatus })
   private _status: ClaimStatus
 
+  @Column({ type: 'enum', enum: ClaimStatus })
+  private _previousStatus: ClaimStatus
+
   @Column(type => CorporateInfo)
   private _corporateInfo: CorporateInfo
 
@@ -227,6 +234,7 @@ export default class Claim {
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
+    this._previousStatus = ClaimStatus.New
     this._analysis = new Analysis({})
   }
 
@@ -256,6 +264,7 @@ export default class Claim {
   }
 
   public changeStatus(newStatus: ClaimStatus) {
+    this._previousStatus = this._status
     this._status = newStatus
   }
 

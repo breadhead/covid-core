@@ -55,6 +55,12 @@ export default class StatusMover {
     await this.changeStatus(claim, newStatus)
   }
 
+  public async success(claim: Claim): Promise<void> {
+    const newStatus = ClaimStatus.ClosedSuccessfully
+
+    await this.changeStatus(claim, newStatus)
+  }
+
   public async next(claim: Claim): Promise<void> {
     const newStatus = await this.getNextStatus(claim)
 
@@ -137,10 +143,17 @@ export default class StatusMover {
   }
 
   private getEvents(claim: Claim): Event[] {
+    const caseManagerSeeClaim = [
+      ClaimStatus.QueueForQuota,
+      ClaimStatus.QuotaAllocation,
+    ].includes(claim.previousStatus)
+
     const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
-      [ClaimStatus.QuestionnaireWaiting]: new ShortClaimApprovedEvent(claim),
+      [ClaimStatus.QuestionnaireWaiting]: caseManagerSeeClaim
+        ? new ShortClaimApprovedEvent(claim)
+        : undefined,
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
     }[claim.status]
 
