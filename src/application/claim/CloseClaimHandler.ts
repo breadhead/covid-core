@@ -31,7 +31,7 @@ export default class CloseClaimHandler
     }
 
     if (type === CloseType.Successful) {
-      await this.statusMover.next(claim)
+      await this.statusMover.success(claim)
     } else {
       await this.statusMover.deny(claim)
     }

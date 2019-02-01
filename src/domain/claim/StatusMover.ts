@@ -55,6 +55,12 @@ export default class StatusMover {
     await this.changeStatus(claim, newStatus)
   }
 
+  public async success(claim: Claim): Promise<void> {
+    const newStatus = ClaimStatus.ClosedSuccessfully
+
+    await this.changeStatus(claim, newStatus)
+  }
+
   public async next(claim: Claim): Promise<void> {
     const newStatus = await this.getNextStatus(claim)
 
