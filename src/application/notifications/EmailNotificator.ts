@@ -53,7 +53,7 @@ export default class EmailNotificator implements Notificator {
       {
         siteUrl: this.siteUrl,
         name,
-        link: `${this.siteUrl}/consultation/redirect/${id}`,
+        link: `${this.siteUrl}/client/consultation/${id}`,
       },
     )
 
@@ -73,7 +73,7 @@ export default class EmailNotificator implements Notificator {
         name,
         id,
         status,
-        link: `${this.siteUrl}/consultation/redirect/${id}`,
+        link: `${this.siteUrl}/client/consultation/${id}`,
         text: message.content,
       }),
       this.userRepo.findCaseManager(),
@@ -119,7 +119,7 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: due.getOrElse(new Date()).toLocaleString(),
-        link: `${this.siteUrl}/consultation/redirect/${id}`,
+        link: `${this.siteUrl}/client/claim/${id}/situation`,
       },
     )
 
@@ -141,7 +141,6 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: due.getOrElse(new Date()).toLocaleString(),
-        link: `${this.siteUrl}/consultation/redirect/${id}`,
       },
     )
 
@@ -159,7 +158,7 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
-      link: `${this.siteUrl}/consultation/redirect/${id}`,
+      link: `${this.siteUrl}/contacts#feedback-form`,
     })
 
     if (author.contacts.email) {
@@ -176,7 +175,7 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
-      link: `${this.siteUrl}/consultation/redirect/${id}`,
+      link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
     })
 
     if (author.contacts.email) {
