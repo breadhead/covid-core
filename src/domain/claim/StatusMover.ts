@@ -143,10 +143,17 @@ export default class StatusMover {
   }
 
   private getEvents(claim: Claim): Event[] {
-    const actionEvent = {
+    const caseManagerSeeClaim = [
+      ClaimStatus.QueueForQuota,
+      ClaimStatus.QuotaAllocation,
+    ].includes(claim.previousStatus)
+
+    const createActionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
-      [ClaimStatus.QuestionnaireWaiting]: new ShortClaimApprovedEvent(claim),
+      [ClaimStatus.QuestionnaireWaiting]: caseManagerSeeClaim
+        ? new ShortClaimApprovedEvent(claim)
+        : undefined,
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
     }[claim.status]
 
@@ -156,7 +163,9 @@ export default class StatusMover {
       .filter(key => key === claim.status)
       .map(() => new DueDateUpdatedEvent(claim))
 
-    const events = [actionEvent, statusEvent, ...dueDateEvents].filter(Boolean)
+    const events = [createActionEvent, statusEvent, ...dueDateEvents].filter(
+      Boolean,
+    )
 
     return events
   }
