@@ -322,7 +322,7 @@ export default class ClaimController {
     return QuestionsClaimData.fromEntity(editedClaim)
   }
 
-  @Roles(Role.Doctor)
+  @Roles(Role.Doctor, Role.CaseManager)
   @Post('answer')
   @ApiOperation({ title: 'Answer questions for claim' })
   @ApiOkResponse({ description: 'Answered' })
