@@ -17,6 +17,7 @@ import TemplateEngine, {
 import StyleInlinerProcessor from '@app/infrastructure/TemplateEngine/processors/StyleInlinerProcessor'
 import Notificator from './Notificator'
 
+import { formatDate } from './helpers'
 export default class EmailNotificator implements Notificator {
   private readonly send: (
     to: string,
@@ -118,7 +119,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         status,
-        date: due.getOrElse(new Date()).toLocaleString(),
+        date: formatDate(due),
         link: `${this.siteUrl}/client/claim/${id}/situation`,
       },
     )
@@ -140,7 +141,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         status,
-        date: due.getOrElse(new Date()).toLocaleString(),
+        date: formatDate(due),
       },
     )
 
