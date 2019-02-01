@@ -148,7 +148,7 @@ export default class StatusMover {
       ClaimStatus.QuotaAllocation,
     ].includes(claim.previousStatus)
 
-    const createActionEvent = {
+    const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
       [ClaimStatus.QuestionnaireWaiting]: caseManagerSeeClaim
@@ -163,9 +163,7 @@ export default class StatusMover {
       .filter(key => key === claim.status)
       .map(() => new DueDateUpdatedEvent(claim))
 
-    const events = [createActionEvent, statusEvent, ...dueDateEvents].filter(
-      Boolean,
-    )
+    const events = [actionEvent, statusEvent, ...dueDateEvents].filter(Boolean)
 
     return events
   }
