@@ -29,6 +29,7 @@ export default class ClaimQuotaResponse {
       logo,
       site,
       companyName: company.name,
+      companyComment: company.comment,
     }
   }
 
@@ -52,4 +53,7 @@ export default class ClaimQuotaResponse {
 
   @ApiModelProperty({ example: 'https://google.com' })
   public readonly site?: string
+
+  @ApiModelProperty({ example: 'this is company comment' })
+  public readonly companyComment?: string
 }
