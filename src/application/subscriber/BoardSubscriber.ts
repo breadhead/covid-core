@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Option } from 'tsoption'
 
 import { ClaimStatus, default as Claim } from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
@@ -28,6 +29,8 @@ import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+
+import { formatDate } from '../notifications/helpers'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
@@ -82,6 +85,7 @@ export default class BoardSubscriber implements EventSubscriber {
       const trelloCardText = await this.templating.render('trello/card', {
         siteUrl,
         id: payload.id,
+        createdAt: formatDate(Option.of(new Date())),
       })
 
       const [list, idLabels] = await Promise.all([
