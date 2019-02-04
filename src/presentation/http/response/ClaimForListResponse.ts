@@ -4,8 +4,8 @@ import Claim, { ClaimStatus, ClaimTarget } from '@app/domain/claim/Claim.entity'
 
 export enum Status {
   Draft = 'Черновик',
-  Closed = 'Закрыта',
-  Denied = 'Отказ',
+  Closed = 'Закрыта успешно',
+  Denied = 'Закрыта неуспешно',
   QuotaAllocation = 'Распределение квоты',
   QueueForQuota = 'В очереди на квоту',
   QuestionnaireWaiting = 'Ожидание анкеты',
