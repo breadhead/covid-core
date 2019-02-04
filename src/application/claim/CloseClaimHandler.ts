@@ -27,7 +27,7 @@ export default class CloseClaimHandler
     const claim = await this.claimRepo.getOne(id)
 
     if (deallocateQuota) {
-      await this.allocator.deallocate(claim)
+      await this.allocator.deallocate(claim, true)
     }
 
     if (type === CloseType.Successful) {

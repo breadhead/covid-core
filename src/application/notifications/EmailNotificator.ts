@@ -26,18 +26,20 @@ export default class EmailNotificator implements Notificator {
   ) => Promise<void>
   private siteUrl: string
 
+  private senderEmail: string
+
   public constructor(
     @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
     @Inject(EmailSenderSymbol) sender: EmailSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     config: Configuration,
   ) {
-    const senderEmail = config
+    this.senderEmail = config
       .get('ONCOHELP_SENDER_EMAIL')
       .getOrElse('oncohelp@email.com')
 
     this.send = (to, subject, content) =>
-      sender.send(senderEmail, to, subject, content)
+      sender.send(this.senderEmail, to, subject, content)
 
     this.siteUrl = config.get('SITE_URL').getOrElse('localhost')
 
@@ -90,21 +92,16 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Сообщение "${theme}" от ${name}`
 
-    const [html, caseManager] = await Promise.all([
-      this.templating.render('email/new-feedback-message', {
-        siteUrl: this.siteUrl,
-        name,
-        email,
-        phone,
-        theme,
-        content,
-      }),
-      this.userRepo.findCaseManager(),
-    ])
+    const html = await this.templating.render('email/new-feedback-message', {
+      siteUrl: this.siteUrl,
+      name,
+      email,
+      phone,
+      theme,
+      content,
+    })
 
-    if (caseManager.contacts.email) {
-      return this.send(caseManager.contacts.email, subject, { html })
-    }
+    return this.send(this.senderEmail, subject, { html })
   }
 
   public async shortClaimApproved(claim: Claim): Promise<void> {

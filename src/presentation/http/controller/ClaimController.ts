@@ -171,7 +171,7 @@ export default class ClaimController {
   }
 
   @Get(':id/trelloUrl')
-  @Roles(Role.Admin, Role.CaseManager)
+  @Roles(Role.Admin, Role.CaseManager, Role.Doctor)
   @ApiOperation({ title: 'Claim`s trello card url' })
   @ApiOkResponse({ description: 'Success' })
   @ApiNotFoundResponse({ description: 'Card not found' })
@@ -322,7 +322,7 @@ export default class ClaimController {
     return QuestionsClaimData.fromEntity(editedClaim)
   }
 
-  @Roles(Role.Doctor)
+  @Roles(Role.Doctor, Role.CaseManager)
   @Post('answer')
   @ApiOperation({ title: 'Answer questions for claim' })
   @ApiOkResponse({ description: 'Answered' })

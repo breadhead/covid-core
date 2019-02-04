@@ -10,13 +10,14 @@ export default class ClaimQuotaResponse {
       }
     }
 
-    const { company, name, comment, id } = quota
+    const { company, name, comment, id, publicCompany } = quota
 
     if (!company) {
       return {
         id,
         name,
         comment,
+        publicCompany,
       }
     }
 
@@ -30,6 +31,7 @@ export default class ClaimQuotaResponse {
       site,
       companyName: company.name,
       companyComment: company.comment,
+      publicCompany,
     }
   }
 
@@ -50,6 +52,9 @@ export default class ClaimQuotaResponse {
 
   @ApiModelProperty({ example: '/google.jpg' })
   public readonly logo?: string
+
+  @ApiModelProperty({ example: true })
+  public readonly publicCompany?: boolean
 
   @ApiModelProperty({ example: 'https://google.com' })
   public readonly site?: string
