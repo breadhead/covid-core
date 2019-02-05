@@ -25,7 +25,7 @@ describe('StatusMover', () => {
       new MockEventEmitter() as any,
       new MockConfiguration(
         {
-          DUARTION_QUESTIONNAIRE_WAITING: '2d',
+          DUARTION_QUESTIONNAIRE_WAITING: '7d',
           DURATION_AT_THE_DOCTOR: '3d',
           DURATION_DELIVERED_TO_CUSTOMER: '4d',
         },

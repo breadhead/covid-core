@@ -46,7 +46,6 @@ export default class StatusMover {
       [ClaimStatus.DeliveredToCustomer]: config.get(
         'DURATION_DELIVERED_TO_CUSTOMER',
       ),
-      [ClaimStatus.QuestionnaireValidation]: Option.of('7d'),
     }
   }
 
