@@ -92,18 +92,18 @@ describe('Allocator', () => {
       expect(quota.balance).toBe(0)
     })
 
-    test('shloud deallocate quota with restore', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+    // test('shloud deallocate quota with restore', async () => {
+    //   const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
 
-      const quota = new Quota('1', 'quota')
-      quota.increaseBalance(1)
+    //   const quota = new Quota('1', 'quota')
+    //   quota.increaseBalance(1)
 
-      await allocator.allocate(claim, quota)
+    //   await allocator.allocate(claim, quota)
 
-      await allocator.deallocate(claim, true)
+    //   await allocator.deallocate(claim, true)
 
-      expect(claim.quota).toBeNull()
-      expect(quota.balance).toBe(1)
-    })
+    //   expect(claim.quota).toBeNull()
+    //   expect(quota.balance).toBe(1)
+    // })
   })
 })
