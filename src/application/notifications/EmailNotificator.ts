@@ -2,7 +2,7 @@ import Feedback from '@app/domain/feedback/Feedback.entity'
 import { Inject } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import Claim from '@app/domain/claim/Claim.entity'
+import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
@@ -66,7 +66,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromClient(message: Message): Promise<void> {
-    const { id, status } = message.claim
+    const { id, status, doctor } = message.claim
     const { name } = message.claim.applicant
     const subject = `Новое сообщение в заявке ${id}, ${name}`
 
@@ -82,9 +82,28 @@ export default class EmailNotificator implements Notificator {
       this.userRepo.findCaseManager(),
     ])
 
-    if (caseManager.contacts.email) {
-      return this.send(caseManager.contacts.email, subject, { html })
+    const notifyCaseManager = () => {
+      const caseManagerEmail = caseManager.login
+
+      return this.send(caseManagerEmail, subject, { html })
     }
+
+    const notifyDoctor = () => {
+      const doctorEmail = doctor.login
+      const STATUSES_FOR_DOCTOR_NOTIFICATION = [
+        ClaimStatus.AtTheDoctor,
+        ClaimStatus.AnswerValidation,
+        ClaimStatus.DeliveredToCustomer,
+      ]
+
+      if (!STATUSES_FOR_DOCTOR_NOTIFICATION.includes(status)) {
+        return Promise.resolve()
+      }
+
+      return this.send(doctorEmail, subject, { html })
+    }
+
+    await Promise.all([notifyCaseManager(), notifyDoctor()])
   }
 
   public async newFeedbackMessage(feedback: Feedback): Promise<void> {
