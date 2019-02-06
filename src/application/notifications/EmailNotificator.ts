@@ -89,16 +89,17 @@ export default class EmailNotificator implements Notificator {
     }
 
     const notifyDoctor = () => {
-      const doctorEmail = doctor.login
       const STATUSES_FOR_DOCTOR_NOTIFICATION = [
         ClaimStatus.AtTheDoctor,
         ClaimStatus.AnswerValidation,
         ClaimStatus.DeliveredToCustomer,
       ]
 
-      if (!STATUSES_FOR_DOCTOR_NOTIFICATION.includes(status)) {
+      if (!STATUSES_FOR_DOCTOR_NOTIFICATION.includes(status) || !doctor) {
         return Promise.resolve()
       }
+
+      const doctorEmail = doctor.login
 
       return this.send(doctorEmail, subject, { html })
     }
