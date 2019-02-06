@@ -16,7 +16,7 @@ export default class BoardCardFinder {
 
   public async getCardById(
     id: string,
-    numberOfRetries: number = 0,
+    numberOfRetries: number = 50,
   ): Promise<Card> {
     const cards = await this.board.getCardsOnBoard(
       this.config.get('BOARD_ID').getOrElse('ppy28Io5'),
