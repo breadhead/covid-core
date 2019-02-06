@@ -107,7 +107,7 @@ export default class BoardSubscriber implements EventSubscriber {
 
   private async changeStatus({ payload }: ChangeStatusEvent) {
     const [claimCard, list] = await Promise.all([
-      this.claimBoardCardFinder.getCardById(payload.id, 50),
+      this.claimBoardCardFinder.getCardById(payload.id),
       this.getListIdForClaimStatus(payload.status),
     ])
 

@@ -184,7 +184,7 @@ export default class ClaimController {
   ): Promise<ClaimBoardCardUrlResponse> {
     return ClaimBoardCardUrlResponse.fromUrl(
       await this.claimBoardCardFinder
-        .getCardById(id)
+        .getCardById(id, 0)
         .then(card => card.shortUrl),
     )
   }
