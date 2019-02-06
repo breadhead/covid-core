@@ -149,12 +149,18 @@ export default class TrelloBoardManager implements BoardManager {
     boardId: string,
     labelText: string,
   ): Promise<any> {
-    const labels = await this.trello.getLabelsForBoard(boardId).then(tapOrThrow)
+    const labels = await this.getLabelsForBoard(boardId).then(tapOrThrow)
 
     return (
       labels.find(({ name }) => name === labelText) ||
       (await this.trello.addLabelOnBoard(boardId, labelText).then(tapOrThrow))
     )
+  }
+
+  private async getLabelsForBoard(boardId: string) {
+    return this.trello.makeRequest('GET', `/1/boards/${boardId}/labels`, {
+      limit: 0,
+    })
   }
 
   private async getCardId(claimId: string) {
