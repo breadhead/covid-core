@@ -190,7 +190,7 @@ export default class ClaimController {
   }
 
   @Post('short')
-  @Roles(Role.Client)
+  @Roles(Role.Client, Role.CaseManager)
   @ApiOperation({ title: 'Send short claim' })
   @ApiOkResponse({ description: 'Saved', type: ShortClaimData })
   public async sendShortClaim(

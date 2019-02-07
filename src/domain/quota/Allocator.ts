@@ -20,7 +20,10 @@ export default class Allocator {
     return this.em
       .transaction(async em => {
         // TODO: TEMP! remove after ON-477
-        throw new QuotaAllocationFailedException(null, 'Auto allocation disabled')
+        throw new QuotaAllocationFailedException(
+          null,
+          'Auto allocation disabled',
+        )
 
         // const commonQuotas = (await this.quotaRepo.findCommon()).filter(
         //   commonQuota => commonQuota.balance > 0,
