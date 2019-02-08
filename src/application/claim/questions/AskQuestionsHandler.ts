@@ -3,6 +3,7 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
+import { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
@@ -31,7 +32,9 @@ export default class AskQuestionsHandler
     const editedClaim = await this.em.transaction(async em => {
       claim.newQuestions(defaultQuestions, additionalQuestions)
 
-      await this.statusMover.next(claim)
+      if (claim.status !== ClaimStatus.QuestionnaireValidation) {
+        await this.statusMover.next(claim)
+      }
 
       return em.save(claim)
     })
