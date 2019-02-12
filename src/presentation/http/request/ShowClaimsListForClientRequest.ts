@@ -1,3 +1,3 @@
-interface ShowClaimsListForClientRequest {
+export interface ShowClaimsListForClientRequest {
   login: string
 }
