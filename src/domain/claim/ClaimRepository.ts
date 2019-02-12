@@ -23,6 +23,14 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
     return claims
   }
 
+  public async getByClientId(id: string): Promise<Claim[]> {
+    const claims = await this.repository.find({
+      id,
+    })
+
+    return claims
+  }
+
   public async count(): Promise<number> {
     return this.repository.count()
   }

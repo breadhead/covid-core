@@ -91,6 +91,30 @@ export default class ClaimController {
     return responseItems
   }
 
+  @Get('/manager/client/:id')
+  @Roles(Role.CaseManager)
+  @ApiOperation({ title: 'Show list of quotas for individual client' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: ClaimForListResponse,
+    isArray: true,
+  })
+  @ApiForbiddenResponse({
+    description: 'Case-manager API token doesn`t provided',
+  })
+  public async showClaimsListForClient(
+    @Param('id') id: string,
+  ): Promise<ClaimForListResponse[]> {
+    const claims = await this.claimRepo.getByClientId(id)
+
+    const responseItems = sortBy(
+      claims.map(ClaimForListResponse.fromClaim),
+      (claim: ClaimForListResponse) => claim.createdAt,
+    )
+
+    return responseItems
+  }
+
   @Get(':id/main')
   @ApiOperation({ title: 'Claim`s main data' })
   @ApiOkResponse({ description: 'Success', type: ClaimForListResponse })
