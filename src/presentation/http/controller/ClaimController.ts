@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiImplicitQuery,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -82,6 +83,31 @@ export default class ClaimController {
     ClaimForListResponse[]
   > {
     const claims = await this.claimRepo.getByLogin(login)
+
+    const responseItems = sortBy(
+      claims.map(ClaimForListResponse.fromClaim),
+      (claim: ClaimForListResponse) => claim.createdAt,
+    )
+
+    return responseItems
+  }
+
+  @Get('/manager/client')
+  @Roles(Role.CaseManager)
+  @ApiImplicitQuery({ name: 'login' })
+  @ApiOperation({ title: 'Show list of claims for individual client' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: ClaimForListResponse,
+    isArray: true,
+  })
+  @ApiForbiddenResponse({
+    description: 'Case-manager API token doesn`t provided',
+  })
+  public async showClaimsListForClient(
+    @Query() query: ShowClaimsListForClientRequest,
+  ): Promise<ClaimForListResponse[]> {
+    const claims = await this.claimRepo.getByLogin(query.login)
 
     const responseItems = sortBy(
       claims.map(ClaimForListResponse.fromClaim),
