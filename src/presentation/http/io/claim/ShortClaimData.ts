@@ -41,6 +41,7 @@ export default class ShortClaimData {
 
     return {
       id: claim.id,
+      authorLogin: claim.author.login,
       personalData,
       localization: claim.localization,
       theme: claim.theme,
@@ -52,6 +53,9 @@ export default class ShortClaimData {
 
   @ApiModelProperty({ example: exampleShortClaim.id })
   public readonly id: string
+
+  @ApiModelProperty({ example: exampleShortClaim.personalData })
+  public readonly authorLogin: string
 
   @ApiModelProperty({ example: exampleShortClaim.personalData })
   public readonly personalData: PersonalData

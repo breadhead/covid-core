@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiImplicitQuery,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -91,8 +92,9 @@ export default class ClaimController {
     return responseItems
   }
 
-  @Get('/manager/client/:id')
+  @Get('/manager/client')
   @Roles(Role.CaseManager)
+  @ApiImplicitQuery({ name: 'login' })
   @ApiOperation({ title: 'Show list of quotas for individual client' })
   @ApiOkResponse({
     description: 'Success',
@@ -103,9 +105,9 @@ export default class ClaimController {
     description: 'Case-manager API token doesn`t provided',
   })
   public async showClaimsListForClient(
-    @Param('id') id: string,
+    @Query() query: any,
   ): Promise<ClaimForListResponse[]> {
-    const claims = await this.claimRepo.getByClientId(id)
+    const claims = await this.claimRepo.getByLogin(query.login)
 
     const responseItems = sortBy(
       claims.map(ClaimForListResponse.fromClaim),
