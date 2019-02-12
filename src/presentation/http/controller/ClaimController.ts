@@ -95,7 +95,7 @@ export default class ClaimController {
   @Get('/manager/client')
   @Roles(Role.CaseManager)
   @ApiImplicitQuery({ name: 'login' })
-  @ApiOperation({ title: 'Show list of quotas for individual client' })
+  @ApiOperation({ title: 'Show list of claims for individual client' })
   @ApiOkResponse({
     description: 'Success',
     type: ClaimForListResponse,
@@ -105,7 +105,7 @@ export default class ClaimController {
     description: 'Case-manager API token doesn`t provided',
   })
   public async showClaimsListForClient(
-    @Query() query: any,
+    @Query() query: ShowClaimsListForClientRequest,
   ): Promise<ClaimForListResponse[]> {
     const claims = await this.claimRepo.getByLogin(query.login)
 

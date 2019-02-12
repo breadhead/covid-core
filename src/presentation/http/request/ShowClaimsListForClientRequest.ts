@@ -1,0 +1,3 @@
+interface ShowClaimsListForClientRequest {
+  login: string
+}
