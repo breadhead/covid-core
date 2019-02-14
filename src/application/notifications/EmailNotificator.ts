@@ -57,7 +57,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         link: `${this.siteUrl}/client/consultation/${id}`,
-        id,
+        number: id,
       },
     )
 
@@ -75,7 +75,7 @@ export default class EmailNotificator implements Notificator {
       this.templating.render('email/new-chat-message-from-client', {
         siteUrl: this.siteUrl,
         name,
-        id,
+        number: id,
         status,
         link: `${this.siteUrl}/manager/consultation/${id}`,
         text: message.content,
@@ -120,7 +120,7 @@ export default class EmailNotificator implements Notificator {
       phone,
       theme,
       content,
-      id,
+      number: id,
     })
 
     return this.send(this.senderEmail, subject, { html })
@@ -140,7 +140,7 @@ export default class EmailNotificator implements Notificator {
         status,
         date: formatDate(due),
         link: `${this.siteUrl}/client/claim/${id}/situation`,
-        id,
+        number: id,
       },
     )
 
@@ -162,7 +162,7 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: formatDate(due),
-        id,
+        number: id,
       },
     )
 
@@ -181,7 +181,7 @@ export default class EmailNotificator implements Notificator {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/contacts#feedback-form`,
-      id,
+      number: id,
     })
 
     if (author.contacts.email) {
@@ -199,7 +199,7 @@ export default class EmailNotificator implements Notificator {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
-      id,
+      number: id,
     })
 
     if (author.contacts.email) {
