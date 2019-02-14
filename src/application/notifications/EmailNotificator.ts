@@ -47,9 +47,9 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
-    const { id, author } = message.claim
+    const { number, author, id } = message.claim
     const { name } = message.claim.applicant
-    const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
+    const subject = `Заявка №${number}. ${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
     const html = await this.templating.render(
       'email/new-chat-message-from-specialist',
@@ -57,6 +57,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         link: `${this.siteUrl}/client/consultation/${id}`,
+        number,
       },
     )
 
@@ -66,15 +67,15 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromClient(message: Message): Promise<void> {
-    const { id, status, doctor } = message.claim
+    const { number, status, doctor, id } = message.claim
     const { name } = message.claim.applicant
-    const subject = `Новое сообщение в заявке ${id}, ${name}`
+    const subject = `Новое сообщение в заявке №${number}, ${name}`
 
     const [html, caseManager] = await Promise.all([
       this.templating.render('email/new-chat-message-from-client', {
         siteUrl: this.siteUrl,
         name,
-        id,
+        number,
         status,
         link: `${this.siteUrl}/manager/consultation/${id}`,
         text: message.content,
@@ -125,10 +126,10 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async shortClaimApproved(claim: Claim): Promise<void> {
-    const { id, status, author, due } = claim
+    const { number, status, author, due, id } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
+    const subject = `Заявка №${number}.${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
     const html = await this.templating.render(
       'email/short-claim-message-approved',
@@ -138,6 +139,7 @@ export default class EmailNotificator implements Notificator {
         status,
         date: formatDate(due),
         link: `${this.siteUrl}/client/claim/${id}/situation`,
+        number,
       },
     )
 
@@ -147,10 +149,10 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
-    const { id, status, author, due } = claim
+    const { number, status, author, due } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
+    const subject = `Заявка №${number}. ${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
 
     const html = await this.templating.render(
       'email/short-claim-message-queued',
@@ -159,6 +161,7 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: formatDate(due),
+        number,
       },
     )
 
@@ -168,15 +171,16 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async claimRejected(claim: Claim): Promise<void> {
-    const { id, author } = claim
+    const { number, author } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, к сожалению, ваша заявка отклонена`
+    const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
 
     const html = await this.templating.render('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/contacts#feedback-form`,
+      number,
     })
 
     if (author.contacts.email) {
@@ -185,15 +189,16 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { id, author } = claim
+    const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, готов ответ специалиста по вашей консультации`
+    const subject = `Заявка №${number}.${name}, готов ответ специалиста по вашей консультации`
 
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+      number,
     })
 
     if (author.contacts.email) {
