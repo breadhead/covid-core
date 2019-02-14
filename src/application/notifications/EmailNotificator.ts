@@ -49,7 +49,7 @@ export default class EmailNotificator implements Notificator {
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
     const { id, author } = message.claim
     const { name } = message.claim.applicant
-    const subject = `${name}, посмотрите новое сообщение по вашей заявке на консультацию`
+    const subject = `Заявка №${id}. ${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
     const html = await this.templating.render(
       'email/new-chat-message-from-specialist',
@@ -68,7 +68,7 @@ export default class EmailNotificator implements Notificator {
   public async newChatMessageFromClient(message: Message): Promise<void> {
     const { id, status, doctor } = message.claim
     const { name } = message.claim.applicant
-    const subject = `Новое сообщение в заявке ${id}, ${name}`
+    const subject = `Новое сообщение в заявке №${id}, ${name}`
 
     const [html, caseManager] = await Promise.all([
       this.templating.render('email/new-chat-message-from-client', {
@@ -108,9 +108,9 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newFeedbackMessage(feedback: Feedback): Promise<void> {
-    const { content, name, theme, email, phone } = feedback
+    const { content, name, theme, email, phone, id } = feedback
 
-    const subject = `Сообщение "${theme}" от ${name}`
+    const subject = `Заявка №${id}. Сообщение "${theme}" от ${name}`
 
     const html = await this.templating.render('email/new-feedback-message', {
       siteUrl: this.siteUrl,
@@ -119,6 +119,7 @@ export default class EmailNotificator implements Notificator {
       phone,
       theme,
       content,
+      id,
     })
 
     return this.send(this.senderEmail, subject, { html })
@@ -128,7 +129,7 @@ export default class EmailNotificator implements Notificator {
     const { id, status, author, due } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, пожалуйста, продолжите заполнение заявки на консультацию`
+    const subject = `Заявка №${id}.${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
     const html = await this.templating.render(
       'email/short-claim-message-approved',
@@ -138,6 +139,7 @@ export default class EmailNotificator implements Notificator {
         status,
         date: formatDate(due),
         link: `${this.siteUrl}/client/claim/${id}/situation`,
+        id,
       },
     )
 
@@ -150,7 +152,7 @@ export default class EmailNotificator implements Notificator {
     const { id, status, author, due } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
+    const subject = `Заявка №${id}. ${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
 
     const html = await this.templating.render(
       'email/short-claim-message-queued',
@@ -159,6 +161,7 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: formatDate(due),
+        id,
       },
     )
 
@@ -171,12 +174,13 @@ export default class EmailNotificator implements Notificator {
     const { id, author } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, к сожалению, ваша заявка отклонена`
+    const subject = `Заявка №${id}. ${name}, к сожалению, ваша заявка отклонена`
 
     const html = await this.templating.render('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/contacts#feedback-form`,
+      id,
     })
 
     if (author.contacts.email) {
@@ -188,12 +192,13 @@ export default class EmailNotificator implements Notificator {
     const { id, author } = claim
     const { name } = claim.applicant
 
-    const subject = `${name}, готов ответ специалиста по вашей консультации`
+    const subject = `Заявка №${id}.${name}, готов ответ специалиста по вашей консультации`
 
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+      id,
     })
 
     if (author.contacts.email) {
