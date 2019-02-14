@@ -1,7 +1,7 @@
 import Processor from './processors/Processor'
 
 export interface Context {
-  [key: string]: string | Context
+  [key: string]: string | number | Context
 }
 
 export default interface TemplateEngine {
