@@ -57,6 +57,7 @@ export default class EmailNotificator implements Notificator {
         siteUrl: this.siteUrl,
         name,
         link: `${this.siteUrl}/client/consultation/${id}`,
+        id,
       },
     )
 
