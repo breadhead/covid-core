@@ -47,7 +47,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
-    const { number, author } = message.claim
+    const { number, author, id } = message.claim
     const { name } = message.claim.applicant
     const subject = `Заявка №${number}. ${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
@@ -56,7 +56,7 @@ export default class EmailNotificator implements Notificator {
       {
         siteUrl: this.siteUrl,
         name,
-        link: `${this.siteUrl}/client/consultation/${number}`,
+        link: `${this.siteUrl}/client/consultation/${id}`,
         number,
       },
     )
@@ -67,7 +67,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async newChatMessageFromClient(message: Message): Promise<void> {
-    const { number, status, doctor } = message.claim
+    const { number, status, doctor, id } = message.claim
     const { name } = message.claim.applicant
     const subject = `Новое сообщение в заявке №${number}, ${name}`
 
@@ -77,7 +77,7 @@ export default class EmailNotificator implements Notificator {
         name,
         number,
         status,
-        link: `${this.siteUrl}/manager/consultation/${number}`,
+        link: `${this.siteUrl}/manager/consultation/${id}`,
         text: message.content,
       }),
       this.userRepo.findCaseManager(),
@@ -126,7 +126,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async shortClaimApproved(claim: Claim): Promise<void> {
-    const { number, status, author, due } = claim
+    const { number, status, author, due, id } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}.${name}, пожалуйста, продолжите заполнение заявки на консультацию`
@@ -138,7 +138,7 @@ export default class EmailNotificator implements Notificator {
         name,
         status,
         date: formatDate(due),
-        link: `${this.siteUrl}/client/claim/${number}/situation`,
+        link: `${this.siteUrl}/client/claim/${id}/situation`,
         number,
       },
     )
@@ -189,7 +189,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { number, author } = claim
+    const { number, author, id } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}.${name}, готов ответ специалиста по вашей консультации`
@@ -197,7 +197,7 @@ export default class EmailNotificator implements Notificator {
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
-      link: `${this.siteUrl}/client/consultation/${number}#expert-answers`,
+      link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
       number,
     })
 
