@@ -1,15 +1,13 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { EntityManager } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import Applicant from '@app/domain/claim/Applicant.vo'
-import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
-import CloseClaimCommand, { CloseType } from './CloseClaimCommand'
+import CloseClaimCommand from './CloseClaimCommand'
+import { successCloseClaimTypes } from './config'
 
 @CommandHandler(CloseClaimCommand)
 export default class CloseClaimHandler
@@ -30,7 +28,7 @@ export default class CloseClaimHandler
       await this.allocator.deallocate(claim, true)
     }
 
-    if (type === CloseType.Successful) {
+    if (successCloseClaimTypes.includes(type)) {
       await this.statusMover.success(claim)
     } else {
       await this.statusMover.deny(claim)
