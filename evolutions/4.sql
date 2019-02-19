@@ -1,5 +1,5 @@
 ALTER TABLE message
-    ADD `_notificated` TINYINT(4) DEFAULT '1' NOT NULL;
+    ADD `_notificated` TINYINT(1) DEFAULT '1' NOT NULL;
 
 #DOWN
 
