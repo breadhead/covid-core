@@ -29,7 +29,7 @@ export default class CloseClaimHandler
     }
 
     if (successCloseClaimTypes.includes(type)) {
-      await this.statusMover.success(claim)
+      await this.statusMover.success(claim, type)
     } else {
       await this.statusMover.deny(claim)
     }
