@@ -1,6 +1,7 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import {
   HttpModule,
+  Inject,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -21,6 +22,7 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import { NotifyMessageRecurrenter } from '@app/application/claim/chat/NotifyMessageRecurrenter'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ChooseDoctorHandler from '@app/application/claim/ChooseDoctorHandler'
@@ -38,8 +40,10 @@ import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
+import AllNotificator from '@app/application/notifications/AllNotificator'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
+import SmsNotificator from '@app/application/notifications/SmsNotificator'
 import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
@@ -78,7 +82,6 @@ import UserRepository from '@app/domain/user/UserRepository'
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
-import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -139,6 +142,8 @@ const securityVoters = [
   EditClaimVoter,
 ]
 
+const notificators = [SmsNotificator, EmailNotificator]
+
 const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
@@ -180,6 +185,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...securityVoters,
     ...eventSubscribers,
     ...signInProviders,
+    ...notificators,
     ClaimBoardCardFinder,
     {
       provide: SignInProviders,
@@ -196,7 +202,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     },
     {
       provide: Notificator,
-      useClass: EmailNotificator,
+      useClass: AllNotificator,
     },
     {
       provide: EmailSender,
@@ -233,6 +239,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     AnswerAccessManager,
     CommandBus,
     StatusMover,
+    NotifyMessageRecurrenter,
     Allocator,
     Accountant,
     Historian,
@@ -252,6 +259,8 @@ export class AppModule implements NestModule {
     private readonly votersUnity: SecurityVotersUnity,
     private readonly commandRunner: CommandRunner,
     private readonly eventEmitter: EventEmitter,
+    @Inject(Notificator) private readonly allNotificator: AllNotificator,
+    private readonly recurrenter: NotifyMessageRecurrenter,
   ) {}
 
   public onModuleInit() {
@@ -266,6 +275,11 @@ export class AppModule implements NestModule {
 
     this.commandRunner.setModuleRef(this.moduleRef)
     this.commandRunner.register(cliCommands)
+
+    this.allNotificator.setModuleRef(this.moduleRef)
+    this.allNotificator.register(notificators)
+
+    this.recurrenter.start()
   }
 
   public configure(consumer: MiddlewareConsumer) {
