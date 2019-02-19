@@ -151,6 +151,7 @@ export default class BoardSubscriber implements EventSubscriber {
       [ClaimStatus.DeliveredToCustomer]: 'Передано заказчику',
       [ClaimStatus.ClosedSuccessfully]: 'Успешно',
       [ClaimStatus.Denied]: 'Отказ',
+      [ClaimStatus.ClosedWithoutAnswer]: 'Не требует ответа эксперта',
     }
 
     const boardId = this.config
