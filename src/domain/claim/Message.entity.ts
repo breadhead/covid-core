@@ -15,12 +15,19 @@ export default class Message {
   public readonly content: string
 
   @JoinColumn()
-  @ManyToOne(type => Claim)
+  @ManyToOne(type => Claim, { eager: true })
   public readonly claim: Claim
 
   @JoinColumn()
   @ManyToOne(type => User, { eager: true })
   public readonly user: User
+
+  public get notificated() {
+    return this._notificated
+  }
+
+  @Column()
+  private _notificated: boolean = false
 
   public constructor(
     id: string,
@@ -34,5 +41,9 @@ export default class Message {
     this.content = content
     this.claim = claim
     this.user = user
+  }
+
+  public markAsNotificated(): void {
+    this._notificated = true
   }
 }

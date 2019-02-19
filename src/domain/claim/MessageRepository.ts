@@ -9,4 +9,12 @@ export default class MessageRepository extends AbstractRepository<Message> {
       where: { claim: id },
     })
   }
+
+  public async findForNotification(): Promise<Message[]> {
+    return this.repository.find({
+      where: {
+        _notificated: false,
+      },
+    })
+  }
 }

@@ -22,6 +22,7 @@ import LoggerInterseptor from '@app/presentation/http/logging/LoggerInterseptor'
 import JwtAuthGuard from '@app/presentation/http/security/JwtAuthGuard'
 import JwtStrategy from '@app/presentation/http/security/JwtStrategy'
 
+import { NotifyMessageRecurrenter } from '@app/application/claim/chat/NotifyMessageRecurrenter'
 import PostMessageHandler from '@app/application/claim/chat/PostMessageHandler'
 import PostMessageVoter from '@app/application/claim/chat/PostMessageVoter'
 import ChooseDoctorHandler from '@app/application/claim/ChooseDoctorHandler'
@@ -81,7 +82,6 @@ import UserRepository from '@app/domain/user/UserRepository'
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
-import VoidBoardManager from '@app/infrastructure/BoardManager/VoidBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
@@ -239,6 +239,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     AnswerAccessManager,
     CommandBus,
     StatusMover,
+    NotifyMessageRecurrenter,
     Allocator,
     Accountant,
     Historian,
@@ -259,6 +260,7 @@ export class AppModule implements NestModule {
     private readonly commandRunner: CommandRunner,
     private readonly eventEmitter: EventEmitter,
     @Inject(Notificator) private readonly allNotificator: AllNotificator,
+    private readonly recurrenter: NotifyMessageRecurrenter,
   ) {}
 
   public onModuleInit() {
@@ -276,6 +278,8 @@ export class AppModule implements NestModule {
 
     this.allNotificator.setModuleRef(this.moduleRef)
     this.allNotificator.register(notificators)
+
+    this.recurrenter.start()
   }
 
   public configure(consumer: MiddlewareConsumer) {
