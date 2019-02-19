@@ -1,6 +1,7 @@
 import { CommandBus } from '@breadhead/nest-throwable-bus'
 import {
   HttpModule,
+  Inject,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -38,8 +39,10 @@ import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
 import DraftVoter from '@app/application/draft/DraftVoter'
 import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
+import AllNotificator from '@app/application/notifications/AllNotificator'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
 import { Notificator } from '@app/application/notifications/Notificator'
+import SmsNotificator from '@app/application/notifications/SmsNotificator'
 import BindQuotaHandler from '@app/application/quota/BindQuotaHandler'
 import CreateQuotaHandler from '@app/application/quota/CreateQuotaHandler'
 import EditQuotaHandler from '@app/application/quota/EditQuotaHandler'
@@ -139,6 +142,8 @@ const securityVoters = [
   EditClaimVoter,
 ]
 
+const notificators = [SmsNotificator, EmailNotificator]
+
 const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
@@ -180,6 +185,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...securityVoters,
     ...eventSubscribers,
     ...signInProviders,
+    ...notificators,
     ClaimBoardCardFinder,
     {
       provide: SignInProviders,
@@ -196,7 +202,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     },
     {
       provide: Notificator,
-      useClass: EmailNotificator,
+      useClass: AllNotificator,
     },
     {
       provide: EmailSender,
@@ -252,6 +258,7 @@ export class AppModule implements NestModule {
     private readonly votersUnity: SecurityVotersUnity,
     private readonly commandRunner: CommandRunner,
     private readonly eventEmitter: EventEmitter,
+    @Inject(Notificator) private readonly allNotificator: AllNotificator,
   ) {}
 
   public onModuleInit() {
@@ -266,6 +273,9 @@ export class AppModule implements NestModule {
 
     this.commandRunner.setModuleRef(this.moduleRef)
     this.commandRunner.register(cliCommands)
+
+    this.allNotificator.setModuleRef(this.moduleRef)
+    this.allNotificator.register(notificators)
   }
 
   public configure(consumer: MiddlewareConsumer) {
