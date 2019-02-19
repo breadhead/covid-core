@@ -60,7 +60,6 @@ export default class StatusMover {
 
   public async success(claim: Claim, type: CloseType): Promise<void> {
     let newStatus
-
     if (type === CloseType.NoAnswerNeeded) {
       this.eventEmitter.emit(new CloseWithoutAnswerEvent(claim))
       newStatus = ClaimStatus.ClosedWithoutAnswer

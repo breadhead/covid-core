@@ -7,6 +7,9 @@ import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ChangeStatusEvent, {
   NAME as ChangeStatusName,
 } from '@app/domain/claim/event/ChangeStatusEvent'
+import CloseWithoutAnswerEvent, {
+  NAME as CloseWithoutAnswerName,
+} from '@app/domain/claim/event/CloseWithoutAnswerEvent'
 import CreateClaimEvent, {
   NAME as CreateClaimName,
 } from '@app/domain/claim/event/CreateClaimEvent'
@@ -44,6 +47,10 @@ export default class BoardSubscriber implements EventSubscriber {
   public subscribedEvents() {
     return [
       { key: NewMessageName, handler: this.addLabelNewMessage.bind(this) },
+      {
+        key: CloseWithoutAnswerName,
+        handler: this.addLabelCloseWithoutAnswer.bind(this),
+      },
       { key: DueDateUpdatedName, handler: this.setDueDate.bind(this) },
       { key: ChangeStatusName, handler: this.changeStatus.bind(this) },
       { key: CreateClaimName, handler: this.createClaim.bind(this) },
@@ -65,6 +72,14 @@ export default class BoardSubscriber implements EventSubscriber {
     } else {
       return this.board.deleteLabelFromCard(claimCard.id, newMessageLabelText)
     }
+  }
+
+  private async addLabelCloseWithoutAnswer({
+    payload,
+  }: CloseWithoutAnswerEvent) {
+    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
+    const closeWithoutAnswerLabelText = 'Без эксперта'
+    return this.board.addLabel(claimCard.id, closeWithoutAnswerLabelText)
   }
 
   private async setDueDate({ payload }: DueDateUpdatedEvent) {
