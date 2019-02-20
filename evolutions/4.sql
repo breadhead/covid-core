@@ -11,8 +11,21 @@ ALTER TABLE claim
       'closed-successfully',
       'denied',
       'closed-without-answer'
-    );;
+    );
 
+    MODIFY COLUMN `_previousStatus` ENUM(
+      'new',
+      'quota-allocation',
+      'queue-for-quota',
+      'questionnaire-waiting',
+      'questionnaire-validation',
+      'at-the-doctor',
+      'answer-validation',
+      'delivered-to-customer',
+      'closed-successfully',
+      'denied',
+      'closed-without-answer'
+    );
 #DOWN
 
 ALTER TABLE claim
@@ -27,4 +40,18 @@ ALTER TABLE claim
       'delivered-to-customer',
       'closed-successfully',
       'denied'
-    );;
+    );
+
+    MODIFY COLUMN `_previousStatus` ENUM(
+      'new',
+      'quota-allocation',
+      'queue-for-quota',
+      'questionnaire-waiting',
+      'questionnaire-validation',
+      'at-the-doctor',
+      'answer-validation',
+      'delivered-to-customer',
+      'closed-successfully',
+      'denied',
+      'closed-without-answer'
+    );
