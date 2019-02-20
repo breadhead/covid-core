@@ -6,9 +6,6 @@ import ClaimRejectedEvent, {
 import DoctorAnswerEvent, {
   NAME as DoctorAnswerName,
 } from '@app/domain/claim/event/DoctorAnswerEvent'
-import NewMessageEvent, {
-  NAME as NewMessageName,
-} from '@app/domain/claim/event/NewMessageEvent'
 import ShortClaimApprovedEvent, {
   NAME as ShortClaimApprovedName,
 } from '@app/domain/claim/event/ShortClaimApprovedEvent'
@@ -31,7 +28,6 @@ export default class NotifySubscriber implements EventSubscriber {
 
   public subscribedEvents() {
     return [
-      { key: NewMessageName, handler: this.onNewMessage.bind(this) },
       {
         key: ShortClaimApprovedName,
         handler: this.onShortClaimApproved.bind(this),
@@ -44,14 +40,6 @@ export default class NotifySubscriber implements EventSubscriber {
       { key: ClaimRejectedName, handler: this.onClaimRejected.bind(this) },
       { key: NewFeedbackName, handler: this.onNewFeedback.bind(this) },
     ]
-  }
-
-  private onNewMessage({ payload }: NewMessageEvent) {
-    const { user } = payload
-
-    return user.isClient
-      ? this.notificator.newChatMessageFromClient(payload)
-      : this.notificator.newChatMessageFromSpecialist(payload)
   }
 
   private onShortClaimApproved({ payload }: ShortClaimApprovedEvent) {
