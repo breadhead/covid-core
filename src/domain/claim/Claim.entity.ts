@@ -26,6 +26,7 @@ export enum ClaimStatus {
   DeliveredToCustomer = 'delivered-to-customer',
   ClosedSuccessfully = 'closed-successfully',
   Denied = 'denied',
+  ClosedWithoutAnswer = 'closed-without-answer',
 }
 
 export enum ClaimTarget {

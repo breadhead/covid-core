@@ -5,6 +5,7 @@ export enum CloseType {
   Unsuccessful = 'unsuccessful',
   Refuse = 'refuse',
   NoContact = 'no-contact',
+  NoAnswerNeeded = 'no-answer-needed',
 }
 
 export default class CloseClaimCommand implements ICommand {

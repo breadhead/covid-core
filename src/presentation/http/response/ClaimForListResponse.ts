@@ -13,6 +13,7 @@ export enum Status {
   AtTheDoctor = 'У врача',
   AnswerValidation = 'Проверка ответа эксперта',
   DeliveredToCustomer = 'Передано заказчику',
+  ClosedWithoutAnswer = 'Не требует ответа эксперта',
 }
 
 const defineStatus = (originalStatus: ClaimStatus) =>
@@ -27,6 +28,7 @@ const defineStatus = (originalStatus: ClaimStatus) =>
     [ClaimStatus.DeliveredToCustomer]: Status.DeliveredToCustomer,
     [ClaimStatus.ClosedSuccessfully]: Status.Closed,
     [ClaimStatus.Denied]: Status.Denied,
+    [ClaimStatus.ClosedWithoutAnswer]: Status.ClosedWithoutAnswer,
   }[originalStatus])
 
 export default class ClaimForListResponse {

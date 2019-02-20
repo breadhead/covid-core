@@ -33,7 +33,7 @@
     "@nestjs/typeorm": "^5.2.2",
     "@solid-soda/config": "^1.1.0",
     "@solid-soda/console": "^1.0.0",
-    "@solid-soda/evolutions": "^0.0.6",
+    "@solid-soda/evolutions": "^0.0.10",
     "@solid-soda/voters": "^1.0.0",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.1",
