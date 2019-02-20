@@ -1,8 +1,5 @@
+import { format } from 'date-fns'
 import { Option } from 'tsoption'
 
 export const formatDate = (due: Option<Date>) =>
-  due
-    .getOrElse(new Date())
-    .toLocaleString()
-    .replace(/\//g, '.')
-    .split(',')[0]
+  format(due.getOrElse(new Date()), 'DD.MM.YYYY')
