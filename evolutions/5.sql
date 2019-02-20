@@ -11,8 +11,7 @@ ALTER TABLE claim
       'closed-successfully',
       'denied',
       'closed-without-answer'
-    );
-
+    ),
     MODIFY COLUMN `_previousStatus` ENUM(
       'new',
       'quota-allocation',
@@ -40,8 +39,7 @@ ALTER TABLE claim
       'delivered-to-customer',
       'closed-successfully',
       'denied'
-    );
-
+    ),
     MODIFY COLUMN `_previousStatus` ENUM(
       'new',
       'quota-allocation',
