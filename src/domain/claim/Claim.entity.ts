@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash'
 import { None, Option, Some } from 'tsoption'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
@@ -371,19 +372,12 @@ export default class Claim {
   }
 
   public answerQuestions(answers: Question[]) {
-    const defaultQuestions = (this._defaultQuestions || []).map(q => q.question)
-    const defaultAnsweredQuestions = answers.filter(({ question }) =>
-      defaultQuestions.includes(question),
-    )
-    this._defaultQuestions = defaultAnsweredQuestions
+    const mapToAnswered = (unanswered: Question) =>
+      answers.find(answered => answered.question === unanswered.question) ||
+      unanswered
 
-    const additionalQuestions = (this._additionalQuestions || []).map(
-      q => q.question,
-    )
-    const additionalAnsweredQuestions = answers.filter(({ question }) =>
-      additionalQuestions.includes(question),
-    )
-    this._additionalQuestions = additionalAnsweredQuestions
+    this._defaultQuestions = this._defaultQuestions.map(mapToAnswered)
+    this._additionalQuestions = this._additionalQuestions.map(mapToAnswered)
   }
 
   public attachDoctor(doctor: User): void {
