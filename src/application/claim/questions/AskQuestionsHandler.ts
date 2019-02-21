@@ -29,8 +29,13 @@ export default class AskQuestionsHandler
 
     const claim = await this.claimRepo.getOne(id)
 
+    const escapeQuestion = (question: string) => question.trim()
+
     const editedClaim = await this.em.transaction(async em => {
-      claim.newQuestions(defaultQuestions, additionalQuestions)
+      claim.newQuestions(
+        defaultQuestions.map(escapeQuestion),
+        additionalQuestions.map(escapeQuestion),
+      )
 
       if (claim.status !== ClaimStatus.QuestionnaireValidation) {
         await this.statusMover.next(claim)
