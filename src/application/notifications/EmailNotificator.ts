@@ -171,7 +171,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async claimRejected(claim: Claim): Promise<void> {
-    const { number, author } = claim
+    const { number, author, closeComment } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
@@ -181,6 +181,7 @@ export default class EmailNotificator implements Notificator {
       name,
       link: `${this.siteUrl}/contacts#feedback-form`,
       number,
+      closeComment,
     })
 
     if (author.contacts.email) {

@@ -59,6 +59,10 @@ export default class Claim {
   @JoinColumn()
   public readonly author: User
 
+  public get closeComment() {
+    return this._closeComment
+  }
+
   public get doctor() {
     return this._doctor
   }
@@ -212,6 +216,9 @@ export default class Claim {
 
   @Column({ type: 'json' })
   private _additionalQuestions: Question[] = []
+
+  @Column()
+  private _closeComment: string
 
   public constructor(
     id: string,
@@ -383,5 +390,9 @@ export default class Claim {
 
   public attachDoctor(doctor: User): void {
     this._doctor = doctor
+  }
+
+  public changeCloseComment(comment: string) {
+    this._closeComment = comment
   }
 }
