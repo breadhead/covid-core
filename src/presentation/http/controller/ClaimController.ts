@@ -374,9 +374,11 @@ export default class ClaimController {
     description: 'Admin or case-manager API token doesn`t provided',
   })
   public async closeClaim(@Body() request: CloseClaimRequest): Promise<void> {
-    const { id, type, deallocateQuota } = request
+    const { id, type, deallocateQuota, comment } = request
 
-    await this.bus.execute(new CloseClaimCommand(id, type, deallocateQuota))
+    await this.bus.execute(
+      new CloseClaimCommand(id, type, deallocateQuota, comment),
+    )
 
     return
   }

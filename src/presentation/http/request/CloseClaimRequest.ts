@@ -14,4 +14,7 @@ export default class CloseClaimRequest {
 
   @ApiModelProperty({ example: true })
   public readonly deallocateQuota: boolean
+
+  @ApiModelProperty({ example: 'comment for client' })
+  public readonly comment: string
 }

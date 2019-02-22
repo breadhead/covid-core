@@ -13,5 +13,6 @@ export default class CloseClaimCommand implements ICommand {
     public readonly id: string,
     public readonly type: CloseType,
     public readonly deallocateQuota: boolean,
+    public readonly comment: string,
   ) {}
 }
