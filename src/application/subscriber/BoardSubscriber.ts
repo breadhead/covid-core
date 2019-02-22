@@ -4,6 +4,9 @@ import { Option } from 'tsoption'
 
 import { ClaimStatus, default as Claim } from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
+import AddAuthorLabelEvent, {
+  NAME as AddAuthorLabelName,
+} from '@app/domain/claim/event/AddAuthorLabelEvent'
 import ChangeStatusEvent, {
   NAME as ChangeStatusName,
 } from '@app/domain/claim/event/ChangeStatusEvent'
@@ -33,6 +36,7 @@ import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
+import Role from '@app/domain/user/Role'
 import { formatDate } from '../notifications/helpers'
 
 export default class BoardSubscriber implements EventSubscriber {
@@ -50,6 +54,10 @@ export default class BoardSubscriber implements EventSubscriber {
       {
         key: CloseWithoutAnswerName,
         handler: this.addLabelCloseWithoutAnswer.bind(this),
+      },
+      {
+        key: AddAuthorLabelName,
+        handler: this.addAuthorLabel.bind(this),
       },
       { key: DueDateUpdatedName, handler: this.setDueDate.bind(this) },
       { key: ChangeStatusName, handler: this.changeStatus.bind(this) },
@@ -78,8 +86,22 @@ export default class BoardSubscriber implements EventSubscriber {
     payload,
   }: CloseWithoutAnswerEvent) {
     const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
-    const closeWithoutAnswerLabelText = 'Без эксперта'
-    return this.board.addLabel(claimCard.id, closeWithoutAnswerLabelText)
+    const text = 'Без эксперта'
+    return this.board.addLabel(claimCard.id, text)
+  }
+
+  private async addAuthorLabel({ payload }: AddAuthorLabelEvent) {
+    const claimCard = await this.claimBoardCardFinder.getCardById(
+      payload.claim.id,
+    )
+    let text = 'Закрыта'
+    if (payload.author === Role.CaseManager) {
+      text = 'Закрыта менеджером'
+    } else if (payload.author === Role.Client) {
+      text = 'Закрыта заказчиком'
+    }
+
+    return this.board.addLabel(claimCard.id, text)
   }
 
   private async setDueDate({ payload }: DueDateUpdatedEvent) {

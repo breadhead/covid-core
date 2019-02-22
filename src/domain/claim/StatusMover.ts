@@ -19,6 +19,8 @@ import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
 import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
+import Role from '../user/Role'
+import AddAuthorLabelEvent from './event/AddAuthorLabelEvent'
 
 const DEFAULT_DURATION = '2d'
 
@@ -58,7 +60,11 @@ export default class StatusMover {
     await this.changeStatus(claim, newStatus)
   }
 
-  public async success(claim: Claim, type: CloseType): Promise<void> {
+  public async success(
+    claim: Claim,
+    type: CloseType,
+    author: string,
+  ): Promise<void> {
     let newStatus
     if (type === CloseType.NoAnswerNeeded) {
       this.eventEmitter.emit(new CloseWithoutAnswerEvent(claim))
@@ -66,7 +72,7 @@ export default class StatusMover {
     } else {
       newStatus = ClaimStatus.ClosedSuccessfully
     }
-
+    this.eventEmitter.emit(new AddAuthorLabelEvent({ claim, author }))
     await this.changeStatus(claim, newStatus)
   }
 

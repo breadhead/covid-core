@@ -6,5 +6,5 @@ export const NAME = 'claim/close-without-answer'
 export default class CloseWithoutAnswer implements Event<Claim> {
   public readonly name = NAME
 
-  public constructor(public readonly payload: any) {}
+  public constructor(public readonly payload: Claim) {}
 }
