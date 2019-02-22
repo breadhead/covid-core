@@ -14,9 +14,9 @@ import { successCloseClaimTypes } from './config'
 export default class CloseClaimHandler
   implements ICommandHandler<CloseClaimCommand> {
   public constructor(
-    @InjectRepository(ClaimRepository)
     @InjectEntityManager()
     private readonly em: EntityManager,
+    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
