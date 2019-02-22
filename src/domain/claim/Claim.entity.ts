@@ -217,8 +217,8 @@ export default class Claim {
   @Column({ type: 'json' })
   private _additionalQuestions: Question[] = []
 
-  @Column()
-  private _closeComment: string
+  @Column({ nullable: true })
+  private _closeComment?: string
 
   public constructor(
     id: string,
