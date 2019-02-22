@@ -35,7 +35,8 @@ export default class CloseClaimHandler
       await this.statusMover.success(claim, type)
     } else {
       claim.changeCloseComment(comment)
-      await Promise.all([this.em.save(claim), this.statusMover.deny(claim)])
+      await this.em.save(claim)
+      await this.statusMover.deny(claim)
     }
 
     resolve(claim)
