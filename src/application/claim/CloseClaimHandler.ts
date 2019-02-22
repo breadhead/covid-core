@@ -1,6 +1,7 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { EntityManager } from 'typeorm'
 
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -14,6 +15,8 @@ export default class CloseClaimHandler
   implements ICommandHandler<CloseClaimCommand> {
   public constructor(
     @InjectRepository(ClaimRepository)
+    @InjectEntityManager()
+    private readonly em: EntityManager,
     private readonly claimRepo: ClaimRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
@@ -32,7 +35,7 @@ export default class CloseClaimHandler
       await this.statusMover.success(claim, type)
     } else {
       claim.changeCloseComment(comment)
-      await this.statusMover.deny(claim)
+      await Promise.all([this.em.save(claim), this.statusMover.deny(claim)])
     }
 
     resolve(claim)
