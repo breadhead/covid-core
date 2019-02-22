@@ -23,8 +23,7 @@ export default class CloseClaimHandler
   ) {}
 
   public async execute(command: CloseClaimCommand, resolve: (value?) => void) {
-    const { id, deallocateQuota, type, comment } = command
-
+    const { id, deallocateQuota, type, comment, closedBy } = command
     const claim = await this.claimRepo.getOne(id)
 
     if (deallocateQuota) {

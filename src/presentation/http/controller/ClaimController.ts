@@ -373,11 +373,14 @@ export default class ClaimController {
   @ApiForbiddenResponse({
     description: 'Admin or case-manager API token doesn`t provided',
   })
-  public async closeClaim(@Body() request: CloseClaimRequest): Promise<void> {
+  public async closeClaim(
+    @Body() request: CloseClaimRequest,
+    @CurrentUser() user: TokenPayload,
+  ): Promise<void> {
     const { id, type, deallocateQuota, comment } = request
 
     await this.bus.execute(
-      new CloseClaimCommand(id, type, deallocateQuota, comment),
+      new CloseClaimCommand(id, type, deallocateQuota, comment, user.roles),
     )
 
     return
