@@ -86,8 +86,8 @@ import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
 import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
-import { DigitalOceanFileSaver } from '@app/infrastructure/FileSaver/DigitalOceanFileSaver'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
+import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
 import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
 import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
@@ -230,7 +230,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     },
     {
       provide: FileSaver,
-      useClass: DigitalOceanFileSaver,
+      useClass: S3FileSaver,
     },
     {
       provide: BoardManager,
