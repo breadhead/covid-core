@@ -36,13 +36,15 @@ export default class FileController {
   ) {}
 
   @Post('upload')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Client)
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ title: 'Upload file' })
   @ApiConsumes('multipart/form-data')
   @ApiImplicitFile({ name: 'file', required: true, description: 'Any file' })
   @ApiOkResponse({ description: 'Uploaded', type: FileResponse })
-  @ApiForbiddenResponse({ description: 'Admin`s API token doesn`t provided ' })
+  @ApiForbiddenResponse({
+    description: 'Admin`s or client`s API token doesn`t provided ',
+  })
   public async upload(@UploadedFile() file): Promise<FileResponse> {
     const { originalname, buffer } = file
 
