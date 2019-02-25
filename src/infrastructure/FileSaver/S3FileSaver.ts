@@ -25,6 +25,6 @@ export class S3FileSaver implements FileSaver {
   public async save(buffer: Buffer, originalName: string) {
     const fileName = await this.uploader.upload(buffer, originalName, true)
 
-    return `//${this.s3Url}/${this.bucket}/${fileName}`
+    return `${this.s3Url}/${this.bucket}/${fileName}`
   }
 }
