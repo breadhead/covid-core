@@ -1,6 +1,7 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { head, intersection } from 'lodash'
 import { EntityManager } from 'typeorm'
 
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -8,7 +9,7 @@ import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
 import CloseClaimCommand from './CloseClaimCommand'
-import { successCloseClaimTypes } from './config'
+import { rolesWithCloseLabel, successCloseClaimTypes } from './config'
 
 @CommandHandler(CloseClaimCommand)
 export default class CloseClaimHandler
@@ -23,8 +24,7 @@ export default class CloseClaimHandler
   ) {}
 
   public async execute(command: CloseClaimCommand, resolve: (value?) => void) {
-    const { id, deallocateQuota, type, comment } = command
-
+    const { id, deallocateQuota, type, comment, closedBy } = command
     const claim = await this.claimRepo.getOne(id)
 
     if (deallocateQuota) {
@@ -32,7 +32,8 @@ export default class CloseClaimHandler
     }
 
     if (successCloseClaimTypes.includes(type)) {
-      await this.statusMover.success(claim, type)
+      const author = head(intersection(rolesWithCloseLabel, closedBy))
+      await this.statusMover.success(claim, type, author)
     } else {
       claim.changeCloseComment(comment)
       await this.em.save(claim)
