@@ -1,7 +1,7 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { intersection } from 'lodash'
+import { head, intersection } from 'lodash'
 import { EntityManager } from 'typeorm'
 
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
@@ -32,7 +32,7 @@ export default class CloseClaimHandler
     }
 
     if (successCloseClaimTypes.includes(type)) {
-      const author = intersection(rolesWithCloseLabel, closedBy)[0]
+      const author = head(intersection(rolesWithCloseLabel, closedBy))
       await this.statusMover.success(claim, type, author)
     } else {
       claim.changeCloseComment(comment)
