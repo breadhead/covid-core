@@ -3,5 +3,5 @@ ALTER TABLE claim
 
 #DOWN
 
-ALTER TABLE message
+ALTER TABLE claim
   DROP COLUMN _closeComment;
