@@ -39,7 +39,7 @@
     md5 "^2.2.1"
     nanoid "^1.3.1"
 
-"@breadhead/s3-uploader@1.1.0":
+"@breadhead/s3-uploader@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@breadhead/s3-uploader/-/s3-uploader-1.1.0.tgz#e1548799b6e26a290e061eee9f0e93a1c5811fc0"
   integrity sha512-nuCpnAXmwJKkvtwkHHAuCHTDKwxClp+yGfAAaqUmr+FCHeVmpCUjrg7nezlN7VC3YdTURdg5+y32Zkzk0LiQPA==
