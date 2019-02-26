@@ -56,7 +56,7 @@ export default class EmailNotificator implements Notificator {
       {
         siteUrl: this.siteUrl,
         name,
-        link: `${this.siteUrl}/client/consultation/${id}`,
+        link: `${this.siteUrl}/client/consultation/${id}?openMessage`,
         number,
       },
     )
@@ -77,7 +77,7 @@ export default class EmailNotificator implements Notificator {
         name,
         number,
         status,
-        link: `${this.siteUrl}/manager/consultation/${id}`,
+        link: `${this.siteUrl}/manager/consultation/${id}?openMessage`,
         text: message.content,
       }),
       this.userRepo.findCaseManager(),
