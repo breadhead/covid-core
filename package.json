@@ -24,7 +24,7 @@
     "@breadhead/detil-ts": "^1.0.1",
     "@breadhead/nest-throwable-bus": "^1.0.5",
     "@breadhead/red-sms-client": "^1.0.1",
-    "@breadhead/s3-uploader": "^1.1.0",
+    "@breadhead/s3-uploader": "^1.2.0",
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
     "@nestjs/cqrs": "^5.1.1",
