@@ -37,6 +37,7 @@
     "@solid-soda/evolutions": "^0.0.10",
     "@solid-soda/voters": "^1.0.0",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "class-transformer": "^0.1.10",
     "class-validator": "^0.9.1",

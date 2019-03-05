@@ -21,8 +21,11 @@ export default class ConsoleLogger extends Logger {
     })
   }
 
-  public log(message: any, context?: string) {
-    this.logger.info(message)
+  public log(message: any, context?: any) {
+    const finalMessage = context
+      ? `${message}, context: ${JSON.stringify(context)}`
+      : message
+    this.logger.info(finalMessage)
   }
 
   public warn(message: any, context?: string) {

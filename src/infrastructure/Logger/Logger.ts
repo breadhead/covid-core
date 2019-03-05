@@ -4,7 +4,7 @@ import Monitor from './Monitor/Monitor'
 export default abstract class Logger implements LoggerService {
   public constructor(private readonly monitor: Monitor) {}
 
-  public abstract log(message: any, context?: string)
+  public abstract log(message: any, context?: any)
 
   public abstract warn(message: any, context?: string)
 
