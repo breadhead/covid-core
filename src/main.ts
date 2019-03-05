@@ -5,6 +5,9 @@ import { join } from 'path'
 import { AppModule } from '@app/app.module'
 import corsMiddleware from '@app/corsMiddleware'
 import setupSwagger from '@app/infrastructure/swagger'
+import { answerRedisMiddleware } from './answerRedisMiddleware'
+import { extraLoggerMiddleware } from './extraLoggerMiddleware'
+import Configuration from './infrastructure/Configuration/Configuration'
 import Logger from './infrastructure/Logger/Logger'
 
 async function bootstrap() {
@@ -16,18 +19,13 @@ async function bootstrap() {
 
   app.use(corsMiddleware())
 
-  const logger = app.get<Logger>(Logger as any)
   app.use(bodyParser.json())
-  app.use((req, _, next) => {
-    if (req.method !== 'GET') {
-      logger.log('Incomeing POST request', {
-        path: req.path,
-        body: req.body,
-      })
-    }
 
-    next()
-  })
+  const logger = app.get<Logger>(Logger as any)
+  const config = app.get<Configuration>(Configuration as any)
+
+  app.use(extraLoggerMiddleware(logger))
+  app.use(answerRedisMiddleware(config))
 
   await app.listen(3000)
 }
