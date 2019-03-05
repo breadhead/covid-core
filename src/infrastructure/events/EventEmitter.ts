@@ -10,6 +10,8 @@ export default class EventEmitter {
   private readonly emitter: any
   private moduleRef: ModuleRef
 
+  private newHandlers = {}
+
   public constructor() {
     this.emitter = new NanoEvents()
   }
@@ -26,12 +28,25 @@ export default class EventEmitter {
       )
       .map(subscriber => subscriber.subscribedEvents())
       .reduce((cur, prev) => [...cur, ...prev], []) // flatten
-      .forEach(handlerMap =>
-        this.emitter.on(handlerMap.key, handlerMap.handler),
-      )
+      .forEach(handlerMap => {
+        if (handlerMap.isNew) {
+          this.newHandlers[handlerMap.key] = [
+            ...(this.newHandlers[handlerMap.key] || []),
+            handlerMap.handler,
+          ]
+        } else {
+          this.emitter.on(handlerMap.key, handlerMap.handler)
+        }
+      })
   }
 
-  public emit<Payload = any>(event: Event<Payload>) {
-    this.emitter.emit(event.name, event)
+  public async emit<Payload = any>(event: Event<Payload>) {
+    const newHandlers = this.newHandlers[event.name]
+
+    if (newHandlers && newHandlers.length) {
+      await Promise.all(newHandlers.map(handler => handler(event)))
+    } else {
+      this.emitter.emit(event.name, event)
+    }
   }
 }

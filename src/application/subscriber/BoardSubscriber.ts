@@ -60,7 +60,11 @@ export default class BoardSubscriber implements EventSubscriber {
         handler: this.addAuthorLabel.bind(this),
       },
       { key: DueDateUpdatedName, handler: this.setDueDate.bind(this) },
-      { key: ChangeStatusName, handler: this.changeStatus.bind(this) },
+      {
+        key: ChangeStatusName,
+        handler: this.changeStatus.bind(this),
+        isNew: true,
+      },
       { key: CreateClaimName, handler: this.createClaim.bind(this) },
       { key: DoctorChangedName, handler: this.doctorChanged.bind(this) },
     ]
@@ -107,9 +111,7 @@ export default class BoardSubscriber implements EventSubscriber {
   private async setDueDate({ payload }: DueDateUpdatedEvent) {
     const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
 
-    if (payload.due.nonEmpty()) {
-      return this.board.setDueDate(claimCard.id, payload.due.get())
-    }
+    await this.board.setDueDate(claimCard.id, payload.due.getOrElse(null))
   }
 
   private async createClaim({ payload }: CreateClaimEvent) {
@@ -148,7 +150,7 @@ export default class BoardSubscriber implements EventSubscriber {
       this.getListIdForClaimStatus(payload.status),
     ])
 
-    return this.board.moveCard(claimCard.id, list.id)
+    await this.board.moveCard(claimCard.id, list.id)
   }
 
   private async doctorChanged({ payload }: DoctorChangedEvent) {

@@ -77,7 +77,7 @@ export default class TrelloBoardManager implements BoardManager {
     return this.trello.deleteLabelFromCard(cardId, label.id)
   }
 
-  public async setDueDate(cardId: string, due: Date): Promise<void> {
+  public async setDueDate(cardId: string, due: Date | null): Promise<void> {
     const result = await this.trello
       .addDueDateToCard(cardId, due)
       .then(tapOrThrow)
