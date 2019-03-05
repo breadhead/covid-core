@@ -1,11 +1,13 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-export const questionWithAnswerExample: QuestionWithAnswer = {
+import { QuestionWithAnswer as QuestionWithAnswerInApp } from '@app/application/claim/questions/dto/QuestionWithAnswer'
+
+export const questionWithAnswerExample: QuestionWithAnswerInApp = {
   question: 'Я умру?',
   answer: 'Да',
 }
 
-export default class QuestionWithAnswer {
+export default class QuestionWithAnswer implements QuestionWithAnswerInApp {
   @ApiModelProperty({ example: questionWithAnswerExample.question })
   public question: string
 

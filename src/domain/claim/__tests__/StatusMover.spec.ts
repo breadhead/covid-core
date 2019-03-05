@@ -34,6 +34,28 @@ describe('StatusMover', () => {
     )
   })
 
+  describe('afterNewAnswers', () => {
+    test('should remove due date and move to next status', async () => {
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      claim.changeDue(new Date())
+      claim.changeStatus(ClaimStatus.AtTheDoctor)
+
+      await statusMover.afterNewAnswers(claim)
+
+      expect(claim.due.isEmpty()).toBeTruthy()
+      expect(claim.status).toBe(ClaimStatus.AnswerValidation)
+    })
+
+    test('should not move to next status if its already moved', async () => {
+      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      claim.changeStatus(ClaimStatus.AnswerValidation)
+
+      await statusMover.afterNewAnswers(claim)
+
+      expect(claim.status).toBe(ClaimStatus.AnswerValidation)
+    })
+  })
+
   describe('deny', () => {
     test('should change status to denied from any status', async () => {
       const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')

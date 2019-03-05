@@ -44,4 +44,89 @@ describe('Claim', () => {
       expect(() => c.unbindQuota()).toThrow(InvariantViolationException)
     })
   })
+
+  describe('answerQuestions', () => {
+    test('should not remove any questions if answers does not provided', () => {
+      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+
+      const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
+      const additionalQuestions = [
+        'Это довольный длинный вопрос с, спорными: символами и другими?(солжностями]',
+      ]
+
+      c.newQuestions(defaultQuestions, additionalQuestions)
+
+      c.answerQuestions([])
+
+      expect(c.questions.defaultQuestions).toEqual(defaultQuestions)
+      expect(c.questions.additionalQuestions).toEqual(additionalQuestions)
+    })
+
+    test('should not remove any questions if incorrect answers provided', () => {
+      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+
+      const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
+      const additionalQuestions = [
+        'Это довольный длинный вопрос с, спорными: символами и другими?(солжностями]',
+      ]
+
+      c.newQuestions(defaultQuestions, additionalQuestions)
+
+      c.answerQuestions([{ question: 'Что?', answer: 'Ничего!' }])
+
+      expect(c.questions.defaultQuestions).toEqual(defaultQuestions)
+      expect(c.questions.additionalQuestions).toEqual(additionalQuestions)
+    })
+
+    test('should add answers if they correct', () => {
+      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+
+      const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
+      const additionalQuestions = [
+        'Это довольный длинный вопрос с, спорными: символами и другими?(солжностями]',
+      ]
+
+      c.newQuestions(defaultQuestions, additionalQuestions)
+
+      c.answerQuestions([{ question: 'Как быть?', answer: 'Забей' }])
+
+      expect(c.questions.defaultQuestions).toEqual(defaultQuestions)
+      expect(c.questions.additionalQuestions).toEqual(additionalQuestions)
+
+      expect(c.answeredQuestions.defaultQuestions).toEqual([
+        { question: 'Как быть?', answer: 'Забей' },
+        {
+          answer: undefined,
+          question: 'Вопрос: Что делать?',
+        },
+      ])
+    })
+
+    test('should add answers if some of they correct', () => {
+      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+
+      const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
+      const additionalQuestions = [
+        'Это довольный длинный вопрос с, спорными: символами и другими?(солжностями]',
+      ]
+
+      c.newQuestions(defaultQuestions, additionalQuestions)
+
+      c.answerQuestions([
+        { question: 'Как быть?', answer: 'Забей' },
+        { question: 'Не вопрос?', answer: 'Не вопрос' },
+      ])
+
+      expect(c.questions.defaultQuestions).toEqual(defaultQuestions)
+      expect(c.questions.additionalQuestions).toEqual(additionalQuestions)
+
+      expect(c.answeredQuestions.defaultQuestions).toEqual([
+        { question: 'Как быть?', answer: 'Забей' },
+        {
+          answer: undefined,
+          question: 'Вопрос: Что делать?',
+        },
+      ])
+    })
+  })
 })

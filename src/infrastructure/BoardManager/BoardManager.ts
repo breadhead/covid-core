@@ -38,7 +38,7 @@ export default interface BoardManager {
 
   addLabel(cardId: string, labelText: string): Promise<void>
 
-  setDueDate(cardId: string, due: Date): Promise<void>
+  setDueDate(cardId: string, due: Date | null): Promise<void>
 
   addMemberToCard(cardId: string, username: string): Promise<void>
   getCardMembers(cardId: string): Promise<Member[]>

@@ -30,7 +30,7 @@ import CloseClaimHandler from '@app/application/claim/CloseClaimHandler'
 import EditClaimVoter from '@app/application/claim/EditClaimVoter'
 import MoveToNextStatusHandler from '@app/application/claim/MoveToNextStatusHandler'
 import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
-import AnswerQuestionsHandler from '@app/application/claim/questions/AnswerQuestionsHandler'
+import { AnsweringQuestions } from '@app/application/claim/questions/AnsweringQuestions'
 import AskQuestionsHandler from '@app/application/claim/questions/AskQuestionsHandler'
 import CreateClaimHandler from '@app/application/claim/short/CreateClaimHandler'
 import EditShortClaimHandler from '@app/application/claim/short/EditShortClaimHandler'
@@ -124,7 +124,6 @@ const commandHandlers = [
   IncomeQuotaHandler,
   EditSituationHandler,
   EditShortClaimHandler,
-  AnswerQuestionsHandler,
   ChooseDoctorHandler,
   VerificateHandler,
   CreateDoctorHandler,
@@ -236,6 +235,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       provide: BoardManager,
       useClass: TrelloBoardManager,
     },
+    AnsweringQuestions,
     AnswerAccessManager,
     CommandBus,
     StatusMover,

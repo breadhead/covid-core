@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es2017", "dom"],
+    "types": ["jest", "node"],
     "module": "commonjs",
     "declaration": true,
     "noImplicitAny": false,
@@ -22,6 +23,5 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
   ]
 }

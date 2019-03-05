@@ -281,6 +281,10 @@ export default class Claim {
     this._due = newDue
   }
 
+  public removeDue() {
+    this._due = null
+  }
+
   public addNewHisotlogy(url: string) {
     const histology = new FileLink({
       title: 'histology',

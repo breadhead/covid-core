@@ -1,4 +1,3 @@
-import * as Trello from 'trello'
 import MockConfiguration from '../../../__mocks__/Configuration'
 import BoardManagerException from '../BoardManagerException'
 import TrelloBoardManager from '../TrelloBoardManager'

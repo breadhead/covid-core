@@ -25,7 +25,7 @@ import ChooseDoctorCommand from '@app/application/claim/ChooseDoctorCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
 import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
-import AnswerQuestionsCommand from '@app/application/claim/questions/AnswerQuestionsCommand'
+import { AnsweringQuestions } from '@app/application/claim/questions/AnsweringQuestions'
 import AskQuestionsCommand from '@app/application/claim/questions/AskQuestionsCommand'
 import CreateClaimCommand from '@app/application/claim/short/CreateClaimCommand'
 import EditShortClaimCommand from '@app/application/claim/short/EditShortClaimCommand'
@@ -68,6 +68,7 @@ export default class ClaimController {
     private readonly votersUnity: SecurityVotersUnity,
     private readonly answerAccess: AnswerAccessManager,
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
+    private readonly answeringQuestions: AnsweringQuestions,
   ) {}
 
   @Get('/')
@@ -352,17 +353,16 @@ export default class ClaimController {
   @Roles(Role.Doctor, Role.CaseManager)
   @Post('answer')
   @ApiOperation({ title: 'Answer questions for claim' })
-  @ApiOkResponse({ description: 'Answered' })
-  @ApiForbiddenResponse({ description: 'Doctor API token doesn`t provided' })
+  @ApiOkResponse({ description: 'New answer saved' })
+  @ApiForbiddenResponse({
+    description: 'Doctor or Case Manager API token doesn`t provided',
+  })
   public async answerQuestions(
     @Body() request: AnswerQuestionsRequest,
-  ): Promise<any> {
+  ): Promise<void> {
     const { claimId, answers } = request
-    const command = new AnswerQuestionsCommand(claimId, answers)
 
-    await this.bus.execute(command)
-
-    return
+    await this.answeringQuestions.answer(claimId, answers)
   }
 
   @Post('close')

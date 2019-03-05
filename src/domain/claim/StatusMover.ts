@@ -54,6 +54,20 @@ export default class StatusMover {
     }
   }
 
+  // start new clear methods
+  public async afterNewAnswers(claim: Claim): Promise<void> {
+    if (claim.status === ClaimStatus.AtTheDoctor) {
+      claim.changeStatus(ClaimStatus.AnswerValidation)
+      claim.removeDue()
+
+      await Promise.all([
+        this.eventEmitter.emit(new ChangeStatusEvent(claim)),
+        this.eventEmitter.emit(new DueDateUpdatedEvent(claim)),
+      ])
+    }
+  }
+  // end
+
   public async deny(claim: Claim): Promise<void> {
     const newStatus = ClaimStatus.Denied
 
