@@ -7,24 +7,24 @@ import FileSaver from './FileSaver'
 @Injectable()
 export class S3FileSaver implements FileSaver {
   private readonly s3Url: string
-  private readonly bucket: string
+  private readonly publicUrl: string
   private readonly uploader: S3Uploader
 
   public constructor(config: Configuration) {
     this.s3Url = config.getStringOrElse('MINIO_HOST', '')
-    this.bucket = config.getStringOrElse('MINIO_BUCKET', 'bucket')
+    this.publicUrl = config.getStringOrElse('MINIO_PUBLIC_URL', this.s3Url)
 
     this.uploader = new MinioUploader(
       config.getStringOrElse('MINIO_ACCESS_KEY', 'Secret'),
       config.getStringOrElse('MINIO_SECRET_KEY', 'Regon'),
       this.s3Url,
-      this.bucket,
+      config.getStringOrElse('MINIO_BUCKET', 'bucket'),
     )
   }
 
   public async save(buffer: Buffer, originalName: string) {
     const fileName = await this.uploader.upload(buffer, originalName, true)
 
-    return `${this.s3Url}/${this.bucket}/${fileName}`
+    return fileName.replace(this.s3Url, this.publicUrl)
   }
 }
