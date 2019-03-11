@@ -28,19 +28,11 @@ export default class CreateClaimHandler
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @InjectRepository(ClaimRepository)
     private readonly claimRepository: ClaimRepository,
-    @Inject(EventEmitter) private readonly eventEmitter: EventEmitter,
-    private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
   ) {}
 
   public async execute(command: CreateClaimCommand, resolve: (value?) => void) {
     const claim = await this.createClaim(command)
-
-    await this.allocator.allocateAuto(claim).catch(() => {
-      /* ok, common quota not found */
-    })
-
-    await this.statusMover.next(claim) // Move to next status after qouta allocating
 
     resolve(claim as Claim)
   }
@@ -88,9 +80,9 @@ export default class CreateClaimHandler
         target,
       )
 
-      const [savedClaim, ...rest] = await em.save([shortClaim, user])
+      await this.statusMover.afterCreate(shortClaim)
 
-      await this.eventEmitter.emit(new CreateClaimEvent(savedClaim))
+      const [savedClaim, ...rest] = await em.save([shortClaim, user])
 
       return savedClaim as Claim
     })

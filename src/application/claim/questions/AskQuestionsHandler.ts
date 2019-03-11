@@ -19,6 +19,7 @@ export default class AskQuestionsHandler
     @InjectEntityManager()
     private readonly em: EntityManager,
     private readonly statusMover: StatusMover,
+    private readonly allocator: Allocator,
   ) {}
 
   public async execute(
@@ -37,9 +38,11 @@ export default class AskQuestionsHandler
         additionalQuestions.map(escapeQuestion),
       )
 
-      if (claim.status !== ClaimStatus.QuestionnaireValidation) {
-        await this.statusMover.next(claim)
-      }
+      await this.allocator.allocateAuto(claim).catch(() => {
+        // pass, it's okay
+      })
+
+      await this.statusMover.afterQuestionary(claim)
 
       return em.save(claim)
     })

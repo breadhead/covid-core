@@ -65,7 +65,11 @@ export default class BoardSubscriber implements EventSubscriber {
         handler: this.changeStatus.bind(this),
         isNew: true,
       },
-      { key: CreateClaimName, handler: this.createClaim.bind(this) },
+      {
+        key: CreateClaimName,
+        handler: this.createClaim.bind(this),
+        isNew: true,
+      },
       { key: DoctorChangedName, handler: this.doctorChanged.bind(this) },
     ]
   }
@@ -140,7 +144,9 @@ export default class BoardSubscriber implements EventSubscriber {
 
       const caseManager = await this.userRepo.findCaseManager()
 
-      return this.board.addMemberToCard(cardId, caseManager.boardUsername)
+      if (caseManager && caseManager.boardUsername) {
+        await this.board.addMemberToCard(cardId, caseManager.boardUsername)
+      }
     }
   }
 

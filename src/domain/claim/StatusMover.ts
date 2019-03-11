@@ -21,6 +21,7 @@ import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
 import Role from '../user/Role'
 import AddAuthorLabelEvent from './event/AddAuthorLabelEvent'
+import CreateClaimEvent from './event/CreateClaimEvent'
 
 const DEFAULT_DURATION = '2d'
 
@@ -64,6 +65,26 @@ export default class StatusMover {
         this.eventEmitter.emit(new ChangeStatusEvent(claim)),
         this.eventEmitter.emit(new DueDateUpdatedEvent(claim)),
       ])
+    }
+  }
+
+  public async afterCreate(claim: Claim): Promise<void> {
+    claim.changeStatus(ClaimStatus.QuestionnaireWaiting)
+
+    // doe not use Promise.all, we must execute it sequentially
+    await this.eventEmitter.emit(new CreateClaimEvent(claim))
+    await this.eventEmitter.emit(new ChangeStatusEvent(claim))
+  }
+
+  public async afterQuestionary(claim: Claim): Promise<void> {
+    if (claim.status === ClaimStatus.QuestionnaireWaiting) {
+      const newStatus = !!claim.quota
+        ? ClaimStatus.QuestionnaireValidation
+        : ClaimStatus.QuotaAllocation
+
+      claim.changeStatus(newStatus)
+
+      await this.eventEmitter.emit(new ChangeStatusEvent(claim))
     }
   }
   // end
