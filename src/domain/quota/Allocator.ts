@@ -28,9 +28,7 @@ export default class Allocator {
 
     return this.em
       .transaction(async em => {
-        const commonQuotas = (await this.quotaRepo.findCommon()).filter(
-          commonQuota => commonQuota.balance > 0,
-        )
+        const commonQuotas = await this.quotaRepo.findCommonAvailable()
 
         if (commonQuotas.length === 0) {
           throw new QuotaAllocationFailedException(
