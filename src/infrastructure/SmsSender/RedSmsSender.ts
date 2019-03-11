@@ -22,7 +22,7 @@ export default class RedSmsSender implements SmsSender {
 
   public async send(to: string, text: string): Promise<void> {
     if (this.config.isProd()) {
-      await this.redSmsClient.sendSms('REDSMS.RU', to, text)
+      await this.redSmsClient.sendSms('nenaprasno', to, text)
       this.logger.log(`SMS sent to "${to}"`)
     }
 
