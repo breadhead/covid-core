@@ -39,7 +39,7 @@ export default class EmailNotificator implements Notificator {
       .getOrElse('oncohelp@email.com')
 
     this.send = (to, subject, content) =>
-      sender.send(this.senderEmail, to, subject, content)
+      sender.send(`Просто спросить <${this.senderEmail}>`, to, subject, content)
 
     this.siteUrl = config.get('SITE_URL').getOrElse('localhost')
 
