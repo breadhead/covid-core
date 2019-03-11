@@ -26,8 +26,6 @@ const CODE_LENGTH = 4
 @CommandHandler(SendVerificationCommand)
 export default class SendVerificationHandler
   implements ICommandHandler<SendVerificationCommand> {
-  private readonly smsContext: object
-
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
@@ -35,12 +33,7 @@ export default class SendVerificationHandler
     @Inject(SmsSenderSymbol) private readonly smsSender: SmsSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
-    config: Configuration,
-  ) {
-    this.smsContext = {
-      link: config.get('SITE_URL').getOrElse('localhost'),
-    }
-  }
+  ) {}
 
   public async execute(
     command: SendVerificationCommand,
@@ -56,7 +49,6 @@ export default class SendVerificationHandler
       await em.save(user)
 
       const text = await this.templating.render('sms/verification', {
-        ...this.smsContext,
         code: verificationCode,
       })
 
