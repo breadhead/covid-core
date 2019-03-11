@@ -6,7 +6,9 @@ import {
   ApiOperation,
   ApiUseTags,
 } from '@nestjs/swagger'
+import { InjectRepository } from '@nestjs/typeorm'
 
+import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
 
@@ -22,7 +24,11 @@ import Roles from '../security/Roles'
 @ApiUseTags('statistics')
 @ApiBearerAuth()
 export default class StatisticsController {
-  public constructor(private readonly historian: Historian) {}
+  public constructor(
+    private readonly historian: Historian,
+    @InjectRepository(QuotaRepository)
+    private readonly quotaRepo: QuotaRepository,
+  ) {}
 
   @Get('donators')
   @Roles(Role.Admin)
@@ -40,5 +46,18 @@ export default class StatisticsController {
     const donators = await this.historian.getDonators(request.from, request.to)
 
     return donators.map(CompanyResponse.fromDonator)
+  }
+
+  @Get('quotas-available')
+  @ApiOperation({ title: 'Common quotas avalability' })
+  @ApiOkResponse({ description: 'Success' })
+  public async commonQuotasAvailable(): Promise<boolean> {
+    try {
+      const quotas = await this.quotaRepo.findCommonAvailable()
+
+      return quotas.length > 0
+    } catch (e) {
+      return false
+    }
   }
 }

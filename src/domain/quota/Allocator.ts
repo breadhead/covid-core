@@ -17,31 +17,34 @@ export default class Allocator {
   ) {}
 
   public allocateAuto(claim: Claim): Promise<void> {
+    if (claim.quota) {
+      this.throwAllocatorException(claim.quota, 'Quota already allocated')
+    }
+
+    const enableAutoAllocation = true
+    if (!enableAutoAllocation) {
+      this.throwAllocatorException(null, 'Auto allocation disabled')
+    }
+
     return this.em
       .transaction(async em => {
-        // TODO: TEMP! remove after ON-477
-        throw new QuotaAllocationFailedException(
-          null,
-          'Auto allocation disabled',
+        const commonQuotas = (await this.quotaRepo.findCommon()).filter(
+          commonQuota => commonQuota.balance > 0,
         )
 
-        // const commonQuotas = (await this.quotaRepo.findCommon()).filter(
-        //   commonQuota => commonQuota.balance > 0,
-        // )
+        if (commonQuotas.length === 0) {
+          throw new QuotaAllocationFailedException(
+            null,
+            'Common quota not found',
+          )
+        }
 
-        // if (commonQuotas.length === 0) {
-        //   throw new QuotaAllocationFailedException(
-        //     null,
-        //     'Common quota not found',
-        //   )
-        // }
+        const quota = sample(commonQuotas)
 
-        // const quota = sample(commonQuotas)
+        claim.bindQuota(quota)
+        quota.decreaseBalance(1)
 
-        // claim.bindQuota(quota)
-        // quota.decreaseBalance(1)
-
-        // await em.save([claim, quota])
+        await em.save([claim, quota])
       })
       .catch(this.throwAllocatorException())
   }
