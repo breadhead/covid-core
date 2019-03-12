@@ -42,8 +42,8 @@ export default class AllNotificator implements Notificator {
     await this.forAll(notificator => notificator.newFeedbackMessage(feedback))
   }
 
-  public async shortClaimApproved(claim: Claim): Promise<void> {
-    await this.forAll(notificator => notificator.shortClaimApproved(claim))
+  public async claimApproved(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimApproved(claim))
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
@@ -56,6 +56,14 @@ export default class AllNotificator implements Notificator {
 
   public async doctorAnswer(claim: Claim): Promise<void> {
     await this.forAll(notificator => notificator.doctorAnswer(claim))
+  }
+
+  public async claimRequiresWaiting(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimRequiresWaiting(claim))
+  }
+
+  public async claimSendToDoctor(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimSendToDoctor(claim))
   }
 
   private async forAll(

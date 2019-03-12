@@ -6,10 +6,12 @@ export default interface Notificator {
   newChatMessageFromClient(message: Message): Promise<void>
   newChatMessageFromSpecialist(message: Message): Promise<void>
   newFeedbackMessage(feedback: Feedback): Promise<void>
-  shortClaimApproved(claim: Claim): Promise<void>
+  claimApproved(claim: Claim): Promise<void>
+  claimRequiresWaiting(claim: Claim): Promise<void>
   shortClaimQueued(claim: Claim): Promise<void>
   claimRejected(claim: Claim): Promise<void>
   doctorAnswer(answer: Claim): Promise<void>
+  claimSendToDoctor(claim: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')

@@ -54,19 +54,16 @@ export default class SmsNotificator implements Notificator {
     // SMS Notification not needed
   }
 
-  public async shortClaimApproved(claim: Claim): Promise<void> {
-    const { number, author } = claim
-    const { name } = claim.applicant
+  public async claimRequiresWaiting(): Promise<void> {
+    // SMS Notification not needed
+  }
 
-    if (author.contacts.phone) {
-      const text = await this.templating.render('sms/claim-approved', {
-        ...this.defaultConext,
-        number,
-        name,
-      })
+  public async claimSendToDoctor(): Promise<void> {
+    // SMS Notification not needed
+  }
 
-      await this.send(author.contacts.phone, text)
-    }
+  public async claimApproved(): Promise<void> {
+    // SMS Notification not needed
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
