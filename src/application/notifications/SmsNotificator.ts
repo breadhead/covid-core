@@ -9,7 +9,9 @@ import SmsSender, {
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import axios from 'axios'
 
+import SmsException from '../exception/SmsException'
 import Notificator from './Notificator'
 
 export default class SmsNotificator implements Notificator {
@@ -23,8 +25,20 @@ export default class SmsNotificator implements Notificator {
   ) {
     this.send = (to, content) => smsSender.send(to, content)
 
+    const link = config.get('SITE_URL').getOrElse('localhost')
+    let shortLink = null
+
+    axios
+      .get(`https://clck.ru/--?url=${link}`)
+      .then(response => {
+        shortLink = response.data
+      })
+      .catch(error => {
+        throw new SmsException(error, link)
+      })
+
     this.defaultConext = {
-      link: config.get('SITE_URL').getOrElse('localhost'),
+      link: shortLink || link,
     }
   }
 
