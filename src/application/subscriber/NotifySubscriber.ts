@@ -1,14 +1,14 @@
 import { Inject } from '@nestjs/common'
 
+import ClaimApprovedEvent, {
+  NAME as ClaimApprovedName,
+} from '@app/domain/claim/event/ClaimApprovedEvent'
 import ClaimRejectedEvent, {
   NAME as ClaimRejectedName,
 } from '@app/domain/claim/event/ClaimRejectedEvent'
 import DoctorAnswerEvent, {
   NAME as DoctorAnswerName,
 } from '@app/domain/claim/event/DoctorAnswerEvent'
-import ShortClaimApprovedEvent, {
-  NAME as ShortClaimApprovedName,
-} from '@app/domain/claim/event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent, {
   NAME as ShortClaimQueuedName,
 } from '@app/domain/claim/event/ShortClaimQueuedEvent'
@@ -29,8 +29,9 @@ export default class NotifySubscriber implements EventSubscriber {
   public subscribedEvents() {
     return [
       {
-        key: ShortClaimApprovedName,
-        handler: this.onShortClaimApproved.bind(this),
+        key: ClaimApprovedName,
+        handler: this.onClaimApproved.bind(this),
+        isNew: true,
       },
       {
         key: ShortClaimQueuedName,
@@ -42,8 +43,8 @@ export default class NotifySubscriber implements EventSubscriber {
     ]
   }
 
-  private onShortClaimApproved({ payload }: ShortClaimApprovedEvent) {
-    return this.notificator.shortClaimApproved(payload)
+  private async onClaimApproved({ payload }: ClaimApprovedEvent) {
+    await this.notificator.claimApproved(payload)
   }
 
   private onShortClaimQueued({ payload }: ShortClaimQueuedEvent) {

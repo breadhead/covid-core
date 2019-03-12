@@ -12,10 +12,10 @@ import { CloseType } from '@app/application/claim/CloseClaimCommand'
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
 import ChangeStatusEvent from './event/ChangeStatusEvent'
+import ClaimApprovedEvent from './event/ClaimApprovedEvent'
 import ClaimRejectedEvent from './event/ClaimRejectedEvent'
 import DoctorAnswerEvent from './event/DoctorAnswerEvent'
 import DueDateUpdatedEvent from './event/DueDateUpdatedEvent'
-import ShortClaimApprovedEvent from './event/ShortClaimApprovedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
 import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
@@ -84,7 +84,20 @@ export default class StatusMover {
 
       claim.changeStatus(newStatus)
 
-      await this.eventEmitter.emit(new ChangeStatusEvent(claim))
+      const events = []
+
+      events.push(new ChangeStatusEvent(claim))
+
+      if (newStatus === ClaimStatus.QuestionnaireValidation) {
+        events.push(new ClaimApprovedEvent(claim))
+      }
+
+      if (newStatus === ClaimStatus.QuotaAllocation) {
+        // TODO: add event for wainting!
+        // events.push()
+      }
+
+      await Promise.all(events.map(event => this.eventEmitter.emit(event)))
     }
   }
   // end
@@ -201,9 +214,6 @@ export default class StatusMover {
     const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
-      [ClaimStatus.QuestionnaireWaiting]: caseManagerSeeClaim
-        ? new ShortClaimApprovedEvent(claim)
-        : undefined,
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
     }[claim.status]
 

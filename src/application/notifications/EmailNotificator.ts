@@ -125,23 +125,20 @@ export default class EmailNotificator implements Notificator {
     return this.send(this.senderEmail, subject, { html })
   }
 
-  public async shortClaimApproved(claim: Claim): Promise<void> {
+  public async claimApproved(claim: Claim): Promise<void> {
     const { number, status, author, due, id } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}.${name}, пожалуйста, продолжите заполнение заявки на консультацию`
 
-    const html = await this.templating.render(
-      'email/short-claim-message-approved',
-      {
-        siteUrl: this.siteUrl,
-        name,
-        status,
-        date: formatDate(due),
-        link: `${this.siteUrl}/client/claim/${id}/situation`,
-        number,
-      },
-    )
+    const html = await this.templating.render('email/claim-approved', {
+      siteUrl: this.siteUrl,
+      name,
+      status,
+      date: formatDate(due),
+      link: `${this.siteUrl}/client/claim/${id}/situation`,
+      number,
+    })
 
     if (author.contacts.email) {
       return this.send(author.contacts.email, subject, { html })

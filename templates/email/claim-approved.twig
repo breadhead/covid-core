@@ -1,0 +1,37 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__id">
+                <div>Заявка № {{ number }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>Спасибо! Мы получили вашу заявку</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Мы передадим вашу заявку подходящему эксперту. Если потребуется, мы зададим вам дополнительные вопросы.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Мы будем сообщать вам о ходе консультации по электронной почте. В среднем срок ожидания ответа — 3 рабочих дня
+                </div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

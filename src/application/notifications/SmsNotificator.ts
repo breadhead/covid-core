@@ -54,7 +54,7 @@ export default class SmsNotificator implements Notificator {
     // SMS Notification not needed
   }
 
-  public async shortClaimApproved(claim: Claim): Promise<void> {
+  public async claimApproved(claim: Claim): Promise<void> {
     const { number, author } = claim
     const { name } = claim.applicant
 

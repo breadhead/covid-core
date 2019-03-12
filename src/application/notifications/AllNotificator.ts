@@ -42,8 +42,8 @@ export default class AllNotificator implements Notificator {
     await this.forAll(notificator => notificator.newFeedbackMessage(feedback))
   }
 
-  public async shortClaimApproved(claim: Claim): Promise<void> {
-    await this.forAll(notificator => notificator.shortClaimApproved(claim))
+  public async claimApproved(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimApproved(claim))
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
