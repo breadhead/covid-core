@@ -21,6 +21,7 @@ import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
 import AddAuthorLabelEvent from './event/AddAuthorLabelEvent'
 import ClaimRequiresWaiting from './event/ClaimRequiresWaiting'
+import ClaimSentToDoctor from './event/ClaimSentToDoctor'
 import CreateClaimEvent from './event/CreateClaimEvent'
 
 const DEFAULT_DURATION = '2d'
@@ -205,15 +206,11 @@ export default class StatusMover {
   }
 
   private getEvents(claim: Claim): Event[] {
-    const caseManagerSeeClaim = [
-      ClaimStatus.QueueForQuota,
-      ClaimStatus.QuotaAllocation,
-    ].includes(claim.previousStatus)
-
     const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
+      [ClaimStatus.AtTheDoctor]: new ClaimSentToDoctor(claim),
     }[claim.status]
 
     const statusEvent = new ChangeStatusEvent(claim)
