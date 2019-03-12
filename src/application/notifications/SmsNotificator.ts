@@ -54,6 +54,14 @@ export default class SmsNotificator implements Notificator {
     // SMS Notification not needed
   }
 
+  public async claimRequiresWaiting(): Promise<void> {
+    // SMS Notification not needed
+  }
+
+  public async claimSendToDoctor(): Promise<void> {
+    // SMS Notification not needed
+  }
+
   public async claimApproved(claim: Claim): Promise<void> {
     const { number, author } = claim
     const { name } = claim.applicant

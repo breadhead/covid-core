@@ -126,17 +126,48 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async claimApproved(claim: Claim): Promise<void> {
-    const { number, status, author, due, id } = claim
+    const { number, author } = claim
     const { name } = claim.applicant
 
-    const subject = `Заявка №${number}.${name}, пожалуйста, продолжите заполнение заявки на консультацию`
+    const subject = `Заявка №${number}. ${name}, мы получили вашу заявку`
 
     const html = await this.templating.render('email/claim-approved', {
       siteUrl: this.siteUrl,
       name,
-      status,
-      date: formatDate(due),
-      link: `${this.siteUrl}/client/claim/${id}/situation`,
+      number,
+    })
+
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
+  }
+
+  public async claimRequiresWaiting(claim: Claim): Promise<void> {
+    const { number, author } = claim
+    const { name } = claim.applicant
+
+    const subject = `Заявка №${number}. ${name}, ваша заявка поставлена в очередь`
+
+    const html = await this.templating.render('email/claim-requires-waiting', {
+      siteUrl: this.siteUrl,
+      name,
+      number,
+    })
+
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
+  }
+
+  public async claimSendToDoctor(claim: Claim): Promise<void> {
+    const { number, author } = claim
+    const { name } = claim.applicant
+
+    const subject = `Заявка №${number}. ${name}, ваша заявка передана эксперту`
+
+    const html = await this.templating.render('email/claim-send-to-doctor', {
+      siteUrl: this.siteUrl,
+      name,
       number,
     })
 

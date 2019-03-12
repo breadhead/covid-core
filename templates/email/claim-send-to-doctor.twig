@@ -1,0 +1,37 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__id">
+                <div>Заявка № {{ number }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>Ваша заявка передана эксперту</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Мы подобрали для вас подходящего эксперта. Если потребуется, он задаст вам дополнительные вопросы.
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Когда будет готов ответ эксперта, мы пришлём вам смс и письмо по электронной почте.
+                </div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

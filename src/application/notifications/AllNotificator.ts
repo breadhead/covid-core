@@ -58,6 +58,14 @@ export default class AllNotificator implements Notificator {
     await this.forAll(notificator => notificator.doctorAnswer(claim))
   }
 
+  public async claimRequiresWaiting(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimRequiresWaiting(claim))
+  }
+
+  public async claimSendToDoctor(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimSendToDoctor(claim))
+  }
+
   private async forAll(
     call: (notificator: Notificator) => Promise<void>,
   ): Promise<void> {

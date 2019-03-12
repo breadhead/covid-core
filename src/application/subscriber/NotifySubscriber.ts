@@ -6,6 +6,9 @@ import ClaimApprovedEvent, {
 import ClaimRejectedEvent, {
   NAME as ClaimRejectedName,
 } from '@app/domain/claim/event/ClaimRejectedEvent'
+import ClaimRequiresWaitingEvent, {
+  NAME as ClaimRequiresWaitingName,
+} from '@app/domain/claim/event/ClaimRequiresWaiting'
 import DoctorAnswerEvent, {
   NAME as DoctorAnswerName,
 } from '@app/domain/claim/event/DoctorAnswerEvent'
@@ -34,6 +37,11 @@ export default class NotifySubscriber implements EventSubscriber {
         isNew: true,
       },
       {
+        key: ClaimRequiresWaitingName,
+        handler: this.onClaimRequiresWaiting.bind(this),
+        isNew: true,
+      },
+      {
         key: ShortClaimQueuedName,
         handler: this.onShortClaimQueued.bind(this),
       },
@@ -45,6 +53,10 @@ export default class NotifySubscriber implements EventSubscriber {
 
   private async onClaimApproved({ payload }: ClaimApprovedEvent) {
     await this.notificator.claimApproved(payload)
+  }
+
+  private async onClaimRequiresWaiting({ payload }: ClaimRequiresWaitingEvent) {
+    // TODO: ...
   }
 
   private onShortClaimQueued({ payload }: ShortClaimQueuedEvent) {

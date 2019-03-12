@@ -3,12 +3,13 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { Option } from 'tsoption'
 import { EntityManager } from 'typeorm'
 
+import { CloseType } from '@app/application/claim/CloseClaimCommand'
+import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import Event from '@app/infrastructure/events/Event'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { add } from '@app/infrastructure/utils/date'
 
-import { CloseType } from '@app/application/claim/CloseClaimCommand'
 import ActionUnavailableException from '../exception/ActionUnavailableException'
 import Claim, { ClaimStatus } from './Claim.entity'
 import ChangeStatusEvent from './event/ChangeStatusEvent'
@@ -18,9 +19,8 @@ import DoctorAnswerEvent from './event/DoctorAnswerEvent'
 import DueDateUpdatedEvent from './event/DueDateUpdatedEvent'
 import ShortClaimQueuedEvent from './event/ShortClaimQueuedEvent'
 
-import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
-import Role from '../user/Role'
 import AddAuthorLabelEvent from './event/AddAuthorLabelEvent'
+import ClaimRequiresWaiting from './event/ClaimRequiresWaiting'
 import CreateClaimEvent from './event/CreateClaimEvent'
 
 const DEFAULT_DURATION = '2d'
@@ -93,8 +93,7 @@ export default class StatusMover {
       }
 
       if (newStatus === ClaimStatus.QuotaAllocation) {
-        // TODO: add event for wainting!
-        // events.push()
+        events.push(new ClaimRequiresWaiting(claim))
       }
 
       await Promise.all(events.map(event => this.eventEmitter.emit(event)))
