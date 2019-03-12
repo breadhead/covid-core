@@ -11,7 +11,6 @@ import TemplateEngine, {
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import axios from 'axios'
 
-import SmsException from '../exception/SmsException'
 import Notificator from './Notificator'
 
 export default class SmsNotificator implements Notificator {
@@ -32,15 +31,19 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = message.claim
     const { name } = message.claim.applicant
 
-    const link = await this.getShortLink(
-      `${this.siteUrl}/client/consultation/${id}?openMessage`,
-    )
+    let link = `${this.siteUrl}/client/consultation/${id}?openMessage`
+
+    try {
+      link = await this.getShortLink(link)
+    } catch (error) {
+      link = link
+    }
 
     if (author.contacts.phone) {
       const text = await this.templating.render(
         'sms/new-chat-message-from-specialist',
         {
-          link: link || this.siteUrl,
+          link,
           number,
           name,
         },
@@ -74,13 +77,17 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
-      `${this.siteUrl}/client/consultation/${id}`,
-    )
+    let link = `${this.siteUrl}/client/consultation/${id}`
+
+    try {
+      link = await this.getShortLink(link)
+    } catch (error) {
+      link = link
+    }
 
     if (author.contacts.phone) {
       const text = await this.templating.render('sms/claim-queued', {
-        link: link || this.siteUrl,
+        link,
         number,
         name,
       })
@@ -93,13 +100,17 @@ export default class SmsNotificator implements Notificator {
     const { number, author } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
-      `${this.siteUrl}/contacts#feedback-form`,
-    )
+    let link = `${this.siteUrl}/contacts#feedback-form`
+
+    try {
+      link = await this.getShortLink(link)
+    } catch (error) {
+      link = link
+    }
 
     if (author.contacts.phone) {
       const text = await this.templating.render('sms/claim-rejected', {
-        link: link || this.siteUrl,
+        link,
         number,
         name,
       })
@@ -112,13 +123,17 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
-      `${this.siteUrl}/client/consultation/${id}#expert-answers`,
-    )
+    let link = `${this.siteUrl}/client/consultation/${id}#expert-answers`
+
+    try {
+      link = await this.getShortLink(link)
+    } catch (error) {
+      link = link
+    }
 
     if (author.contacts.email) {
       const text = await this.templating.render('sms/doctor-answer', {
-        link: link || this.siteUrl,
+        link,
         number,
         name,
       })
@@ -128,13 +143,8 @@ export default class SmsNotificator implements Notificator {
   }
 
   private async getShortLink(link: string): Promise<any> {
-    return axios
-      .get(`https://clck.ru/--?url=${link}`)
-      .then(response => {
-        return response.data
-      })
-      .catch(error => {
-        throw new SmsException(error, link)
-      })
+    return axios.get(`https://clck.ru/--?url=${link}`).then(response => {
+      return response.data
+    })
   }
 }
