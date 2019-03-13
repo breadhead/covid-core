@@ -39,10 +39,10 @@
     md5 "^2.2.1"
     nanoid "^1.3.1"
 
-"@breadhead/s3-uploader@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@breadhead/s3-uploader/-/s3-uploader-1.2.4.tgz#a790451b92335be63b495c8c0ff45ccbe07d010e"
-  integrity sha512-29e+bWng7KpxQwZD76gHQLQtuyQf4zoMnvuDX+/eoXeGpVtZY4vIDz6SbNu6hF62y1IqW3aoCZ8qTa7vMo6Zgw==
+"@breadhead/s3-uploader@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@breadhead/s3-uploader/-/s3-uploader-1.2.5.tgz#dc5c53c57f18e70efcb69887bcbf8d5707fb1e2d"
+  integrity sha512-41Vtx94CAb5QIUdOCW4HzI56/EhcBuXEGLcjFpdMRB288tJraFXL9efCxJyViN5Dz0+US7eH3ZRyeZHcohPR4g==
   dependencies:
     aws-sdk "^2.409.0"
     cyrillic-to-translit-js "^2.1.0"
