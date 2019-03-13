@@ -1,6 +1,7 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { EntityManager } from 'typeorm'
 
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -17,6 +18,8 @@ export default class BindQuotaHandler
     private readonly quotaRepo: QuotaRepository,
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
+    @InjectEntityManager()
+    private readonly em: EntityManager,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,
   ) {}
@@ -31,6 +34,8 @@ export default class BindQuotaHandler
 
     await this.allocator.allocate(claim, quota)
     await this.statusMover.afterAllocation(claim)
+
+    await this.em.save([claim, quota])
 
     resolve()
   }
