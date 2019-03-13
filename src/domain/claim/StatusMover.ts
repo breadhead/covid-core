@@ -100,6 +100,12 @@ export default class StatusMover {
       await Promise.all(events.map(event => this.eventEmitter.emit(event)))
     }
   }
+
+  public async afterAllocation(claim: Claim): Promise<void> {
+    claim.changeStatus(ClaimStatus.QuestionnaireValidation)
+
+    await this.eventEmitter.emit(new ChangeStatusEvent(claim))
+  }
   // end
 
   public async deny(claim: Claim): Promise<void> {
