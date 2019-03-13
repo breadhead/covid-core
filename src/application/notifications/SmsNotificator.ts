@@ -9,12 +9,14 @@ import SmsSender, {
 import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
+import axios from 'axios'
 
+import { SHORTENING_SERVICE } from './helpers'
 import Notificator from './Notificator'
 
 export default class SmsNotificator implements Notificator {
   private readonly send: (to: string, content: string) => Promise<void>
-  private readonly defaultConext: object
+  private siteUrl: string
 
   public constructor(
     @Inject(SmsSenderSymbol) smsSender: SmsSender,
@@ -23,20 +25,22 @@ export default class SmsNotificator implements Notificator {
   ) {
     this.send = (to, content) => smsSender.send(to, content)
 
-    this.defaultConext = {
-      link: config.get('SITE_URL').getOrElse('localhost'),
-    }
+    this.siteUrl = config.get('SITE_URL').getOrElse('localhost')
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
-    const { number, author } = message.claim
+    const { number, author, id } = message.claim
     const { name } = message.claim.applicant
+
+    const link = await this.getShortLink(
+      `${this.siteUrl}/client/consultation/${id}?openMessage`,
+    )
 
     if (author.contacts.phone) {
       const text = await this.templating.render(
         'sms/new-chat-message-from-specialist',
         {
-          ...this.defaultConext,
+          link,
           number,
           name,
         },
@@ -67,12 +71,16 @@ export default class SmsNotificator implements Notificator {
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
-    const { number, author } = claim
+    const { number, author, id } = claim
     const { name } = claim.applicant
+
+    const link = await this.getShortLink(
+      `${this.siteUrl}/client/consultation/${id}`,
+    )
 
     if (author.contacts.phone) {
       const text = await this.templating.render('sms/claim-queued', {
-        ...this.defaultConext,
+        link,
         number,
         name,
       })
@@ -85,9 +93,13 @@ export default class SmsNotificator implements Notificator {
     const { number, author } = claim
     const { name } = claim.applicant
 
+    const link = await this.getShortLink(
+      `${this.siteUrl}/contacts#feedback-form`,
+    )
+
     if (author.contacts.phone) {
       const text = await this.templating.render('sms/claim-rejected', {
-        ...this.defaultConext,
+        link,
         number,
         name,
       })
@@ -97,17 +109,31 @@ export default class SmsNotificator implements Notificator {
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { number, author } = claim
+    const { number, author, id } = claim
     const { name } = claim.applicant
+
+    const link = await this.getShortLink(
+      `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+    )
 
     if (author.contacts.email) {
       const text = await this.templating.render('sms/doctor-answer', {
-        ...this.defaultConext,
+        link,
         number,
         name,
       })
 
       await this.send(author.contacts.phone, text)
     }
+  }
+
+  private async getShortLink(link: string): Promise<any> {
+    // TODO: move to separate service
+    return axios
+      .get(`${SHORTENING_SERVICE}${link}`)
+      .then(response => {
+        return response.data
+      })
+      .catch(() => link)
   }
 }
