@@ -128,6 +128,7 @@ export default class SmsNotificator implements Notificator {
   }
 
   private async getShortLink(link: string): Promise<any> {
+    // TODO: move to separate service
     return axios
       .get(`${SHORTENING_SERVICE}${link}`)
       .then(response => {
