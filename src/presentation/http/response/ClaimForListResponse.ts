@@ -1,6 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 import Claim, { ClaimStatus, ClaimTarget } from '@app/domain/claim/Claim.entity'
+import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 
 export enum Status {
   Draft = 'Черновик',
@@ -42,6 +43,7 @@ export default class ClaimForListResponse {
       email: claim.author.contacts.email,
       target: claim.target,
       closeComment: claim.closeComment,
+      corporateStatus: claim.corporateStatus,
     }
   }
 
@@ -74,4 +76,9 @@ export default class ClaimForListResponse {
 
   @ApiModelProperty({ example: 'claim closed' })
   public readonly closeComment: string
+  @ApiModelProperty({
+    example: CorporateStatus.Empty,
+    enum: Object.values(CorporateStatus),
+  })
+  public readonly corporateStatus: CorporateStatus
 }

@@ -36,6 +36,11 @@ import TemplateEngine, {
   TemplateEngine as TemplateEngineSymbol,
 } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
+import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
+import ClaimEditedEvent, {
+  NAME as ClaimEditedName,
+} from '@app/domain/claim/event/ClaimEditedEvent'
+import { getReadableCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStatus'
 import Role from '@app/domain/user/Role'
 import { formatDate } from '../notifications/helpers'
 
@@ -71,7 +76,16 @@ export default class BoardSubscriber implements EventSubscriber {
         isNew: true,
       },
       { key: DoctorChangedName, handler: this.doctorChanged.bind(this) },
+      {
+        key: ClaimEditedName,
+        handler: this.onClaimEdited.bind(this),
+        isNew: true,
+      },
     ]
+  }
+
+  private async onClaimEdited({ payload }: ClaimEditedEvent) {
+    await this.fitCorporateLabels(payload)
   }
 
   private async addLabelNewMessage({ payload }: NewMessageEvent) {
@@ -203,11 +217,8 @@ export default class BoardSubscriber implements EventSubscriber {
       claim.applicant.gender,
       claim.localization,
       claim.theme,
+      ...Object.values(CorporateStatus).map(getReadableCorporateStatus),
     ].filter(property => !!property)
-
-    if (claim.corporateInfo.nonEmpty()) {
-      propertiesToLabel.push('Проверка корпоративности')
-    }
 
     const labels = await Promise.all(
       propertiesToLabel.map(property =>
@@ -216,6 +227,30 @@ export default class BoardSubscriber implements EventSubscriber {
     )
 
     return labels.map(label => label.id)
+  }
+
+  private async fitCorporateLabels(claim: Claim) {
+    const allLabelValues = Object.values(CorporateStatus).map(
+      getReadableCorporateStatus,
+    )
+
+    const card = await this.claimBoardCardFinder.getCardById(claim.id)
+
+    await Promise.all(
+      allLabelValues.map(label =>
+        this.board.deleteLabelFromCard(card.id, label),
+      ),
+    )
+
+    const labelText = getReadableCorporateStatus(claim.corporateStatus)
+
+    if (labelText.length > 0) {
+      await this.board
+        .addLabel(card.id, getReadableCorporateStatus(claim.corporateStatus))
+        .catch(() => {
+          // okay...
+        })
+    }
   }
 
   private async removeDoctorsFromCard(cardId: string): Promise<void> {
