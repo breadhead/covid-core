@@ -221,7 +221,7 @@ export default class EmailNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const subject = `Заявка №${number}.${name}, готов ответ специалиста по вашей консультации`
+    const subject = `Заявка №${number}. ${name}, готов ответ эксперта по вашей консультации`
 
     const html = await this.templating.render('email/doctor-answer', {
       siteUrl: this.siteUrl,

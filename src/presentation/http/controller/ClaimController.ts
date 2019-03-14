@@ -23,6 +23,7 @@ import { sortBy } from 'lodash'
 
 import ChooseDoctorCommand from '@app/application/claim/ChooseDoctorCommand'
 import CloseClaimCommand from '@app/application/claim/CloseClaimCommand'
+import { CorporateStatusMover } from '@app/application/claim/corporate/CorporateStatusMover'
 import MoveToNextStatusCommand from '@app/application/claim/MoveToNextStatusCommand'
 import AnswerAccessManager from '@app/application/claim/questions/AnswerAccessManager'
 import { AnsweringQuestions } from '@app/application/claim/questions/AnsweringQuestions'
@@ -34,6 +35,7 @@ import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -44,6 +46,7 @@ import ShortClaimData from '../io/claim/ShortClaimData'
 import SituationClaimData from '../io/claim/SituationClaimData'
 import AnswerQuestionsRequest from '../request/AnswerQuestionsRequest'
 import BindQuotaRequest from '../request/BindQuotaRequest'
+import ChangeCorporateStatusRequest from '../request/ChangeCorporateStatusRequest'
 import ChooseDoctorRequest from '../request/ChooseDoctorRequest'
 import CloseClaimRequest from '../request/CloseClaimRequest'
 import { ShowClaimsListForClientRequest } from '../request/ShowClaimsListForClientRequest'
@@ -69,6 +72,7 @@ export default class ClaimController {
     private readonly answerAccess: AnswerAccessManager,
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly answeringQuestions: AnsweringQuestions,
+    private readonly corporateStatusMover: CorporateStatusMover,
   ) {}
 
   @Get('/')
@@ -443,6 +447,22 @@ export default class ClaimController {
     await this.bus.execute(new ChooseDoctorCommand(claimId, doctorLogin))
 
     return
+  }
+
+  @Post('change-corporate-status')
+  @Roles(Role.CaseManager)
+  @ApiOperation({ title: 'Change corporate status' })
+  @ApiOkResponse({ description: 'Changed' })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description: 'Case-manager API token doesn`t provided',
+  })
+  public async changeCorporateStatus(
+    @Body() request: ChangeCorporateStatusRequest,
+  ): Promise<void> {
+    const { claimId, newStatus } = request
+
+    await this.corporateStatusMover.changeStatus(claimId, newStatus)
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>

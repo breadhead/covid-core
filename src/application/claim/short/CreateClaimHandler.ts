@@ -15,7 +15,7 @@ import IdGenerator, {
 } from '@app/infrastructure/IdGenerator/IdGenerator'
 
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
-import CreateClaimEvent from '@app/domain/claim/event/CreateClaimEvent'
+import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import CreateClaimCommand from './CreateClaimCommand'
 
@@ -29,6 +29,7 @@ export default class CreateClaimHandler
     @InjectRepository(ClaimRepository)
     private readonly claimRepository: ClaimRepository,
     private readonly statusMover: StatusMover,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public async execute(command: CreateClaimCommand, resolve: (value?) => void) {
@@ -83,6 +84,8 @@ export default class CreateClaimHandler
       await this.statusMover.afterCreate(shortClaim)
 
       const [savedClaim, ...rest] = await em.save([shortClaim, user])
+
+      await this.eventEmitter.emit(new ClaimEditedEvent(savedClaim as Claim))
 
       return savedClaim as Claim
     })
