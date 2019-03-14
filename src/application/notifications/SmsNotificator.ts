@@ -90,11 +90,11 @@ export default class SmsNotificator implements Notificator {
   }
 
   public async claimRejected(claim: Claim): Promise<void> {
-    const { number, author } = claim
+    const { number, author, id } = claim
     const { name } = claim.applicant
 
     const link = await this.getShortLink(
-      `${this.siteUrl}/contacts#feedback-form`,
+      `${this.siteUrl}/client/consultation/${id}`,
     )
 
     if (author.contacts.phone) {
