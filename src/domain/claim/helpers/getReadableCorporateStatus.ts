@@ -1,6 +1,6 @@
 import { CorporateStatus } from '../CorporateStatus'
 
-export const getReadbleCorporateStatus = (status: CorporateStatus): string =>
+export const getReadableCorporateStatus = (status: CorporateStatus): string =>
   ({
     [CorporateStatus.Empty]: '',
     [CorporateStatus.Checking]: 'Проверка корпоративности',

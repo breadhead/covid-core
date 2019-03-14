@@ -40,7 +40,7 @@ import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import ClaimEditedEvent, {
   NAME as ClaimEditedName,
 } from '@app/domain/claim/event/ClaimEditedEvent'
-import { getReadbleCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStaus'
+import { getReadableCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStatus'
 import Role from '@app/domain/user/Role'
 import { formatDate } from '../notifications/helpers'
 
@@ -85,7 +85,7 @@ export default class BoardSubscriber implements EventSubscriber {
   }
 
   private async onClaimEdited({ payload }: ClaimEditedEvent) {
-    await this.fitCorporateLables(payload)
+    await this.fitCorporateLabels(payload)
   }
 
   private async addLabelNewMessage({ payload }: NewMessageEvent) {
@@ -217,7 +217,7 @@ export default class BoardSubscriber implements EventSubscriber {
       claim.applicant.gender,
       claim.localization,
       claim.theme,
-      ...Object.values(CorporateStatus).map(getReadbleCorporateStatus),
+      ...Object.values(CorporateStatus).map(getReadableCorporateStatus),
     ].filter(property => !!property)
 
     const labels = await Promise.all(
@@ -229,9 +229,9 @@ export default class BoardSubscriber implements EventSubscriber {
     return labels.map(label => label.id)
   }
 
-  private async fitCorporateLables(claim: Claim) {
+  private async fitCorporateLabels(claim: Claim) {
     const allLabelValues = Object.values(CorporateStatus).map(
-      getReadbleCorporateStatus,
+      getReadableCorporateStatus,
     )
 
     const card = await this.claimBoardCardFinder.getCardById(claim.id)
@@ -242,11 +242,11 @@ export default class BoardSubscriber implements EventSubscriber {
       ),
     )
 
-    const labelText = getReadbleCorporateStatus(claim.corporateStatus)
+    const labelText = getReadableCorporateStatus(claim.corporateStatus)
 
     if (labelText.length > 0) {
       await this.board
-        .addLabel(card.id, getReadbleCorporateStatus(claim.corporateStatus))
+        .addLabel(card.id, getReadableCorporateStatus(claim.corporateStatus))
         .catch(() => {
           // okay...
         })
