@@ -450,7 +450,7 @@ export default class ClaimController {
   }
 
   @Post('change-corporate-status')
-  // @Roles(Role.CaseManager)
+  @Roles(Role.CaseManager)
   @ApiOperation({ title: 'Change corporate status' })
   @ApiOkResponse({ description: 'Changed' })
   @ApiNotFoundResponse({ description: 'Claim not found' })
