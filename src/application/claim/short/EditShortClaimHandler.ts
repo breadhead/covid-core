@@ -8,7 +8,9 @@ import Claim from '@app/domain/claim/Claim.entity'
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import CorporateInfo from '@app/domain/claim/CorporateInfo.vo'
 import UserRepository from '@app/domain/user/UserRepository'
+import EventEmitter from '@app/infrastructure/events/EventEmitter'
 
+import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
 import EditShortClaimCommand from './EditShortClaimCommand'
 
 @CommandHandler(EditShortClaimCommand)
@@ -19,6 +21,7 @@ export default class EditShortClaimHandler
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public async execute(
@@ -65,6 +68,8 @@ export default class EditShortClaimHandler
       claim.changeShortDiseasesInfo(theme, localization, target)
 
       const [savedClaim, ...rest] = await em.save([claim, user])
+
+      this.eventEmitter.emit(new ClaimEditedEvent(savedClaim as Claim))
 
       return savedClaim as Claim
     })

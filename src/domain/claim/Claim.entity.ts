@@ -1,4 +1,3 @@
-import { uniqBy } from 'lodash'
 import { None, Option, Some } from 'tsoption'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
@@ -9,6 +8,7 @@ import Analysis from './analysis/Analysis.vo'
 import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
 import CorporateInfo, { CorporateParams } from './CorporateInfo.vo'
+import { CorporateStatus } from './CorporateStatus'
 import Question from './Question.vo'
 import RelativesDisease from './RelativesDisease.vo'
 import MedicinalTreatment from './treatment/MedicinalTreatment'
@@ -164,6 +164,9 @@ export default class Claim {
   @Column({ nullable: true })
   public diagnosisDate?: Date
 
+  @Column({ type: 'enum', enum: CorporateStatus })
+  public corporateStatus: CorporateStatus
+
   @ManyToOne(type => User, { eager: true, nullable: true })
   @JoinColumn()
   private _doctor?: User = null
@@ -245,6 +248,8 @@ export default class Claim {
     this._status = ClaimStatus.New
     this._previousStatus = ClaimStatus.New
     this._analysis = new Analysis({})
+
+    this.corporateStatus = this.defineInitialCorporateStatus()
   }
 
   public isActive() {
@@ -371,6 +376,11 @@ export default class Claim {
 
   public newCorporateInfo(newCorporateInfo: CorporateInfo): void {
     this._corporateInfo = newCorporateInfo
+
+    const INITIAL_STATUSES = [CorporateStatus.Checking, CorporateStatus.Empty]
+    if (!INITIAL_STATUSES.includes(this.corporateStatus)) {
+      this.corporateStatus = this.defineInitialCorporateStatus()
+    }
   }
 
   public changeShortDiseasesInfo(
@@ -398,5 +408,11 @@ export default class Claim {
 
   public changeCloseComment(comment: string) {
     this._closeComment = comment
+  }
+
+  private defineInitialCorporateStatus() {
+    return this.corporateInfo.isEmpty()
+      ? CorporateStatus.Empty
+      : CorporateStatus.Checking
   }
 }
