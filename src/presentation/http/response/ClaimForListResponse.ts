@@ -42,6 +42,7 @@ export default class ClaimForListResponse {
       expireAt: claim.due.getOrElse(undefined),
       email: claim.author.contacts.email,
       target: claim.target,
+      closeComment: claim.closeComment,
       corporateStatus: claim.corporateStatus,
     }
   }
@@ -73,6 +74,8 @@ export default class ClaimForListResponse {
   })
   public readonly target: ClaimTarget
 
+  @ApiModelProperty({ example: 'claim closed' })
+  public readonly closeComment: string
   @ApiModelProperty({
     example: CorporateStatus.Empty,
     enum: Object.values(CorporateStatus),
