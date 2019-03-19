@@ -52,7 +52,7 @@ export default class Claim {
   public readonly createdAt: Date
 
   @Column({ nullable: true })
-  public readonly editedAt: Date | false
+  public readonly editedAt: Date
 
   public get applicant() {
     return this._applicant
@@ -230,7 +230,7 @@ export default class Claim {
     id: string,
     number: number,
     createdAt: Date,
-    editedAt: Date = new Date(),
+    editedAt: Date = createdAt,
     applicant: Applicant,
     author: User,
     theme: string,
