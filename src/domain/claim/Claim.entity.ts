@@ -52,7 +52,7 @@ export default class Claim {
   public readonly createdAt: Date
 
   @Column({ nullable: true })
-  public readonly editedAt: Date
+  public editedAt: Date
 
   public get applicant() {
     return this._applicant
@@ -413,6 +413,10 @@ export default class Claim {
 
   public changeCloseComment(comment: string) {
     this._closeComment = comment
+  }
+
+  public setEditedAt() {
+    this.editedAt = new Date()
   }
 
   private defineInitialCorporateStatus() {
