@@ -30,7 +30,7 @@ describe('Allocator', () => {
 
   // describe('allocateAuto', () => {
   //   test('should allocate common quota', async () => {
-  //     const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+  //     const claim = createMockClaim()
 
   //     await allocator.allocateAuto(claim)
 
@@ -39,7 +39,7 @@ describe('Allocator', () => {
   //   })
 
   //   test('should throw exception if no common quota found', async () => {
-  //     const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+  //     const claim = createMockClaim()
 
   //     // spent all quotas
   //     await allocator.allocateAuto(
@@ -54,7 +54,7 @@ describe('Allocator', () => {
 
   // describe('allocate', () => {
   //   test('shloud allocate quota', async () => {
-  //     const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+  //     const claim = createMockClaim()
 
   //     const quota = new Quota('1', 'quota')
   //     quota.increaseBalance(1)
@@ -67,7 +67,7 @@ describe('Allocator', () => {
   //   })
 
   //   test('should throw exception if try to allocate empty quota', async () => {
-  //     const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+  //     const claim = createMockClaim()
 
   //     const quota = new Quota('1', 'quota')
 
@@ -77,9 +77,12 @@ describe('Allocator', () => {
   //   })
   // })
 
+  const createMockClaim = () =>
+    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
+
   describe('deallocate', () => {
     test('shloud deallocate quota without restore', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)
@@ -93,7 +96,7 @@ describe('Allocator', () => {
     })
 
     test('shloud deallocate quota with restore', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
 
       const quota = new Quota('1', 'quota')
       quota.increaseBalance(1)

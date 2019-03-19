@@ -70,6 +70,7 @@ export default class CreateClaimHandler
         id,
         number,
         new Date(),
+        new Date(),
         applicant,
         user,
         theme,

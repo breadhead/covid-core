@@ -33,10 +33,12 @@ describe('StatusMover', () => {
       ),
     )
   })
+  const createMockClaim = () =>
+    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
 
   describe('afterNewAnswers', () => {
     test('should remove due date and move to next status', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeDue(new Date())
       claim.changeStatus(ClaimStatus.AtTheDoctor)
 
@@ -47,7 +49,7 @@ describe('StatusMover', () => {
     })
 
     test('should not move to next status if its already moved', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.AnswerValidation)
 
       await statusMover.afterNewAnswers(claim)
@@ -58,7 +60,7 @@ describe('StatusMover', () => {
 
   describe('deny', () => {
     test('should change status to denied from any status', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
 
       const statuses = Object.keys(ClaimStatus).map(key => ClaimStatus[key])
 
@@ -74,7 +76,7 @@ describe('StatusMover', () => {
 
   describe('next', () => {
     test('should move from New to QuotaAllocation claim without quota', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.New)
 
       await statusMover.next(claim)
@@ -83,7 +85,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from New to QuestionnaireWaiting claim with quota', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.bindQuota(new Quota('1', 'first'))
       claim.changeStatus(ClaimStatus.New)
 
@@ -93,7 +95,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from QuotaAllocation to QueueForQuota claim without quota', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.QuotaAllocation)
 
       await statusMover.next(claim)
@@ -102,7 +104,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from QuotaAllocation to QuestionnaireWaiting claim with quota', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.bindQuota(new Quota('1', 'first'))
       claim.changeStatus(ClaimStatus.QuotaAllocation)
 
@@ -112,7 +114,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from QuestionnaireWaiting to QuestionnaireValidation claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.QuestionnaireWaiting)
 
       await statusMover.next(claim)
@@ -121,7 +123,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from QuestionnaireValidation to AtTheDoctor claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.QuestionnaireValidation)
 
       await statusMover.next(claim)
@@ -130,7 +132,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from AtTheDoctor to AnswerValidation claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.AtTheDoctor)
 
       await statusMover.next(claim)
@@ -139,7 +141,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from AnswerValidation to DeliveredToCustomer claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.AnswerValidation)
 
       await statusMover.next(claim)
@@ -148,7 +150,7 @@ describe('StatusMover', () => {
     })
 
     test('should move from DeliveredToCustomer to ClosedSuccessfully claim', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.DeliveredToCustomer)
 
       await statusMover.next(claim)
@@ -157,7 +159,7 @@ describe('StatusMover', () => {
     })
 
     test('should add due date for QuestionnaireWaiting', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.New)
       claim.bindQuota(new Quota('1', 'first'))
 
@@ -170,7 +172,7 @@ describe('StatusMover', () => {
     })
 
     test('should add due date for AtTheDoctor', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.QuestionnaireValidation)
 
       await statusMover.next(claim)
@@ -182,7 +184,7 @@ describe('StatusMover', () => {
     })
 
     test('should add due date for DeliveredToCustomer', async () => {
-      const claim = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const claim = createMockClaim()
       claim.changeStatus(ClaimStatus.AnswerValidation)
 
       await statusMover.next(claim)
