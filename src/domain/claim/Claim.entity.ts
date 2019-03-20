@@ -421,8 +421,8 @@ export default class Claim {
     this._closeComment = comment
   }
 
-  public setEditedAt() {
-    this.editedAt = new Date()
+  public set setEditedAt(date: any) {
+    this.editedAt = date
   }
 
   public setAnsweredAt() {

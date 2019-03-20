@@ -66,7 +66,7 @@ export default class EditShortClaimHandler
       claim.newApplicant(applicant)
       claim.newCorporateInfo(corporate)
       claim.changeShortDiseasesInfo(theme, localization, target)
-      claim.setEditedAt()
+      claim.setEditedAt(new Date())
 
       const [savedClaim, ...rest] = await em.save([claim, user])
 
