@@ -54,6 +54,12 @@ export default class Claim {
   @Column({ nullable: true })
   public editedAt: Date
 
+  @Column({ nullable: true })
+  public answeredAt?: Date
+
+  @Column({ nullable: true })
+  public editedAnswer?: Date
+
   public get applicant() {
     return this._applicant
   }
@@ -231,6 +237,8 @@ export default class Claim {
     number: number,
     createdAt: Date,
     editedAt: Date = createdAt,
+    answeredAt: Date,
+    editedAnswer: Date,
     applicant: Applicant,
     author: User,
     theme: string,
@@ -242,6 +250,8 @@ export default class Claim {
     this.number = number
     this.createdAt = createdAt
     this.editedAt = editedAt
+    this.answeredAt = answeredAt
+    this.editedAnswer = editedAnswer
     this._applicant = applicant
     this.author = author
     this._theme = theme
@@ -417,6 +427,14 @@ export default class Claim {
 
   public setEditedAt() {
     this.editedAt = new Date()
+  }
+
+  public setAnsweredAt() {
+    this.answeredAt = new Date()
+  }
+
+  public setEditedAnswer() {
+    this.editedAnswer = new Date()
   }
 
   private defineInitialCorporateStatus() {

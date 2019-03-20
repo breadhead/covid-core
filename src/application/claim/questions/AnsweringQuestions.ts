@@ -28,6 +28,8 @@ export class AnsweringQuestions {
       answers.map(({ question, answer }) => new Question(question, answer)),
     )
 
+    claim.setAnsweredAt()
+
     await this.statusMover.afterNewAnswers(claim)
 
     await this.em.save(claim)

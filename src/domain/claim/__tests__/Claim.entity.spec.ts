@@ -15,7 +15,17 @@ describe('Claim', () => {
   })
 
   const createMockClaim = () =>
-    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
+    new Claim(
+      '1',
+      1,
+      new Date(),
+      new Date(),
+      null,
+      null,
+      applicant,
+      user,
+      'theme',
+    )
 
   describe('bindQuota', () => {
     test('should bind quota correctly', () => {

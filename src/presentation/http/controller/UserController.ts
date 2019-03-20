@@ -93,6 +93,8 @@ export default class UserController {
 
     const assignedDoctorLogin = claim.doctor && claim.doctor.login
 
+    claim.setEditedAnswer()
+
     const mapAssigned = (response: DoctorResponse): DoctorResponse => ({
       ...response,
       assigned: response.login === assignedDoctorLogin,
