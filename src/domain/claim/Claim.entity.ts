@@ -58,7 +58,7 @@ export default class Claim {
   public answeredAt?: Date
 
   @Column({ nullable: true })
-  public updatedAnswer?: Date
+  public answerUpdatedAt?: Date
 
   public get applicant() {
     return this._applicant
@@ -430,7 +430,7 @@ export default class Claim {
   }
 
   public setAnswerUpdatedAt() {
-    this.updatedAnswer = new Date()
+    this.answerUpdatedAt = new Date()
   }
 
   private defineInitialCorporateStatus() {
