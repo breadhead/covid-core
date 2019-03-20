@@ -1,0 +1,11 @@
+ALTER TABLE claim
+    ADD COLUMN editedAt TIMESTAMP DEFAULT NULL();
+    ADD COLUMN answeredAt TIMESTAMP DEFAULT NULL();
+    ADD COLUMN updatedAnswer TIMESTAMP DEFAULT NULL();
+
+#DOWN
+
+ALTER TABLE claim
+    DROP COLUMN editedAt
+    DROP COLUMN answeredAt
+    DROP COLUMN updatedAnswer
