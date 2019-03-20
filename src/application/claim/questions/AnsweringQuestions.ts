@@ -29,9 +29,9 @@ export class AnsweringQuestions {
     )
 
     if (!!claim.answeredAt) {
-      claim.setAnswerUpdatedAt()
+      claim.setAnswerUpdatedAt = new Date()
     } else {
-      claim.setAnsweredAt()
+      claim.setAnsweredAt = new Date()
     }
     await this.statusMover.afterNewAnswers(claim)
     await this.em.save(claim)

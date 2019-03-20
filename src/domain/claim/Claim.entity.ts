@@ -421,16 +421,16 @@ export default class Claim {
     this._closeComment = comment
   }
 
-  public set setEditedAt(date: any) {
+  public set setEditedAt(date: Date) {
     this.editedAt = date
   }
 
-  public setAnsweredAt() {
-    this.answeredAt = new Date()
+  public set setAnsweredAt(date: Date) {
+    this.answeredAt = date
   }
 
-  public setAnswerUpdatedAt() {
-    this.answerUpdatedAt = new Date()
+  public set setAnswerUpdatedAt(date: Date) {
+    this.answerUpdatedAt = date
   }
 
   private defineInitialCorporateStatus() {
