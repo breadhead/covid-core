@@ -78,17 +78,7 @@ describe('Allocator', () => {
   // })
 
   const createMockClaim = () =>
-    new Claim(
-      '1',
-      1,
-      new Date(),
-      new Date(),
-      null,
-      null,
-      applicant,
-      user,
-      'theme',
-    )
+    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
 
   describe('deallocate', () => {
     test('shloud deallocate quota without restore', async () => {

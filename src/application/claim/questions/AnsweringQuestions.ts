@@ -29,7 +29,7 @@ export class AnsweringQuestions {
     )
 
     if (!!claim.answeredAt) {
-      claim.setEditedAnswer()
+      claim.setAnswerUpdatedAt()
     } else {
       claim.setAnsweredAt()
     }

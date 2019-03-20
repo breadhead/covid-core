@@ -34,17 +34,7 @@ describe('StatusMover', () => {
     )
   })
   const createMockClaim = () =>
-    new Claim(
-      '1',
-      1,
-      new Date(),
-      new Date(),
-      null,
-      null,
-      applicant,
-      user,
-      'theme',
-    )
+    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
 
   describe('afterNewAnswers', () => {
     test('should remove due date and move to next status', async () => {
