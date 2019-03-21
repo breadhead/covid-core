@@ -156,7 +156,7 @@ export default class Claim {
   }
 
   public get sentToDoctorAt() {
-    return this.sentToDoctorAt
+    return this._sentToDoctorAt
   }
 
   public get sentToClientAt() {
