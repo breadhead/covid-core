@@ -137,6 +137,18 @@ export default class Claim {
     }
   }
 
+  public get editedAt() {
+    return this._editedAt
+  }
+
+  public get answeredAt() {
+    return this._answeredAt
+  }
+
+  public get answerUpdatedAt() {
+    return this._answerUpdatedAt
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -223,10 +235,20 @@ export default class Claim {
   @Column({ nullable: true })
   private _closeComment?: string
 
+  @Column({ nullable: true })
+  private _editedAt: Date
+
+  @Column({ nullable: true })
+  private _answeredAt?: Date
+
+  @Column({ nullable: true })
+  private _answerUpdatedAt?: Date
+
   public constructor(
     id: string,
     number: number,
     createdAt: Date,
+    editedAt: Date = createdAt,
     applicant: Applicant,
     author: User,
     theme: string,
@@ -237,6 +259,7 @@ export default class Claim {
     this.id = id
     this.number = number
     this.createdAt = createdAt
+    this._editedAt = editedAt
     this._applicant = applicant
     this.author = author
     this._theme = theme
@@ -408,6 +431,18 @@ export default class Claim {
 
   public changeCloseComment(comment: string) {
     this._closeComment = comment
+  }
+
+  public updateEditedAt() {
+    this._editedAt = new Date()
+  }
+
+  public updateAnsweredAt() {
+    this._answeredAt = new Date()
+  }
+
+  public updateAnswerUpdatedAt() {
+    this._answerUpdatedAt = new Date()
   }
 
   private defineInitialCorporateStatus() {

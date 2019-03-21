@@ -14,9 +14,12 @@ describe('Claim', () => {
     user = new User('login')
   })
 
+  const createMockClaim = () =>
+    new Claim('1', 1, new Date(), new Date(), applicant, user, 'theme')
+
   describe('bindQuota', () => {
     test('should bind quota correctly', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
       const q = new Quota('1', 'quota first')
 
       c.bindQuota(q)
@@ -28,7 +31,7 @@ describe('Claim', () => {
 
   describe('unbindQuota', () => {
     test('should unbind quota correctly', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
       const q = new Quota('1', 'quota first')
 
       c.bindQuota(q)
@@ -39,7 +42,7 @@ describe('Claim', () => {
     })
 
     test('should throw excaption ig try to unbind empty quota', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
 
       expect(() => c.unbindQuota()).toThrow(InvariantViolationException)
     })
@@ -47,7 +50,7 @@ describe('Claim', () => {
 
   describe('answerQuestions', () => {
     test('should not remove any questions if answers does not provided', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
 
       const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
       const additionalQuestions = [
@@ -63,7 +66,7 @@ describe('Claim', () => {
     })
 
     test('should not remove any questions if incorrect answers provided', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
 
       const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
       const additionalQuestions = [
@@ -79,7 +82,7 @@ describe('Claim', () => {
     })
 
     test('should add answers if they correct', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
 
       const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
       const additionalQuestions = [
@@ -103,7 +106,7 @@ describe('Claim', () => {
     })
 
     test('should add answers if some of they correct', () => {
-      const c = new Claim('1', 1, new Date(), applicant, user, 'theme')
+      const c = createMockClaim()
 
       const defaultQuestions = ['Как быть?', 'Вопрос: Что делать?']
       const additionalQuestions = [

@@ -28,8 +28,12 @@ export class AnsweringQuestions {
       answers.map(({ question, answer }) => new Question(question, answer)),
     )
 
+    if (!!claim.answeredAt) {
+      claim.updateAnswerUpdatedAt()
+    } else {
+      claim.updateAnsweredAt()
+    }
     await this.statusMover.afterNewAnswers(claim)
-
     await this.em.save(claim)
   }
 }
