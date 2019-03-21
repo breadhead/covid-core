@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
+import Role from '../user/Role'
 import User from '../user/User.entity'
 import Analysis from './analysis/Analysis.vo'
 import FileLink from './analysis/FileLink.vo'
@@ -196,6 +197,9 @@ export default class Claim {
 
   @Column({ type: 'enum', enum: CorporateStatus })
   public corporateStatus: CorporateStatus
+
+  @Column({ type: 'enum', enum: Role })
+  public closedBy?: string
 
   @ManyToOne(type => User, { eager: true, nullable: true })
   @JoinColumn()
