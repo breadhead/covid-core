@@ -444,6 +444,13 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.2.tgz#07b90f6adf75d42c34230c026a2529e56c249dbb"
   integrity sha512-D1xlXHZpDonVX+VJ28XtcD5xlu8ex6Fc4cQNnrm2wJvlQnbec9RedhCrhQr6kRAE9XWHSec+JPuTmqJ9jC0qsA==
 
+"@types/json2csv@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@types/json2csv/-/json2csv-4.2.0.tgz#3eb847f70be10d5d73786da02a66f8e265a9001c"
+  integrity sha512-bYq/uoqOqjSEewzNuGwPhtsodaMPImPmnZWGbZ8quHXlkOzflZ06dzObQ9eXYyYU1/TWxSm2wSk07IZOYWChSQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
@@ -1742,7 +1749,7 @@ commander@^2.12.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.18.0.tgz#2bf063ddee7c7891176981a2cc798e5754bc6970"
   integrity sha512-6CYPa+JP2ftfRU2qkDK+UTVeQYosOg/2GbcjIcKPHfinyOLPVGXu/ovN86RP49Re5ndJK1N0kuiidFFuepc4ZQ==
 
-commander@^2.14.1, commander@^2.9.0:
+commander@^2.14.1, commander@^2.15.1, commander@^2.9.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
   integrity sha512-6tvAOO+D6OENvRAh524Dh9jcfKTYDQAqvqezbCW82xj5X0pSrcpxtvRKHLG0yBY6SD7PSDrJaj+0AiOcKVd1Xg==
@@ -4526,6 +4533,15 @@ json-stringify-safe@5.0.1, json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
+json2csv@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/json2csv/-/json2csv-4.3.5.tgz#859c82c361cb12cca64fc012be96bd2c33d4860e"
+  integrity sha512-p7h3IFPDIWzXEGnBFa7ksXtDaT5wGC0vZOh0CGgmNkQxOtI4O9AZOQ/XfV9JiWERbh5jubqc3nzXziZ4S763jw==
+  dependencies:
+    commander "^2.15.1"
+    jsonparse "^1.3.1"
+    lodash.get "^4.4.2"
+
 json5@2.x:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.1.0.tgz#e7a0c62c48285c628d20a10b85c89bb807c32850"
@@ -4545,7 +4561,7 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-jsonparse@^1.2.0:
+jsonparse@^1.2.0, jsonparse@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/jsonparse/-/jsonparse-1.3.1.tgz#3f4dae4a91fac315f71062f8521cc239f1366280"
   integrity sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA=

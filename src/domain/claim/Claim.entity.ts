@@ -30,7 +30,7 @@ export enum ClaimStatus {
   ClosedWithoutAnswer = 'closed-without-answer',
 }
 
-const CLOSED_STATUSES = [
+export const CLOSED_STATUSES = [
   ClaimStatus.ClosedSuccessfully,
   ClaimStatus.Denied,
   ClaimStatus.ClosedWithoutAnswer,
@@ -199,7 +199,7 @@ export default class Claim {
   public corporateStatus: CorporateStatus
 
   @Column({ type: 'enum', enum: Role })
-  public closedBy?: string
+  public closedBy?: Role
 
   @ManyToOne(type => User, { eager: true, nullable: true })
   @JoinColumn()
