@@ -44,7 +44,7 @@ export default class AskQuestionsHandler
 
       await this.statusMover.afterQuestionary(claim)
 
-      claim.setEditedAt = new Date()
+      claim.updateEditedAt()
 
       return em.save(claim)
     })

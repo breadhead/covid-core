@@ -35,7 +35,7 @@ export default class EditSituationHandler
       this.updateAnlysis(command, claim)
       this.updateRelativesDiseases(command, claim)
       this.updateTreatments(command, claim)
-      claim.setEditedAt = new Date()
+      claim.updateEditedAt()
 
       return em.save(claim)
     })

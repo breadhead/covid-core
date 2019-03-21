@@ -51,15 +51,6 @@ export default class Claim {
   @Column({ nullable: true })
   public readonly createdAt: Date
 
-  @Column({ nullable: true })
-  public editedAt: Date
-
-  @Column({ nullable: true })
-  public answeredAt?: Date
-
-  @Column({ nullable: true })
-  public answerUpdatedAt?: Date
-
   public get applicant() {
     return this._applicant
   }
@@ -144,6 +135,18 @@ export default class Claim {
       defaultQuestions: this._defaultQuestions,
       additionalQuestions: this._additionalQuestions,
     }
+  }
+
+  public get editedAt() {
+    return this._editedAt
+  }
+
+  public get answeredAt() {
+    return this._answeredAt
+  }
+
+  public get answerUpdatedAt() {
+    return this._answerUpdatedAt
   }
 
   @Column({ nullable: true })
@@ -232,6 +235,15 @@ export default class Claim {
   @Column({ nullable: true })
   private _closeComment?: string
 
+  @Column({ nullable: true })
+  private _editedAt: Date
+
+  @Column({ nullable: true })
+  private _answeredAt?: Date
+
+  @Column({ nullable: true })
+  private _answerUpdatedAt?: Date
+
   public constructor(
     id: string,
     number: number,
@@ -247,7 +259,7 @@ export default class Claim {
     this.id = id
     this.number = number
     this.createdAt = createdAt
-    this.editedAt = editedAt
+    this._editedAt = editedAt
     this._applicant = applicant
     this.author = author
     this._theme = theme
@@ -421,16 +433,16 @@ export default class Claim {
     this._closeComment = comment
   }
 
-  public set setEditedAt(date: Date) {
-    this.editedAt = date
+  public updateEditedAt() {
+    this._editedAt = new Date()
   }
 
-  public set setAnsweredAt(date: Date) {
-    this.answeredAt = date
+  public updateAnsweredAt() {
+    this._answeredAt = new Date()
   }
 
-  public set setAnswerUpdatedAt(date: Date) {
-    this.answerUpdatedAt = date
+  public updateAnswerUpdatedAt() {
+    this._answerUpdatedAt = new Date()
   }
 
   private defineInitialCorporateStatus() {
