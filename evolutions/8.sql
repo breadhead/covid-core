@@ -1,11 +1,11 @@
 ALTER TABLE claim
-    ADD COLUMN editedAt TIMESTAMP DEFAULT NOW();
-    ADD COLUMN answeredAt TIMESTAMP DEFAULT NOW();
-    ADD COLUMN answerUpdatedAt TIMESTAMP DEFAULT NOW();
+    ADD COLUMN _editedAt TIMESTAMP DEFAULT NOW();
+    ADD COLUMN _answeredAt TIMESTAMP DEFAULT NOW();
+    ADD COLUMN _answerUpdatedAt TIMESTAMP DEFAULT NOW();
 
 #DOWN
 
 ALTER TABLE claim
-    DROP COLUMN editedAt
-    DROP COLUMN answeredAt
-    DROP COLUMN answerUpdatedAt
+    DROP COLUMN _editedAt
+    DROP COLUMN _answeredAt
+    DROP COLUMN _answerUpdatedAt
