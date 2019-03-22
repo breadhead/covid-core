@@ -234,4 +234,22 @@ export default class EmailNotificator implements Notificator {
       return this.send(author.contacts.email, subject, { html })
     }
   }
+
+  public async feedbackAnswer(claim: Claim): Promise<void> {
+    const { number, author, id } = claim
+    const { name } = claim.applicant
+
+    const subject = `Заявка №${number}. ${name}, эксперт понятно ответил на ваши вопросы?`
+
+    const html = await this.templating.render('email/feedback-answer', {
+      siteUrl: this.siteUrl,
+      name,
+      link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+      number,
+    })
+
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
+  }
 }
