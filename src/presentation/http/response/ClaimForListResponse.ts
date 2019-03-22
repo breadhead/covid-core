@@ -11,7 +11,7 @@ export enum Status {
   QueueForQuota = 'В очереди на квоту',
   QuestionnaireWaiting = 'Ожидание анкеты',
   QuestionnaireValidation = 'Проверка анкеты',
-  AtTheDoctor = 'У врача',
+  AtTheDoctor = 'У эксперта',
   AnswerValidation = 'Проверка ответа эксперта',
   DeliveredToCustomer = 'Передано заказчику',
   ClosedWithoutAnswer = 'Не требует ответа эксперта',
