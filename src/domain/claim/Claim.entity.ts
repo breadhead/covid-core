@@ -153,6 +153,10 @@ export default class Claim {
     return this._statusChangedAt
   }
 
+  public get isFeedbackReminderSent() {
+    return this._isFeedbackReminderSent
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -250,6 +254,9 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _statusChangedAt?: Date
+
+  @Column({ nullable: true })
+  private _isFeedbackReminderSent?: boolean
 
   public constructor(
     id: string,
@@ -454,6 +461,10 @@ export default class Claim {
 
   public updateStatusChangedAt() {
     this._statusChangedAt = new Date()
+  }
+
+  public updateIsFeedbackReminderSent() {
+    this._isFeedbackReminderSent = true
   }
 
   private defineInitialCorporateStatus() {

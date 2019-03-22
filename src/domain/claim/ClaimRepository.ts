@@ -1,7 +1,7 @@
-import { AbstractRepository, EntityRepository } from 'typeorm'
+import { AbstractRepository, EntityRepository, Raw } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
-import Claim from './Claim.entity'
+import Claim, { ClaimStatus } from './Claim.entity'
 
 @EntityRepository(Claim)
 export default class ClaimRepository extends AbstractRepository<Claim> {
@@ -25,5 +25,12 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
 
   public async count(): Promise<number> {
     return this.repository.count()
+  }
+
+  public async findClaimsForFeedbackReminder() {
+    const claims = await this.repository.find({
+      status: ClaimStatus.DeliveredToCustomer,
+      statusChangedAt: Raw('(NOW() - statusChangedAt) > INTERVAL 4 days'),
+    })
   }
 }
