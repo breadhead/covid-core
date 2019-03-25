@@ -102,6 +102,8 @@ import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEnc
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
+import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGenerator'
+import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
@@ -235,6 +237,10 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: BoardManager,
       useClass: TrelloBoardManager,
+    },
+    {
+      provide: TableGenerator,
+      useClass: CsvTableGenerator,
     },
     CorporateStatusMover,
     AnsweringQuestions,
