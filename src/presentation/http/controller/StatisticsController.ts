@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Header, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -68,6 +68,7 @@ export default class StatisticsController {
   }
 
   @Get('closed-claims-report')
+  @Header('Content-Type', 'text/csv')
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiDateRangeQuery()
@@ -91,6 +92,7 @@ export default class StatisticsController {
   }
 
   @Get('claims-report')
+  @Header('Content-Type', 'text/csv')
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiDateRangeQuery()
