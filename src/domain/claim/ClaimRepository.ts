@@ -47,7 +47,7 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .andWhere('claim.createdAt >= :start', { start })
       .andWhere('claim.createdAt <= :end', { end })
       .getMany()
