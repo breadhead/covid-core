@@ -8,7 +8,7 @@ import { EntityManager } from 'typeorm'
 import FeedbackAnswerEvent from '@app/domain/claim/event/FeedbackAnswerEvent'
 
 @Injectable()
-export class FeedbackRecurrenter {
+export class FeedbackAnswerRecurrenter {
   private readonly job: CronJob
 
   public constructor(
@@ -30,7 +30,7 @@ export class FeedbackRecurrenter {
     )
   }
 
-  public start() {
+  public async start() {
     this.job.start()
   }
 

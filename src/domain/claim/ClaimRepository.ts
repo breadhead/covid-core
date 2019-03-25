@@ -1,6 +1,6 @@
 import { AbstractRepository, EntityRepository, LessThan, Raw } from 'typeorm'
 
-import { endOfDay, startOfDay } from 'date-fns'
+import { endOfDay, startOfDay, subDays } from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 
 import Claim, { CLOSED_STATUSES } from './Claim.entity'
@@ -48,7 +48,7 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .andWhere('claim.createdAt >= :start', { start })
       .andWhere('claim.createdAt <= :end', { end })
       .getMany()
@@ -59,12 +59,15 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
   }
 
   public async findClaimsForFeedbackReminder() {
-    const claims = await this.repository.find({
-      where: {
-        isFeedbackReminderSent: false,
-        sentToClientAt: Raw(alias => `${alias} > NOW() - INTERVAL 4 DAY`),
-      },
-    })
+    const start = subDays(new Date(), 4).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .where('claim._sentToClientAt <= :start', { start })
+      .andWhere('claim._sentToClientAt IS NOT NULL')
+      .andWhere('claim._isFeedbackReminderSent = false')
+      .getMany()
 
     return claims
   }
