@@ -232,7 +232,7 @@ export default class EmailNotificator implements Notificator {
     }
   }
 
-  public async feedbackAnswer(claim: Claim): Promise<void> {
+  public async feedbackAnswerSent(claim: Claim): Promise<void> {
     const { number, author, id } = claim
     const { name } = claim.applicant
 

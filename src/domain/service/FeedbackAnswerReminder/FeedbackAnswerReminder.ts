@@ -8,6 +8,4 @@ export default class FeedbackReminder {
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
   ) {}
-
-  // public init = () => {}
 }
