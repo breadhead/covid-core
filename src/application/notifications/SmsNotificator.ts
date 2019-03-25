@@ -71,7 +71,7 @@ export default class SmsNotificator implements Notificator {
   }
 
   public async feedbackAnswerSent(): Promise<void> {
-    // ???
+    // SMS Notification not needed
   }
 
   public async shortClaimQueued(claim: Claim): Promise<void> {
