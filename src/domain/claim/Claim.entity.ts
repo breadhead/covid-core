@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
+import Role from '../user/Role'
 import User from '../user/User.entity'
 import Analysis from './analysis/Analysis.vo'
 import FileLink from './analysis/FileLink.vo'
@@ -28,6 +29,12 @@ export enum ClaimStatus {
   Denied = 'denied',
   ClosedWithoutAnswer = 'closed-without-answer',
 }
+
+export const CLOSED_STATUSES = [
+  ClaimStatus.ClosedSuccessfully,
+  ClaimStatus.Denied,
+  ClaimStatus.ClosedWithoutAnswer,
+]
 
 export enum ClaimTarget {
   Self = 'Для себя',
@@ -149,6 +156,18 @@ export default class Claim {
     return this._answerUpdatedAt
   }
 
+  public get sentToDoctorAt() {
+    return this._sentToDoctorAt
+  }
+
+  public get sentToClientAt() {
+    return this._sentToClientAt
+  }
+
+  public get closedAt() {
+    return this._closedAt
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -178,6 +197,9 @@ export default class Claim {
 
   @Column({ type: 'enum', enum: CorporateStatus })
   public corporateStatus: CorporateStatus
+
+  @Column({ type: 'enum', enum: Role })
+  public closedBy?: Role
 
   @ManyToOne(type => User, { eager: true, nullable: true })
   @JoinColumn()
@@ -244,6 +266,15 @@ export default class Claim {
   @Column({ nullable: true })
   private _answerUpdatedAt?: Date
 
+  @Column({ nullable: true })
+  private _sentToDoctorAt?: Date
+
+  @Column({ nullable: true })
+  private _sentToClientAt?: Date
+
+  @Column({ nullable: true })
+  private _closedAt?: Date
+
   public constructor(
     id: string,
     number: number,
@@ -276,9 +307,7 @@ export default class Claim {
   }
 
   public isActive() {
-    return ![ClaimStatus.Denied, ClaimStatus.ClosedSuccessfully].includes(
-      this.status,
-    )
+    return !CLOSED_STATUSES.includes(this.status)
   }
 
   public isInactive() {
@@ -301,6 +330,20 @@ export default class Claim {
   }
 
   public changeStatus(newStatus: ClaimStatus) {
+    const now = new Date()
+
+    if (newStatus === ClaimStatus.AtTheDoctor) {
+      this._sentToDoctorAt = now
+    }
+
+    if (newStatus === ClaimStatus.DeliveredToCustomer) {
+      this._sentToClientAt = now
+    }
+
+    if (CLOSED_STATUSES.includes(newStatus)) {
+      this._closedAt = now
+    }
+
     this._previousStatus = this._status
     this._status = newStatus
   }
