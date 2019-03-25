@@ -12,6 +12,7 @@ import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
+import Configuration from '@app/infrastructure/Configuration/Configuration'
 import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
@@ -27,6 +28,8 @@ import Roles from '../security/Roles'
 @ApiUseTags('statistics')
 @ApiBearerAuth()
 export default class StatisticsController {
+  private readonly siteUrl: string
+
   public constructor(
     private readonly historian: Historian,
     @InjectRepository(QuotaRepository)
@@ -34,7 +37,10 @@ export default class StatisticsController {
     @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly tableGenerator: TableGenerator,
-  ) {}
+    config: Configuration,
+  ) {
+    this.siteUrl = config.getStringOrElse('SITE_URL', 'localhost')
+  }
 
   @Get('donators')
   @Roles(Role.Admin)
@@ -81,7 +87,9 @@ export default class StatisticsController {
       request.from,
       request.to,
     )
-    const statisticItems = closedClaims.map(ClaimStatisticsItem.fromClaim)
+    const statisticItems = closedClaims.map(
+      ClaimStatisticsItem.fromClaim(this.siteUrl),
+    )
 
     const table = await this.tableGenerator.generate(
       statisticItems,
@@ -102,7 +110,9 @@ export default class StatisticsController {
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<any> {
     const claims = await this.claimRepo.findByRange(request.from, request.to)
-    const statisticItems = claims.map(ClaimStatisticsItem.fromClaim)
+    const statisticItems = claims.map(
+      ClaimStatisticsItem.fromClaim(this.siteUrl),
+    )
 
     const table = await this.tableGenerator.generate(
       statisticItems,

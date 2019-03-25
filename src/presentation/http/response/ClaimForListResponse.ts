@@ -17,7 +17,7 @@ export enum Status {
   ClosedWithoutAnswer = 'Не требует ответа эксперта',
 }
 
-const defineStatus = (originalStatus: ClaimStatus) =>
+export const defineStatus = (originalStatus: ClaimStatus) =>
   ({
     [ClaimStatus.New]: Status.Draft,
     [ClaimStatus.QuotaAllocation]: Status.QuotaAllocation,

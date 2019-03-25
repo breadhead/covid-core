@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import Role from '@app/domain/user/Role'
+import { defineStatus } from './ClaimForListResponse'
 
 const formatDateOrEmpty = (date?: Date) =>
   date ? format(date, 'DD-MM-YYYY') : ''
@@ -23,8 +24,10 @@ const getReadbleRole = (role: Role): string =>
   }[role])
 
 export class ClaimStatisticsItem {
-  public static fromClaim(claim: Claim): ClaimStatisticsItem {
-    return {
+  public static fromClaim(siteUrl: string) {
+    const createLink = id => `${siteUrl}/consultation/redirect/${id}`
+
+    return (claim: Claim): ClaimStatisticsItem => ({
       number: claim.number.toString(),
       theme: claim.theme,
       createdAt: formatDateOrEmpty(claim.createdAt),
@@ -41,11 +44,11 @@ export class ClaimStatisticsItem {
       gender: claim.applicant.gender,
       region: claim.applicant.region,
       quota: tryOr(() => claim.quota.name, ''),
-      closedWith: claim.isInactive() ? claim.status : '',
+      closedWith: claim.isInactive() ? defineStatus(claim.status) : '',
       closedBy: tryOr(() => getReadbleRole(claim.closedBy), ''),
-      link: 'ССЫЛКА на сервис', // TODO: add real link
+      link: createLink(claim.id),
       donator: tryOr(() => claim.quota.company.name, ''),
-    }
+    })
   }
 
   public static getHeader(): ClaimStatisticsItem {
