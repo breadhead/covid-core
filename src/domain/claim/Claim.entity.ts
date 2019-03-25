@@ -149,10 +149,6 @@ export default class Claim {
     return this._answerUpdatedAt
   }
 
-  public get statusChangedAt() {
-    return this._statusChangedAt
-  }
-
   public get isFeedbackReminderSent() {
     return this._isFeedbackReminderSent
   }
@@ -251,9 +247,6 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _answerUpdatedAt?: Date
-
-  @Column({ nullable: true })
-  private _statusChangedAt?: Date
 
   @Column({ nullable: true })
   private _isFeedbackReminderSent?: boolean
@@ -457,10 +450,6 @@ export default class Claim {
 
   public updateAnswerUpdatedAt() {
     this._answerUpdatedAt = new Date()
-  }
-
-  public updateStatusChangedAt() {
-    this._statusChangedAt = new Date()
   }
 
   public updateIsFeedbackReminderSent() {

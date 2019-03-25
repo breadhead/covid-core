@@ -208,7 +208,6 @@ export default class StatusMover {
     const getNextStatus: (cliam: Claim) => Promise<ClaimStatus> =
       this.getNextStatusMap[claim.status] || this.fromUnknown
 
-    claim.updateStatusChangedAt()
     return getNextStatus(claim)
   }
 

@@ -30,7 +30,6 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
   public async findClaimsForFeedbackReminder() {
     const claims = await this.repository.find({
       status: ClaimStatus.DeliveredToCustomer,
-      statusChangedAt: Raw('(NOW() - statusChangedAt) > INTERVAL 4 days'),
     })
   }
 }
