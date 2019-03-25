@@ -1,5 +1,5 @@
 ALTER TABLE claim
-    ADD COLUMN _isFeedbackReminderSent DATETIME DEFAULT NOW(),
+    ADD COLUMN _isFeedbackReminderSent DATETIME DEFAULT NOW();
 
 #DOWN
 

@@ -1,11 +1,11 @@
 import ClaimRepository from '@app/domain/claim/ClaimRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { CronJob } from 'cron'
 import { EntityManager } from 'typeorm'
 
-import FeedbackAnswerEvent from '@app/domain/claim/event/feedbackAnswerEvent'
+import FeedbackAnswerEvent from '@app/domain/claim/event/FeedbackAnswerEvent'
 
 @Injectable()
 export class FeedbackRecurrenter {
