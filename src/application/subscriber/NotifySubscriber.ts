@@ -94,6 +94,6 @@ export default class NotifySubscriber implements EventSubscriber {
   }
 
   private onFeedbackAnswer({ payload }: FeedbackAnswerEvent) {
-    this.notificator.feedbackAnswerSent(payload as any)
+    this.notificator.feedbackAnswerSent(payload)
   }
 }
