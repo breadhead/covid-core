@@ -12,6 +12,7 @@ export default interface Notificator {
   claimRejected(claim: Claim): Promise<void>
   doctorAnswer(answer: Claim): Promise<void>
   claimSendToDoctor(claim: Claim): Promise<void>
+  feedbackAnswerSent(claim: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')

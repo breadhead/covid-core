@@ -201,9 +201,7 @@ export default class EmailNotificator implements Notificator {
   public async claimRejected(claim: Claim): Promise<void> {
     const { number, author, closeComment } = claim
     const { name } = claim.applicant
-
     const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
-
     const html = await this.templating.render('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
@@ -211,7 +209,6 @@ export default class EmailNotificator implements Notificator {
       number,
       closeComment,
     })
-
     if (author.contacts.email) {
       return this.send(author.contacts.email, subject, { html })
     }
@@ -228,6 +225,26 @@ export default class EmailNotificator implements Notificator {
       name,
       link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
       number,
+    })
+
+    if (author.contacts.email) {
+      return this.send(author.contacts.email, subject, { html })
+    }
+  }
+
+  public async feedbackAnswerSent(claim: Claim): Promise<void> {
+    const { number, author, id } = claim
+    const { name } = claim.applicant
+
+    const subject = `Заявка №${number}. ${name}, эксперт понятно ответил на ваши вопросы?`
+
+    const html = await this.templating.render('email/feedback-answer', {
+      siteUrl: this.siteUrl,
+      name,
+      link: `${this.siteUrl}/client/consultation/${id}#feedback`,
+      number,
+      yesLink: `${this.siteUrl}/client/consultation/${id}?donation`,
+      noLink: `${this.siteUrl}/client/consultation/${id}?openMessage`,
     })
 
     if (author.contacts.email) {

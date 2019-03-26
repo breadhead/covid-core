@@ -156,6 +156,10 @@ export default class Claim {
     return this._answerUpdatedAt
   }
 
+  public get isFeedbackReminderSent() {
+    return this._isFeedbackReminderSent
+  }
+
   public get sentToDoctorAt() {
     return this._sentToDoctorAt
   }
@@ -271,6 +275,9 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _sentToClientAt?: Date
+
+  @Column({ nullable: true })
+  private _isFeedbackReminderSent?: boolean
 
   @Column({ nullable: true })
   private _closedAt?: Date
@@ -486,6 +493,10 @@ export default class Claim {
 
   public updateAnswerUpdatedAt() {
     this._answerUpdatedAt = new Date()
+  }
+
+  public updateIsFeedbackReminderSent() {
+    this._isFeedbackReminderSent = true
   }
 
   private defineInitialCorporateStatus() {
