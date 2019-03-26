@@ -1,7 +1,8 @@
-import { endOfDay, startOfDay } from 'date-fns'
-import { AbstractRepository, EntityRepository } from 'typeorm'
+import { AbstractRepository, EntityRepository, LessThan, Raw } from 'typeorm'
 
+import { endOfDay, startOfDay, subDays } from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
+
 import Claim, { CLOSED_STATUSES } from './Claim.entity'
 
 @EntityRepository(Claim)
@@ -55,5 +56,19 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
 
   public async count(): Promise<number> {
     return this.repository.count()
+  }
+
+  public async findClaimsForFeedbackReminder() {
+    const start = subDays(new Date(), 4).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .where('claim._sentToClientAt <= :start', { start })
+      .andWhere('claim._sentToClientAt IS NOT NULL')
+      .andWhere('claim._isFeedbackReminderSent = false')
+      .getMany()
+
+    return claims
   }
 }

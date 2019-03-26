@@ -1,0 +1,61 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__p">
+                <div>Здравствуйте, {{ name }}!</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__id">
+                <div>Заявка № {{ number }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__h1">
+                <div>Эксперт понятно ответил на все ваши вопросы?</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    Еще не успели посмореть ответ эксперта?
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>
+                    <a class="link__feedback" href="{{link}}">Посмотреть ответ эксперта на ваши вопросы</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table class="inner__table button__table">
+        <tr>
+            <td class="button__td button__feedback">
+                <table class="button__feedback-table">
+                    <tr>
+                        <td class="btn btn__td btn__feedback">
+                            <a target="_blank" href="{{yesLink}}">
+                                <nobr>Да, мне все понятно</nobr>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="button__td button__no">
+                <table>
+                    <tr>
+                        <td class="btn btn__td btn__no">
+                            <a target="_blank" style="color: #151833;" href="{{noLink}}">
+                                <nobr>Нет</nobr>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+{% endblock content %}

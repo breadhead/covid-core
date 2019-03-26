@@ -106,6 +106,7 @@ import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGe
 import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
+import { FeedbackAnswerRecurrenter } from './domain/service/FeedbackAnswerRecurrenter'
 
 const cliCommands = [DoctorCommand]
 
@@ -248,6 +249,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     CommandBus,
     StatusMover,
     NotifyMessageRecurrenter,
+    FeedbackAnswerRecurrenter,
     Allocator,
     Accountant,
     Historian,
@@ -268,7 +270,8 @@ export class AppModule implements NestModule {
     private readonly commandRunner: CommandRunner,
     private readonly eventEmitter: EventEmitter,
     @Inject(Notificator) private readonly allNotificator: AllNotificator,
-    private readonly recurrenter: NotifyMessageRecurrenter,
+    private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
+    private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
   ) {}
 
   public onModuleInit() {
@@ -287,7 +290,8 @@ export class AppModule implements NestModule {
     this.allNotificator.setModuleRef(this.moduleRef)
     this.allNotificator.register(notificators)
 
-    this.recurrenter.start()
+    this.notifyMessageRecurrenter.start()
+    this.feedbackAnswerRecurrenter.start()
   }
 
   public configure(consumer: MiddlewareConsumer) {
