@@ -69,6 +69,12 @@ export default class AllNotificator implements Notificator {
   private async forAll(
     call: (notificator: Notificator) => Promise<void>,
   ): Promise<void> {
-    await Promise.all(this.notificators.map(call))
+    await Promise.all(
+      this.notificators.map(notificator =>
+        call(notificator).catch(() => {
+          /* ok, notification failed */
+        }),
+      ),
+    )
   }
 }
