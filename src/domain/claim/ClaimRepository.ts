@@ -3,7 +3,7 @@ import { AbstractRepository, EntityRepository, LessThan, Raw } from 'typeorm'
 import { endOfDay, startOfDay, subDays } from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 
-import Claim, { CLOSED_STATUSES } from './Claim.entity'
+import Claim, { ClaimStatus, CLOSED_STATUSES } from './Claim.entity'
 
 @EntityRepository(Claim)
 export default class ClaimRepository extends AbstractRepository<Claim> {
@@ -44,18 +44,17 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
-    return (
-      this.repository
-        .createQueryBuilder('claim')
-        .leftJoinAndSelect('claim.author', 'author')
-        .leftJoinAndSelect('claim._doctor', 'doctor')
-        .leftJoinAndSelect('claim._quota', 'quota')
-        // tslint:disable-next-line:quotemark
-        .where("claim._status <> 'questionnaire-waiting'")
-        .andWhere('claim.createdAt >= :start', { start })
-        .andWhere('claim.createdAt <= :end', { end })
-        .getMany()
-    )
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'quota')
+      .where('claim._status NOT IN (:excludeStatuses)', {
+        excludeStatuses: [ClaimStatus.QuestionnaireWaiting],
+      })
+      .andWhere('claim.createdAt >= :start', { start })
+      .andWhere('claim.createdAt <= :end', { end })
+      .getMany()
   }
 
   public async count(): Promise<number> {
