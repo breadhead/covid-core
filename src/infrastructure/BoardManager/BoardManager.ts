@@ -8,6 +8,12 @@ export interface Label {
   readonly text: string
 }
 
+export enum BoardKind {
+  Current = 'current',
+  Denied = 'denied',
+  Success = 'success',
+}
+
 export interface CreateCardParams {
   desc: string
   idLabels: string[]
@@ -17,6 +23,7 @@ export interface Card {
   id: string
   desc: string
   name: string
+  title: string
   shortUrl: string
 }
 
@@ -34,7 +41,7 @@ export default interface BoardManager {
     listId: string,
   ): Promise<string>
 
-  moveCard(cardId: string, listId: string): Promise<void>
+  moveCard(cardId: string, listId: string, boardId?: string): Promise<void>
 
   addLabel(cardId: string, labelText: string): Promise<void>
 
@@ -57,6 +64,8 @@ export default interface BoardManager {
   createOrGetLabel(boardId: string, name: string): Promise<Label>
 
   deleteLabelFromCard(cardId: string, labelText: string): Promise<void>
+
+  getBoardIdByKind(boardKind: BoardKind): string
 }
 
 const BoardManager = Symbol('BoardManager')

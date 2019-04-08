@@ -1,3 +1,6 @@
+import NewFeedbackEvent, {
+  NAME as NewFeedbackEventName,
+} from '@app/domain/feedback/event/NewFeedbackEvent'
 import { Inject } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Option } from 'tsoption'
@@ -27,6 +30,7 @@ import NewMessageEvent, {
 } from '@app/domain/claim/event/NewMessageEvent'
 import UserRepository from '@app/domain/user/UserRepository'
 import BoardManager, {
+  BoardKind,
   BoardManager as BoardManagerSymbol,
   List,
 } from '@app/infrastructure/BoardManager/BoardManager'
@@ -79,6 +83,11 @@ export default class BoardSubscriber implements EventSubscriber {
       {
         key: ClaimEditedName,
         handler: this.onClaimEdited.bind(this),
+        isNew: true,
+      },
+      {
+        key: NewFeedbackEventName,
+        handler: this.feedbackHandler.bind(this),
         isNew: true,
       },
     ]
@@ -138,14 +147,14 @@ export default class BoardSubscriber implements EventSubscriber {
         .get('SITE_URL')
         .getOrElse('oncohelp.breadhead.ru')
 
-      const cardTitle = 'Заявка #' + payload.number
+      const cardTitle = `Заявка #${payload.number}`
       const trelloCardText = await this.templating.render('trello/card', {
         siteUrl,
         id: payload.id,
         createdAt: formatDate(Option.of(new Date())),
       })
 
-      const [list, idLabels] = await Promise.all([
+      const [[_, listId], idLabels] = await Promise.all([
         this.getListIdForClaimStatus(ClaimStatus.QuotaAllocation),
         this.createClaimLabels(payload),
       ])
@@ -153,7 +162,7 @@ export default class BoardSubscriber implements EventSubscriber {
       const cardId = await this.board.createCardWithExtraParams(
         cardTitle,
         { desc: trelloCardText, idLabels },
-        list.id,
+        listId,
       )
 
       const caseManager = await this.userRepo.findCaseManager()
@@ -164,13 +173,39 @@ export default class BoardSubscriber implements EventSubscriber {
     }
   }
 
+  private async feedbackHandler({ payload }: NewFeedbackEvent) {
+    const match = payload.theme.match(/Заявка №(\d+)/)
+
+    if (!match) {
+      return
+    }
+
+    const [_, claimNumber] = match
+
+    if (claimNumber) {
+      const card = await this.claimBoardCardFinder.getCardByNumber(
+        claimNumber,
+        50,
+        BoardKind.Success,
+      )
+
+      if (card) {
+        const [boardId, listId] = await this.getListIdForClaimStatus(
+          ClaimStatus.Feedback,
+        )
+
+        this.board.moveCard(card.id, listId, boardId)
+      }
+    }
+  }
+
   private async changeStatus({ payload }: ChangeStatusEvent) {
-    const [claimCard, list] = await Promise.all([
+    const [claimCard, [boardId, listId]] = await Promise.all([
       this.claimBoardCardFinder.getCardById(payload.id),
       this.getListIdForClaimStatus(payload.status),
     ])
 
-    await this.board.moveCard(claimCard.id, list.id)
+    await this.board.moveCard(claimCard.id, listId, boardId)
   }
 
   private async doctorChanged({ payload }: DoctorChangedEvent) {
@@ -184,33 +219,53 @@ export default class BoardSubscriber implements EventSubscriber {
     )
   }
 
-  private async getListIdForClaimStatus(status: ClaimStatus): Promise<List> {
+  private async getListIdForClaimStatus(
+    status: ClaimStatus,
+  ): Promise<[string, string]> {
     const statusListNameTable = {
-      [ClaimStatus.QuotaAllocation]: 'Распределение квоты',
-      [ClaimStatus.QueueForQuota]: 'В очереди на квоту',
-      [ClaimStatus.QuestionnaireWaiting]: 'Ожидание анкеты',
-      [ClaimStatus.QuestionnaireValidation]: 'Проверка анкеты',
-      [ClaimStatus.AtTheDoctor]: 'В работе у врача',
-      [ClaimStatus.AnswerValidation]: 'Проверка ответа врача',
-      [ClaimStatus.DeliveredToCustomer]: 'Передано заказчику',
-      [ClaimStatus.ClosedSuccessfully]: 'Успешно',
-      [ClaimStatus.Denied]: 'Отказ',
-      [ClaimStatus.ClosedWithoutAnswer]: 'Не требует ответа эксперта',
+      [ClaimStatus.QuotaAllocation]: [BoardKind.Current, 'Распределение квоты'],
+      [ClaimStatus.QueueForQuota]: [BoardKind.Current, 'В очереди на квоту'],
+      [ClaimStatus.QuestionnaireWaiting]: [
+        BoardKind.Current,
+        'Ожидание анкеты',
+      ],
+      [ClaimStatus.QuestionnaireValidation]: [
+        BoardKind.Current,
+        'Проверка анкеты',
+      ],
+      [ClaimStatus.AtTheDoctor]: [BoardKind.Current, 'В работе у врача'],
+      [ClaimStatus.AnswerValidation]: [
+        BoardKind.Current,
+        'Проверка ответа врача',
+      ],
+      [ClaimStatus.DeliveredToCustomer]: [
+        BoardKind.Current,
+        'Передано заказчику',
+      ],
+      [ClaimStatus.ClosedWithoutAnswer]: [
+        BoardKind.Current,
+        'Не требует ответа эксперта',
+      ],
+
+      [ClaimStatus.Denied]: [BoardKind.Denied, 'Отказ'],
+
+      [ClaimStatus.ClosedSuccessfully]: [BoardKind.Success, 'Успешно'],
+      [ClaimStatus.Feedback]: [BoardKind.Success, 'Жалоба'],
     }
 
-    const boardId = this.config
-      .get('BOARD_ID')
-      .getOrElse('5baa59a6648f9b2166d65935')
+    const [boardKind, listName] = statusListNameTable[status]
+
+    const boardId = this.board.getBoardIdByKind(boardKind)
 
     const lists = await this.board.getBoardLists(boardId)
 
-    return lists.find(l => l.name.includes(statusListNameTable[status]))
+    const listId = lists.find(l => l.name.includes(listName)).id
+
+    return [boardId, listId]
   }
 
   private async createClaimLabels(claim: Claim): Promise<string[]> {
-    const boardId = this.config
-      .get('BOARD_ID')
-      .getOrElse('5baa59a6648f9b2166d65935')
+    const boardId = this.board.getBoardIdByKind(BoardKind.Current)
 
     const propertiesToLabel = [
       claim.applicant.region,

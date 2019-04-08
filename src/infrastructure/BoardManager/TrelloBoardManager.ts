@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import * as Trello from 'trello'
 import Configuration from '../Configuration/Configuration'
 import BoardManager, {
+  BoardKind,
   Card,
   CreateCardParams,
   Label,
@@ -56,10 +57,21 @@ export default class TrelloBoardManager implements BoardManager {
     return response.id
   }
 
-  public async moveCard(cardId: string, listId: string): Promise<void> {
-    const response = await this.trello
-      .updateCardList(cardId, listId)
-      .then(tapOrThrow)
+  public async moveCard(
+    cardId: string,
+    listId: string,
+    boardId?: string,
+  ): Promise<void> {
+    if (boardId) {
+      await this.trello
+        .makeRequest('put', `/1/cards/${cardId}`, {
+          idList: listId,
+          idBoard: boardId,
+        })
+        .then(tapOrThrow)
+    } else {
+      await this.trello.updateCardList(cardId, listId).then(tapOrThrow)
+    }
   }
 
   public async addLabel(cardId: string, labelText: string): Promise<void> {
@@ -155,6 +167,26 @@ export default class TrelloBoardManager implements BoardManager {
       labels.find(({ name }) => name === labelText) ||
       (await this.trello.addLabelOnBoard(boardId, labelText).then(tapOrThrow))
     )
+  }
+
+  public getBoardIdByKind(boardKind: BoardKind): string {
+    const boardIdCurrent = this.config
+      .get('BOARD_ID_CURRENT')
+      .getOrElse('5baa59a6648f9b2166d65935')
+
+    const boardIdRejected = this.config
+      .get('BOARD_ID_REJECTED')
+      .getOrElse('5baa59a6648f9b2166d65935')
+
+    const boardIdCompleted = this.config
+      .get('BOARD_ID_COMPLETED')
+      .getOrElse('5baa59a6648f9b2166d65935')
+
+    return {
+      [BoardKind.Current]: boardIdCurrent,
+      [BoardKind.Denied]: boardIdRejected,
+      [BoardKind.Success]: boardIdCompleted,
+    }[boardKind]
   }
 
   private async getLabelsForBoard(boardId: string) {
