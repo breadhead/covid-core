@@ -10,8 +10,8 @@ export interface Label {
 
 export enum BoardKind {
   Current = 'current',
-  Denied = 'denied',
-  Success = 'success',
+  Rejected = 'rejected',
+  Completed = 'completed',
 }
 
 export interface CreateCardParams {

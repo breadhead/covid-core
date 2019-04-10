@@ -184,8 +184,8 @@ export default class TrelloBoardManager implements BoardManager {
 
     return {
       [BoardKind.Current]: boardIdCurrent,
-      [BoardKind.Denied]: boardIdRejected,
-      [BoardKind.Success]: boardIdCompleted,
+      [BoardKind.Rejected]: boardIdRejected,
+      [BoardKind.Completed]: boardIdCompleted,
     }[boardKind]
   }
 

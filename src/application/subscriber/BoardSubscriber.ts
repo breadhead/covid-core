@@ -186,7 +186,7 @@ export default class BoardSubscriber implements EventSubscriber {
       const card = await this.claimBoardCardFinder.getCardByNumber(
         claimNumber,
         50,
-        BoardKind.Success,
+        BoardKind.Completed,
       )
 
       if (card) {
@@ -247,10 +247,10 @@ export default class BoardSubscriber implements EventSubscriber {
         'Не требует ответа эксперта',
       ],
 
-      [ClaimStatus.Denied]: [BoardKind.Denied, 'Отказ'],
+      [ClaimStatus.Denied]: [BoardKind.Rejected, 'Отказ'],
 
-      [ClaimStatus.ClosedSuccessfully]: [BoardKind.Success, 'Успешно'],
-      [ClaimStatus.Feedback]: [BoardKind.Success, 'Жалоба'],
+      [ClaimStatus.ClosedSuccessfully]: [BoardKind.Completed, 'Успешно'],
+      [ClaimStatus.Feedback]: [BoardKind.Completed, 'Жалоба'],
     }
 
     const [boardKind, listName] = statusListNameTable[status]
