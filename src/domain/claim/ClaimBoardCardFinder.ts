@@ -1,5 +1,6 @@
 import EntityNotFoundException from '@app/domain/exception/EntityNotFoundException'
 import BoardManager, {
+  BoardKind,
   BoardManager as BoardManagerSymbol,
   Card,
 } from '@app/infrastructure/BoardManager/BoardManager'
@@ -17,25 +18,51 @@ export default class BoardCardFinder {
   public async getCardById(
     id: string,
     numberOfRetries: number = 50,
+    boardKind: BoardKind = BoardKind.Current,
   ): Promise<Card> {
-    const cards = await this.board.getCardsOnBoard(
-      this.config.get('BOARD_ID').getOrElse('ppy28Io5'),
-    )
+    return this.getCard(async () => {
+      const boardId = this.board.getBoardIdByKind(boardKind)
 
+      const cards = await this.board.getCardsOnBoard(boardId)
+
+      const idRe = new RegExp(`${id}\\)`)
+
+      return cards.find(card => idRe.test(card.desc))
+    }, numberOfRetries)
+  }
+
+  public async getCardByNumber(
+    number: string,
+    numberOfRetries: number = 50,
+    boardKind: BoardKind = BoardKind.Current,
+  ): Promise<Card> {
+    return this.getCard(async () => {
+      const boardId = this.board.getBoardIdByKind(boardKind)
+
+      const cards = await this.board.getCardsOnBoard(boardId)
+
+      const numberRe = new RegExp(`Заявка #${number}`)
+
+      return cards.find(card => numberRe.test(card.name))
+    }, numberOfRetries)
+  }
+
+  private async getCard(
+    cardFinder: () => Promise<Card>,
+    numberOfRetries: number,
+  ): Promise<Card> {
     const sleep = promisify(setTimeout)
 
-    const idRe = new RegExp(`${id}\\)`)
-
-    const claimCard = cards.find(card => idRe.test(card.desc))
+    const claimCard = await cardFinder()
 
     if (claimCard) {
       return claimCard
     } else {
       if (numberOfRetries > 0) {
         await sleep(500)
-        return this.getCardById(id, numberOfRetries - 1)
+        return this.getCard(cardFinder, numberOfRetries - 1)
       } else {
-        throw new EntityNotFoundException('Card', { id })
+        throw new EntityNotFoundException('Card')
       }
     }
   }

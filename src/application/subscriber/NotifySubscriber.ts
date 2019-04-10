@@ -51,7 +51,7 @@ export default class NotifySubscriber implements EventSubscriber {
       },
       {
         key: ClaimSentToDoctorName,
-        handler: this.onClaimSentToDcotor.bind(this),
+        handler: this.onClaimSentToDoctor.bind(this),
         isNew: true,
       },
       {
@@ -73,7 +73,7 @@ export default class NotifySubscriber implements EventSubscriber {
     await this.notificator.claimRequiresWaiting(payload)
   }
 
-  private async onClaimSentToDcotor({ payload }: ClaimSentToDoctorEvent) {
+  private async onClaimSentToDoctor({ payload }: ClaimSentToDoctorEvent) {
     await this.notificator.claimSendToDoctor(payload)
   }
 
