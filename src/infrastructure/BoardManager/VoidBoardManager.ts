@@ -1,4 +1,5 @@
 import BoardManager, {
+  BoardKind,
   Card,
   CreateCardParams,
   Label,
@@ -80,5 +81,9 @@ export default class VoidBoardManager implements BoardManager {
 
   public createOrGetLabel(boardId: string, name: string): Promise<Label> {
     return Promise.resolve(1 as any)
+  }
+
+  public getBoardIdByKind(boardKind: BoardKind): string {
+    return ''
   }
 }

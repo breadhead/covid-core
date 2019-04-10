@@ -28,12 +28,14 @@ export enum ClaimStatus {
   ClosedSuccessfully = 'closed-successfully',
   Denied = 'denied',
   ClosedWithoutAnswer = 'closed-without-answer',
+  Feedback = 'feedback',
 }
 
 export const CLOSED_STATUSES = [
   ClaimStatus.ClosedSuccessfully,
   ClaimStatus.Denied,
   ClaimStatus.ClosedWithoutAnswer,
+  ClaimStatus.Feedback,
 ]
 
 export enum ClaimTarget {

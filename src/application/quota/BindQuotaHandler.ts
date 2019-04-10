@@ -32,8 +32,13 @@ export default class BindQuotaHandler
       this.quotaRepo.getOne(quotaId),
     ])
 
+    const quotaAllocated = !!claim.quota
+
     await this.allocator.allocate(claim, quota)
-    await this.statusMover.afterAllocation(claim)
+
+    if (!quotaAllocated) {
+      await this.statusMover.afterAllocation(claim)
+    }
 
     await this.em.save([claim, quota])
 
