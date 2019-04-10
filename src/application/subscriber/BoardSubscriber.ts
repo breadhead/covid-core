@@ -194,7 +194,7 @@ export default class BoardSubscriber implements EventSubscriber {
           ClaimStatus.Feedback,
         )
 
-        this.board.moveCard(card.id, listId, boardId)
+        await this.board.moveCard(card.id, listId, boardId)
       }
     }
   }
