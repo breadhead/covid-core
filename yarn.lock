@@ -39,10 +39,10 @@
     md5 "^2.2.1"
     nanoid "^1.3.1"
 
-"@breadhead/s3-uploader@^1.2.6":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@breadhead/s3-uploader/-/s3-uploader-1.2.6.tgz#d4849c284ff21c65c20a66dd6cb87819dd52bd54"
-  integrity sha512-bm1yMULQA2EzT/oE5Jt+hgWBdO1M6oZyCSdg0G2rneoxyit2laQYG9Mq6+j0LG4nh69KuJLEhnunfvqrQZ1sVg==
+"@breadhead/s3-uploader@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@breadhead/s3-uploader/-/s3-uploader-1.2.7.tgz#55f2b9ebd7ebe82bb2b9a377df0dc4b72204c964"
+  integrity sha512-iBJrqbAj6udvkk13djxT68MoHRbmg0AyRVGm2HPjL2T6AFLtAAKuzjLCHYABDQa+7vBMNVQItqp06XP3RW3lZg==
   dependencies:
     aws-sdk "^2.409.0"
     cyrillic-to-translit-js "^2.1.0"
@@ -879,9 +879,9 @@ atob@^2.1.1:
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 aws-sdk@^2.409.0:
-  version "2.409.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.409.0.tgz#d017060ba9e005487c68dc34a592af74d916f295"
-  integrity sha512-QV6j9zBQq/Kz8BqVOrJ03ABjMKtErXdUT1YdYEljoLQZimpzt0ZdQwJAsoZIsxxriOJgrqeZsQUklv9AFQaldQ==
+  version "2.437.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.437.0.tgz#94e41a2ff112aa020ddbe4950dd5f73187889b8b"
+  integrity sha512-sDZb5QBOO6FOMvuKDEdO16YQRk0WUhnQd38EaSt0yUCi4Gev8uypODyYONgODZcXe8Cr1GMwC8scUKr00S/I5w==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -2043,9 +2043,9 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 cyrillic-to-translit-js@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/cyrillic-to-translit-js/-/cyrillic-to-translit-js-2.1.0.tgz#14e3eb9097da2d63009c7c6ffc9fb790e8159392"
-  integrity sha512-dpqqF2M9pwwHeMROWWQUIMQXcjj2cQ/LxCgTV5Lb5td9UvH8CkppiPcvVh//imHs9kQZORQLG9x7vm6IxJ2XUA==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/cyrillic-to-translit-js/-/cyrillic-to-translit-js-2.2.0.tgz#1a592c30077903f000c5e41174a2c188878af9d7"
+  integrity sha512-kUp5VdCEPkmwDQq5v5S/sOPtm2nIDa/c+wMvCMPVyy8OJ8pI3SUhBGiWZFNNF0Z9/8ZYjzGs+7tR+SYXz5aUZw==
 
 cz-conventional-changelog@^2.1.0:
   version "2.1.0"
