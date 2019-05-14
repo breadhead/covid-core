@@ -9,6 +9,7 @@ import { answerRedisMiddleware } from './answerRedisMiddleware'
 import { extraLoggerMiddleware } from './extraLoggerMiddleware'
 import Configuration from './infrastructure/Configuration/Configuration'
 import Logger from './infrastructure/Logger/Logger'
+import { rateLimiter } from './rateLimiter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -26,6 +27,7 @@ async function bootstrap() {
 
   app.use(extraLoggerMiddleware(logger))
   app.use(answerRedisMiddleware(config))
+  app.use(rateLimiter(app))
 
   await app.listen(3000)
 }
