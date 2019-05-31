@@ -7,3 +7,5 @@ export const successCloseClaimTypes = [
 ]
 
 export const rolesWithCloseLabel = [Role.CaseManager, Role.Client]
+
+export type RolesWithCloseLabelType = Role.CaseManager | Role.Client
