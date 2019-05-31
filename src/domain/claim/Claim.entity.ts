@@ -365,6 +365,10 @@ export default class Claim {
     this._due = null
   }
 
+  public changeClosedBy(closedBy?: Role) {
+    this.closedBy = closedBy
+  }
+
   public addNewHisotlogy(url: string) {
     const histology = new FileLink({
       title: 'histology',

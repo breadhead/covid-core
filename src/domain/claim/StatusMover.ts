@@ -1,3 +1,4 @@
+import Role from '@app/domain/user/Role'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { Option } from 'tsoption'
@@ -117,7 +118,7 @@ export default class StatusMover {
   public async success(
     claim: Claim,
     type: CloseType,
-    author: string,
+    author: Role,
   ): Promise<void> {
     let newStatus
     if (type === CloseType.NoAnswerNeeded) {
@@ -127,6 +128,9 @@ export default class StatusMover {
       newStatus = ClaimStatus.ClosedSuccessfully
     }
     this.eventEmitter.emit(new AddAuthorLabelEvent({ claim, author }))
+
+    claim.changeClosedBy(author)
+
     await this.changeStatus(claim, newStatus)
   }
 

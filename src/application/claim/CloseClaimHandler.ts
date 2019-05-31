@@ -1,3 +1,4 @@
+import Role from '@app/domain/user/Role'
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
@@ -9,7 +10,11 @@ import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
 import CloseClaimCommand from './CloseClaimCommand'
-import { rolesWithCloseLabel, successCloseClaimTypes } from './config'
+import {
+  rolesWithCloseLabel,
+  RolesWithCloseLabelType,
+  successCloseClaimTypes,
+} from './config'
 
 @CommandHandler(CloseClaimCommand)
 export default class CloseClaimHandler
@@ -33,7 +38,12 @@ export default class CloseClaimHandler
 
     if (successCloseClaimTypes.includes(type)) {
       const author = head(intersection(rolesWithCloseLabel, closedBy))
-      await this.statusMover.success(claim, type, author)
+
+      await this.statusMover.success(
+        claim,
+        type,
+        author as RolesWithCloseLabelType,
+      )
     } else {
       claim.changeCloseComment(comment)
       await this.em.save(claim)

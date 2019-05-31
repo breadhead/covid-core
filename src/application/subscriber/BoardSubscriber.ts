@@ -124,6 +124,8 @@ export default class BoardSubscriber implements EventSubscriber {
   private async addAuthorLabel({ payload }: AddAuthorLabelEvent) {
     const claimCard = await this.claimBoardCardFinder.getCardById(
       payload.claim.id,
+      50,
+      BoardKind.Completed,
     )
     let text = 'Закрыта'
     if (payload.author === Role.CaseManager) {
