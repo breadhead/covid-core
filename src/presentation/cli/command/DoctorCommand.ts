@@ -1,4 +1,3 @@
-import { CommandBus } from '@breadhead/nest-throwable-bus'
 import { Injectable } from '@nestjs/common'
 import {
   CommandConfiguration,
@@ -7,11 +6,11 @@ import {
   Output,
 } from '@solid-soda/console'
 
-import CreateDoctorCommand from '@app/application/user/createUser/CreateDoctorCommand'
+import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
 
 @Injectable()
 export default class DoctorCommand implements ConsoleCommand {
-  public constructor(private readonly bus: CommandBus) {}
+  public constructor(private readonly doctorManager: DoctorManager) {}
 
   public configure = (): CommandConfiguration => ({
     name: 'doctor',
@@ -47,16 +46,15 @@ export default class DoctorCommand implements ConsoleCommand {
       boardUsername,
     } = this.createDoctorRequest(input)
 
-    const command = new CreateDoctorCommand(
-      email,
-      password,
-      name,
-      boardUsername,
-      description.getOrElse(null),
-    )
-
     try {
-      const created: boolean = await this.bus.execute(command)
+      const created: boolean = await this.doctorManager.createOrEdit(
+        email,
+        password,
+        name,
+        boardUsername,
+        description.getOrElse(null),
+      )
+
       if (created) {
         await output.success('Doctor account successfully created')
       } else {
