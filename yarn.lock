@@ -444,14 +444,14 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@solid-soda/config@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@solid-soda/config/-/config-1.1.0.tgz#f8c434946574770040a4d80875e5c786b0364970"
-  integrity sha512-A7ZVfhRyRHSBQK8S70V/FUL78KJk3KMzMGuIUUdxeUaScviwLbi4SF1XtbA/utQBQ+jaRIfkpU4TIwqLeJEXJw==
+"@solid-soda/config@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@solid-soda/config/-/config-2.0.0.tgz#e3343ca51345e437946585c8ac99c2f044abd578"
+  integrity sha512-jJ3Q7iyNGrbekZm+h4Bx39S4jPRfCALEOKsm/dSZpFMI0jf0nxCOsFd6/kcGZDVonpo/68Rz9TEe19cx+ephUw==
   dependencies:
     change-case "^3.1.0"
     dotenv "^6.2.0"
-    tsoption "^0.7.0"
+    nanoption "^1.0.1"
 
 "@solid-soda/console@^1.0.0":
   version "1.0.0"
@@ -473,10 +473,10 @@
     md5 "^2.2.1"
     path "^0.12.7"
 
-"@solid-soda/scripts@^1.12.4":
-  version "1.12.4"
-  resolved "https://registry.yarnpkg.com/@solid-soda/scripts/-/scripts-1.12.4.tgz#1ad37cd6621018a86d7e422581080d07406fff79"
-  integrity sha512-on7AQpXZqZZ/qM8X0URRHsfH3E+lKRBMmiQGzpTYM+cnGD7/hYGTClRw9Y16yLbSm6UYlofeVFj4aO3gW4NR0g==
+"@solid-soda/scripts@^1.12.5":
+  version "1.12.5"
+  resolved "https://registry.yarnpkg.com/@solid-soda/scripts/-/scripts-1.12.5.tgz#9781f678dfb2069dc08aa8e21f7fcd58da82569d"
+  integrity sha512-2wPwVSxWndhs08mpzIlxLHk5jFGMVa5EQj/X6sQ76ZWIR9biFV7bSBW/tP8phZhLOy1O7S6dX+mAPnwDFaRRlA==
   dependencies:
     "@commitlint/cli" "7"
     "@commitlint/config-conventional" "7"
@@ -6904,6 +6904,11 @@ nanomerge@^0.2.0:
   integrity sha512-b929MpaA7PBFWggbjaqJUWbmFZlhqdgy7d1n3HvS9QRnkdifwsBijQ6Ap/ajaE1V7nc8w1VIS8DI2fOGbIxB3w==
   dependencies:
     nanoclone "^0.1.5"
+
+nanoption@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nanoption/-/nanoption-1.0.1.tgz#b83147b9a1810c1e9e31170ac71993fb8c6bcc73"
+  integrity sha512-KfUnW+FZa6R5fGO11AT+yRtdXsp2Ta7l23gD1TevgYVRHzRS2fWX9dwPwk9gPFGE4FfCn4N5kUm6SmDAUywEng==
 
 natural-compare@^1.4.0:
   version "1.4.0"

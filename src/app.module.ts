@@ -58,10 +58,10 @@ import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/provider
 import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
-import CreateDoctorHandler from '@app/application/user/createUser/CreateDoctorHandler'
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 import VerificateHandler from '@app/application/user/verification/VerificateHandler'
+import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
@@ -80,6 +80,7 @@ import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
+import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRecurrenter'
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
@@ -106,7 +107,6 @@ import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGe
 import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
-import { FeedbackAnswerRecurrenter } from './domain/service/FeedbackAnswerRecurrenter'
 
 const cliCommands = [DoctorCommand]
 
@@ -130,7 +130,6 @@ const commandHandlers = [
   EditShortClaimHandler,
   ChooseDoctorHandler,
   VerificateHandler,
-  CreateDoctorHandler,
 ]
 
 const signInProviders = [
@@ -190,6 +189,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...signInProviders,
     ...notificators,
     ClaimBoardCardFinder,
+    DoctorManager,
     {
       provide: SignInProviders,
       useFactory: (...providers: SignInProvider[]) => providers,
