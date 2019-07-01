@@ -62,7 +62,7 @@ export default class EmailNotificator implements Notificator {
     )
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -138,7 +138,7 @@ export default class EmailNotificator implements Notificator {
     })
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -155,7 +155,7 @@ export default class EmailNotificator implements Notificator {
     })
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -172,7 +172,7 @@ export default class EmailNotificator implements Notificator {
     })
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -194,7 +194,7 @@ export default class EmailNotificator implements Notificator {
     )
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -210,7 +210,7 @@ export default class EmailNotificator implements Notificator {
       closeComment,
     })
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -228,7 +228,7 @@ export default class EmailNotificator implements Notificator {
     })
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 
@@ -248,7 +248,7 @@ export default class EmailNotificator implements Notificator {
     })
 
     if (author.contacts.email) {
-      return this.send(author.contacts.email, subject, { html })
+      await this.send(author.contacts.email, subject, { html })
     }
   }
 }

@@ -36,7 +36,7 @@ export class FeedbackAnswerRecurrenter {
 
   private async notify(): Promise<void> {
     const claims = await this.claimRepo.findClaimsForFeedbackReminder()
-    claims.map(claim => {
+    claims.forEach(claim => {
       this.eventEmitter.emit(new FeedbackAnswerEvent(claim))
       claim.updateIsFeedbackReminderSent()
     })

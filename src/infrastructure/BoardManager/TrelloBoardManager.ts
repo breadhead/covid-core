@@ -148,7 +148,7 @@ export default class TrelloBoardManager implements BoardManager {
 
   public async getCard(cardId: string) {
     const card = this.trello
-      .makeRequest('GET', '/1/card/' + cardId)
+      .makeRequest('GET', `/1/card/${cardId}`)
       .then(tapOrThrow)
     return card
   }
@@ -165,7 +165,7 @@ export default class TrelloBoardManager implements BoardManager {
 
     return (
       labels.find(({ name }) => name === labelText) ||
-      (await this.trello.addLabelOnBoard(boardId, labelText).then(tapOrThrow))
+      this.trello.addLabelOnBoard(boardId, labelText).then(tapOrThrow)
     )
   }
 
@@ -193,10 +193,6 @@ export default class TrelloBoardManager implements BoardManager {
     return this.trello.makeRequest('GET', `/1/boards/${boardId}/labels`, {
       limit: 0,
     })
-  }
-
-  private async getCardId(claimId: string) {
-    return
   }
 
   private async getBoardMemberByUsername(boardId: string, username: string) {

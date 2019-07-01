@@ -404,7 +404,9 @@ export default class Claim {
     analysis.forEach(({ title, url }) => {
       if (title === 'histology') {
         return this.addNewHisotlogy(url)
-      } else if (title === 'discharge') {
+      }
+
+      if (title === 'discharge') {
         return this.addNewDischarge(url)
       }
 
@@ -420,6 +422,8 @@ export default class Claim {
         ...this._analysis,
         other,
       })
+
+      return undefined
     })
   }
 

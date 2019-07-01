@@ -57,13 +57,13 @@ export default class BoardCardFinder {
 
     if (claimCard) {
       return claimCard
-    } else {
-      if (numberOfRetries > 0) {
-        await sleep(500)
-        return this.getCard(cardFinder, numberOfRetries - 1)
-      } else {
-        throw new EntityNotFoundException('Card')
-      }
     }
+
+    if (numberOfRetries > 0) {
+      await sleep(500)
+      return this.getCard(cardFinder, numberOfRetries - 1)
+    }
+
+    throw new EntityNotFoundException('Card')
   }
 }

@@ -89,6 +89,8 @@ export class NotifyMessageRecurrenter {
         }),
       ]
 
+      // We must await in loop, becase want to send messages by chunks
+      // eslint-disable-next-line no-await-in-loop
       await Promise.all(promises)
     }
 

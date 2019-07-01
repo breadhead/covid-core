@@ -20,7 +20,7 @@ export default class DbOptionsFactory implements TypeOrmOptionsFactory {
       username: this.config.get('DB_USER').getOrElse('admin'),
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
-      entities: [__dirname + `/../**/*.{entity,vo}.{ts,js}`],
+      entities: [join(__dirname, '/../**/*.{entity,vo}.{ts,js}')],
       synchronize: !this.config
         .get('PRODUCTION_READY')
         .map(parseInt)

@@ -13,6 +13,7 @@ export default class MonthYear {
 
     // TODO: это костыль. Почему то из базы читается дата строкой, а не датой. Нужно исправть как будет время.
     if (typeof date === 'string') {
+      // eslint-disable-next-line no-param-reassign
       date = new Date(date)
     }
 

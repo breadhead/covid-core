@@ -26,10 +26,14 @@ export default class Authenticator {
   ) {}
 
   public async signIn(login: string, credential: string): Promise<string> {
+    // We must use await in loop to execute providers sequentially
+
     let user: User | null
     for (const provider of this.signInProviders) {
+      // eslint-disable-next-line no-await-in-loop
       const supports = await provider.supports(login, credential)
       if (supports) {
+        // eslint-disable-next-line no-await-in-loop
         user = await provider.signIn(login, credential)
         break
       }

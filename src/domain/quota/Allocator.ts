@@ -83,7 +83,7 @@ export default class Allocator {
       if (claim.quota) {
         if (restoreQuota) {
           // restore quota if needed
-          const quota = claim.quota
+          const { quota } = claim
           quota.increaseBalance(1)
 
           entitiesForSave.push(quota)

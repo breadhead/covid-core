@@ -386,8 +386,6 @@ export default class ClaimController {
     await this.bus.execute(
       new CloseClaimCommand(id, type, deallocateQuota, comment, user.roles),
     )
-
-    return
   }
 
   @Post('bind-quota')
@@ -398,8 +396,6 @@ export default class ClaimController {
   public async bindQuota(@Body() request: BindQuotaRequest): Promise<void> {
     const { claimId, quotaId } = request
     await this.bus.execute(new BindQuotaCommand(quotaId, claimId))
-
-    return
   }
 
   @Post(':id/next-status')
@@ -409,8 +405,6 @@ export default class ClaimController {
   @ApiOkResponse({ description: 'Moved to next' })
   public async setNextStatus(@Query('id') id: string): Promise<void> {
     await this.bus.execute(new MoveToNextStatusCommand(id))
-
-    return
   }
 
   @Get(':id/quota')
@@ -445,8 +439,6 @@ export default class ClaimController {
     doctorLogin,
   }: ChooseDoctorRequest): Promise<void> {
     await this.bus.execute(new ChooseDoctorCommand(claimId, doctorLogin))
-
-    return
   }
 
   @Post('change-corporate-status')

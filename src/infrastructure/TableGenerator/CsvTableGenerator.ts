@@ -20,6 +20,7 @@ export class CsvTableGenerator extends TableGenerator {
     return parser.parse(items)
   }
 
+  // eslint-disable-next-line consistent-return
   private createFieldsDeclaration<T>(header?: Header<T>) {
     if (header) {
       return Object.entries(header).map(([key, value]: [string, string]) => ({
