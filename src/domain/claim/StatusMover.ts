@@ -1,7 +1,7 @@
 import Role from '@app/domain/user/Role'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
-import { Option } from 'tsoption'
+import { Option } from 'nanoption'
 import { EntityManager } from 'typeorm'
 
 import { CloseType } from '@app/application/claim/CloseClaimCommand'
