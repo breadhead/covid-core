@@ -43,8 +43,6 @@ export default class VerificationController {
     await this.commandBus.execute(
       new SendVerificationCommand(request.number, user.login),
     )
-
-    return
   }
 
   @Post('verificate')
@@ -59,7 +57,5 @@ export default class VerificationController {
     const { code } = request
 
     await this.commandBus.execute(new VerificateCommand(login, code))
-
-    return
   }
 }

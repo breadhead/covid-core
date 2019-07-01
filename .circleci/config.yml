@@ -20,7 +20,7 @@ jobs:
             - ./node_modules
       - run:
           name: Lint Code
-          command: yarn lint
+          command: yarn s lint
 
   test:
     docker:

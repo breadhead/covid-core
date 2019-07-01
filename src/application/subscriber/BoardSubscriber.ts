@@ -108,9 +108,9 @@ export default class BoardSubscriber implements EventSubscriber {
 
     if (author.isClient) {
       return this.board.addLabel(claimCard.id, newMessageLabelText)
-    } else {
-      return this.board.deleteLabelFromCard(claimCard.id, newMessageLabelText)
     }
+
+    return this.board.deleteLabelFromCard(claimCard.id, newMessageLabelText)
   }
 
   private async addLabelCloseWithoutAnswer({

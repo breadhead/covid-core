@@ -14,8 +14,6 @@ const start = async () => {
       .select(AppModule)
       .get(CommandRunner)
       .run(process.argv)
-  } catch (e) {
-    throw e
   } finally {
     app.close()
   }

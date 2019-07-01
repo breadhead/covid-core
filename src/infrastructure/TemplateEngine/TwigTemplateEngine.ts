@@ -14,7 +14,7 @@ export default class TwigTemplateEngine implements TemplateEngine {
   }
 
   public async render(name: string, context: Context): Promise<string> {
-    const rawHtml = (await new Promise((resolve, reject) => {
+    const rawHtml = new Promise((resolve, reject) => {
       Twig.renderFile(
         path.resolve(__dirname, `../../../templates/${name}.twig`),
         context,
@@ -26,11 +26,11 @@ export default class TwigTemplateEngine implements TemplateEngine {
           resolve(html)
         },
       )
-    })) as Promise<string>
+    }) as Promise<string>
 
-    return await this.processors.reduce(
+    return this.processors.reduce(
       (currentPromise, processor) => currentPromise.then(processor.process),
-      Promise.resolve(rawHtml),
+      rawHtml,
     )
   }
 }

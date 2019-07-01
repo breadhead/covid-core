@@ -67,6 +67,7 @@ describe('StatusMover', () => {
       for (const status of statuses) {
         claim.changeStatus(status)
 
+        // eslint-disable-next-line no-await-in-loop
         await statusMover.deny(claim)
 
         expect(claim.status).toBe(ClaimStatus.Denied)

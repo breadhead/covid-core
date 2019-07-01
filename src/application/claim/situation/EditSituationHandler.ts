@@ -144,7 +144,7 @@ export default class EditSituationHandler
 
   private monthYearToDate(monthYear?: MonthYear): Date | undefined {
     if (!monthYear) {
-      return
+      return undefined
     }
 
     const { month, year } = monthYear

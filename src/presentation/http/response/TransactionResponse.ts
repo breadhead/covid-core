@@ -2,21 +2,38 @@ import { ApiModelProperty } from '@nestjs/swagger'
 
 import Income from '@app/domain/quota/Income.entity'
 import Transfer from '@app/domain/quota/Transfer.entity'
+import LogicException from '../exception/LogicException'
 
 export enum TransactionKind {
   Income = 'Income',
   Transfer = 'Transfer',
 }
 
+const DEFAULT_PAYER = 'Unknown'
+
 export default class TransactionRepsonse {
   public static fromEntity(entity: Transfer | Income) {
     if (entity instanceof Transfer) {
-      return fromTransfer(entity)
+      return {
+        from: entity.source.name,
+        to: entity.target.name,
+        amount: entity.amount,
+        date: entity.date,
+        kind: TransactionKind.Transfer,
+      } as TransactionRepsonse
     }
 
     if (entity instanceof Income) {
-      return fromIncome(entity)
+      return {
+        from: entity.payer ? entity.payer.name : DEFAULT_PAYER,
+        to: entity.target.name,
+        amount: entity.amount,
+        date: entity.date,
+        kind: TransactionKind.Income,
+      } as TransactionRepsonse
     }
+
+    throw new LogicException('Transaction is not a Income or Transfer')
   }
 
   @ApiModelProperty({ example: 'Сбербанк' })
@@ -37,23 +54,3 @@ export default class TransactionRepsonse {
   })
   public readonly kind: TransactionKind
 }
-
-const fromTransfer = (transfer: Transfer) =>
-  ({
-    from: transfer.source.name,
-    to: transfer.target.name,
-    amount: transfer.amount,
-    date: transfer.date,
-    kind: TransactionKind.Transfer,
-  } as TransactionRepsonse)
-
-const DEFAULT_PAYER = 'Unknown'
-
-const fromIncome = (income: Income) =>
-  ({
-    from: income.payer ? income.payer.name : DEFAULT_PAYER,
-    to: income.target.name,
-    amount: income.amount,
-    date: income.date,
-    kind: TransactionKind.Income,
-  } as TransactionRepsonse)
