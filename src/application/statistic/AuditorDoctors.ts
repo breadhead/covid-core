@@ -25,9 +25,9 @@ export class AuditorDoctors {
       claim => claim.doctor.fullName || claim.doctor.login,
     )
 
-    return Object.entries(grouped).map(([name, claim]) => ({
+    return Object.entries(grouped).map(([name, claims]) => ({
       name,
-      ...this.answerTime(claim),
+      ...this.answerTime(claims),
     }))
   }
 
