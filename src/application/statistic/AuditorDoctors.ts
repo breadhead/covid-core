@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { differenceInMilliseconds } from 'date-fns'
-import { mean, groupBy } from 'lodash'
+import { groupBy } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
@@ -38,7 +38,7 @@ export class AuditorDoctors {
 
     return {
       median: this.median(answerTimes),
-      average: mean(answerTimes),
+      average: this.average(answerTimes),
     }
   }
 
@@ -48,5 +48,12 @@ export class AuditorDoctors {
     const meanIndex = Math.trunc(sorted.length / 2)
 
     return sorted[meanIndex]
+  }
+
+  private average(values: number[]) {
+    const sum = values.reduce((a, b) => a + b, 0)
+    const count = values.length
+
+    return sum / count
   }
 }
