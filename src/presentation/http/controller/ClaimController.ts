@@ -34,7 +34,7 @@ import EditSituationCommand from '@app/application/claim/situation/EditSituation
 import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import Role from '@app/domain/user/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -65,7 +65,6 @@ import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 @ApiBearerAuth()
 export default class ClaimController {
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,

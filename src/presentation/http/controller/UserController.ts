@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Role from '@app/domain/user/Role'
 
 import UserRepository from '@app/domain/user/UserRepository'
@@ -31,7 +31,6 @@ import CurrentUser from './decorator/CurrentUser'
 export default class UserController {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
   ) {}
 

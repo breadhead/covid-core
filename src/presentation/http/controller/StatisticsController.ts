@@ -8,11 +8,12 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
@@ -22,6 +23,7 @@ import { ClaimStatisticsItem } from '../response/ClaimStatisticsItem'
 import CompanyResponse from '../response/CompanyResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
+import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -34,10 +36,10 @@ export default class StatisticsController {
     private readonly historian: Historian,
     @InjectRepository(QuotaRepository)
     private readonly quotaRepo: QuotaRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly tableGenerator: TableGenerator,
     config: Configuration,
+    private readonly auditor: AuditorDoctors,
   ) {
     this.siteUrl = config.getStringOrElse('SITE_URL', 'localhost')
   }
@@ -120,5 +122,19 @@ export default class StatisticsController {
     )
 
     return table
+  }
+
+  @Get('doctor-answer')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Doctor velocity' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  async getDoctorAnswerTimes(): Promise<DoctorAnswerTimeResponse> {
+    const [{ median, average }, doctors] = await Promise.all([
+      this.auditor.calculateAnswerTime(),
+      this.auditor.calculateAnswerTimeByDoctors(),
+    ])
+
+    return { median, average, doctors }
   }
 }

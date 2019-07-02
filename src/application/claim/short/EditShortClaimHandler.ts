@@ -5,7 +5,7 @@ import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import CorporateInfo from '@app/domain/claim/CorporateInfo.vo'
 import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
@@ -19,7 +19,6 @@ export default class EditShortClaimHandler
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly eventEmitter: EventEmitter,
   ) {}

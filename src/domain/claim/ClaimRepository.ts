@@ -1,12 +1,25 @@
-import { AbstractRepository, EntityRepository, LessThan, Raw } from 'typeorm'
+import {
+  AbstractRepository,
+  EntityRepository,
+  LessThan,
+  Raw,
+  Repository,
+} from 'typeorm'
 
 import { endOfDay, startOfDay, subDays } from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 
 import Claim, { ClaimStatus, CLOSED_STATUSES } from './Claim.entity'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-@EntityRepository(Claim)
-export default class ClaimRepository extends AbstractRepository<Claim> {
+@Injectable()
+class ClaimRepo {
+  constructor(
+    @InjectRepository(Claim)
+    private readonly repository: Repository<Claim>,
+  ) {}
+
   public async getOne(id: string): Promise<Claim> {
     const claim = await this.repository.findOne(id)
 
@@ -37,6 +50,16 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
       .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
       .andWhere('claim._closedAt >= :start', { start })
       .andWhere('claim._closedAt <= :end', { end })
+      .getMany()
+  }
+
+  async findAllClosed(): Promise<Claim[]> {
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'auota')
+      .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
       .getMany()
   }
 
@@ -75,3 +98,6 @@ export default class ClaimRepository extends AbstractRepository<Claim> {
     return claims
   }
 }
+
+export const ClaimRepository = ClaimRepo
+export type ClaimRepository = ClaimRepo

@@ -4,7 +4,7 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import DoctorChangedEvent from '@app/domain/claim/event/DoctorChangesEvent'
 import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
@@ -15,7 +15,6 @@ import ChooseDoctorCommand from './ChooseDoctorCommand'
 export default class ChooseDoctorHandler
   implements ICommandHandler<ChooseDoctorCommand> {
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectRepository(UserRepository)
     private readonly userRepo: UserRepository,
