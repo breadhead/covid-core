@@ -3,7 +3,7 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import NewMessageEvent from '@app/domain/claim/event/NewMessageEvent'
 import Message from '@app/domain/claim/Message.entity'
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
@@ -17,7 +17,6 @@ export default class PostMessageHandler
   implements ICommandHandler<PostMessageCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly eventEmitter: EventEmitter,

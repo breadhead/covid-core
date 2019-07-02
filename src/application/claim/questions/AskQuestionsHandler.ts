@@ -4,7 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import { ClaimStatus } from '@app/domain/claim/Claim.entity'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
@@ -14,7 +14,6 @@ import AskQuestionsCommand from './AskQuestionsCommand'
 export default class AskQuestionsHandler
   implements ICommandHandler<AskQuestionsCommand> {
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectEntityManager()
     private readonly em: EntityManager,

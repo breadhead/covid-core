@@ -1,4 +1,4 @@
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
@@ -12,7 +12,6 @@ export class FeedbackAnswerRecurrenter {
   private readonly job: CronJob
 
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly eventEmitter: EventEmitter,

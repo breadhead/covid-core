@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
@@ -34,7 +34,6 @@ export default class StatisticsController {
     private readonly historian: Historian,
     @InjectRepository(QuotaRepository)
     private readonly quotaRepo: QuotaRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly tableGenerator: TableGenerator,
     config: Configuration,

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Question from '@app/domain/claim/Question.vo'
 import StatusMover from '@app/domain/claim/StatusMover'
 
@@ -11,7 +11,6 @@ import { QuestionWithAnswer } from './dto/QuestionWithAnswer'
 @Injectable()
 export class AnsweringQuestions {
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectEntityManager()
     private readonly em: EntityManager,

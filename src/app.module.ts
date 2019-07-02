@@ -65,7 +65,7 @@ import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -171,7 +171,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
-      ClaimRepository,
       User,
       UserRepository,
       Draft,
@@ -260,6 +259,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     NenaprasnoBackendClient,
     EventEmitter,
     CommandRunner,
+    ClaimRepository,
   ],
 })
 export class AppModule implements NestModule {

@@ -3,7 +3,7 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
@@ -16,7 +16,6 @@ export default class BindQuotaHandler
   public constructor(
     @InjectRepository(QuotaRepository)
     private readonly quotaRepo: QuotaRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectEntityManager()
     private readonly em: EntityManager,

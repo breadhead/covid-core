@@ -4,7 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import Claim from '@app/domain/claim/Claim.entity'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import MedicinalTreatment from '@app/domain/claim/treatment/MedicinalTreatment'
 import RadiationTreatment from '@app/domain/claim/treatment/RadiationTreatment'
 import SurgicalTreatment from '@app/domain/claim/treatment/SurgicalTreatment'
@@ -16,7 +16,6 @@ import EditSituationCommand from './EditSituationCommand'
 export default class EditSituationHandler
   implements ICommandHandler<EditSituationCommand> {
   public constructor(
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     @InjectEntityManager()
     private readonly em: EntityManager,

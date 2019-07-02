@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import UserRepository from '@app/domain/user/UserRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVoter from '@app/infrastructure/security/SecurityVoter/SecurityVoter'
@@ -12,7 +12,6 @@ export default class PostMessageVoter
   implements SecurityVoter<PostMessageCommand> {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
   ) {}
 

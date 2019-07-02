@@ -4,7 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { head, intersection } from 'lodash'
 import { EntityManager } from 'typeorm'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
 
@@ -21,7 +21,6 @@ export default class CloseClaimHandler
   public constructor(
     @InjectEntityManager()
     private readonly em: EntityManager,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly allocator: Allocator,
     private readonly statusMover: StatusMover,

@@ -13,7 +13,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import PostMessageCommand from '@app/application/claim/chat/PostMessageCommand'
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
@@ -33,7 +33,6 @@ export default class ChatController {
   public constructor(
     @InjectRepository(MessageRepository)
     private readonly messageRepo: MessageRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepo: ClaimRepository,
     private readonly bus: CommandBus,
     private readonly votersUnity: SecurityVotersUnity,

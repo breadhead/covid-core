@@ -14,7 +14,7 @@ import IdGenerator, {
   IdGenerator as IdGeneratorSymbol,
 } from '@app/infrastructure/IdGenerator/IdGenerator'
 
-import ClaimRepository from '@app/domain/claim/ClaimRepository'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import CreateClaimCommand from './CreateClaimCommand'
@@ -26,7 +26,6 @@ export default class CreateClaimHandler
     @InjectEntityManager() private readonly em: EntityManager,
     @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @InjectRepository(ClaimRepository)
     private readonly claimRepository: ClaimRepository,
     private readonly statusMover: StatusMover,
     private readonly eventEmitter: EventEmitter,
