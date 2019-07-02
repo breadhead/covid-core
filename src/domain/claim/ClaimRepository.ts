@@ -53,6 +53,16 @@ class ClaimRepo {
       .getMany()
   }
 
+  async findAllClosed(): Promise<Claim[]> {
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'auota')
+      .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
+      .getMany()
+  }
+
   public async findByRange(from: Date, to: Date): Promise<Claim[]> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
