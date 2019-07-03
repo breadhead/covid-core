@@ -34,14 +34,22 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
+    const getStartTime = (answeredAt?: Date, answerUpdatedAt?: Date) => {
+      if (answeredAt || answerUpdatedAt) {
+        return lastDate(answeredAt, answerUpdatedAt)
+      }
+
+      return undefined
+    }
+
     const answerTimes = claims
       .map(({ sentToClientAt, answeredAt, answerUpdatedAt }) => ({
-        start: lastDate(answeredAt, answerUpdatedAt),
+        start: getStartTime(answeredAt, answerUpdatedAt),
         end: sentToClientAt,
       }))
       .filter(({ start, end }) => !!start && !!end)
       .map(({ start, end }) => Math.abs(differenceInMilliseconds(start, end)))
-      .filter(diff => diff > 0)
+      .filter(diff => diff > 1000 * 60 * 15) // more then 30 minutes
 
     return {
       median: median(answerTimes),
