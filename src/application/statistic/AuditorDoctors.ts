@@ -45,6 +45,8 @@ export class AuditorDoctors {
     return {
       median: median(answerTimes),
       average: this.average(answerTimes),
+      max: Math.max(...answerTimes),
+      min: Math.min(...answerTimes),
     }
   }
 
