@@ -12,6 +12,7 @@ import EntityNotFoundException from '../exception/EntityNotFoundException'
 import Claim, { ClaimStatus, CLOSED_STATUSES } from './Claim.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Status } from '@app/presentation/http/response/ClaimForListResponse'
 
 @Injectable()
 class ClaimRepo {
@@ -59,7 +60,13 @@ class ClaimRepo {
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
       .leftJoinAndSelect('claim._quota', 'auota')
-      .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
+      .where('claim._status in (:statuses)', {
+        statuses: [
+          ...CLOSED_STATUSES,
+          Status.DeliveredToCustomer,
+          Status.AnswerValidation,
+        ],
+      })
       .getMany()
   }
 

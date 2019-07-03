@@ -34,8 +34,8 @@ export class AuditorDoctors {
 
   private answerTime(claims: Claim[]) {
     const answerTimes = claims
-      .map(({ sentToClientAt, answeredAt, answerUpdatedAt }) => ({
-        start: answeredAt || answerUpdatedAt,
+      .map(({ sentToClientAt, answeredAt }) => ({
+        start: answeredAt,
         end: sentToClientAt,
       }))
       .filter(({ start, end }) => !!start && !!end)
