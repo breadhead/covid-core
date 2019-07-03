@@ -29,7 +29,7 @@ export default class AskQuestionsHandler
 
     const claim = await this.claimRepo.getOne(id)
 
-    const escapeQuestion = (question: string) => question.trim()
+    const escapeQuestion = (question: string = '') => question.trim()
 
     const editedClaim = await this.em.transaction(async em => {
       claim.newQuestions(
