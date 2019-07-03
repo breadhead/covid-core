@@ -33,8 +33,8 @@ export default class AskQuestionsHandler
 
     const editedClaim = await this.em.transaction(async em => {
       claim.newQuestions(
-        defaultQuestions.map(escapeQuestion),
-        additionalQuestions.map(escapeQuestion),
+        defaultQuestions.filter(Boolean).map(escapeQuestion),
+        additionalQuestions.filter(Boolean).map(escapeQuestion),
       )
 
       await this.allocator.allocateAuto(claim).catch(() => {
