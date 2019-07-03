@@ -5,7 +5,7 @@ import { groupBy } from 'lodash'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
 import { median } from '@app/infrastructure/utils/median'
-import { lastDate } from '@app/infrastructure/utils/lastDate'
+import { lastDate } from '@app/utils/infrastructure/lastDate'
 
 @Injectable()
 export class AuditorDoctors {

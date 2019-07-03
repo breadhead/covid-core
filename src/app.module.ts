@@ -109,6 +109,8 @@ import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerato
 import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
+import { UtilsModule } from './utils/utils.module'
+
 const cliCommands = [DoctorCommand]
 
 const commandHandlers = [
@@ -151,6 +153,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
   imports: [
+    UtilsModule,
     ConfigModule,
     CQRSModule,
     PassportModule.register({
