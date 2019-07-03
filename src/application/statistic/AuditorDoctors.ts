@@ -4,6 +4,8 @@ import { groupBy } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
+import { median } from '@app/infrastructure/utils/median'
+import { lastDate } from '@app/infrastructure/utils/lastDate'
 
 @Injectable()
 export class AuditorDoctors {
@@ -32,28 +34,24 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
-    const answerTimes = claims.map(({ sentToClientAt, sentToDoctorAt }) =>
-      differenceInMilliseconds(sentToClientAt, sentToDoctorAt),
-    )
+    const answerTimes = claims
+      .map(({ sentToClientAt, answeredAt, answerUpdatedAt }) => ({
+        start: lastDate(answeredAt, answerUpdatedAt),
+        end: sentToClientAt,
+      }))
+      .filter(({ start, end }) => !!start && !!end)
+      .map(({ start, end }) => Math.abs(differenceInMilliseconds(start, end)))
 
     return {
-      median: this.median(answerTimes),
+      median: median(answerTimes),
       average: this.average(answerTimes),
     }
-  }
-
-  private median(values: number[]) {
-    const sorted = values.sort((a, b) => a - b)
-
-    const meanIndex = Math.trunc(sorted.length / 2)
-
-    return sorted[meanIndex]
   }
 
   private average(values: number[]) {
     const sum = values.reduce((a, b) => a + b, 0)
     const count = values.length
 
-    return sum / count
+    return Math.round(sum / (count || 1))
   }
 }
