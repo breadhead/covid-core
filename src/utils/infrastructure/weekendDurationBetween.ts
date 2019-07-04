@@ -1,4 +1,5 @@
-import { differenceInDays, getDay, differenceInMilliseconds } from 'date-fns'
+import { differenceInDays } from 'date-fns'
+import { getWeekendDuration } from './getWeekendDuration'
 
 const CHUNK_SIZE = 5
 
@@ -8,7 +9,7 @@ export const weekendDurationBetween = (start: Date, end: Date) => {
   if (diff >= CHUNK_SIZE) {
     // makeChunks
   } else {
-    console.log('diff:', getDay(start), getDay(end))
+    getWeekendDuration(start, end)
   }
 
   return 0
