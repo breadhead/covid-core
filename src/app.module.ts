@@ -100,8 +100,6 @@ import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBa
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
-import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGenerator'
-import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 
 import { UtilsModule } from './utils/utils.module'
 
@@ -223,10 +221,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: BoardManager,
       useClass: TrelloBoardManager,
-    },
-    {
-      provide: TableGenerator,
-      useClass: CsvTableGenerator,
     },
     CorporateStatusMover,
     AnsweringQuestions,

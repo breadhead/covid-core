@@ -1,5 +1,5 @@
-import { Header } from './types/Header'
-import { Item } from './types/Item'
+import { Header } from './Header'
+import { Item } from './Item'
 
 export abstract class TableGenerator {
   public abstract generate<T>(
