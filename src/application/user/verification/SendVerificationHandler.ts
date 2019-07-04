@@ -5,13 +5,8 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import UserRepository from '@app/domain/user/UserRepository'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
-import IdGenerator, {
-  IdGenerator as IdGeneratorSymbol,
-} from '@app/infrastructure/IdGenerator/IdGenerator'
-import PasswordEncoder, {
-  PasswordEncoder as PasswordEncoderSymbol,
-} from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
+import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
+import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
 import SmsSender, {
   SmsSender as SmsSenderSymbol,
 } from '@app/infrastructure/SmsSender/SmsSender'
@@ -28,8 +23,8 @@ export default class SendVerificationHandler
   implements ICommandHandler<SendVerificationCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
-    @Inject(PasswordEncoderSymbol) private readonly encoder: PasswordEncoder,
+    private readonly idGenerator: IdGenerator,
+    private readonly encoder: PasswordEncoder,
     @Inject(SmsSenderSymbol) private readonly smsSender: SmsSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
