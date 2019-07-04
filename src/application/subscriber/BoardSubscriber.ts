@@ -32,13 +32,9 @@ import UserRepository from '@app/domain/user/UserRepository'
 import BoardManager, {
   BoardKind,
   BoardManager as BoardManagerSymbol,
-  List,
 } from '@app/infrastructure/BoardManager/BoardManager'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
-import TemplateEngine, {
-  TemplateEngine as TemplateEngineSymbol,
-} from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
 import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import ClaimEditedEvent, {
@@ -47,11 +43,12 @@ import ClaimEditedEvent, {
 import { getReadableCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStatus'
 import Role from '@app/domain/user/Role'
 import { formatDate } from '../notifications/helpers'
+import { Templating } from '@app/utils/infrastructure/Templating/Templating'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
     @Inject(BoardManagerSymbol) private readonly board: BoardManager,
-    @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
+    private readonly templating: Templating,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly config: Configuration,

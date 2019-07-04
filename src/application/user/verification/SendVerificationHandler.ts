@@ -10,11 +10,9 @@ import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/Passw
 import SmsSender, {
   SmsSender as SmsSenderSymbol,
 } from '@app/infrastructure/SmsSender/SmsSender'
-import TemplateEngine, {
-  TemplateEngine as TemplateEngineSymbol,
-} from '@app/infrastructure/TemplateEngine/TemplateEngine'
 
 import SendVerificationCommand from './SendVerificationCommand'
+import { Templating } from '@app/utils/infrastructure/Templating/Templating'
 
 const CODE_LENGTH = 4
 
@@ -27,7 +25,7 @@ export default class SendVerificationHandler
     private readonly encoder: PasswordEncoder,
     @Inject(SmsSenderSymbol) private readonly smsSender: SmsSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
+    private readonly templating: Templating,
   ) {}
 
   public async execute(

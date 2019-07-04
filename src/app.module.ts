@@ -102,8 +102,6 @@ import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGenerator'
 import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
-import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
-import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 import { UtilsModule } from './utils/utils.module'
 
@@ -205,10 +203,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: SmsSender,
       useClass: RedSmsSender,
-    },
-    {
-      provide: TemplateEngine,
-      useClass: TwigTemplateEngine,
     },
     {
       provide: Logger,

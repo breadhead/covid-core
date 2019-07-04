@@ -6,13 +6,11 @@ import Configuration from '@app/infrastructure/Configuration/Configuration'
 import SmsSender, {
   SmsSender as SmsSenderSymbol,
 } from '@app/infrastructure/SmsSender/SmsSender'
-import TemplateEngine, {
-  TemplateEngine as TemplateEngineSymbol,
-} from '@app/infrastructure/TemplateEngine/TemplateEngine'
 import axios from 'axios'
 
 import { SHORTENING_SERVICE } from './helpers'
 import Notificator from './Notificator'
+import { Templating } from '@app/utils/infrastructure/Templating/Templating'
 
 export default class SmsNotificator implements Notificator {
   private readonly send: (to: string, content: string) => Promise<void>
@@ -20,7 +18,7 @@ export default class SmsNotificator implements Notificator {
 
   public constructor(
     @Inject(SmsSenderSymbol) smsSender: SmsSender,
-    @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
+    private readonly templating: Templating,
     config: Configuration,
   ) {
     this.send = (to, content) => smsSender.send(to, content)

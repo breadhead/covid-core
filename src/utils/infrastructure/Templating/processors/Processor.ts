@@ -1,3 +1,3 @@
-export default interface Processor {
+export interface Processor {
   process(html: string): Promise<string>
 }
