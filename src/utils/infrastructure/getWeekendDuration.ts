@@ -1,5 +1,9 @@
-import { getDay } from 'date-fns'
+import { isItHoliday } from './isItHoliday'
 
 export const getWeekendDuration = (start: Date, end: Date) => {
-  console.log('diff:', getDay(start), getDay(end))
+  if ([start, end].some(isItHoliday)) {
+    // some code
+  } else {
+    return 0
+  }
 }
