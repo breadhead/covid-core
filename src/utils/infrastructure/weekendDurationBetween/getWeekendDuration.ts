@@ -20,12 +20,12 @@ export const getWeekendDuration = (start: Date, end: Date) => {
   }
 
   if (isWeekend(start)) {
-    let endOfTheCurrentDayCandidate = endOfDay(start)
+    const endOfTheCurrentDayCandidate = endOfDay(start)
     // на случай если начало и конец находятся в одном дне
-    let endOfTheCurrentDay =
+    const endOfTheCurrentDay =
       endOfTheCurrentDayCandidate > end ? end : endOfTheCurrentDayCandidate
 
-    let durationOfStartDay = Math.abs(
+    const durationOfStartDay = Math.abs(
       differenceInMilliseconds(start, endOfTheCurrentDay),
     )
     const nextDay = addDays(endOfTheCurrentDay, 1)
@@ -43,8 +43,8 @@ export const getWeekendDuration = (start: Date, end: Date) => {
   }
 
   if (isWeekend(end)) {
-    let startOfTheCurrentDay = startOfDay(end)
-    let durationOfEndDay = Math.abs(
+    const startOfTheCurrentDay = startOfDay(end)
+    const durationOfEndDay = Math.abs(
       differenceInMilliseconds(startOfTheCurrentDay, end),
     )
 
