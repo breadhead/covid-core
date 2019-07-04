@@ -5,6 +5,7 @@ import { groupBy } from 'lodash'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
 import { median } from '@app/utils/infrastructure/median'
+import { weekendDurationBetween } from '@app/utils/infrastructure/weekendDurationBetween'
 
 @Injectable()
 export class AuditorDoctors {
@@ -39,7 +40,12 @@ export class AuditorDoctors {
         end: sentToClientAt,
       }))
       .filter(({ start, end }) => !!start && !!end)
-      .map(({ start, end }) => Math.abs(differenceInMilliseconds(start, end)))
+      .map(({ start, end }) => {
+        const weekendDuration = weekendDurationBetween(start, end)
+        const fullDuration = Math.abs(differenceInMilliseconds(start, end))
+
+        return fullDuration - weekendDuration
+      })
       .filter(diff => diff > 0)
 
     return {
