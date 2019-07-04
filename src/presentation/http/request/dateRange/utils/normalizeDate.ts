@@ -1,14 +1,10 @@
-import * as moment from 'moment'
 import { Option } from 'tsoption'
+import { startOfDay } from 'date-fns'
 
 import LogicException from '../../../exception/LogicException'
 
 export default (def: Date = new Date()) => (date: Option<Date>) => {
-  const normalized = date
-    .orElse(Option.of(def))
-    .map(d => moment(d))
-    .map(m => m.startOf('day'))
-    .map(m => m.toDate())
+  const normalized = date.orElse(Option.of(def)).map(startOfDay)
 
   if (normalized.nonEmpty()) {
     return normalized.get()
