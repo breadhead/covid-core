@@ -1,11 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 import { flow } from 'lodash'
-
-import {
-  endOfTheDay,
-  previusMonth,
-  startOfTheDay,
-} from '@app/infrastructure/utils/date'
+import { endOfDay, startOfDay, subMonths } from 'date-fns'
 
 import LogicException from '../../exception/LogicException'
 import DateRangeRequest from './DateRangeRequest'
@@ -17,7 +12,7 @@ interface DateRangeQuery {
   to?: string
 }
 
-const DEFAULT_FROM: Date = previusMonth(new Date())
+const DEFAULT_FROM: Date = subMonths(new Date(), 1)
 const DEFAULT_TO = new Date()
 
 @Injectable()
@@ -36,13 +31,13 @@ export default class DateRandePipe
     const parsedFrom: Date = flow([
       toOptionalDate,
       normalizeDate(DEFAULT_FROM),
-      startOfTheDay,
+      startOfDay,
     ])(from)
 
     const parsedTo: Date = flow([
       toOptionalDate,
       normalizeDate(DEFAULT_TO),
-      endOfTheDay,
+      endOfDay,
     ])(to)
 
     return new DateRangeRequest(parsedFrom, parsedTo)

@@ -1,11 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import UserRepository from '@app/domain/user/UserRepository'
-import PasswordEncoder, {
-  PasswordEncoder as PasswordEncoderSymbol,
-} from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
+import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
 import User from '@app/domain/user/User.entity'
 import Role from '@app/domain/user/Role'
 
@@ -13,7 +11,6 @@ import Role from '@app/domain/user/Role'
 export class DoctorManager {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(PasswordEncoderSymbol)
     private readonly passwordEncoder: PasswordEncoder,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
   ) {}

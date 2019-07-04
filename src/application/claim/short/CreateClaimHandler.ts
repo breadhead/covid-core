@@ -8,11 +8,8 @@ import { EntityManager } from 'typeorm'
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
 import StatusMover from '@app/domain/claim/StatusMover'
-import Allocator from '@app/domain/quota/Allocator'
 import UserRepository from '@app/domain/user/UserRepository'
-import IdGenerator, {
-  IdGenerator as IdGeneratorSymbol,
-} from '@app/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
@@ -24,7 +21,7 @@ export default class CreateClaimHandler
   implements ICommandHandler<CreateClaimCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
+    private readonly idGenerator: IdGenerator,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly claimRepository: ClaimRepository,
     private readonly statusMover: StatusMover,

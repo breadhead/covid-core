@@ -6,7 +6,6 @@ import { QueryFailedError } from 'typeorm'
 import { matches } from 'z'
 
 import Logger from '@app/infrastructure/Logger/Logger'
-import { strip } from '@app/infrastructure/utils/string'
 
 import responseToLog from '../logging/responseToLog'
 
@@ -27,7 +26,7 @@ export default class EntityNotFoundFilter implements ExceptionFilter {
     const regex = /`(.+?)`/gm
     const entryName = Option.of(regex.exec((exception as any).query as string))
       .map(head)
-      .map(strip(/`/g))
+      .map(name => name.replace(/`/g, ''))
       .map(capitalize)
       .getOrElse('Unknown')
 

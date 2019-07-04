@@ -1,5 +1,4 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
-import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
@@ -8,9 +7,7 @@ import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
-import IdGenerator, {
-  IdGenerator as IdGeneratorSymbol,
-} from '@app/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
 
 import CreateQuotaCommand from './CreateQuotaCommand'
 
@@ -19,7 +16,7 @@ export default class CreateQuotaHandler
   implements ICommandHandler<CreateQuotaCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
+    private readonly idGenerator: IdGenerator,
     @InjectRepository(CompanyRepository)
     private readonly companyRepo: CompanyRepository,
     private readonly accountant: Accountant,

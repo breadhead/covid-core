@@ -7,9 +7,7 @@ import { EntityManager } from 'typeorm'
 import NewFeedbackEvent from '@app/domain/feedback/event/NewFeedbackEvent'
 import Feedback from '@app/domain/feedback/Feedback.entity'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
-import IdGenerator, {
-  IdGenerator as IdGeneratorSymbol,
-} from '@app/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
 
 import PostFeedbackCommand from './PostFeedbackCommand'
 
@@ -18,7 +16,7 @@ export default class PostFeedbackHandler
   implements ICommandHandler<PostFeedbackCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(IdGeneratorSymbol) private readonly idGenerator: IdGenerator,
+    private readonly idGenerator: IdGenerator,
     private readonly eventEmitter: EventEmitter,
   ) {}
 

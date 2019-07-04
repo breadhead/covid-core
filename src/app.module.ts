@@ -91,23 +91,15 @@ import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEma
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
-import { IdGenerator } from '@app/infrastructure/IdGenerator/IdGenerator'
-import NanoIdGenerator from '@app/infrastructure/IdGenerator/NanoIdGenerator'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
 import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
 import Logger from '@app/infrastructure/Logger/Logger'
 import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
 import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
 import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
-import BcryptPasswordEncoder from '@app/infrastructure/PasswordEncoder/BcryptPasswordEncoder'
-import { PasswordEncoder } from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
 import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
 import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
-import { CsvTableGenerator } from '@app/infrastructure/TableGenerator/CsvTableGenerator'
-import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
-import { TemplateEngine } from '@app/infrastructure/TemplateEngine/TemplateEngine'
-import TwigTemplateEngine from '@app/infrastructure/TemplateEngine/TwigTemplateEngine'
 
 import { UtilsModule } from './utils/utils.module'
 
@@ -199,14 +191,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       inject: signInProviders,
     },
     {
-      provide: IdGenerator,
-      useClass: NanoIdGenerator,
-    },
-    {
-      provide: PasswordEncoder,
-      useClass: BcryptPasswordEncoder,
-    },
-    {
       provide: Notificator,
       useClass: AllNotificator,
     },
@@ -217,10 +201,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: SmsSender,
       useClass: RedSmsSender,
-    },
-    {
-      provide: TemplateEngine,
-      useClass: TwigTemplateEngine,
     },
     {
       provide: Logger,
@@ -241,10 +221,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: BoardManager,
       useClass: TrelloBoardManager,
-    },
-    {
-      provide: TableGenerator,
-      useClass: CsvTableGenerator,
     },
     CorporateStatusMover,
     AnsweringQuestions,

@@ -1,12 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import PasswordEncoder, {
-  PasswordEncoder as PasswordEncoderSymbol,
-} from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
+import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
 
 import SignInProvider from './SignInProvider'
 
@@ -14,7 +12,7 @@ import SignInProvider from './SignInProvider'
 export default class InternalSignInProvider implements SignInProvider {
   public constructor(
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-    @Inject(PasswordEncoderSymbol) private readonly encoder: PasswordEncoder,
+    private readonly encoder: PasswordEncoder,
   ) {}
 
   public async supports(login: string): Promise<boolean> {

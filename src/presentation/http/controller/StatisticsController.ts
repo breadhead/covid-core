@@ -14,7 +14,6 @@ import Historian from '@app/domain/service/Historian/Historian'
 import Role from '@app/domain/user/Role'
 import Configuration from '@app/infrastructure/Configuration/Configuration'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
-import { TableGenerator } from '@app/infrastructure/TableGenerator/TableGenerator'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
@@ -24,6 +23,7 @@ import CompanyResponse from '../response/CompanyResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
+import { TableGenerator } from '@app/utils/infrastructure/TableGenerator/TableGenerator'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)

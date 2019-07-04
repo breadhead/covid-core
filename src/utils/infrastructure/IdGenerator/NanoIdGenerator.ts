@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import * as nanoid from 'nanoid'
-const generate = require('nanoid/generate') // tslint:disable-line
+const generate = require('nanoid/generate')
 
-import IdGenerator from './IdGenerator'
+import { IdGenerator } from './IdGenerator'
 
 const DEFAULT_LENGTH = 14
 const DEFAULT_NUMCODE_LENGTH = 4
 
 @Injectable()
-export default class NanoIdGenerator implements IdGenerator {
+export class NanoIdGenerator implements IdGenerator {
   public get(length?: number): string {
     return nanoid(length || DEFAULT_LENGTH)
   }

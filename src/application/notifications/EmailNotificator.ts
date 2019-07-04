@@ -10,14 +10,12 @@ import EmailSender, {
   EmailSender as EmailSenderSymbol,
   MessageContent,
 } from '@app/infrastructure/EmailSender/EmailSender'
-import TemplateEngine, {
-  TemplateEngine as TemplateEngineSymbol,
-} from '@app/infrastructure/TemplateEngine/TemplateEngine'
-
-import StyleInlinerProcessor from '@app/infrastructure/TemplateEngine/processors/StyleInlinerProcessor'
 import Notificator from './Notificator'
 
 import { formatDate } from './helpers'
+import { Templating } from '@app/utils/infrastructure/Templating/Templating'
+import { StyleInliner } from '@app/utils/infrastructure/Templating/processors/StyleInliner'
+import { Context } from '@app/utils/infrastructure/Templating/Context'
 export default class EmailNotificator implements Notificator {
   private readonly send: (
     to: string,
@@ -28,8 +26,14 @@ export default class EmailNotificator implements Notificator {
 
   private senderEmail: string
 
+  private readonly renderHtml: (
+    template: string,
+    context: Context,
+  ) => Promise<string>
+
   public constructor(
-    @Inject(TemplateEngineSymbol) private readonly templating: TemplateEngine,
+    templating: Templating,
+    styleInliner: StyleInliner,
     @Inject(EmailSenderSymbol) sender: EmailSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     config: Configuration,
@@ -43,7 +47,7 @@ export default class EmailNotificator implements Notificator {
 
     this.siteUrl = config.get('SITE_URL').getOrElse('localhost')
 
-    this.templating.addProcessor(new StyleInlinerProcessor())
+    this.renderHtml = templating.createRender([styleInliner])
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
@@ -51,7 +55,7 @@ export default class EmailNotificator implements Notificator {
     const { name } = message.claim.applicant
     const subject = `Заявка №${number}. ${name}, посмотрите новое сообщение по вашей заявке на консультацию`
 
-    const html = await this.templating.render(
+    const html = await this.renderHtml(
       'email/new-chat-message-from-specialist',
       {
         siteUrl: this.siteUrl,
@@ -72,7 +76,7 @@ export default class EmailNotificator implements Notificator {
     const subject = `Новое сообщение в заявке №${number}, ${name}`
 
     const [html, caseManager] = await Promise.all([
-      this.templating.render('email/new-chat-message-from-client', {
+      this.renderHtml('email/new-chat-message-from-client', {
         siteUrl: this.siteUrl,
         name,
         number,
@@ -113,7 +117,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Сообщение "${theme}" от ${name}`
 
-    const html = await this.templating.render('email/new-feedback-message', {
+    const html = await this.renderHtml('email/new-feedback-message', {
       siteUrl: this.siteUrl,
       name,
       email,
@@ -131,7 +135,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, мы получили вашу заявку`
 
-    const html = await this.templating.render('email/claim-approved', {
+    const html = await this.renderHtml('email/claim-approved', {
       siteUrl: this.siteUrl,
       name,
       number,
@@ -148,7 +152,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, ваша заявка поставлена в очередь`
 
-    const html = await this.templating.render('email/claim-requires-waiting', {
+    const html = await this.renderHtml('email/claim-requires-waiting', {
       siteUrl: this.siteUrl,
       name,
       number,
@@ -165,7 +169,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, ваша заявка передана эксперту`
 
-    const html = await this.templating.render('email/claim-send-to-doctor', {
+    const html = await this.renderHtml('email/claim-send-to-doctor', {
       siteUrl: this.siteUrl,
       name,
       number,
@@ -182,16 +186,13 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, ваша заявка поставлена в очередь на бесплатную консультацию`
 
-    const html = await this.templating.render(
-      'email/short-claim-message-queued',
-      {
-        siteUrl: this.siteUrl,
-        name,
-        status,
-        date: formatDate(due),
-        number,
-      },
-    )
+    const html = await this.renderHtml('email/short-claim-message-queued', {
+      siteUrl: this.siteUrl,
+      name,
+      status,
+      date: formatDate(due),
+      number,
+    })
 
     if (author.contacts.email) {
       await this.send(author.contacts.email, subject, { html })
@@ -202,7 +203,7 @@ export default class EmailNotificator implements Notificator {
     const { number, author, closeComment } = claim
     const { name } = claim.applicant
     const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
-    const html = await this.templating.render('email/claim-rejected', {
+    const html = await this.renderHtml('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/contacts#feedback-form`,
@@ -220,7 +221,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, готов ответ эксперта по вашей консультации`
 
-    const html = await this.templating.render('email/doctor-answer', {
+    const html = await this.renderHtml('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
@@ -238,7 +239,7 @@ export default class EmailNotificator implements Notificator {
 
     const subject = `Заявка №${number}. ${name}, эксперт понятно ответил на ваши вопросы?`
 
-    const html = await this.templating.render('email/feedback-answer', {
+    const html = await this.renderHtml('email/feedback-answer', {
       siteUrl: this.siteUrl,
       name,
       link: `${this.siteUrl}/client/consultation/${id}#feedback`,

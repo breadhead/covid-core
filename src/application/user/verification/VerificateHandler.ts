@@ -1,20 +1,11 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
-import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import VerificationFailedException from '@app/application/exception/VerificationFailedException'
 import UserRepository from '@app/domain/user/UserRepository'
-import IdGenerator, {
-  IdGenerator as IdGeneratorSymbol,
-} from '@app/infrastructure/IdGenerator/IdGenerator'
-import PasswordEncoder, {
-  PasswordEncoder as PasswordEncoderSymbol,
-} from '@app/infrastructure/PasswordEncoder/PasswordEncoder'
-import SmsSender, {
-  SmsSender as SmsSenderSymbol,
-} from '@app/infrastructure/SmsSender/SmsSender'
+import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
 
 import VerificateCommand from './VerificateCommand'
 
@@ -23,7 +14,7 @@ export default class VerificateHandler
   implements ICommandHandler<VerificateCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @Inject(PasswordEncoderSymbol) private readonly encoder: PasswordEncoder,
+    private readonly encoder: PasswordEncoder,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
   ) {}
 
