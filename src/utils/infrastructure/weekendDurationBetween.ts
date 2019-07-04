@@ -10,6 +10,7 @@ export const weekendDurationBetween = (start: Date, end: Date): number => {
   }
 
   return getDaysChunks(start, end, CHUNK_SIZE)
+    .filter(({ start, end }) => end - start > 1)
     .map(({ start, end }) => weekendDurationBetween(start, end))
     .reduce((a, b) => a + b, 0)
 }
