@@ -40,7 +40,7 @@ export class AuditorDoctors {
       }))
       .filter(({ start, end }) => !!start && !!end)
       .map(({ start, end }) => Math.abs(differenceInMilliseconds(start, end)))
-      .filter(diff => diff > 1000 * 60 * 15) // more then 30 minutes
+      .filter(diff => diff > 0)
 
     return {
       median: median(answerTimes),
