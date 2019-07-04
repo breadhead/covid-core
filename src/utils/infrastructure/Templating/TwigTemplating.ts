@@ -26,7 +26,7 @@ export class TwigTemplating implements Templating {
   private renderTwig(name: string, context: Context): Promise<string> {
     return new Promise((resolve, reject) => {
       Twig.renderFile(
-        path.resolve(__dirname, `../../../templates/${name}.twig`),
+        path.resolve(__dirname, `../../../../templates/${name}.twig`),
         context,
         (err, html) => {
           if (err) {
