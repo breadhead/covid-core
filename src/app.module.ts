@@ -83,7 +83,6 @@ import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRec
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
-import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
