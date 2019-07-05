@@ -1,13 +1,13 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
+import { UserRepository } from '@app/user/service/UserRepository'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import CorporateInfo from '@app/domain/claim/CorporateInfo.vo'
-import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 
 import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
@@ -18,7 +18,7 @@ export default class EditShortClaimHandler
   implements ICommandHandler<EditShortClaimCommand> {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly claimRepo: ClaimRepository,
     private readonly eventEmitter: EventEmitter,
   ) {}
@@ -57,7 +57,7 @@ export default class EditShortClaimHandler
     const user = await this.userRepo.getOne(userLogin)
 
     return this.em.transaction(async em => {
-      user.newContacts({ email, phone })
+      user.newContacts(email, phone)
 
       const applicant = new Applicant(name, age, gender, region)
       const corporate = new CorporateInfo({ company, position })

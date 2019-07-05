@@ -2,15 +2,15 @@ import { None, Option, Some } from 'tsoption'
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
+import InvariantViolationException from '@app/domain/exception/InvariantViolationException'
 
-import InvariantViolationException from '../exception/InvariantViolationException'
-import Contacts, { Params as ContactsParams } from './Contacts.vo'
-import NenaprasnoCabinetCredentials from './credentials/NenaprasnoCabinetCredentials.vo'
-import PasswordCredentials from './credentials/PasswordCredentials.vo'
-import Role from './Role'
+import { Contacts } from './Contacts.vo'
+import { NenaprasnoCabinetCredentials } from './credentials/NenaprasnoCabinetCredentials.vo'
+import { PasswordCredentials } from './credentials/PasswordCredentials.vo'
+import { Role } from './Role'
 
 @Entity()
-export default class User {
+export class User {
   @PrimaryColumn()
   public readonly login: string
 
@@ -84,7 +84,7 @@ export default class User {
     this._roles = []
   }
 
-  public newContacts({ email, phone }: ContactsParams) {
+  public newContacts(email?: string, phone?: string) {
     this._contacts = new Contacts({ email, phone })
   }
 

@@ -4,9 +4,8 @@ import MockEntityManager from '../../../__mocks__/EnitityManager'
 import Gender from '../../../infrastructure/customTypes/Gender'
 import Applicant from '../../claim/Applicant.vo'
 import Claim from '../../claim/Claim.entity'
-import User from '../../user/User.entity'
-import QuotaAllocationFailedException from '../exception/QuotaAllocationFailedException'
-import Quota, { QuotaType } from '../Quota.entity'
+import Quota from '../Quota.entity'
+import { User } from '@app/user/model/User.entity'
 
 describe('Allocator', () => {
   let applicant: Applicant

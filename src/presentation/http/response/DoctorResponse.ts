@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
-import User from '@app/domain/user/User.entity'
+import { User } from '@app/user/model/User.entity'
 
 export const exampleDoctor = {
   login: 'chepuhov@oncohelp.core',

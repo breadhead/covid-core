@@ -1,6 +1,6 @@
 import { Column } from 'typeorm'
 
-export default class NenaprasnoCabinetCredentials {
+export class NenaprasnoCabinetCredentials {
   @Column({ nullable: true })
   public readonly id: number
 

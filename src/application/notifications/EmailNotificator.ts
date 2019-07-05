@@ -1,10 +1,7 @@
 import Feedback from '@app/domain/feedback/Feedback.entity'
-import { Inject } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 
 import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import { Configuration } from '@app/config/Configuration'
 import Notificator from './Notificator'
 
@@ -14,7 +11,10 @@ import { StyleInliner } from '@app/utils/service/Templating/processors/StyleInli
 import { Context } from '@app/utils/service/Templating/Context'
 import { MessageContent } from '@app/sender/service/EmailSender/MessageContent'
 import { EmailSender } from '@app/sender/service/EmailSender/EmailSender'
+import { UserRepository } from '@app/user/service/UserRepository'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export default class EmailNotificator implements Notificator {
   private readonly send: (
     to: string,
@@ -34,8 +34,8 @@ export default class EmailNotificator implements Notificator {
     templating: Templating,
     styleInliner: StyleInliner,
     sender: EmailSender,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     config: Configuration,
+    private readonly userRepo: UserRepository,
   ) {
     this.senderEmail = config
       .get('ONCOHELP_SENDER_EMAIL')

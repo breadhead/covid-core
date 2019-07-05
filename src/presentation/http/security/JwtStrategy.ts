@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
-import User from '@app/domain/user/User.entity'
+import { User } from '@app/user/model/User.entity'
 import { Configuration } from '@app/config/Configuration'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 

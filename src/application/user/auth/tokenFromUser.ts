@@ -1,4 +1,4 @@
-import User from '@app/domain/user/User.entity'
+import { User } from '@app/user/model/User.entity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 export default (user: User) =>

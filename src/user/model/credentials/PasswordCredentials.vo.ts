@@ -1,6 +1,6 @@
 import { Column } from 'typeorm'
 
-export default class PasswordCredentials {
+export class PasswordCredentials {
   @Column({ nullable: true })
   public readonly password: string
 

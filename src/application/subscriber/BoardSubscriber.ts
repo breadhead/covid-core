@@ -2,7 +2,6 @@ import NewFeedbackEvent, {
   NAME as NewFeedbackEventName,
 } from '@app/domain/feedback/event/NewFeedbackEvent'
 import { Inject } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 import { Option } from 'tsoption'
 
 import { ClaimStatus, default as Claim } from '@app/domain/claim/Claim.entity'
@@ -28,7 +27,6 @@ import DueDateUpdatedEvent, {
 import NewMessageEvent, {
   NAME as NewMessageName,
 } from '@app/domain/claim/event/NewMessageEvent'
-import UserRepository from '@app/domain/user/UserRepository'
 import BoardManager, {
   BoardKind,
   BoardManager as BoardManagerSymbol,
@@ -41,15 +39,16 @@ import ClaimEditedEvent, {
   NAME as ClaimEditedName,
 } from '@app/domain/claim/event/ClaimEditedEvent'
 import { getReadableCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStatus'
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 import { formatDate } from '../notifications/helpers'
 import { Templating } from '@app/utils/service/Templating/Templating'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(
     @Inject(BoardManagerSymbol) private readonly board: BoardManager,
     private readonly templating: Templating,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly config: Configuration,
   ) {}

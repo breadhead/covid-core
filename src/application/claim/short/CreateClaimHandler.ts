@@ -1,15 +1,14 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
-import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { random } from 'lodash'
 import { EntityManager } from 'typeorm'
 
 import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
 import StatusMover from '@app/domain/claim/StatusMover'
-import UserRepository from '@app/domain/user/UserRepository'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'
@@ -22,7 +21,7 @@ export default class CreateClaimHandler
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly claimRepository: ClaimRepository,
     private readonly statusMover: StatusMover,
     private readonly eventEmitter: EventEmitter,
@@ -58,7 +57,7 @@ export default class CreateClaimHandler
     ])
 
     return this.em.transaction(async em => {
-      user.newContacts({ email, phone })
+      user.newContacts(email, phone)
 
       const applicant = new Applicant(name, age, gender, region)
 

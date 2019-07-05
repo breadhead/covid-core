@@ -3,8 +3,8 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import Role from '@app/domain/user/Role'
-import User from '@app/domain/user/User.entity'
+import { Role } from '@app/user/model/Role'
+import { User } from '@app/user/model/User.entity'
 
 import CreateUserFromCabinetCommand from './CreateUserFromCabinetCommand'
 

@@ -1,15 +1,14 @@
-import { InjectRepository } from '@nestjs/typeorm'
+import { Injectable } from '@nestjs/common'
 
 import Claim from '@app/domain/claim/Claim.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVoter from '@app/infrastructure/security/SecurityVoter/SecurityVoter'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
+import { UserRepository } from '@app/user/service/UserRepository'
 
+@Injectable()
 export default class ShowClaimVoter implements SecurityVoter<Claim> {
-  public constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-  ) {}
+  public constructor(private readonly userRepo: UserRepository) {}
 
   public supports(attribute: Attribute, subject) {
     return attribute === Attribute.Show && subject instanceof Claim

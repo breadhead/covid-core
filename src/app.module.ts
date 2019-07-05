@@ -79,8 +79,6 @@ import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
-import User from '@app/domain/user/User.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRecurrenter'
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
@@ -95,6 +93,8 @@ import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/Secu
 
 import { UtilsModule } from './utils/utils.module'
 import { SenderModule } from './sender/sender.module'
+import { UserModule } from './user/user.module'
+import { DbModule } from './db/db.module'
 
 const cliCommands = [DoctorCommand]
 
@@ -140,7 +140,9 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
   imports: [
     UtilsModule,
     ConfigModule,
+    DbModule,
     SenderModule,
+    UserModule,
     CQRSModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -148,10 +150,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useClass: JwtOptionsFactory,
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useClass: DbOptionsFactory,
     }),
     TypeOrmModule.forFeature([
       Quota,
@@ -161,8 +159,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
-      User,
-      UserRepository,
       Draft,
       DraftRepository,
     ]),

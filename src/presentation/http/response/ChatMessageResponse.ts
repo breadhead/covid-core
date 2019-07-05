@@ -1,8 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 import Message from '@app/domain/claim/Message.entity'
-import Role from '@app/domain/user/Role'
-import User from '@app/domain/user/User.entity'
+import { Role } from '@app/user/model/Role'
+import { User } from '@app/user/model/User.entity'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 enum Author {

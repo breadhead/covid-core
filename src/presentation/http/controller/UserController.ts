@@ -6,12 +6,10 @@ import {
   ApiOperation,
   ApiUseTags,
 } from '@nestjs/swagger'
-import { InjectRepository } from '@nestjs/typeorm'
 
+import { UserRepository } from '@app/user/service/UserRepository'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
-import Role from '@app/domain/user/Role'
-
-import UserRepository from '@app/domain/user/UserRepository'
+import { Role } from '@app/user/model/Role'
 
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
@@ -30,7 +28,7 @@ import CurrentUser from './decorator/CurrentUser'
 @ApiBearerAuth()
 export default class UserController {
   public constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly claimRepo: ClaimRepository,
   ) {}
 

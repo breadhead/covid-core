@@ -1,16 +1,15 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
-import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import UserRepository from '@app/domain/user/UserRepository'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
 
 import SendVerificationCommand from './SendVerificationCommand'
 import { Templating } from '@app/utils/service/Templating/Templating'
 import { SmsSender } from '@app/sender/service/SmsSender/SmsSender'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 const CODE_LENGTH = 4
 
@@ -22,7 +21,7 @@ export default class SendVerificationHandler
     private readonly idGenerator: IdGenerator,
     private readonly encoder: PasswordEncoder,
     private readonly smsSender: SmsSender,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly templating: Templating,
   ) {}
 

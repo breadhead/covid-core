@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import UserRepository from '@app/domain/user/UserRepository'
 import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
-import User from '@app/domain/user/User.entity'
-import Role from '@app/domain/user/Role'
+import { User } from '@app/user/model/User.entity'
+import { Role } from '@app/user/model/Role'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 @Injectable()
 export class DoctorManager {
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly passwordEncoder: PasswordEncoder,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
   ) {}
 
   async createOrEdit(

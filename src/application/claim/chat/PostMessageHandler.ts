@@ -1,14 +1,14 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import NewMessageEvent from '@app/domain/claim/event/NewMessageEvent'
 import Message from '@app/domain/claim/Message.entity'
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
-import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 import PostMessageCommand from './PostMessageCommand'
 
@@ -18,7 +18,7 @@ export default class PostMessageHandler
   public constructor(
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly claimRepo: ClaimRepository,
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly eventEmitter: EventEmitter,
   ) {}
 

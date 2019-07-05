@@ -1,11 +1,19 @@
-import { AbstractRepository, EntityRepository } from 'typeorm'
+import { Repository } from 'typeorm'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import EntityNotFoundException from '../exception/EntityNotFoundException'
-import Role from './Role'
-import User from './User.entity'
+import EntityNotFoundException from '@app/domain/exception/EntityNotFoundException'
 
-@EntityRepository(User)
-export default class UserRepository extends AbstractRepository<User> {
+import { Role } from '../model/Role'
+import { User } from '../model/User.entity'
+
+@Injectable()
+class UserRepo {
+  constructor(
+    @InjectRepository(User)
+    private readonly repository: Repository<User>,
+  ) {}
+
   public findOne(login: string): Promise<User | null> {
     return this.repository.findOne(login)
   }
@@ -29,7 +37,8 @@ export default class UserRepository extends AbstractRepository<User> {
   }
 
   public findCaseManager(): Promise<User> {
-    return this.createQueryBuilder('user')
+    return this.repository
+      .createQueryBuilder('user')
       .where('user._roles like :role', {
         role: `%${Role.CaseManager}%`,
       })
@@ -37,10 +46,14 @@ export default class UserRepository extends AbstractRepository<User> {
   }
 
   public findDoctors(): Promise<User[]> {
-    return this.createQueryBuilder('user')
+    return this.repository
+      .createQueryBuilder('user')
       .where('user._roles like :role', {
         role: `%${Role.Doctor}%`,
       })
       .getMany()
   }
 }
+
+export const UserRepository = UserRepo
+export type UserRepository = UserRepo

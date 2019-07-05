@@ -28,7 +28,7 @@ import TransferQuotaCommand from '@app/application/quota/TransferQuotaCommand'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 
 import IncomeQuotaCommand from '@app/application/quota/IncomeQuotaCommand'
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'

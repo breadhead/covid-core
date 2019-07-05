@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 
 import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
-import UserRepository from '@app/domain/user/UserRepository'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 @Injectable()
 export default class AnswerAccessManager {
@@ -11,9 +10,7 @@ export default class AnswerAccessManager {
     ClaimStatus.ClosedSuccessfully,
   ]
 
-  public constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-  ) {}
+  public constructor(private readonly userRepo: UserRepository) {}
 
   public async accessIsGranted(login: string, claim: Claim): Promise<boolean> {
     const user = await this.userRepo.getOne(login)

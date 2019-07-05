@@ -1,4 +1,4 @@
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { Option } from 'nanoption'

@@ -1,9 +1,9 @@
 import Gender from '../../../infrastructure/customTypes/Gender'
 import InvariantViolationException from '../../exception/InvariantViolationException'
 import Quota from '../../quota/Quota.entity'
-import User from '../../user/User.entity'
 import Applicant from '../Applicant.vo'
 import Claim from '../Claim.entity'
+import { User } from '@app/user/model/User.entity'
 
 describe('Claim', () => {
   let applicant: Applicant

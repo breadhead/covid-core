@@ -6,8 +6,8 @@ import { EntityManager } from 'typeorm'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import DoctorChangedEvent from '@app/domain/claim/event/DoctorChangesEvent'
-import UserRepository from '@app/domain/user/UserRepository'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 import ChooseDoctorCommand from './ChooseDoctorCommand'
 
@@ -16,7 +16,6 @@ export default class ChooseDoctorHandler
   implements ICommandHandler<ChooseDoctorCommand> {
   public constructor(
     private readonly claimRepo: ClaimRepository,
-    @InjectRepository(UserRepository)
     private readonly userRepo: UserRepository,
     @InjectEntityManager()
     private readonly em: EntityManager,

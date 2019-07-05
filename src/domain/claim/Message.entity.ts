@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
-import User from '../user/User.entity'
 import Claim from './Claim.entity'
+import { User } from '@app/user/model/User.entity'
 
 @Entity()
 export default class Message {
