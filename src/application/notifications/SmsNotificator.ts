@@ -7,8 +7,8 @@ import axios from 'axios'
 
 import { SHORTENING_SERVICE } from './helpers'
 import Notificator from './Notificator'
-import { Templating } from '@app/utils/infrastructure/Templating/Templating'
-import { SmsSender } from '@app/sender/infrastructure/SmsSender/SmsSender'
+import { Templating } from '@app/utils/service/Templating/Templating'
+import { SmsSender } from '@app/sender/service/SmsSender/SmsSender'
 
 @Injectable()
 export default class SmsNotificator implements Notificator {

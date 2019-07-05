@@ -1,7 +1,7 @@
 import { None, Option, Some } from 'tsoption'
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 
-import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
+import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Contacts, { Params as ContactsParams } from './Contacts.vo'

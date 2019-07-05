@@ -9,7 +9,7 @@ import Applicant from '@app/domain/claim/Applicant.vo'
 import Claim from '@app/domain/claim/Claim.entity'
 import StatusMover from '@app/domain/claim/StatusMover'
 import UserRepository from '@app/domain/user/UserRepository'
-import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import ClaimEditedEvent from '@app/domain/claim/event/ClaimEditedEvent'

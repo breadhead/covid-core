@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
-import { Logger } from '@app/utils/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 import VerificationFailedException from '@app/application/exception/VerificationFailedException'
 import responseToLog from '../logging/responseToLog'

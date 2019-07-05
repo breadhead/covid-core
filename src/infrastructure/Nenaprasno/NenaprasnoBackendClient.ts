@@ -4,7 +4,7 @@ import { HttpService, Injectable } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 
 import { Configuration } from '../../config/Configuration'
-import { Logger } from '@app/utils/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 const ACCOUNT_EXISTS_STATUS = 409
 

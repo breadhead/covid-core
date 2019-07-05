@@ -23,7 +23,7 @@ import CompanyResponse from '../response/CompanyResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
-import { TableGenerator } from '@app/utils/infrastructure/TableGenerator/TableGenerator'
+import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)

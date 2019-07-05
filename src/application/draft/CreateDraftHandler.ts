@@ -5,7 +5,7 @@ import { EntityManager } from 'typeorm'
 
 import Draft from '@app/domain/draft/Draft.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 
 import CreateDraftCommand from './CreateDraftCommand'
 

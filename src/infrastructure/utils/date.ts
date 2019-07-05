@@ -1,7 +1,7 @@
 import { flow, head } from 'lodash'
 import * as moment from 'moment'
 
-import { splitNumbersAndLetters } from '@app/utils/infrastructure/splitNumbersAndLetters'
+import { splitNumbersAndLetters } from '@app/utils/service/splitNumbersAndLetters'
 
 export const add = (date: Date, modifier: string) =>
   flow(

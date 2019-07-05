@@ -3,7 +3,7 @@ import * as winston from 'winston'
 
 const { combine, timestamp, label } = winston.format
 
-import { Logger } from '@app/utils/infrastructure/Logger/Logger'
+import { Logger } from './Logger'
 import { format } from './format'
 
 @Injectable()

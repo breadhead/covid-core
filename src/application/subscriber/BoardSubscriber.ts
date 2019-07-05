@@ -43,7 +43,7 @@ import ClaimEditedEvent, {
 import { getReadableCorporateStatus } from '@app/domain/claim/helpers/getReadableCorporateStatus'
 import Role from '@app/domain/user/Role'
 import { formatDate } from '../notifications/helpers'
-import { Templating } from '@app/utils/infrastructure/Templating/Templating'
+import { Templating } from '@app/utils/service/Templating/Templating'
 
 export default class BoardSubscriber implements EventSubscriber {
   public constructor(

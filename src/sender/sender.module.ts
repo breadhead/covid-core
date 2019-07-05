@@ -8,10 +8,10 @@ import {
 import { ConfigModule } from '@app/config/config.module'
 import { UtilsModule } from '@app/utils/utils.module'
 
-import { SmsSender } from './infrastructure/SmsSender/SmsSender'
-import { RedSmsSender } from './infrastructure/SmsSender/RedSmsSender'
-import { EmailSender } from './infrastructure/EmailSender/EmailSender'
-import { NodemailerEmailSender } from './infrastructure/EmailSender/NodemailerEmailSender'
+import { SmsSender } from './service/SmsSender/SmsSender'
+import { RedSmsSender } from './service/SmsSender/RedSmsSender'
+import { EmailSender } from './service/EmailSender/EmailSender'
+import { NodemailerEmailSender } from './service/EmailSender/NodemailerEmailSender'
 
 @Module({
   imports: [forwardRef(() => ConfigModule), forwardRef(() => UtilsModule)],

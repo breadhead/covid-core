@@ -9,11 +9,11 @@ import { Configuration } from '@app/config/Configuration'
 import Notificator from './Notificator'
 
 import { formatDate } from './helpers'
-import { Templating } from '@app/utils/infrastructure/Templating/Templating'
-import { StyleInliner } from '@app/utils/infrastructure/Templating/processors/StyleInliner'
-import { Context } from '@app/utils/infrastructure/Templating/Context'
-import { MessageContent } from '@app/sender/infrastructure/EmailSender/MessageContent'
-import { EmailSender } from '@app/sender/infrastructure/EmailSender/EmailSender'
+import { Templating } from '@app/utils/service/Templating/Templating'
+import { StyleInliner } from '@app/utils/service/Templating/processors/StyleInliner'
+import { Context } from '@app/utils/service/Templating/Context'
+import { MessageContent } from '@app/sender/service/EmailSender/MessageContent'
+import { EmailSender } from '@app/sender/service/EmailSender/EmailSender'
 
 export default class EmailNotificator implements Notificator {
   private readonly send: (

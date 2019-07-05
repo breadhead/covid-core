@@ -5,12 +5,12 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import UserRepository from '@app/domain/user/UserRepository'
-import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
-import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
+import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
+import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
 
 import SendVerificationCommand from './SendVerificationCommand'
-import { Templating } from '@app/utils/infrastructure/Templating/Templating'
-import { SmsSender } from '@app/sender/infrastructure/SmsSender/SmsSender'
+import { Templating } from '@app/utils/service/Templating/Templating'
+import { SmsSender } from '@app/sender/service/SmsSender/SmsSender'
 
 const CODE_LENGTH = 4
 

@@ -1,4 +1,4 @@
-import { Logger } from './utils/infrastructure/Logger/Logger'
+import { Logger } from './utils/service/Logger/Logger'
 
 export const extraLoggerMiddleware = (logger: Logger) => {
   return (req, _, next) => {

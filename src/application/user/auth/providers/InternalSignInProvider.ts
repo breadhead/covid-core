@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import User from '@app/domain/user/User.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
+import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
 
 import SignInProvider from './SignInProvider'
 

@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
 import ActionUnavailableException from '@app/domain/exception/ActionUnavailableException'
-import { Logger } from '@app/utils/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 import responseToLog from '../logging/responseToLog'
 
