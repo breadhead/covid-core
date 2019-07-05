@@ -37,9 +37,6 @@ import CreateClaimHandler from '@app/application/claim/short/CreateClaimHandler'
 import EditShortClaimHandler from '@app/application/claim/short/EditShortClaimHandler'
 import ShowClaimVoter from '@app/application/claim/ShowClaimVoter'
 import EditSituationHandler from '@app/application/claim/situation/EditSituationHandler'
-import CreateDraftHandler from '@app/application/draft/CreateDraftHandler'
-import DraftVoter from '@app/application/draft/DraftVoter'
-import EditDraftHandler from '@app/application/draft/EditDraftHandler'
 import PostFeedbackHandler from '@app/application/feedback/PostFeedbackHandler'
 import AllNotificator from '@app/application/notifications/AllNotificator'
 import EmailNotificator from '@app/application/notifications/EmailNotificator'
@@ -68,8 +65,6 @@ import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
-import Draft from '@app/domain/draft/Draft.entity'
-import DraftRepository from '@app/domain/draft/DraftRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
@@ -103,8 +98,6 @@ const commandHandlers = [
   PostFeedbackHandler,
   CreateClaimHandler,
   CloseClaimHandler,
-  CreateDraftHandler,
-  EditDraftHandler,
   MoveToNextStatusHandler,
   IncomeQuotaHandler,
   EditSituationHandler,
@@ -117,12 +110,7 @@ const signInProviders = [
   NenaprasnoCabinetSignInProvider,
 ]
 
-const securityVoters = [
-  PostMessageVoter,
-  DraftVoter,
-  ShowClaimVoter,
-  EditClaimVoter,
-]
+const securityVoters = [PostMessageVoter, ShowClaimVoter, EditClaimVoter]
 
 const notificators = [SmsNotificator, EmailNotificator]
 
@@ -151,8 +139,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
-      Draft,
-      DraftRepository,
     ]),
     HttpModule,
   ],
