@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
-
-import User from '../user/User.entity'
+import { User } from '@app/user/model/User.entity'
 
 @Entity()
 export default class Draft {

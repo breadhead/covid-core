@@ -12,7 +12,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import ConfigModule from '@app/config/config.module'
+import { ConfigModule } from '@app/config/config.module'
 
 import DoctorCommand from '@app/presentation/cli/command/DoctorCommand'
 import CommandRunner from '@app/presentation/cli/CommandRunner'
@@ -58,10 +58,6 @@ import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/provider
 import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
-import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
-import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
-import VerificateHandler from '@app/application/user/verification/VerificateHandler'
-import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 
 import Claim from '@app/domain/claim/Claim.entity'
@@ -79,29 +75,21 @@ import Allocator from '@app/domain/quota/Allocator'
 import Quota from '@app/domain/quota/Quota.entity'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
-import User from '@app/domain/user/User.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRecurrenter'
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
-import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
-import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
-import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
-import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
-import Logger from '@app/infrastructure/Logger/Logger'
-import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
-import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
 import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
-import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 
 import { UtilsModule } from './utils/utils.module'
+import { SenderModule } from './sender/sender.module'
+import { UserModule } from './user/user.module'
+import { DbModule } from './db/db.module'
 
 const cliCommands = [DoctorCommand]
 
@@ -112,8 +100,6 @@ const commandHandlers = [
   EditQuotaHandler,
   BindQuotaHandler,
   PostMessageHandler,
-  CreateUserFromCabinetHandler,
-  SendVerificationHandler,
   PostFeedbackHandler,
   CreateClaimHandler,
   CloseClaimHandler,
@@ -124,7 +110,6 @@ const commandHandlers = [
   EditSituationHandler,
   EditShortClaimHandler,
   ChooseDoctorHandler,
-  VerificateHandler,
 ]
 
 const signInProviders = [
@@ -147,6 +132,9 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
   imports: [
     UtilsModule,
     ConfigModule,
+    DbModule,
+    SenderModule,
+    UserModule,
     CQRSModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -154,10 +142,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useClass: JwtOptionsFactory,
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useClass: DbOptionsFactory,
     }),
     TypeOrmModule.forFeature([
       Quota,
@@ -167,8 +151,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
-      User,
-      UserRepository,
       Draft,
       DraftRepository,
     ]),
@@ -184,7 +166,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...signInProviders,
     ...notificators,
     ClaimBoardCardFinder,
-    DoctorManager,
     {
       provide: SignInProviders,
       useFactory: (...providers: SignInProvider[]) => providers,
@@ -193,22 +174,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: Notificator,
       useClass: AllNotificator,
-    },
-    {
-      provide: EmailSender,
-      useClass: NodemailerEmailSender,
-    },
-    {
-      provide: SmsSender,
-      useClass: RedSmsSender,
-    },
-    {
-      provide: Logger,
-      useClass: ConsoleLogger,
-    },
-    {
-      provide: Monitor,
-      useClass: VoidMonitor,
     },
     {
       provide: APP_INTERCEPTOR,

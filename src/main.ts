@@ -8,7 +8,7 @@ import setupSwagger from '@app/infrastructure/swagger'
 import { answerRedisMiddleware } from './answerRedisMiddleware'
 import { extraLoggerMiddleware } from './extraLoggerMiddleware'
 import { Configuration } from './config/Configuration'
-import Logger from './infrastructure/Logger/Logger'
+import { Logger } from './utils/service/Logger/Logger'
 import { rateLimiter } from './rateLimiter'
 
 async function bootstrap() {

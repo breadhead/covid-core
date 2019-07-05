@@ -1,15 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { InjectRepository } from '@nestjs/typeorm'
 
-import User from '@app/domain/user/User.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import InvalidCredentialsException from '../../exception/InvalidCredentialsException'
 import SignInProvider, { SignInProviders } from './providers/SignInProvider'
 import tokenFromUser from './tokenFromUser'
+import { UserRepository } from '@app/user/service/UserRepository'
+import { User } from '@app/user/model/User.entity'
 
 interface SignUpResult {
   token: string
@@ -19,8 +18,8 @@ interface SignUpResult {
 @Injectable()
 export default class Authenticator {
   constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     @Inject(SignInProviders) private readonly signInProviders: SignInProvider[],
+    private readonly userRepo: UserRepository,
     private readonly nenaprasno: NenaprasnoBackendClient,
     private readonly jwtService: JwtService,
   ) {}

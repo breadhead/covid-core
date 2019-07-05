@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import QuotaRepository from '@app/domain/quota/QuotaRepository'
 import Historian from '@app/domain/service/Historian/Historian'
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 import { Configuration } from '@app/config/Configuration'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 
@@ -23,7 +23,7 @@ import CompanyResponse from '../response/CompanyResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
-import { TableGenerator } from '@app/utils/infrastructure/TableGenerator/TableGenerator'
+import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)

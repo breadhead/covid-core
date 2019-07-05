@@ -1,15 +1,11 @@
-import { InjectRepository } from '@nestjs/typeorm'
-
 import Draft from '@app/domain/draft/Draft.entity'
-import UserRepository from '@app/domain/user/UserRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVoter from '@app/infrastructure/security/SecurityVoter/SecurityVoter'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 export default class DraftVoter implements SecurityVoter<Draft> {
-  public constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
-  ) {}
+  public constructor(private readonly userRepo: UserRepository) {}
 
   public supports(attribute: Attribute, subject) {
     const acceptedAttributes = [Attribute.Show, Attribute.Edit]

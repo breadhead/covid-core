@@ -17,7 +17,7 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger'
 
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 import FileSaver, {
   FileSaver as FileSaverSymbol,
 } from '@app/infrastructure/FileSaver/FileSaver'

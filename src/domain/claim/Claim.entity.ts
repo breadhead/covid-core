@@ -3,8 +3,6 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import InvariantViolationException from '../exception/InvariantViolationException'
 import Quota from '../quota/Quota.entity'
-import Role from '../user/Role'
-import User from '../user/User.entity'
 import Analysis from './analysis/Analysis.vo'
 import FileLink from './analysis/FileLink.vo'
 import Applicant from './Applicant.vo'
@@ -15,6 +13,8 @@ import RelativesDisease from './RelativesDisease.vo'
 import MedicinalTreatment from './treatment/MedicinalTreatment'
 import RadiationTreatment from './treatment/RadiationTreatment'
 import SurgicalTreatment from './treatment/SurgicalTreatment'
+import { User } from '@app/user/model/User.entity'
+import { Role } from '@app/user/model/Role'
 
 export enum ClaimStatus {
   New = 'new',

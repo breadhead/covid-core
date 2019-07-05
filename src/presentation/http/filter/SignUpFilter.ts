@@ -1,7 +1,7 @@
 import SignUpException from '@app/application/exception/SignUpException'
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 import responseToLog from '../logging/responseToLog'
 

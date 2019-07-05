@@ -7,7 +7,7 @@ import Company from '@app/domain/company/Company.entity'
 import CompanyRepository from '@app/domain/company/CompanyRepository'
 import Accountant from '@app/domain/quota/Accountant'
 import Quota from '@app/domain/quota/Quota.entity'
-import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
+import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 
 import CreateQuotaCommand from './CreateQuotaCommand'
 

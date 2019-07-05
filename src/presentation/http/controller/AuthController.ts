@@ -7,21 +7,20 @@ import {
 } from '@nestjs/swagger'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
-import UserRepository from '@app/domain/user/UserRepository'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import { JwtService } from '@nestjs/jwt'
-import { InjectRepository } from '@nestjs/typeorm'
 import ApiUnauthorizedResponse from '../docs/ApiUnauthorizedResponse'
 import LoginRequest from '../request/LoginRequest'
 import RegistrationRequest from '../request/RegistrationRequest'
 import ClientResponse from '../response/ClientResponse'
 import TokenResponse from '../response/TokenResponse'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 @Controller('auth')
 @ApiUseTags('auth')
 export default class AuthController {
   public constructor(
-    @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
+    private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
     private readonly jwtService: JwtService,
   ) {}

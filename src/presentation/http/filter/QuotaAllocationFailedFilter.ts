@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 import QuotaAllocationFailedException from '@app/domain/quota/exception/QuotaAllocationFailedException'
 import responseToLog from '../logging/responseToLog'

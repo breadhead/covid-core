@@ -1,4 +1,4 @@
-import User from '@app/domain/user/User.entity'
+import { User } from '@app/user/model/User.entity'
 
 export default interface SignInProvider {
   supports(login: string, cred: string): Promise<boolean>

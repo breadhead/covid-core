@@ -1,4 +1,3 @@
-import { CommandBus } from '@breadhead/nest-throwable-bus'
 import {
   Body,
   Controller,
@@ -15,21 +14,20 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger'
 
-import SendVerificationCommand from '@app/application/user/verification/SendVerificationCommand'
-import VerificateCommand from '@app/application/user/verification/VerificateCommand'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import SendRequest from '../request/verification/SendRequest'
 import VerificateRequest from '../request/verification/VerificateRequest'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import CurrentUser from './decorator/CurrentUser'
+import { Verificator } from '@app/user/application/Verificator'
 
 @Controller('verification')
 @ApiUseTags('verification')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export default class VerificationController {
-  public constructor(private readonly commandBus: CommandBus) {}
+  public constructor(private readonly verivicator: Verificator) {}
 
   @Post('send')
   @HttpCode(200)
@@ -37,12 +35,10 @@ export default class VerificationController {
   @ApiOkResponse({ description: 'Success' })
   @ApiBadRequestResponse({ description: 'Invalid number' })
   public async send(
-    @Body() request: SendRequest,
-    @CurrentUser() user: TokenPayload,
+    @Body() { number }: SendRequest,
+    @CurrentUser() { login }: TokenPayload,
   ): Promise<void> {
-    await this.commandBus.execute(
-      new SendVerificationCommand(request.number, user.login),
-    )
+    await this.verivicator.sendCode(login, number)
   }
 
   @Post('verificate')
@@ -50,12 +46,9 @@ export default class VerificationController {
   @ApiOkResponse({ description: 'Verificated' })
   @ApiBadRequestResponse({ description: 'Invalid code' })
   public async verificate(
-    @CurrentUser() user: TokenPayload,
-    @Body() request: VerificateRequest,
+    @CurrentUser() { login }: TokenPayload,
+    @Body() { code }: VerificateRequest,
   ): Promise<void> {
-    const { login } = user
-    const { code } = request
-
-    await this.commandBus.execute(new VerificateCommand(login, code))
+    await this.verivicator.validateCode(login, code)
   }
 }

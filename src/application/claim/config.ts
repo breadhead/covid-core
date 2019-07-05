@@ -1,4 +1,4 @@
-import Role from '@app/domain/user/Role'
+import { Role } from '@app/user/model/Role'
 import { CloseType } from './CloseClaimCommand'
 
 export const successCloseClaimTypes = [

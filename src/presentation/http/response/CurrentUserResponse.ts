@@ -1,4 +1,4 @@
-import User from '@app/domain/user/User.entity'
+import { User } from '@app/user/model/User.entity'
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export default class CurrentUserResponse {
