@@ -1,28 +1,36 @@
 import { Injectable } from '@nestjs/common'
 
-import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
-import { User } from '@app/user/model/User.entity'
 import { Role } from '@app/user/model/Role'
-import { UserRepository } from '@app/user/service/UserRepository'
+import { User } from '@app/user/model/User.entity'
 import { EntitySaver } from '@app/db/EntitySaver'
+import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
 
 @Injectable()
-export class DoctorManager {
+export class UserCreator {
   public constructor(
     private readonly entitySaver: EntitySaver,
     private readonly passwordEncoder: PasswordEncoder,
-    private readonly userRepo: UserRepository,
   ) {}
 
-  async createOrEdit(
+  async createClient(nenaprasnoId: number) {
+    const login = `nenaprasno-cabinet-${nenaprasnoId}`
+
+    const user = new User(login)
+    user.roles.push(Role.Client)
+    user.bindToNenaprasnoCabinet(nenaprasnoId)
+
+    await this.entitySaver.save(user)
+
+    return user
+  }
+
+  async createDoctor(
     email: string,
     rawPassword: string,
     name: string,
     boardUsername: string,
     desciption?: string,
   ) {
-    const userExists = !!(await this.userRepo.findOne(email))
-
     const user = new User(email)
 
     await user.changePassword(rawPassword, this.passwordEncoder)
@@ -34,6 +42,6 @@ export class DoctorManager {
 
     await this.entitySaver.save(user)
 
-    return !userExists
+    return user
   }
 }

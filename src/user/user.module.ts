@@ -6,12 +6,12 @@ import { UtilsModule } from '@app/utils/utils.module'
 
 import { UserRepository } from './service/UserRepository'
 import { User } from './model/User.entity'
-import { DoctorManager } from './application/DoctorManager'
+import { UserCreator } from './application/UserCreator'
 
 @Module({
   imports: [DbModule, UtilsModule, TypeOrmModule.forFeature([User])],
-  providers: [UserRepository, DoctorManager],
-  exports: [UserRepository, DoctorManager],
+  providers: [UserRepository, UserCreator],
+  exports: [UserRepository, UserCreator],
 })
 export class UserModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

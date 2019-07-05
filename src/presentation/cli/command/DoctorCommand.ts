@@ -6,11 +6,11 @@ import {
   Output,
 } from '@solid-soda/console'
 
-import { DoctorManager } from '@app/user/application/DoctorManager'
+import { UserCreator } from '@app/user/application/UserCreator'
 
 @Injectable()
 export default class DoctorCommand implements ConsoleCommand {
-  public constructor(private readonly doctorManager: DoctorManager) {}
+  public constructor(private readonly userCreator: UserCreator) {}
 
   public configure = (): CommandConfiguration => ({
     name: 'doctor',
@@ -47,7 +47,7 @@ export default class DoctorCommand implements ConsoleCommand {
     } = this.createDoctorRequest(input)
 
     try {
-      const created: boolean = await this.doctorManager.createOrEdit(
+      await this.userCreator.createDoctor(
         email,
         password,
         name,
@@ -55,11 +55,7 @@ export default class DoctorCommand implements ConsoleCommand {
         description.getOrElse(null),
       )
 
-      if (created) {
-        await output.success('Doctor account successfully created')
-      } else {
-        await output.success('Doctor account successfully edited')
-      }
+      await output.success('Doctor account successfully created')
 
       await output.info(`Login: ${email}`)
       await output.info(`Password: ${password}`)
