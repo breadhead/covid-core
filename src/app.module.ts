@@ -12,7 +12,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import ConfigModule from '@app/config/config.module'
+import { ConfigModule } from '@app/config/config.module'
 
 import DoctorCommand from '@app/presentation/cli/command/DoctorCommand'
 import CommandRunner from '@app/presentation/cli/CommandRunner'
@@ -86,18 +86,15 @@ import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRec
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
 import DbOptionsFactory from '@app/infrastructure/DbOptionsFactory'
-import { EmailSender } from '@app/infrastructure/EmailSender/EmailSender'
-import NodemailerEmailSender from '@app/infrastructure/EmailSender/NodemailerEmailSender'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
 import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
-import RedSmsSender from '@app/infrastructure/SmsSender/RedSmsSender'
-import { SmsSender } from '@app/infrastructure/SmsSender/SmsSender'
 
 import { UtilsModule } from './utils/utils.module'
+import { SenderModule } from './sender/sender.module'
 
 const cliCommands = [DoctorCommand]
 
@@ -143,6 +140,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
   imports: [
     UtilsModule,
     ConfigModule,
+    SenderModule,
     CQRSModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -189,14 +187,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: Notificator,
       useClass: AllNotificator,
-    },
-    {
-      provide: EmailSender,
-      useClass: NodemailerEmailSender,
-    },
-    {
-      provide: SmsSender,
-      useClass: RedSmsSender,
     },
     {
       provide: APP_INTERCEPTOR,

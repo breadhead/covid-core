@@ -7,12 +7,10 @@ import { EntityManager } from 'typeorm'
 import UserRepository from '@app/domain/user/UserRepository'
 import { IdGenerator } from '@app/utils/infrastructure/IdGenerator/IdGenerator'
 import { PasswordEncoder } from '@app/utils/infrastructure/PasswordEncoder/PasswordEncoder'
-import SmsSender, {
-  SmsSender as SmsSenderSymbol,
-} from '@app/infrastructure/SmsSender/SmsSender'
 
 import SendVerificationCommand from './SendVerificationCommand'
 import { Templating } from '@app/utils/infrastructure/Templating/Templating'
+import { SmsSender } from '@app/sender/infrastructure/SmsSender/SmsSender'
 
 const CODE_LENGTH = 4
 
@@ -23,7 +21,7 @@ export default class SendVerificationHandler
     @InjectEntityManager() private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
     private readonly encoder: PasswordEncoder,
-    @Inject(SmsSenderSymbol) private readonly smsSender: SmsSender,
+    private readonly smsSender: SmsSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     private readonly templating: Templating,
   ) {}

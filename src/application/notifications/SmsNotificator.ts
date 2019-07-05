@@ -1,23 +1,22 @@
-import { Inject } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import { Configuration } from '@app/config/Configuration'
-import SmsSender, {
-  SmsSender as SmsSenderSymbol,
-} from '@app/infrastructure/SmsSender/SmsSender'
 import axios from 'axios'
 
 import { SHORTENING_SERVICE } from './helpers'
 import Notificator from './Notificator'
 import { Templating } from '@app/utils/infrastructure/Templating/Templating'
+import { SmsSender } from '@app/sender/infrastructure/SmsSender/SmsSender'
 
+@Injectable()
 export default class SmsNotificator implements Notificator {
   private readonly send: (to: string, content: string) => Promise<void>
   private siteUrl: string
 
   public constructor(
-    @Inject(SmsSenderSymbol) smsSender: SmsSender,
+    smsSender: SmsSender,
     private readonly templating: Templating,
     config: Configuration,
   ) {

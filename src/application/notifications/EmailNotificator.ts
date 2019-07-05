@@ -6,16 +6,15 @@ import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import UserRepository from '@app/domain/user/UserRepository'
 import { Configuration } from '@app/config/Configuration'
-import EmailSender, {
-  EmailSender as EmailSenderSymbol,
-  MessageContent,
-} from '@app/infrastructure/EmailSender/EmailSender'
 import Notificator from './Notificator'
 
 import { formatDate } from './helpers'
 import { Templating } from '@app/utils/infrastructure/Templating/Templating'
 import { StyleInliner } from '@app/utils/infrastructure/Templating/processors/StyleInliner'
 import { Context } from '@app/utils/infrastructure/Templating/Context'
+import { MessageContent } from '@app/sender/infrastructure/EmailSender/MessageContent'
+import { EmailSender } from '@app/sender/infrastructure/EmailSender/EmailSender'
+
 export default class EmailNotificator implements Notificator {
   private readonly send: (
     to: string,
@@ -34,7 +33,7 @@ export default class EmailNotificator implements Notificator {
   public constructor(
     templating: Templating,
     styleInliner: StyleInliner,
-    @Inject(EmailSenderSymbol) sender: EmailSender,
+    sender: EmailSender,
     @InjectRepository(UserRepository) private readonly userRepo: UserRepository,
     config: Configuration,
   ) {

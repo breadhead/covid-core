@@ -3,12 +3,14 @@ import { createTransport, getTestMessageUrl, Transporter } from 'nodemailer'
 
 import { Configuration } from '@app/config/Configuration'
 import { Logger } from '@app/utils/infrastructure/Logger/Logger'
-import EmailSender, { MessageContent } from './EmailSender'
+
+import { EmailSender } from './EmailSender'
+import { MessageContent } from './MessageContent'
 
 const SECURE_PORT = 587
 
 @Injectable()
-export default class NodemailerEmailSender implements EmailSender {
+export class NodemailerEmailSender implements EmailSender {
   private readonly transporter: Transporter
 
   public constructor(
@@ -16,10 +18,7 @@ export default class NodemailerEmailSender implements EmailSender {
     private readonly logger: Logger,
   ) {
     const host = this.config.get('SMTP_HOST').getOrElse('localhost')
-    const port = this.config
-      .get('SMTP_PORT')
-      .map(Number)
-      .getOrElse(587)
+    const port = this.config.getNumber('SMTP_PORT').getOrElse(587)
     const auth = {
       user: this.config.get('SMTP_USER').getOrElse('admin'),
       pass: this.config.get('SMTP_PASSWORD').getOrElse('admin'),

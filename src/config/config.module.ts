@@ -8,4 +8,4 @@ const configProvider = ConfigurationFactory.provider()
   providers: [configProvider],
   exports: [configProvider],
 })
-export default class ConfigModule {}
+export class ConfigModule {}

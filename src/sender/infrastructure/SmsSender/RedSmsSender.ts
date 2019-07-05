@@ -3,19 +3,19 @@ import { Injectable } from '@nestjs/common'
 
 import { Configuration } from '@app/config/Configuration'
 import { Logger } from '@app/utils/infrastructure/Logger/Logger'
-import SmsSender from './SmsSender'
+
+import { SmsSender } from './SmsSender'
 
 @Injectable()
-export default class RedSmsSender implements SmsSender {
+export class RedSmsSender implements SmsSender {
   private redSmsClient: RedSmsClient
 
   public constructor(
     private readonly config: Configuration,
     private readonly logger: Logger,
   ) {
-    const login = this.config.get('SMS_LOGIN').getOrElse('')
-
-    const apiKey = this.config.get('SMS_API_KEY').getOrElse('')
+    const login = this.config.getStringOrThrow('SMS_LOGIN')
+    const apiKey = this.config.getStringOrThrow('SMS_API_KEY')
 
     this.redSmsClient = new RedSmsClient(login, apiKey)
   }
