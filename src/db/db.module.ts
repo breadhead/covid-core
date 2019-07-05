@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { DbOptionsFactory } from './DbOptionsFactory'
 import { ConfigModule } from '@app/config/config.module'
+
+import { DbOptionsFactory } from './DbOptionsFactory'
+import { EntitySaver } from './EntitySaver'
 
 @Module({
   imports: [
@@ -11,8 +13,8 @@ import { ConfigModule } from '@app/config/config.module'
       useClass: DbOptionsFactory,
     }),
   ],
-  providers: [],
-  exports: [],
+  providers: [EntitySaver],
+  exports: [EntitySaver],
 })
 export class DbModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

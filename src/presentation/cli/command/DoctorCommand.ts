@@ -6,7 +6,7 @@ import {
   Output,
 } from '@solid-soda/console'
 
-import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
+import { DoctorManager } from '@app/user/application/DoctorManager'
 
 @Injectable()
 export default class DoctorCommand implements ConsoleCommand {

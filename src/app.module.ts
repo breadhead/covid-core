@@ -61,7 +61,6 @@ import SignInProvider, {
 import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
 import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
 import VerificateHandler from '@app/application/user/verification/VerificateHandler'
-import { DoctorManager } from '@app/application/user/createUser/DoctorManager'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 
 import Claim from '@app/domain/claim/Claim.entity'
@@ -173,7 +172,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     ...signInProviders,
     ...notificators,
     ClaimBoardCardFinder,
-    DoctorManager,
     {
       provide: SignInProviders,
       useFactory: (...providers: SignInProvider[]) => providers,
