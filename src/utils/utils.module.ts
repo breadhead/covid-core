@@ -9,9 +9,12 @@ import { TwigTemplating } from './infrastructure/Templating/TwigTemplating'
 import { StyleInliner } from './infrastructure/Templating/processors/StyleInliner'
 import { TableGenerator } from './infrastructure/TableGenerator/TableGenerator'
 import { CsvTableGenerator } from './infrastructure/TableGenerator/CsvTableGenerator'
+import { Logger } from './infrastructure/Logger/Logger'
+import { ConsoleLogger } from './infrastructure/Logger/ConsoleLogger'
 
 @Module({
   providers: [
+    { provide: Logger, useClass: ConsoleLogger },
     { provide: TableGenerator, useClass: CsvTableGenerator },
     { provide: PasswordEncoder, useClass: BcryptPasswordEncoder },
     { provide: IdGenerator, useClass: NanoIdGenerator },
@@ -24,6 +27,7 @@ import { CsvTableGenerator } from './infrastructure/TableGenerator/CsvTableGener
     Templating,
     StyleInliner,
     TableGenerator,
+    Logger,
   ],
 })
 export class UtilsModule implements NestModule {

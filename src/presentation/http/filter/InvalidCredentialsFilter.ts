@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
 import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 
 import responseToLog from '../logging/responseToLog'
 

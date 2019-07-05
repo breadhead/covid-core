@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { createTransport, getTestMessageUrl, Transporter } from 'nodemailer'
 
-import { Configuration } from '../../config/Configuration'
-import Logger from '../Logger/Logger'
+import { Configuration } from '@app/config/Configuration'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 import EmailSender, { MessageContent } from './EmailSender'
 
 const SECURE_PORT = 587

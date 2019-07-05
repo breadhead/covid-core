@@ -3,7 +3,7 @@ import { Response } from 'express'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 
 import responseToLog from './responseToLog'
 

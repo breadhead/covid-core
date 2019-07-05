@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
 import EntityNotFoundException from '@app/domain/exception/EntityNotFoundException'
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 
 import responseToLog from '../logging/responseToLog'
 

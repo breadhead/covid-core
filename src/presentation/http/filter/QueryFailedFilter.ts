@@ -5,7 +5,7 @@ import { Option } from 'tsoption'
 import { QueryFailedError } from 'typeorm'
 import { matches } from 'z'
 
-import Logger from '@app/infrastructure/Logger/Logger'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 
 import responseToLog from '../logging/responseToLog'
 

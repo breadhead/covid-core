@@ -92,8 +92,6 @@ import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
 import JwtOptionsFactory from '@app/infrastructure/JwtOptionsFactory'
-import ConsoleLogger from '@app/infrastructure/Logger/ConsoleLogger'
-import Logger from '@app/infrastructure/Logger/Logger'
 import { Monitor } from '@app/infrastructure/Logger/Monitor/Monitor'
 import VoidMonitor from '@app/infrastructure/Logger/Monitor/VoidMonitor'
 import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
@@ -201,10 +199,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     {
       provide: SmsSender,
       useClass: RedSmsSender,
-    },
-    {
-      provide: Logger,
-      useClass: ConsoleLogger,
     },
     {
       provide: Monitor,

@@ -4,7 +4,7 @@ import { last } from 'lodash'
 import * as md5 from 'md5'
 import { promisify } from 'util'
 
-import Logger from '../Logger/Logger'
+import { Logger } from '@app/utils/infrastructure/Logger/Logger'
 import FileSaver from './FileSaver'
 
 const PUBLIC_DIR = 'public'
