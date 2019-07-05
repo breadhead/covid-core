@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common'
 import { JwtModuleOptions, JwtOptionsFactory as Factory } from '@nestjs/jwt'
 
-import Configuration from './Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 
 export default class JwtOptionsFactory implements Factory {
   public constructor(

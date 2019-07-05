@@ -12,7 +12,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import ConfigModule from '@app/config.module'
+import ConfigModule from '@app/config/config.module'
 
 import DoctorCommand from '@app/presentation/cli/command/DoctorCommand'
 import CommandRunner from '@app/presentation/cli/CommandRunner'

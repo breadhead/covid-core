@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import SmsSender, {
   SmsSender as SmsSenderSymbol,
 } from '@app/infrastructure/SmsSender/SmsSender'

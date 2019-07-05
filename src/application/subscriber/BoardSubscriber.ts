@@ -33,7 +33,7 @@ import BoardManager, {
   BoardKind,
   BoardManager as BoardManagerSymbol,
 } from '@app/infrastructure/BoardManager/BoardManager'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import EventSubscriber from '@app/infrastructure/events/EventSubscriber'
 
 import { CorporateStatus } from '@app/domain/claim/CorporateStatus'

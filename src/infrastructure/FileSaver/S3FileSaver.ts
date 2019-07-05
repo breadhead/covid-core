@@ -1,7 +1,7 @@
 import { MinioUploader, S3Uploader } from '@breadhead/s3-uploader'
 import { Injectable } from '@nestjs/common'
 
-import Configuration from '../Configuration/Configuration'
+import { Configuration } from '../../config/Configuration'
 import FileSaver from './FileSaver'
 
 @Injectable()

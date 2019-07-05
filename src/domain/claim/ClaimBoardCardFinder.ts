@@ -4,7 +4,7 @@ import BoardManager, {
   BoardManager as BoardManagerSymbol,
   Card,
 } from '@app/infrastructure/BoardManager/BoardManager'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import { Inject, Injectable } from '@nestjs/common'
 import { promisify } from 'util'
 

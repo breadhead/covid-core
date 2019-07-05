@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import Authenticator from '@app/application/user/auth/Authenticator'
 import User from '@app/domain/user/User.entity'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 @Injectable()

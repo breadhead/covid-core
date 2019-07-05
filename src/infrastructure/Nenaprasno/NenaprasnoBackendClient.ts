@@ -3,7 +3,7 @@ import SignUpException from '@app/application/exception/SignUpException'
 import { HttpService, Injectable } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 
-import Configuration from '../Configuration/Configuration'
+import { Configuration } from '../../config/Configuration'
 import Logger from '../Logger/Logger'
 
 const ACCOUNT_EXISTS_STATUS = 409

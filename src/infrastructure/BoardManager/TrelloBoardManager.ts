@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import * as Trello from 'trello'
-import Configuration from '../Configuration/Configuration'
+import { Configuration } from '../../config/Configuration'
 import BoardManager, {
   BoardKind,
   Card,

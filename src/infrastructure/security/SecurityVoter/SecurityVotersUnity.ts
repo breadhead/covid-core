@@ -2,7 +2,7 @@ import { Inject, Type } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { SecurityVotersUnity, Strategy } from '@solid-soda/voters'
 
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 
 import SecurityException from '../SecurityException'
 import TokenPayload from '../TokenPayload'

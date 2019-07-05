@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { createTransport, getTestMessageUrl, Transporter } from 'nodemailer'
 
-import Configuration from '../Configuration/Configuration'
+import { Configuration } from '../../config/Configuration'
 import Logger from '../Logger/Logger'
 import EmailSender, { MessageContent } from './EmailSender'
 

@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
 import { join } from 'path'
 
-import Configuration from './Configuration/Configuration'
+import { Configuration } from '../config/Configuration'
 
 export default class DbOptionsFactory implements TypeOrmOptionsFactory {
   public constructor(

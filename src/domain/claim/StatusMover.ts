@@ -6,7 +6,7 @@ import { EntityManager } from 'typeorm'
 
 import { CloseType } from '@app/application/claim/CloseClaimCommand'
 import CloseWithoutAnswerEvent from '@app/domain/claim/event/CloseWithoutAnswerEvent'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import Event from '@app/infrastructure/events/Event'
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { add } from '@app/infrastructure/utils/date'

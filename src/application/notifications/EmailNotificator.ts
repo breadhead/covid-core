@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import Claim, { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import UserRepository from '@app/domain/user/UserRepository'
-import Configuration from '@app/infrastructure/Configuration/Configuration'
+import { Configuration } from '@app/config/Configuration'
 import EmailSender, {
   EmailSender as EmailSenderSymbol,
   MessageContent,

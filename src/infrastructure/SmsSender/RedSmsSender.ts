@@ -1,7 +1,7 @@
 import RedSmsClient from '@breadhead/red-sms-client'
 import { Inject, Injectable } from '@nestjs/common'
 
-import Configuration from '../Configuration/Configuration'
+import { Configuration } from '../../config/Configuration'
 import Logger from '../Logger/Logger'
 import SmsSender from './SmsSender'
 
