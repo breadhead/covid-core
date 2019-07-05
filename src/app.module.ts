@@ -58,9 +58,6 @@ import NenaprasnoCabinetSignInProvider from '@app/application/user/auth/provider
 import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
-import CreateUserFromCabinetHandler from '@app/application/user/createUser/CreateUserFromCabinetHandler'
-import SendVerificationHandler from '@app/application/user/verification/SendVerificationHandler'
-import VerificateHandler from '@app/application/user/verification/VerificateHandler'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 
 import Claim from '@app/domain/claim/Claim.entity'
@@ -103,8 +100,6 @@ const commandHandlers = [
   EditQuotaHandler,
   BindQuotaHandler,
   PostMessageHandler,
-  CreateUserFromCabinetHandler,
-  SendVerificationHandler,
   PostFeedbackHandler,
   CreateClaimHandler,
   CloseClaimHandler,
@@ -115,7 +110,6 @@ const commandHandlers = [
   EditSituationHandler,
   EditShortClaimHandler,
   ChooseDoctorHandler,
-  VerificateHandler,
 ]
 
 const signInProviders = [

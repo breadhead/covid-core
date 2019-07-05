@@ -1,4 +1,4 @@
-export default class VerificationFailedException extends Error {
+export class VerificationFailedException extends Error {
   public readonly code: string
 
   public constructor(code: string) {
