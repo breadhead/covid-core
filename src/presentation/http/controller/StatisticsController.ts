@@ -75,6 +75,16 @@ export default class StatisticsController {
     }
   }
 
+  @Get('success-closed-claims-report')
+  @Header('Content-Type', 'text/csv')
+  @ApiOperation({ title: 'number of successfully closed claims' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  public async generateReportForSuccessClosedClaims(): Promise<any> {
+    const closedClaims = await this.claimRepo.findSuccessefullyClosedClaimsNum()
+    return { num: closedClaims.length }
+  }
+
   @Get('closed-claims-report')
   @Header('Content-Type', 'text/csv')
   @Roles(Role.Admin)

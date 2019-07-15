@@ -39,6 +39,20 @@ class ClaimRepo {
     return claims
   }
 
+  public async findSuccessefullyClosedClaimsNum(): Promise<Claim[]> {
+    const claims = this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'auota')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.ClosedSuccessfully],
+      })
+      .getMany()
+
+    return claims
+  }
+
   public async findClosedByRange(from: Date, to: Date): Promise<Claim[]> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
