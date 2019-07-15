@@ -75,9 +75,15 @@ export default class TrelloBoardManager implements BoardManager {
   }
 
   public async addLabel(cardId: string, labelText: string): Promise<void> {
-    const card = await this.getCard(cardId)
-    const label = await this.createOrGetLabel(card.idBoard, labelText)
-    return this.trello.addLabelToCard(cardId, label.id).then(tapOrThrow)
+    try {
+      const card = await this.getCard(cardId)
+      const label = await this.createOrGetLabel(card.idBoard, labelText)
+      await this.trello.addLabelToCard(cardId, label.id).then(tapOrThrow)
+    } catch (e) {
+      // pass
+      // ok, we can't assign label
+      // never mind
+    }
   }
 
   public async deleteLabelFromCard(
