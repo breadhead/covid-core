@@ -16,6 +16,7 @@ import ClientResponse from '../response/ClientResponse'
 import TokenResponse from '../response/TokenResponse'
 import { UserRepository } from '@app/user/service/UserRepository'
 import { PasswordManager } from '@app/user/application/PasswordManager'
+import { PasswordResetRequest } from '../request/PasswordResetRequest'
 
 @Controller('auth')
 @ApiUseTags('auth')
@@ -70,24 +71,12 @@ export default class AuthController {
 
   @Post('reset-password')
   @HttpCode(200)
-  @ApiOperation({ title: 'Issue the new token' })
-  @ApiOkResponse({ description: 'Correct credentials', type: TokenResponse })
-  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @ApiOperation({ title: 'Reset password' })
   public async resetPassword(
-    @Body() loginRequest: LoginRequest,
-  ): Promise<TokenResponse> {
-    this.passwordManager.fdskjf
+    @Body() request: PasswordResetRequest,
+  ): Promise<void> {
+    const { login } = request
 
-    const { login, password } = loginRequest
-
-    const token = await this.authenticator.signIn(login, password)
-
-    const payload = this.jwtService.decode(token, {}) as TokenPayload
-
-    const user = await this.userRepo.getOne(payload.login)
-
-    const roles = user.roles.map(role => role.toString())
-
-    return new TokenResponse(token, roles)
+    await this.passwordManager.reset(login)
   }
 }

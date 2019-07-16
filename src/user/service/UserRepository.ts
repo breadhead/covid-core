@@ -28,6 +28,24 @@ class UserRepo {
     return user
   }
 
+  async findOneByContactEmail(email: string): Promise<User | null> {
+    return await this.repository.findOne({
+      where: {
+        _contacts: { email },
+      },
+    })
+  }
+
+  async getOneByContactEmail(email: string): Promise<User> {
+    const user = await this.findOneByContactEmail(email)
+
+    if (!user) {
+      throw new EntityNotFoundException(User.name, { email })
+    }
+
+    return user
+  }
+
   public findOneByCabinetId(id: number): Promise<User | null> {
     return this.repository.findOne({
       where: {
