@@ -1,10 +1,4 @@
-import {
-  AbstractRepository,
-  EntityRepository,
-  LessThan,
-  Raw,
-  Repository,
-} from 'typeorm'
+import { Repository } from 'typeorm'
 
 import { endOfDay, startOfDay, subDays } from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
@@ -37,6 +31,17 @@ class ClaimRepo {
     })
 
     return claims
+  }
+
+  public async getSuccessClaimsCount(): Promise<number> {
+    const claimsCount = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.ClosedSuccessfully],
+      })
+      .getCount()
+
+    return claimsCount
   }
 
   public async findClosedByRange(from: Date, to: Date): Promise<Claim[]> {
