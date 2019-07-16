@@ -78,7 +78,6 @@ export default class StatisticsController {
   @Get('success-closed-claims-count')
   @ApiOperation({ title: 'number of successfully closed claims' })
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
   public async generateSuccessClaimsCount(): Promise<number> {
     const closedClaimsCount = await this.claimRepo.getSuccessClaimsCount()
     return closedClaimsCount
