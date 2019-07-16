@@ -3,7 +3,9 @@ import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVoter from '@app/infrastructure/security/SecurityVoter/SecurityVoter'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import { UserRepository } from '@app/user/service/UserRepository'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export default class EditClaimVoter implements SecurityVoter<Claim> {
   private readonly statusesForEditingByClient = [
     ClaimStatus.New,
