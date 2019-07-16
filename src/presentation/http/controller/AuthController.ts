@@ -15,6 +15,8 @@ import RegistrationRequest from '../request/RegistrationRequest'
 import ClientResponse from '../response/ClientResponse'
 import TokenResponse from '../response/TokenResponse'
 import { UserRepository } from '@app/user/service/UserRepository'
+import { PasswordManager } from '@app/user/application/PasswordManager'
+import { PasswordResetRequest } from '../request/PasswordResetRequest'
 
 @Controller('auth')
 @ApiUseTags('auth')
@@ -23,6 +25,7 @@ export default class AuthController {
     private readonly userRepo: UserRepository,
     private readonly authenticator: Authenticator,
     private readonly jwtService: JwtService,
+    private readonly passwordManager: PasswordManager,
   ) {}
 
   @Post('register')
@@ -64,5 +67,16 @@ export default class AuthController {
     const roles = user.roles.map(role => role.toString())
 
     return new TokenResponse(token, roles)
+  }
+
+  @Post('reset-password')
+  @HttpCode(200)
+  @ApiOperation({ title: 'Reset password' })
+  public async resetPassword(
+    @Body() request: PasswordResetRequest,
+  ): Promise<void> {
+    const { login } = request
+
+    await this.passwordManager.reset(login)
   }
 }

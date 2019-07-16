@@ -11,7 +11,7 @@ import { User } from '../model/User.entity'
 class UserRepo {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
+    private readonly repository: Repository<User>
   ) {}
 
   public findOne(login: string): Promise<User | null> {
@@ -28,11 +28,31 @@ class UserRepo {
     return user
   }
 
+  async findOneByContactEmail(email: string): Promise<User | null> {
+    const findedEmail = await this.repository.findOne({
+      where: {
+        _contacts: { email }
+      }
+    })
+
+    return findedEmail
+  }
+
+  async getOneByContactEmail(email: string): Promise<User> {
+    const user = await this.findOneByContactEmail(email)
+
+    if (!user) {
+      throw new EntityNotFoundException(User.name, { email })
+    }
+
+    return user
+  }
+
   public findOneByCabinetId(id: number): Promise<User | null> {
     return this.repository.findOne({
       where: {
-        _nenaprasnoCabinetCredentials: { id },
-      },
+        _nenaprasnoCabinetCredentials: { id }
+      }
     })
   }
 
@@ -40,7 +60,7 @@ class UserRepo {
     return this.repository
       .createQueryBuilder('user')
       .where('user._roles like :role', {
-        role: `%${Role.CaseManager}%`,
+        role: `%${Role.CaseManager}%`
       })
       .getOne()
   }
@@ -49,7 +69,7 @@ class UserRepo {
     return this.repository
       .createQueryBuilder('user')
       .where('user._roles like :role', {
-        role: `%${Role.Doctor}%`,
+        role: `%${Role.Doctor}%`
       })
       .getMany()
   }

@@ -85,6 +85,7 @@ import { UtilsModule } from './utils/utils.module'
 import { SenderModule } from './sender/sender.module'
 import { UserModule } from './user/user.module'
 import { DbModule } from './db/db.module'
+import ResetedSignInProvider from './application/user/auth/providers/ResetedSignInProvider'
 
 const cliCommands = [DoctorCommand]
 
@@ -107,6 +108,7 @@ const commandHandlers = [
 
 const signInProviders = [
   InternalSignInProvider,
+  ResetedSignInProvider,
   NenaprasnoCabinetSignInProvider,
 ]
 
