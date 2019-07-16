@@ -7,3 +7,6 @@ export { default as FileController } from './FileController'
 export { default as QuotaController } from './QuotaController'
 export { default as StatisticsController } from './StatisticsController'
 export { default as VerificationController } from './VerificationController'
+export {
+  default as PublicStatisticsController,
+} from './PublicStatisticsController'
