@@ -56,6 +56,7 @@ import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
+import ResetedSignInProvider from '@app/application/user/auth/providers/ResetedSignInProvider'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
@@ -85,7 +86,7 @@ import { UtilsModule } from './utils/utils.module'
 import { SenderModule } from './sender/sender.module'
 import { UserModule } from './user/user.module'
 import { DbModule } from './db/db.module'
-import ResetedSignInProvider from './application/user/auth/providers/ResetedSignInProvider'
+import { TelegramModule } from './telegram/telegram.module'
 
 const cliCommands = [DoctorCommand]
 
@@ -120,6 +121,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
   imports: [
+    TelegramModule,
     UtilsModule,
     ConfigModule,
     DbModule,
