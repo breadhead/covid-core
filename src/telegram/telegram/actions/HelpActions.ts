@@ -7,8 +7,17 @@ import { Templating } from '@app/utils/service/Templating/Templating'
 export class HelpActions {
   public constructor(private readonly templating: Templating) {}
 
+  @TelegramActionHandler({ onStart: true })
+  async start(ctx: Context) {
+    await this.sendHelpText(ctx)
+  }
+
   @TelegramActionHandler({ command: '/help' })
-  public async income(ctx: Context) {
+  async help(ctx: Context) {
+    await this.sendHelpText(ctx)
+  }
+
+  private async sendHelpText(ctx: Context) {
     const responseText = await this.templating.render('telegram/help', {})
 
     await ctx.reply(responseText)

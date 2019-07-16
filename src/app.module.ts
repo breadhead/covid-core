@@ -87,6 +87,8 @@ import { SenderModule } from './sender/sender.module'
 import { UserModule } from './user/user.module'
 import { DbModule } from './db/db.module'
 import { TelegramModule } from './telegram/telegram.module'
+import { TelegramBot } from 'nest-telegram'
+import { Configuration } from './config/Configuration'
 
 const cliCommands = [DoctorCommand]
 
@@ -208,6 +210,8 @@ export class AppModule implements NestModule {
     @Inject(Notificator) private readonly allNotificator: AllNotificator,
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
+    private readonly config: Configuration,
+    private readonly telegramBot: TelegramBot,
   ) {}
 
   public onModuleInit() {
@@ -228,6 +232,13 @@ export class AppModule implements NestModule {
 
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
+
+    this.telegramBot.init(this.moduleRef)
+
+    if (this.config.isDev()) {
+      // in dev use long poll
+      this.telegramBot.startPolling()
+    }
   }
 
   public configure(consumer: MiddlewareConsumer) {
