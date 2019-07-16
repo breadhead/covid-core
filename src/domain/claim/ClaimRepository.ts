@@ -34,7 +34,7 @@ class ClaimRepo {
   }
 
   public async getSuccessClaimsCount(): Promise<number> {
-    const claimsCount = this.repository
+    const claimsCount = await this.repository
       .createQueryBuilder('claim')
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.ClosedSuccessfully],
