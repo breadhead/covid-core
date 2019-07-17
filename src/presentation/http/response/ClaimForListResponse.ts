@@ -41,6 +41,7 @@ export default class ClaimForListResponse {
       editedAt: claim.editedAt || claim.createdAt,
       answeredAt: claim.answeredAt,
       answerUpdatedAt: claim.answerUpdatedAt,
+      draftedAt: claim.draftedAt,
       status: defineStatus(claim.status),
       expireAt: claim.due.getOrElse(undefined),
       email: claim.author.contacts.email,
@@ -70,6 +71,9 @@ export default class ClaimForListResponse {
 
   @ApiModelProperty({ example: new Date() })
   public readonly answerUpdatedAt?: Date
+
+  @ApiModelProperty({ example: new Date() })
+  public readonly draftedAt?: Date
 
   @ApiModelProperty({ example: Status.Draft, enum: Object.values(Status) })
   public readonly status: Status

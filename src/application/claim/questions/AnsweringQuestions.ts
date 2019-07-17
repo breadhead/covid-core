@@ -23,6 +23,8 @@ export class AnsweringQuestions {
   ): Promise<void> {
     const claim = await this.editAnswers(claimId, answers)
 
+    claim.updateDraftedAt()
+
     await this.em.save(claim)
   }
 
