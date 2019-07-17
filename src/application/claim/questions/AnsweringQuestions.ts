@@ -17,10 +17,26 @@ export class AnsweringQuestions {
     private readonly statusMover: StatusMover,
   ) {}
 
-  public async answer(
+  async preAnswer(
     claimId: string,
     answers: QuestionWithAnswer[],
   ): Promise<void> {
+    const claim = await this.editAnswers(claimId, answers)
+
+    await this.em.save(claim)
+  }
+
+  async answer(claimId: string, answers: QuestionWithAnswer[]): Promise<void> {
+    const claim = await this.editAnswers(claimId, answers)
+
+    await this.statusMover.afterNewAnswers(claim)
+    await this.em.save(claim)
+  }
+
+  private editAnswers = async (
+    claimId: string,
+    answers: QuestionWithAnswer[],
+  ) => {
     const claim = await this.claimRepo.getOne(claimId)
 
     claim.answerQuestions(
@@ -32,7 +48,7 @@ export class AnsweringQuestions {
     } else {
       claim.updateAnsweredAt()
     }
-    await this.statusMover.afterNewAnswers(claim)
-    await this.em.save(claim)
+
+    return claim
   }
 }

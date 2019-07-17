@@ -354,6 +354,21 @@ export default class ClaimController {
   }
 
   @Roles(Role.Doctor, Role.CaseManager)
+  @Post('pre-answer')
+  @ApiOperation({ title: 'Pre-Answer questions for claim' })
+  @ApiOkResponse({ description: 'New answer saved' })
+  @ApiForbiddenResponse({
+    description: 'Doctor or Case Manager API token doesn`t provided',
+  })
+  public async preAnswerQuestions(
+    @Body() request: AnswerQuestionsRequest,
+  ): Promise<void> {
+    const { claimId, answers } = request
+
+    await this.answeringQuestions.preAnswer(claimId, answers)
+  }
+
+  @Roles(Role.Doctor, Role.CaseManager)
   @Post('answer')
   @ApiOperation({ title: 'Answer questions for claim' })
   @ApiOkResponse({ description: 'New answer saved' })
