@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
@@ -31,6 +31,12 @@ export class AnsweringQuestions {
   async answer(claimId: string, answers: QuestionWithAnswer[]): Promise<void> {
     const claim = await this.editAnswers(claimId, answers)
 
+    if (!!claim.answeredAt) {
+      claim.updateAnswerUpdatedAt()
+    } else {
+      claim.updateAnsweredAt()
+    }
+
     await this.statusMover.afterNewAnswers(claim)
     await this.em.save(claim)
   }
@@ -44,12 +50,6 @@ export class AnsweringQuestions {
     claim.answerQuestions(
       answers.map(({ question, answer }) => new Question(question, answer)),
     )
-
-    if (!!claim.answeredAt) {
-      claim.updateAnswerUpdatedAt()
-    } else {
-      claim.updateAnsweredAt()
-    }
 
     return claim
   }
