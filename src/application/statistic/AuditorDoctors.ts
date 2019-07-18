@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { differenceInMilliseconds } from 'date-fns'
+import { differenceInMilliseconds, differenceInCalendarDays } from 'date-fns'
 import { groupBy } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
 import { median } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
+import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 
 @Injectable()
 export class AuditorDoctors {
@@ -34,11 +35,12 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
-    const answerTimes = claims
-      .map(({ sentToClientAt, answeredAt }) => ({
-        start: answeredAt,
-        end: sentToClientAt,
-      }))
+    const claimsDates = claims.map(({ sentToDoctorAt, answeredAt }) => ({
+      start: sentToDoctorAt,
+      end: answeredAt,
+    }))
+
+    const answerTimes = claimsDates
       .filter(({ start, end }) => !!start && !!end)
       .map(({ start, end }) => {
         const weekendDuration = weekendDurationBetween(start, end)
@@ -48,11 +50,16 @@ export class AuditorDoctors {
       })
       .filter(diff => diff > 0)
 
+    const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
+    const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
+
     return {
       median: median(answerTimes),
       average: this.average(answerTimes),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
+      success,
+      failure,
     }
   }
 

@@ -32,6 +32,12 @@ export class DoctorAnswerTimeResponse {
   @ApiModelProperty({ example: 21321 })
   public readonly max: number
 
+  @ApiModelProperty({ example: 21321 })
+  public readonly success: number
+
+  @ApiModelProperty({ example: 21321 })
+  public readonly failure: number
+
   @ApiModelProperty({ example: [] })
   public readonly doctors: DoctorStat[]
 }
