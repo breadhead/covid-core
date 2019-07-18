@@ -50,8 +50,19 @@ export default class TelegramNotificator implements Notificator {
     // SMS Notification not needed
   }
 
-  public async claimSendToDoctor(): Promise<void> {
-    // SMS Notification not needed
+  public async claimSendToDoctor(claim: Claim): Promise<void> {
+    const { number, id, doctor } = claim
+
+    if (!doctor.contacts.telegramId) {
+      return
+    }
+
+    const text = await this.templating.render('telegram/claim-send-to-doctor', {
+      number,
+      link: `${this.siteUrl}/doctor/consultation/${id}`,
+    })
+
+    await this.telegramClient.sendMarkdown(doctor.contacts.telegramId, text)
   }
 
   public async claimApproved(): Promise<void> {
