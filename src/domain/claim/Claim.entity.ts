@@ -68,6 +68,9 @@ export default class Claim {
   @JoinColumn()
   public readonly author: User
 
+  @Column()
+  public overdueNotificated: boolean = false
+
   public get closeComment() {
     return this._closeComment
   }

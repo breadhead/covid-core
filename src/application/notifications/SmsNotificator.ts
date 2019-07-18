@@ -127,4 +127,8 @@ export default class SmsNotificator implements Notificator {
       await this.send(author.contacts.phone, text)
     }
   }
+
+  async claimAlmostOverdue(): Promise<void> {
+    // SMS Notification not needed
+  }
 }

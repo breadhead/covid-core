@@ -90,4 +90,23 @@ export default class TelegramNotificator implements Notificator {
   public async doctorAnswer(): Promise<void> {
     // SMS Notification not needed
   }
+
+  async claimAlmostOverdue(claim: Claim): Promise<void> {
+    const { number, id, doctor } = claim
+
+    if (!doctor.contacts.telegramId) {
+      return
+    }
+
+    const counters = await this.auditor.getCurrentStatusForDoctor(doctor.login)
+
+    const text = await this.templating.render('telegram/claim-almost-overdue', {
+      number,
+      link: `${this.siteUrl}/doctor/consultation/${id}`,
+      boardUsername: doctor.boardUsername,
+      ...counters,
+    })
+
+    await this.telegramClient.sendMarkdown(doctor.contacts.telegramId, text)
+  }
 }

@@ -90,6 +90,7 @@ import { TelegramModule } from './telegram/telegram.module'
 import { TelegramBot } from 'nest-telegram'
 import { Configuration } from './config/Configuration'
 import TelegramNotificator from './application/notifications/TelegramNotificator'
+import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecurrenter'
 
 const cliCommands = [DoctorCommand]
 
@@ -187,6 +188,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     StatusMover,
     NotifyMessageRecurrenter,
     FeedbackAnswerRecurrenter,
+    NotifyOverdueRecurrenter,
     Allocator,
     Accountant,
     Historian,
@@ -212,6 +214,7 @@ export class AppModule implements NestModule {
     @Inject(Notificator) private readonly allNotificator: AllNotificator,
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
+    private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
     private readonly config: Configuration,
     private readonly telegramBot: TelegramBot,
   ) {}
@@ -234,6 +237,7 @@ export class AppModule implements NestModule {
 
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
+    this.notifyOverdueRecurrenter.start()
 
     this.telegramBot.init(this.moduleRef)
 
