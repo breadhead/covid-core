@@ -130,11 +130,14 @@ export default class StatisticsController {
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
   async getDoctorAnswerTimes(): Promise<DoctorAnswerTimeResponse> {
-    const [{ median, average, min, max }, doctors] = await Promise.all([
+    const [
+      { median, average, min, max, success, failure },
+      doctors,
+    ] = await Promise.all([
       this.auditor.calculateAnswerTime(),
       this.auditor.calculateAnswerTimeByDoctors(),
     ])
 
-    return { median, average, min, max, doctors }
+    return { median, average, min, max, doctors, success, failure }
   }
 }
