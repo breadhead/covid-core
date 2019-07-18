@@ -60,8 +60,8 @@ export class NotifyMessageRecurrenter {
   private async notify(): Promise<void> {
     const messagerSorter = (message: Message) => message.date.valueOf()
 
-    // Wait 1 sec, app initializing...
-    await wait(1000)
+    // Wait 10 sec, app initializing...
+    await wait(10000)
 
     const messages = await this.messageRepo.findForNotification()
 
