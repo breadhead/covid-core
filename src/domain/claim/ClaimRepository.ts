@@ -1,12 +1,18 @@
 import { Repository } from 'typeorm'
 
-import { endOfDay, startOfDay, subDays } from 'date-fns'
+import {
+  endOfDay,
+  startOfDay,
+  subDays,
+  differenceInMilliseconds,
+} from 'date-fns'
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 
 import Claim, { ClaimStatus, CLOSED_STATUSES } from './Claim.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Status } from '@app/presentation/http/response/ClaimForListResponse'
+import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 
 @Injectable()
 class ClaimRepo {
@@ -108,6 +114,50 @@ class ClaimRepo {
       .getMany()
 
     return claims
+  }
+
+  public async getDoctorActiveClaimsCount(doctorLogin: string) {
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .where('claim._status = :status', { status: ClaimStatus.AtTheDoctor })
+      .andWhere('claim._doctor.login = :doctorLogin', { doctorLogin })
+      .getCount()
+  }
+
+  public async getDoctorOverdueClaimsCount(doctorLogin: string) {
+    const now = new Date().toISOString()
+
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .where('claim._status = :status', { status: ClaimStatus.AtTheDoctor })
+      .andWhere('claim._doctor.login = :doctorLogin', { doctorLogin })
+      .andWhere('claim._due >= :now', { now })
+      .getCount()
+  }
+
+  async findAlmostOverdue() {
+    const now = new Date().toISOString()
+
+    const activeClaims = await this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'quota')
+      .where('claim._status = :status', { status: ClaimStatus.AtTheDoctor })
+      .andWhere('claim.overdueNotificated = :notificated', {
+        notificated: false,
+      })
+      .getMany()
+
+    return activeClaims.filter(
+      claim =>
+        Math.abs(
+          differenceInMilliseconds(claim.due.getOrElse(new Date()), now),
+        ) <
+        MS_IN_DAY / 2,
+    )
   }
 }
 

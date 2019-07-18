@@ -1,14 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import { Configuration } from '@app/config/Configuration'
-import axios from 'axios'
 
-import { SHORTENING_SERVICE } from './helpers'
 import Notificator from './Notificator'
 import { Templating } from '@app/utils/service/Templating/Templating'
 import { SmsSender } from '@app/sender/service/SmsSender/SmsSender'
+import { LinkShortener } from '@app/utils/service/LinkShortener/LinkShortener'
 
 @Injectable()
 export default class SmsNotificator implements Notificator {
@@ -16,8 +15,9 @@ export default class SmsNotificator implements Notificator {
   private siteUrl: string
 
   public constructor(
-    smsSender: SmsSender,
     private readonly templating: Templating,
+    private readonly linkShortener: LinkShortener,
+    smsSender: SmsSender,
     config: Configuration,
   ) {
     this.send = (to, content) => smsSender.send(to, content)
@@ -29,7 +29,7 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = message.claim
     const { name } = message.claim.applicant
 
-    const link = await this.getShortLink(
+    const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}?openMessage`,
     )
 
@@ -75,7 +75,7 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
+    const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}`,
     )
 
@@ -94,7 +94,7 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
+    const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}`,
     )
 
@@ -113,7 +113,7 @@ export default class SmsNotificator implements Notificator {
     const { number, author, id } = claim
     const { name } = claim.applicant
 
-    const link = await this.getShortLink(
+    const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}#expert-answers`,
     )
 
@@ -128,13 +128,7 @@ export default class SmsNotificator implements Notificator {
     }
   }
 
-  private async getShortLink(link: string): Promise<any> {
-    // TODO: move to separate service
-    return axios
-      .get(`${SHORTENING_SERVICE}${link}`)
-      .then(response => {
-        return response.data
-      })
-      .catch(() => link)
+  async claimAlmostOverdue(): Promise<void> {
+    // SMS Notification not needed
   }
 }

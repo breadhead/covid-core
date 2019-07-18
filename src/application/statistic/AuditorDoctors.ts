@@ -12,6 +12,18 @@ import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 export class AuditorDoctors {
   constructor(private readonly claimRepo: ClaimRepository) {}
 
+  async getCurrentStatusForDoctor(doctorLogin: string) {
+    const [activeCount, overdueCount] = await Promise.all([
+      this.claimRepo.getDoctorActiveClaimsCount(doctorLogin),
+      this.claimRepo.getDoctorOverdueClaimsCount(doctorLogin),
+    ])
+
+    return {
+      activeCount,
+      overdueCount,
+    }
+  }
+
   async calculateAnswerTime() {
     const allClaims = await this.claimRepo.findAllClosed()
 

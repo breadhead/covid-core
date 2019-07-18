@@ -56,6 +56,7 @@ import SignInProvider, {
   SignInProviders,
 } from '@app/application/user/auth/providers/SignInProvider'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
+import ResetedSignInProvider from '@app/application/user/auth/providers/ResetedSignInProvider'
 
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
@@ -85,7 +86,11 @@ import { UtilsModule } from './utils/utils.module'
 import { SenderModule } from './sender/sender.module'
 import { UserModule } from './user/user.module'
 import { DbModule } from './db/db.module'
-import ResetedSignInProvider from './application/user/auth/providers/ResetedSignInProvider'
+import { TelegramModule } from './telegram/telegram.module'
+import { TelegramBot } from 'nest-telegram'
+import { Configuration } from './config/Configuration'
+import TelegramNotificator from './application/notifications/TelegramNotificator'
+import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecurrenter'
 
 const cliCommands = [DoctorCommand]
 
@@ -114,12 +119,13 @@ const signInProviders = [
 
 const securityVoters = [PostMessageVoter, ShowClaimVoter, EditClaimVoter]
 
-const notificators = [SmsNotificator, EmailNotificator]
+const notificators = [SmsNotificator, EmailNotificator, TelegramNotificator]
 
 const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
 @Module({
   imports: [
+    TelegramModule,
     UtilsModule,
     ConfigModule,
     DbModule,
@@ -182,6 +188,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     StatusMover,
     NotifyMessageRecurrenter,
     FeedbackAnswerRecurrenter,
+    NotifyOverdueRecurrenter,
     Allocator,
     Accountant,
     Historian,
@@ -190,6 +197,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     JwtAuthGuard,
     SecurityVotersUnity,
     NenaprasnoBackendClient,
+    TelegramNotificator,
     EventEmitter,
     CommandRunner,
     ClaimRepository,
@@ -206,6 +214,9 @@ export class AppModule implements NestModule {
     @Inject(Notificator) private readonly allNotificator: AllNotificator,
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
+    private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
+    private readonly config: Configuration,
+    private readonly telegramBot: TelegramBot,
   ) {}
 
   public onModuleInit() {
@@ -226,6 +237,14 @@ export class AppModule implements NestModule {
 
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
+    this.notifyOverdueRecurrenter.start()
+
+    this.telegramBot.init(this.moduleRef)
+
+    if (this.config.isDev()) {
+      // in dev use long poll
+      this.telegramBot.startPolling()
+    }
   }
 
   public configure(consumer: MiddlewareConsumer) {

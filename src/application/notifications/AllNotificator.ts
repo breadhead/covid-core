@@ -70,6 +70,10 @@ export default class AllNotificator implements Notificator {
     await this.forAll(notificator => notificator.feedbackAnswerSent(claim))
   }
 
+  async claimAlmostOverdue(claim: Claim): Promise<void> {
+    await this.forAll(notificator => notificator.claimAlmostOverdue(claim))
+  }
+
   private async forAll(
     call: (notificator: Notificator) => Promise<void>,
   ): Promise<void> {
