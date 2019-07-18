@@ -62,6 +62,8 @@ export class NotifyOverdueRecurrenter {
     const groups = chunk(claims, 5)
 
     for (const claimGroup of groups) {
+      // We must await in loop, becase want to send messages by chunks
+      // eslint-disable-next-line no-await-in-loop
       await Promise.all(
         claimGroup.map(claim => this.notificator.claimAlmostOverdue(claim)),
       )
