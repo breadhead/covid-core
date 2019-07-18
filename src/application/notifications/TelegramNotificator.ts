@@ -6,6 +6,7 @@ import Claim from '@app/domain/claim/Claim.entity'
 import Message from '@app/domain/claim/Message.entity'
 import { Configuration } from '@app/config/Configuration'
 
+import { AuditorDoctors } from '../statistic/AuditorDoctors'
 import Notificator from './Notificator'
 
 @Injectable()
@@ -15,6 +16,7 @@ export default class TelegramNotificator implements Notificator {
   public constructor(
     private readonly telegramClient: TelegramClient,
     private readonly templating: Templating,
+    private readonly auditor: AuditorDoctors,
     config: Configuration,
   ) {
     this.siteUrl = config.get('SITE_URL').getOrElse('https://ask.nenaprasno.ru')
@@ -57,9 +59,13 @@ export default class TelegramNotificator implements Notificator {
       return
     }
 
+    const counters = await this.auditor.getCurrentStatusForDoctor(doctor.login)
+
     const text = await this.templating.render('telegram/claim-send-to-doctor', {
       number,
       link: `${this.siteUrl}/doctor/consultation/${id}`,
+      boardUsername: doctor.boardUsername,
+      ...counters,
     })
 
     await this.telegramClient.sendMarkdown(doctor.contacts.telegramId, text)

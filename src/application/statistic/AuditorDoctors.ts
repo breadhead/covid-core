@@ -11,6 +11,18 @@ import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetwee
 export class AuditorDoctors {
   constructor(private readonly claimRepo: ClaimRepository) {}
 
+  async getCurrentStatusForDoctor(doctorLogin: string) {
+    const [activeCount, overdueCount] = await Promise.all([
+      this.claimRepo.getDoctorActiveClaimsCount(doctorLogin),
+      this.claimRepo.getDoctorOverdueClaimsCount(doctorLogin),
+    ])
+
+    return {
+      activeCount,
+      overdueCount,
+    }
+  }
+
   async calculateAnswerTime() {
     const allClaims = await this.claimRepo.findAllClosed()
 

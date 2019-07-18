@@ -109,6 +109,27 @@ class ClaimRepo {
 
     return claims
   }
+
+  public async getDoctorActiveClaimsCount(doctorLogin: string) {
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .where('claim._status = :status', { status: ClaimStatus.AtTheDoctor })
+      .andWhere('claim._doctor.login = :doctorLogin', { doctorLogin })
+      .getCount()
+  }
+
+  public async getDoctorOverdueClaimsCount(doctorLogin: string) {
+    const now = new Date().toISOString()
+
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .where('claim._status = :status', { status: ClaimStatus.AtTheDoctor })
+      .andWhere('claim._doctor.login = :doctorLogin', { doctorLogin })
+      .andWhere('claim._due >= :now', { now })
+      .getCount()
+  }
 }
 
 export const ClaimRepository = ClaimRepo
