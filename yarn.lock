@@ -664,9 +664,9 @@
   integrity sha512-3AvcEJAh9EMatxs+OxAlvAEs7OTy6AG94mcH1iqyVDwVVndekLxzwkWQ/Z4SDbY6GO2oyUXyWW8tQ4rENSSQVQ==
 
 "@types/node@^12.0.4":
-  version "12.6.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.3.tgz#44d507c5634f85e7164707ca36bba21b5213d487"
-  integrity sha512-7TEYTQT1/6PP53NftXXabIZDaZfaoBdeBm8Md/i7zsWRoBe0YwOXguyK8vhHs8ehgB/w9U4K/6EWuTyp0W6nIA==
+  version "12.6.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.8.tgz#e469b4bf9d1c9832aee4907ba8a051494357c12c"
+  integrity sha512-aX+gFgA5GHcDi89KG5keey2zf0WfZk/HAQotEamsK2kbey+8yGKcson0hbK8E+v0NArlCJQCqMP161YhV6ZXLg==
 
 "@types/nodemailer@^4.6.5":
   version "4.6.5"
@@ -6979,10 +6979,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nest-telegram@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/nest-telegram/-/nest-telegram-0.4.0.tgz#dbda1d765ca90c28f6b11b63a3f203eb437299e5"
-  integrity sha512-kplrfEL3EoIm3KzgMdR0K/XCp6raWzT3yF62Z3YiPj7j4j51OAoLDZGbkFmt+wHjR4u9mN7d80vqsWO3qR9PlQ==
+nest-telegram@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/nest-telegram/-/nest-telegram-0.5.0.tgz#0e20c7aa25cf6a3a26739e2aa14d00ee55c9eadd"
+  integrity sha512-+bWMh2dRLu1MqM6HaMcjGOZ1dJyC8IZ8uB/Bjx20NEUyTpYPO46R+84G2EHvNjvjW/QoRLWMiFfLdJW556G5tw==
   dependencies:
     lodash "^4.17.11"
     telegraf "^3.27.1"

@@ -89,6 +89,7 @@ import { DbModule } from './db/db.module'
 import { TelegramModule } from './telegram/telegram.module'
 import { TelegramBot } from 'nest-telegram'
 import { Configuration } from './config/Configuration'
+import TelegramNotificator from './application/notifications/TelegramNotificator'
 
 const cliCommands = [DoctorCommand]
 
@@ -117,7 +118,7 @@ const signInProviders = [
 
 const securityVoters = [PostMessageVoter, ShowClaimVoter, EditClaimVoter]
 
-const notificators = [SmsNotificator, EmailNotificator]
+const notificators = [SmsNotificator, EmailNotificator, TelegramNotificator]
 
 const eventSubscribers = [BoardSubscriber, NotifySubscriber]
 
@@ -194,6 +195,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     JwtAuthGuard,
     SecurityVotersUnity,
     NenaprasnoBackendClient,
+    TelegramNotificator,
     EventEmitter,
     CommandRunner,
     ClaimRepository,

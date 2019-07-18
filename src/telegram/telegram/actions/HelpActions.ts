@@ -9,15 +9,15 @@ export class HelpActions {
 
   @TelegramActionHandler({ onStart: true })
   async start(ctx: Context) {
-    await this.sendHelpText(ctx)
+    const responseText = await this.templating.render('telegram/hello', {
+      id: ctx.from.id,
+    })
+
+    await ctx.reply(responseText)
   }
 
   @TelegramActionHandler({ command: '/help' })
   async help(ctx: Context) {
-    await this.sendHelpText(ctx)
-  }
-
-  private async sendHelpText(ctx: Context) {
     const responseText = await this.templating.render('telegram/help', {})
 
     await ctx.reply(responseText)

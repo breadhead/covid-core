@@ -9,6 +9,8 @@ import Notificator, {
 } from '@app/application/notifications/Notificator'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
+import { Configuration } from '@app/config/Configuration'
+import { Logger } from '@app/utils/service/Logger/Logger'
 
 const wait = (ms: number) =>
   new Promise(resolve => {
@@ -17,39 +19,49 @@ const wait = (ms: number) =>
 
 @Injectable()
 export class NotifyMessageRecurrenter {
-  private readonly job: CronJob
+  private readonly job: CronJob | null = null
 
   public constructor(
     @InjectRepository(MessageRepository)
     private readonly messageRepo: MessageRepository,
+    private readonly logger: Logger,
     @Inject(NotificatorSymbol) private readonly notificator: Notificator,
     @InjectEntityManager() private readonly em: EntityManager,
+    config: Configuration,
   ) {
-    // random minutes for every app instanse
-    const minutes = random(1, 50, false)
+    if (config.isProd()) {
+      // random minutes for every app instanse
+      const minutes = random(1, 50, false)
 
-    this.job = new CronJob(
-      `${minutes} */3 * * *`,
-      () => {
-        this.notify()
-      },
-      null,
-      null,
-      null,
-      null,
-      true,
-    )
+      this.job = new CronJob(
+        `${minutes} */3 * * *`,
+        () => {
+          this.notify()
+        },
+        null,
+        null,
+        null,
+        null,
+        true,
+      )
+    }
+
+    if (config.isDev()) {
+      setInterval(() => this.notify(), 2000)
+    }
   }
 
   public start() {
-    this.job.start()
+    if (this.job) {
+      this.job.start()
+    }
   }
 
   private async notify(): Promise<void> {
     const messagerSorter = (message: Message) => message.date.valueOf()
 
-    // Wait 10 sec, app initializing...
-    await wait(10000)
+    // Wait 1 sec, app initializing...
+    await wait(1000)
 
     const messages = await this.messageRepo.findForNotification()
 
@@ -81,9 +93,7 @@ export class NotifyMessageRecurrenter {
 
       // We pass the error because it's just notification
       const promises = [
-        fromClientNotification.catch(() => {
-          // pass
-        }),
+        fromClientNotification.catch(this.logger.warn),
         fromSpecialistNotification.catch(() => {
           // pass
         }),

@@ -11,6 +11,8 @@ import { TableGenerator } from './service/TableGenerator/TableGenerator'
 import { CsvTableGenerator } from './service/TableGenerator/CsvTableGenerator'
 import { Logger } from './service/Logger/Logger'
 import { ConsoleLogger } from './service/Logger/ConsoleLogger'
+import { LinkShortener } from './service/LinkShortener/LinkShortener'
+import { ClckLinkShortener } from './service/LinkShortener/ClckLinkShortener'
 
 @Module({
   providers: [
@@ -19,6 +21,7 @@ import { ConsoleLogger } from './service/Logger/ConsoleLogger'
     { provide: PasswordEncoder, useClass: BcryptPasswordEncoder },
     { provide: IdGenerator, useClass: NanoIdGenerator },
     { provide: Templating, useClass: TwigTemplating },
+    { provide: LinkShortener, useClass: ClckLinkShortener },
     StyleInliner,
   ],
   exports: [
@@ -28,6 +31,7 @@ import { ConsoleLogger } from './service/Logger/ConsoleLogger'
     StyleInliner,
     TableGenerator,
     Logger,
+    LinkShortener,
   ],
 })
 export class UtilsModule implements NestModule {
