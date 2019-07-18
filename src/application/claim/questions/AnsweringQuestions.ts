@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
@@ -17,22 +17,40 @@ export class AnsweringQuestions {
     private readonly statusMover: StatusMover,
   ) {}
 
-  public async answer(
+  async preAnswer(
     claimId: string,
     answers: QuestionWithAnswer[],
   ): Promise<void> {
-    const claim = await this.claimRepo.getOne(claimId)
+    const claim = await this.editAnswers(claimId, answers)
 
-    claim.answerQuestions(
-      answers.map(({ question, answer }) => new Question(question, answer)),
-    )
+    claim.updateDraftedAt()
+
+    await this.em.save(claim)
+  }
+
+  async answer(claimId: string, answers: QuestionWithAnswer[]): Promise<void> {
+    const claim = await this.editAnswers(claimId, answers)
 
     if (!!claim.answeredAt) {
       claim.updateAnswerUpdatedAt()
     } else {
       claim.updateAnsweredAt()
     }
+
     await this.statusMover.afterNewAnswers(claim)
     await this.em.save(claim)
+  }
+
+  private editAnswers = async (
+    claimId: string,
+    answers: QuestionWithAnswer[],
+  ) => {
+    const claim = await this.claimRepo.getOne(claimId)
+
+    claim.answerQuestions(
+      answers.map(({ question, answer }) => new Question(question, answer)),
+    )
+
+    return claim
   }
 }
