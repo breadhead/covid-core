@@ -1,0 +1,7 @@
+ALTER TABLE claim
+    ADD COLUMN _draftedAt DATETIME DEFAULT NOW();
+
+#DOWN
+
+ALTER TABLE claim
+    DROP COLUMN _draftedAt;

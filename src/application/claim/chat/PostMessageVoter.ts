@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common'
+
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVoter from '@app/infrastructure/security/SecurityVoter/SecurityVoter'
@@ -6,6 +8,7 @@ import { UserRepository } from '@app/user/service/UserRepository'
 
 import PostMessageCommand from './PostMessageCommand'
 
+@Injectable()
 export default class PostMessageVoter
   implements SecurityVoter<PostMessageCommand> {
   public constructor(

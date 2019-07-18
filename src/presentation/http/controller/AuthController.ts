@@ -74,9 +74,16 @@ export default class AuthController {
   @ApiOperation({ title: 'Reset password' })
   public async resetPassword(
     @Body() request: PasswordResetRequest,
-  ): Promise<void> {
+  ): Promise<string> {
     const { login } = request
 
     await this.passwordManager.reset(login)
+
+    const user = await this.userRepo.getOneByContactEmail(login)
+
+    return this.hidePhoneNumber(user.contacts.phone)
   }
+
+  private hidePhoneNumber = (phone: string) =>
+    phone.substr(-2, 2).padStart(10, '*')
 }

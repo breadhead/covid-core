@@ -4,6 +4,6 @@ export default class LoginRequest {
   @ApiModelProperty({ example: 'kate@gmail.com' })
   public readonly login: string
 
-  @ApiModelProperty({ example: 'hfdsh565)hk' })
+  @ApiModelProperty({ example: '268890' })
   public readonly password: string
 }

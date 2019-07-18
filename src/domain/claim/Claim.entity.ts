@@ -154,6 +154,10 @@ export default class Claim {
     return this._answeredAt
   }
 
+  public get draftedAt() {
+    return this._draftedAt
+  }
+
   public get answerUpdatedAt() {
     return this._answerUpdatedAt
   }
@@ -270,6 +274,9 @@ export default class Claim {
   private _answeredAt?: Date
 
   @Column({ nullable: true })
+  private _draftedAt: Date
+
+  @Column({ nullable: true })
   private _answerUpdatedAt?: Date
 
   @Column({ nullable: true })
@@ -289,6 +296,7 @@ export default class Claim {
     number: number,
     createdAt: Date,
     editedAt: Date = createdAt,
+    draftedAt: Date,
     applicant: Applicant,
     author: User,
     theme: string,
@@ -300,6 +308,7 @@ export default class Claim {
     this.number = number
     this.createdAt = createdAt
     this._editedAt = editedAt
+    this._draftedAt = draftedAt
     this._applicant = applicant
     this.author = author
     this._theme = theme
@@ -499,6 +508,10 @@ export default class Claim {
 
   public updateAnsweredAt() {
     this._answeredAt = new Date()
+  }
+
+  public updateDraftedAt() {
+    this._draftedAt = new Date()
   }
 
   public updateAnswerUpdatedAt() {

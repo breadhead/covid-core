@@ -10,7 +10,7 @@ import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 
 @Controller('public-statistics')
 @ApiUseTags('public-statistics')
-export default class StatisticsController {
+export default class PublicStatisticsController {
   public constructor(private readonly claimRepo: ClaimRepository) {}
 
   @Get('success-closed-claims-count')
