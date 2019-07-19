@@ -110,12 +110,18 @@ class ClaimRepo {
     return claims
   }
 
-  public async getAllQuestionnaireWaitingClaims() {
+  public async getQuestionnaireWaitingClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
     const claims = await this.repository
       .createQueryBuilder('claim')
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.QuestionnaireWaiting],
       })
+      .andWhere('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
+      .getCount()
 
     return claims
   }
@@ -126,6 +132,7 @@ class ClaimRepo {
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.QuestionnaireValidation],
       })
+      .getMany()
 
     return claims
   }
@@ -135,7 +142,7 @@ class ClaimRepo {
   //     .createQueryBuilder('claim')
   //     .where('claim._status in (:statuses)', {
   //       statuses: [ClaimStatus.QuestionnaireFinished],
-  //     })
+  //     }).getMany()
 
   //   return claims
   // }
@@ -146,6 +153,7 @@ class ClaimRepo {
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.AnswerValidation],
       })
+      .getMany()
 
     return claims
   }
@@ -156,6 +164,7 @@ class ClaimRepo {
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.DeliveredToCustomer],
       })
+      .getMany()
 
     return claims
   }
@@ -166,6 +175,7 @@ class ClaimRepo {
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.ClosedSuccessfully],
       })
+      .getMany()
 
     return claims
   }

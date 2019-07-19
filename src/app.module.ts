@@ -86,6 +86,7 @@ import { SenderModule } from './sender/sender.module'
 import { UserModule } from './user/user.module'
 import { DbModule } from './db/db.module'
 import ResetedSignInProvider from './application/user/auth/providers/ResetedSignInProvider'
+import { AuditorClaims } from './application/statistic/AuditorClaims'
 
 const cliCommands = [DoctorCommand]
 
@@ -194,6 +195,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     CommandRunner,
     ClaimRepository,
     AuditorDoctors,
+    AuditorClaims,
   ],
 })
 export class AppModule implements NestModule {
