@@ -16,9 +16,15 @@ export class AuditorClaims {
       to,
     )
 
+    const finishedClaims = await this.claimRepo.getFinishedClaimsByRange(
+      from,
+      to,
+    )
+
     return {
       shortClaims,
       situationClaims,
+      finishedClaims,
     }
   }
 }

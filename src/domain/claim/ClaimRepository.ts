@@ -145,6 +145,21 @@ class ClaimRepo {
     return claims
   }
 
+  public async getFinishedClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .andWhere('claim.createdAt >= :start', { start })
+      .andWhere('claim._claimFinishedAt IS NOT NULL')
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
+
+    return claims
+  }
+
   // public async getAllQuestionnaireFinishedClaims() {
   //   const claims = await this.repository
   //     .createQueryBuilder('claim')
