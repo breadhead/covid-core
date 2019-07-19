@@ -167,6 +167,20 @@ class ClaimRepo {
 
     return claims
   }
+
+  public async getAnswerValidationClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .andWhere('claim._answeredAt  >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
+
+    return claims
+  }
 }
 
 export const ClaimRepository = ClaimRepo

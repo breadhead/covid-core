@@ -26,11 +26,17 @@ export class AuditorClaims {
       to,
     )
 
+    const answerValidationClaims = await this.claimRepo.getAnswerValidationClaimsByRange(
+      from,
+      to,
+    )
+
     return {
       shortClaims,
       situationClaims,
       finishedClaims,
       sendedToDoctorClaims,
+      answerValidationClaims,
     }
   }
 }
