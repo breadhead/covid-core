@@ -29,6 +29,8 @@ export default class EditSituationHandler
 
     const claim = await this.claimRepo.getOne(id)
 
+    claim.updateSituationAddedAt()
+
     const editedClaim = await this.em.transaction(em => {
       this.updateMainInfo(command, claim)
       this.updateAnlysis(command, claim)

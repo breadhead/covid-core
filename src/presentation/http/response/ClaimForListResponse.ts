@@ -39,6 +39,7 @@ export default class ClaimForListResponse {
       number: claim.number,
       createdAt: claim.createdAt || new Date(),
       editedAt: claim.editedAt || claim.createdAt,
+      situationAddedAt: claim.situationAddedAt,
       answeredAt: claim.answeredAt,
       answerUpdatedAt: claim.answerUpdatedAt,
       draftedAt: claim.draftedAt,
@@ -59,6 +60,9 @@ export default class ClaimForListResponse {
 
   @ApiModelProperty({ example: new Date() })
   public readonly createdAt: Date
+
+  @ApiModelProperty({ example: new Date() })
+  public readonly situationAddedAt: Date
 
   @ApiModelProperty({ example: new Date() })
   public readonly editedAt: Date
