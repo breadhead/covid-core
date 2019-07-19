@@ -109,6 +109,66 @@ class ClaimRepo {
 
     return claims
   }
+
+  public async getAllQuestionnaireWaitingClaims() {
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.QuestionnaireWaiting],
+      })
+
+    return claims
+  }
+
+  public async getAllQuestionnaireValidationClaims() {
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.QuestionnaireValidation],
+      })
+
+    return claims
+  }
+
+  // public async getAllQuestionnaireFinishedClaims() {
+  //   const claims = await this.repository
+  //     .createQueryBuilder('claim')
+  //     .where('claim._status in (:statuses)', {
+  //       statuses: [ClaimStatus.QuestionnaireFinished],
+  //     })
+
+  //   return claims
+  // }
+
+  public async getAllAnswerValidationClaims() {
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.AnswerValidation],
+      })
+
+    return claims
+  }
+
+  public async getAllDeliveredToCustomerClaims() {
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.DeliveredToCustomer],
+      })
+
+    return claims
+  }
+
+  public async getAllClosedSuccessfullyClaims() {
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.ClosedSuccessfully],
+      })
+
+    return claims
+  }
 }
 
 export const ClaimRepository = ClaimRepo
