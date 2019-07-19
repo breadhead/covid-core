@@ -21,10 +21,16 @@ export class AuditorClaims {
       to,
     )
 
+    const sendedToDoctorClaims = await this.claimRepo.getSentToDoctorClaimsByRange(
+      from,
+      to,
+    )
+
     return {
       shortClaims,
       situationClaims,
       finishedClaims,
+      sendedToDoctorClaims,
     }
   }
 }

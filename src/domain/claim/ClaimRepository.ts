@@ -116,9 +116,6 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.QuestionnaireWaiting],
-      })
       .andWhere('claim.createdAt >= :start', { start })
       .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
       .setParameter('end', end)
@@ -133,9 +130,6 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.QuestionnaireWaiting],
-      })
       .andWhere('claim.createdAt >= :start', { start })
       .andWhere('claim._situationAddedAt IS NOT NULL')
       .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
@@ -160,45 +154,16 @@ class ClaimRepo {
     return claims
   }
 
-  // public async getAllQuestionnaireFinishedClaims() {
-  //   const claims = await this.repository
-  //     .createQueryBuilder('claim')
-  //     .where('claim._status in (:statuses)', {
-  //       statuses: [ClaimStatus.QuestionnaireFinished],
-  //     }).getMany()
+  public async getSentToDoctorClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
 
-  //   return claims
-  // }
-
-  public async getAllAnswerValidationClaims() {
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.AnswerValidation],
-      })
-      .getMany()
-
-    return claims
-  }
-
-  public async getAllDeliveredToCustomerClaims() {
-    const claims = await this.repository
-      .createQueryBuilder('claim')
-      .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.DeliveredToCustomer],
-      })
-      .getMany()
-
-    return claims
-  }
-
-  public async getAllClosedSuccessfullyClaims() {
-    const claims = await this.repository
-      .createQueryBuilder('claim')
-      .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.ClosedSuccessfully],
-      })
-      .getMany()
+      .andWhere('claim._sentToDoctorAt  >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
 
     return claims
   }
