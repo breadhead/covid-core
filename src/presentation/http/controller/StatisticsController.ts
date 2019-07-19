@@ -139,7 +139,7 @@ export default class StatisticsController {
     const { from, to } = request
     const funnelInfo = await this.auditorClaims.getFunnel(from, to)
 
-    return { funnel: 'funnel' }
+    return { funnel: funnelInfo }
   }
 
   @Get('doctor-answer')

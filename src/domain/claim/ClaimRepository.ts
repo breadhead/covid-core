@@ -111,7 +111,7 @@ class ClaimRepo {
   }
 
   public async getQuestionnaireWaitingClaimsByRange(from: Date, to: Date) {
-    const start = startOfDay(from).toISOString()
+    const start = startOfDay(new Date()).toISOString()
     const end = endOfDay(to).toISOString()
 
     const claims = await this.repository
@@ -119,8 +119,9 @@ class ClaimRepo {
       .where('claim._status in (:statuses)', {
         statuses: [ClaimStatus.QuestionnaireWaiting],
       })
-      .andWhere('claim._closedAt >= :start', { start })
-      .andWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
       .getCount()
 
     return claims

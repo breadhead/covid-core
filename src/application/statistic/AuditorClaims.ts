@@ -5,12 +5,17 @@ import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 export class AuditorClaims {
   constructor(private readonly claimRepo: ClaimRepository) {}
 
-  async getFunnel(from: Date = new Date('2019-01-01'), to: Date = new Date()) {
+  async getFunnel(
+    from: Date = new Date('2019-01-01'),
+    to: Date = new Date('2020-01-05'),
+  ) {
     const questionnaireWaitingClaims = await this.claimRepo.getQuestionnaireWaitingClaimsByRange(
       from,
       to,
     )
 
-    return {}
+    return {
+      questionnaireWaitingClaims,
+    }
   }
 }
