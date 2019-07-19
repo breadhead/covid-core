@@ -31,12 +31,24 @@ export class AuditorClaims {
       to,
     )
 
+    const sendedToClientClaims = await this.claimRepo.getSendedToClientClaimsByRange(
+      from,
+      to,
+    )
+
+    const successfullyClosedClaims = await this.claimRepo.getSuccessufllyClosedClaimsByRange(
+      from,
+      to,
+    )
+
     return {
       shortClaims,
       situationClaims,
       finishedClaims,
       sendedToDoctorClaims,
       answerValidationClaims,
+      sendedToClientClaims,
+      successfullyClosedClaims,
     }
   }
 }

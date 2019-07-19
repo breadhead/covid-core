@@ -110,7 +110,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getShortClaimsByRange(from: Date, to: Date) {
+  public async getShortClaimsByRange(from: Date, to: Date): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -124,7 +124,10 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSituationClaimsByRange(from: Date, to: Date) {
+  public async getSituationClaimsByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -139,7 +142,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getFinishedClaimsByRange(from: Date, to: Date) {
+  public async getFinishedClaimsByRange(from: Date, to: Date): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -154,7 +157,10 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSentToDoctorClaimsByRange(from: Date, to: Date) {
+  public async getSentToDoctorClaimsByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -168,7 +174,10 @@ class ClaimRepo {
     return claims
   }
 
-  public async getAnswerValidationClaimsByRange(from: Date, to: Date) {
+  public async getAnswerValidationClaimsByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -176,6 +185,43 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .andWhere('claim._answeredAt  >= :start', { start })
       .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
+
+    return claims
+  }
+
+  public async getSendedToClientClaimsByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .andWhere('claim._sentToClientAt  >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
+
+    return claims
+  }
+
+  public async getSuccessufllyClosedClaimsByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const claims = await this.repository
+      .createQueryBuilder('claim')
+      .andWhere('claim.createdAt  >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .andWhere('claim._status in (:statuses)', {
+        statuses: [ClaimStatus.ClosedSuccessfully],
+      })
       .setParameter('end', end)
       .getCount()
 
