@@ -110,8 +110,8 @@ class ClaimRepo {
     return claims
   }
 
-  public async getQuestionnaireWaitingClaimsByRange(from: Date, to: Date) {
-    const start = startOfDay(new Date()).toISOString()
+  public async getShortClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
     const claims = await this.repository
@@ -127,13 +127,20 @@ class ClaimRepo {
     return claims
   }
 
-  public async getAllQuestionnaireValidationClaims() {
+  public async getSituationClaimsByRange(from: Date, to: Date) {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
     const claims = await this.repository
       .createQueryBuilder('claim')
       .where('claim._status in (:statuses)', {
-        statuses: [ClaimStatus.QuestionnaireValidation],
+        statuses: [ClaimStatus.QuestionnaireWaiting],
       })
-      .getMany()
+      .andWhere('claim.createdAt >= :start', { start })
+      .andWhere('claim._situationAddedAt IS NOT NULL')
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .setParameter('end', end)
+      .getCount()
 
     return claims
   }

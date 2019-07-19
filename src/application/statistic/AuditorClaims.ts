@@ -9,13 +9,16 @@ export class AuditorClaims {
     from: Date = new Date('2019-01-01'),
     to: Date = new Date('2020-01-05'),
   ) {
-    const questionnaireWaitingClaims = await this.claimRepo.getQuestionnaireWaitingClaimsByRange(
+    const shortClaims = await this.claimRepo.getShortClaimsByRange(from, to)
+
+    const situationClaims = await this.claimRepo.getSituationClaimsByRange(
       from,
       to,
     )
 
     return {
-      questionnaireWaitingClaims,
+      shortClaims,
+      situationClaims,
     }
   }
 }
