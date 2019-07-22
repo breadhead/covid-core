@@ -179,7 +179,6 @@ class ClaimRepo {
       .andWhere('claim._sentToDoctorAt  >= :start', { start })
       .andWhere('claim._sentToDoctorAt <= :end', { end })
       .getCount()
-
     return claims
   }
 

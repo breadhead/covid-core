@@ -30,8 +30,8 @@ export class AuditorClaims {
       funnel.shortClaims = res[0]
       funnel.situationClaims = res[1]
       funnel.finishedClaims = res[2]
-      funnel.answerValidationClaims = res[3]
-      funnel.sendedToDoctorClaims = res[4]
+      funnel.sendedToDoctorClaims = res[3]
+      funnel.answerValidationClaims = res[4]
       funnel.sendedToClientClaims = res[5]
       funnel.successfullyClosedClaims = res[6]
 
