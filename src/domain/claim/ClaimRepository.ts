@@ -116,9 +116,8 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .andWhere('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
       .getCount()
 
     return claims
@@ -133,10 +132,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .andWhere('claim.createdAt >= :start', { start })
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
       .andWhere('claim._situationAddedAt IS NOT NULL')
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .andWhere('claim._situationAddedAt >= :start', { start })
+      .andWhere('claim._situationAddedAt <= :end', { end })
       .getCount()
 
     return claims
@@ -148,10 +148,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .andWhere('claim.createdAt >= :start', { start })
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
       .andWhere('claim._claimFinishedAt IS NOT NULL')
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .andWhere('claim._claimFinishedAt >= :start', { start })
+      .andWhere('claim._claimFinishedAt <= :end', { end })
       .getCount()
 
     return claims
@@ -166,9 +167,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
+      .andWhere('claim._sentToDoctorAt IS NOT NULL')
       .andWhere('claim._sentToDoctorAt  >= :start', { start })
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .andWhere('claim._sentToDoctorAt <= :end', { end })
       .getCount()
 
     return claims
@@ -183,9 +186,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
+      .andWhere('claim._answeredAt IS NOT NULL')
       .andWhere('claim._answeredAt  >= :start', { start })
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .andWhere('claim._answeredAt <= :end', { end })
       .getCount()
 
     return claims
@@ -200,9 +205,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
+      .andWhere('claim._sentToClientAt IS NOT NULL')
       .andWhere('claim._sentToClientAt  >= :start', { start })
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
-      .setParameter('end', end)
+      .andWhere('claim._sentToClientAt <= :end', { end })
       .getCount()
 
     return claims
@@ -217,12 +224,11 @@ class ClaimRepo {
 
     const claims = await this.repository
       .createQueryBuilder('claim')
-      .andWhere('claim.createdAt  >= :start', { start })
-      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL OR claim._closedAt <= :end', { end })
       .andWhere('claim._status in (:statuses)', {
         statuses: [ClaimStatus.ClosedSuccessfully],
       })
-      .setParameter('end', end)
       .getCount()
 
     return claims
