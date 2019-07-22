@@ -110,7 +110,10 @@ class ClaimRepo {
     return claims
   }
 
-  public async getShortClaimsByRange(from: Date, to: Date): Promise<number> {
+  public async getShortClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -123,7 +126,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSituationClaimsByRange(
+  public async getSituationClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -142,7 +145,10 @@ class ClaimRepo {
     return claims
   }
 
-  public async getFinishedClaimsByRange(from: Date, to: Date): Promise<number> {
+  public async getFinishedClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
     const start = startOfDay(from).toISOString()
     const end = endOfDay(to).toISOString()
 
@@ -158,7 +164,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSentToDoctorClaimsByRange(
+  public async getSentToDoctorClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -177,7 +183,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getAnswerValidationClaimsByRange(
+  public async getAnswerValidationClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -196,7 +202,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSendedToClientClaimsByRange(
+  public async getSendedToClientClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -215,7 +221,7 @@ class ClaimRepo {
     return claims
   }
 
-  public async getSuccessufllyClosedClaimsByRange(
+  public async getSuccessufllyClosedClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {

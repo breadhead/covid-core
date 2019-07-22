@@ -19,13 +19,13 @@ export class AuditorClaims {
     const funnel = {} as Funnel
 
     return Promise.all([
-      this.claimRepo.getShortClaimsByRange(from, to),
-      this.claimRepo.getSituationClaimsByRange(from, to),
-      this.claimRepo.getFinishedClaimsByRange(from, to),
-      this.claimRepo.getSentToDoctorClaimsByRange(from, to),
-      this.claimRepo.getAnswerValidationClaimsByRange(from, to),
-      this.claimRepo.getSendedToClientClaimsByRange(from, to),
-      this.claimRepo.getSuccessufllyClosedClaimsByRange(from, to),
+      this.claimRepo.getShortClaimsCountByRange(from, to),
+      this.claimRepo.getSituationClaimsCountByRange(from, to),
+      this.claimRepo.getFinishedClaimsCountByRange(from, to),
+      this.claimRepo.getSentToDoctorClaimsCountByRange(from, to),
+      this.claimRepo.getAnswerValidationClaimsCountByRange(from, to),
+      this.claimRepo.getSendedToClientClaimsCountByRange(from, to),
+      this.claimRepo.getSuccessufllyClosedClaimsCountByRange(from, to),
     ]).then(res => {
       funnel.shortClaims = res[0]
       funnel.situationClaims = res[1]
