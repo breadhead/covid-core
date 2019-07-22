@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -139,7 +139,7 @@ export default class StatisticsController {
     const { from, to } = request
     const funnelInfo = await this.auditorClaims.getFunnel(from, to)
 
-    return { funnel: funnelInfo }
+    return funnelInfo
   }
 
   @Get('doctor-answer')
