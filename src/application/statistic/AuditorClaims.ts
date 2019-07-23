@@ -27,13 +27,15 @@ export class AuditorClaims {
       this.claimRepo.getSendedToClientClaimsCountByRange(from, to),
       this.claimRepo.getSuccessufllyClosedClaimsCountByRange(from, to),
     ]).then(res => {
-      funnel.shortClaims = res[0]
-      funnel.situationClaims = res[1]
-      funnel.finishedClaims = res[2]
-      funnel.sendedToDoctorClaims = res[3]
-      funnel.answerValidationClaims = res[4]
-      funnel.sendedToClientClaims = res[5]
-      funnel.successfullyClosedClaims = res[6]
+      ;[
+        funnel.shortClaims,
+        funnel.situationClaims,
+        funnel.finishedClaims,
+        funnel.sendedToDoctorClaims,
+        funnel.answerValidationClaims,
+        funnel.sendedToClientClaims,
+        funnel.successfullyClosedClaims,
+      ] = res
 
       return funnel
     })
