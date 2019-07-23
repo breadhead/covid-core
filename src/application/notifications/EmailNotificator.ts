@@ -13,6 +13,7 @@ import { MessageContent } from '@app/sender/service/EmailSender/MessageContent'
 import { EmailSender } from '@app/sender/service/EmailSender/EmailSender'
 import { UserRepository } from '@app/user/service/UserRepository'
 import { Injectable } from '@nestjs/common'
+import { expertAnswersEmailUTM } from '@app/domain/claim/analysis/utmCodes'
 
 @Injectable()
 export default class EmailNotificator implements Notificator {
@@ -223,7 +224,9 @@ export default class EmailNotificator implements Notificator {
     const html = await this.renderHtml('email/doctor-answer', {
       siteUrl: this.siteUrl,
       name,
-      link: `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+      link: `${
+        this.siteUrl
+      }/client/consultation/${id}?${expertAnswersEmailUTM}#expert-answers`,
       number,
     })
 
