@@ -1,6 +1,6 @@
 ALTER TABLE claim
-    ADD COLUMN _situationAddedAt DATETIME DEFAULT NOW(),
-    ADD COLUMN _claimFinishedAt DATETIME DEFAULT NOW();
+    ADD COLUMN _situationAddedAt DATETIME,
+    ADD COLUMN _claimFinishedAt DATETIME;
     
 UPDATE claim 
     SET _situationAddedAt=createdAt WHERE description IS NOT NULL,
