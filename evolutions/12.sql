@@ -1,5 +1,5 @@
 ALTER TABLE claim
-    ADD COLUMN _draftedAt DATETIME DEFAULT NOW();
+    ADD COLUMN _draftedAt DATETIME;
 
 #DOWN
 
