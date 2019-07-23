@@ -161,6 +161,14 @@ export default class Claim {
     return this._draftedAt
   }
 
+  public get situationAddedAt() {
+    return this._situationAddedAt
+  }
+
+  public get claimFinishedAt() {
+    return this._claimFinishedAt
+  }
+
   public get answerUpdatedAt() {
     return this._answerUpdatedAt
   }
@@ -278,6 +286,12 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _draftedAt: Date
+
+  @Column({ nullable: true })
+  private _situationAddedAt: Date
+
+  @Column({ nullable: true })
+  private _claimFinishedAt: Date
 
   @Column({ nullable: true })
   private _answerUpdatedAt?: Date
@@ -515,6 +529,14 @@ export default class Claim {
 
   public updateDraftedAt() {
     this._draftedAt = new Date()
+  }
+
+  public updateSituationAddedAt() {
+    this._situationAddedAt = new Date()
+  }
+
+  public updateClaimFinishedAt() {
+    this._claimFinishedAt = new Date()
   }
 
   public updateAnswerUpdatedAt() {

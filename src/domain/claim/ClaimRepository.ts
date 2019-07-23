@@ -116,6 +116,142 @@ class ClaimRepo {
     return claims
   }
 
+  public async getShortClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .getCount()
+
+    return count
+  }
+
+  public async getSituationClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._situationAddedAt IS NOT NULL')
+      .andWhere('claim._situationAddedAt >= :start', { start })
+      .andWhere('claim._situationAddedAt <= :end', { end })
+      .getCount()
+
+    return count
+  }
+
+  public async getFinishedClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._claimFinishedAt IS NOT NULL')
+      .andWhere('claim._claimFinishedAt >= :start', { start })
+      .andWhere('claim._claimFinishedAt <= :end', { end })
+      .getCount()
+
+    return count
+  }
+
+  public async getSentToDoctorClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._sentToDoctorAt IS NOT NULL')
+      .andWhere('claim._sentToDoctorAt  >= :start', { start })
+      .andWhere('claim._sentToDoctorAt <= :end', { end })
+      .getCount()
+    return count
+  }
+
+  public async getAnswerValidationClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._answeredAt IS NOT NULL')
+      .andWhere('claim._answeredAt  >= :start', { start })
+      .andWhere('claim._answeredAt <= :end', { end })
+      .getCount()
+
+    return count
+  }
+
+  public async getSendedToClientClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._sentToClientAt IS NOT NULL')
+      .andWhere('claim._sentToClientAt  >= :start', { start })
+      .andWhere('claim._sentToClientAt <= :end', { end })
+      .getCount()
+
+    return count
+  }
+
+  public async getSuccessufllyClosedClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim._closedAt IS NULL')
+      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._status = :status', {
+        status: ClaimStatus.ClosedSuccessfully,
+      })
+      .getCount()
+
+    return count
+  }
+
   public async getDoctorActiveClaimsCount(doctorLogin: string) {
     return this.repository
       .createQueryBuilder('claim')

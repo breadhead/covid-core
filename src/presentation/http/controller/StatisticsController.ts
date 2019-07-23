@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -24,6 +24,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
+import { FunnelClaimsResponse } from './FunnelClaimsResponse'
+import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -39,7 +41,8 @@ export default class StatisticsController {
     private readonly claimRepo: ClaimRepository,
     private readonly tableGenerator: TableGenerator,
     config: Configuration,
-    private readonly auditor: AuditorDoctors,
+    private readonly auditorDoctors: AuditorDoctors,
+    private readonly auditorClaims: AuditorClaims,
   ) {
     this.siteUrl = config.getStringOrElse('SITE_URL', 'localhost')
   }
@@ -124,6 +127,21 @@ export default class StatisticsController {
     return table
   }
 
+  @Get('funnel-claims')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Claims funnel' })
+  @ApiDateRangeQuery()
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  public async getFunnelClaims(
+    @Query(DateRandePipe) request: DateRangeRequest,
+  ): Promise<FunnelClaimsResponse> {
+    const { from, to } = request
+    const funnelInfo = await this.auditorClaims.getFunnel(from, to)
+
+    return funnelInfo
+  }
+
   @Get('doctor-answer')
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Doctor velocity' })
@@ -134,8 +152,8 @@ export default class StatisticsController {
       { median, average, min, max, success, failure },
       doctors,
     ] = await Promise.all([
-      this.auditor.calculateAnswerTime(),
-      this.auditor.calculateAnswerTimeByDoctors(),
+      this.auditorDoctors.calculateAnswerTime(),
+      this.auditorDoctors.calculateAnswerTimeByDoctors(),
     ])
 
     return { median, average, min, max, doctors, success, failure }
