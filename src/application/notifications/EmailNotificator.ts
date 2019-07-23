@@ -251,4 +251,8 @@ export default class EmailNotificator implements Notificator {
       await this.send(author.contacts.email, subject, { html })
     }
   }
+
+  async claimAlmostOverdue(): Promise<void> {
+    // Email Notification not needed
+  }
 }

@@ -13,6 +13,7 @@ export default interface Notificator {
   doctorAnswer(answer: Claim): Promise<void>
   claimSendToDoctor(claim: Claim): Promise<void>
   feedbackAnswerSent(claim: Claim): Promise<void>
+  claimAlmostOverdue(claim: Claim): Promise<void>
 }
 
 const Notificator = Symbol('Notificator')
