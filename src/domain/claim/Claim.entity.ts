@@ -325,7 +325,7 @@ export default class Claim {
     this.number = number
     this.createdAt = createdAt
     this._editedAt = editedAt
-    this._draftedAt = draftedAt
+    this._draftedAt = null
     this._applicant = applicant
     this.author = author
     this._theme = theme
