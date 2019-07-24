@@ -308,7 +308,7 @@ export default class ClaimController {
       radiationTreatments,
       aids,
     } = request
-    console.log('request:', request)
+
     const claim = await this.claimRepo.getOne(id)
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, claim, user)
 

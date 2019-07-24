@@ -190,10 +190,6 @@ export default class Claim {
     return this._closedAt
   }
 
-  public get aids() {
-    return this._aids
-  }
-
   @Column({ nullable: true })
   public description?: string
 
@@ -313,8 +309,8 @@ export default class Claim {
   @Column({ nullable: true })
   private _closedAt?: Date
 
-  @Column({ type: 'enum', enum: Aids, default: Aids.DontKnow })
-  private _aids: Aids
+  @Column({ type: 'enum', enum: Aids })
+  public aids: Aids
 
   public constructor(
     id: string,

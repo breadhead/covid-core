@@ -56,6 +56,7 @@ export default class SituationClaimData {
       medicinalTreatments,
       aids,
     } = claim
+
     const { histology, discharge, other } = analysis
 
     return {
