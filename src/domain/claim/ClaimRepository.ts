@@ -173,45 +173,6 @@ class ClaimRepo {
     return count
   }
 
-  public async getSentToDoctorClaimsCountByRange(
-    from: Date,
-    to: Date,
-  ): Promise<number> {
-    const start = startOfDay(from).toISOString()
-    const end = endOfDay(to).toISOString()
-
-    const count = await this.repository
-      .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
-      .andWhere('claim._sentToDoctorAt IS NOT NULL')
-      .andWhere('claim._sentToDoctorAt  >= :start', { start })
-      .andWhere('claim._sentToDoctorAt <= :end', { end })
-      .getCount()
-    return count
-  }
-
-  public async getAnswerValidationClaimsCountByRange(
-    from: Date,
-    to: Date,
-  ): Promise<number> {
-    const start = startOfDay(from).toISOString()
-    const end = endOfDay(to).toISOString()
-
-    const count = await this.repository
-      .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
-      .andWhere('claim._answeredAt IS NOT NULL')
-      .andWhere('claim._answeredAt  >= :start', { start })
-      .andWhere('claim._answeredAt <= :end', { end })
-      .getCount()
-
-    return count
-  }
-
   public async getSendedToClientClaimsCountByRange(
     from: Date,
     to: Date,
@@ -242,8 +203,7 @@ class ClaimRepo {
     const count = await this.repository
       .createQueryBuilder('claim')
       .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim._closedAt <= :end', { end })
       .andWhere('claim._status = :status', {
         status: ClaimStatus.ClosedSuccessfully,
       })
