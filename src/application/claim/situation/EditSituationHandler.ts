@@ -38,6 +38,8 @@ export default class EditSituationHandler
       this.updateTreatments(command, claim)
       claim.updateEditedAt()
 
+      claim.aids = command.aids
+
       return em.save(claim)
     })
 

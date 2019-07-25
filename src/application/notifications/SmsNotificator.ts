@@ -8,6 +8,7 @@ import Notificator from './Notificator'
 import { Templating } from '@app/utils/service/Templating/Templating'
 import { SmsSender } from '@app/sender/service/SmsSender/SmsSender'
 import { LinkShortener } from '@app/utils/service/LinkShortener/LinkShortener'
+import { expertAnswersSmsUTM } from '@app/domain/claim/analysis/utmCodes'
 
 @Injectable()
 export default class SmsNotificator implements Notificator {
@@ -114,7 +115,9 @@ export default class SmsNotificator implements Notificator {
     const { name } = claim.applicant
 
     const link = await this.linkShortener.getShort(
-      `${this.siteUrl}/client/consultation/${id}#expert-answers`,
+      `${
+        this.siteUrl
+      }/client/consultation/${id}?${expertAnswersSmsUTM}#expert-answers`,
     )
 
     if (author.contacts.email) {

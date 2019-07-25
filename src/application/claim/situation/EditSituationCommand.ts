@@ -6,12 +6,14 @@ import MonthYear from './dto/MonthYear'
 import RadiationTreatment from './dto/RadiationTreatment'
 import RelativeDisease from './dto/RelativeDisease'
 import SurgicalTreatment from './dto/SurgicalTreatment'
+import { Aids } from '@app/infrastructure/customTypes/Aids'
 
 export default class EditSituationCommand implements ICommand {
   public constructor(
     public readonly id: string,
     public readonly description: string,
     public readonly feeling: string,
+    public readonly aids: Aids,
     public readonly diagnosis?: string,
     public readonly stage?: string,
     public readonly otherDisease?: string,
