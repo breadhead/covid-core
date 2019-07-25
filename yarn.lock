@@ -490,10 +490,10 @@
     lodash.pick "^4.4.0"
     tsoption "^0.7.0"
 
-"@solid-soda/evolutions@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@solid-soda/evolutions/-/evolutions-0.0.10.tgz#6ca8583632b2ecfa9c17bfa409a59d4790c84d59"
-  integrity sha512-6U6FXBxPM8twxRLK5ogR++Pjg9zR8aM023CNTGcJPozITwbagG7HXPOCkrcD+Wf68sjAT9Wvl3NzvBgey6wamw==
+"@solid-soda/evolutions@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@solid-soda/evolutions/-/evolutions-0.0.14.tgz#f1e74a2ceee6abebbada54dd1730854be5e73380"
+  integrity sha512-it0eyZOjJknRLB7aF+XRKw0c4RH5UapSD8Tvi8y+A49JtOzupHoRpl373c9DHqr3E49ObzNyiW2bHtBTmKS2jA==
   dependencies:
     command-line-args "^5.0.2"
     fs "0.0.1-security"

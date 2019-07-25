@@ -286,7 +286,7 @@ export default class Claim {
   private _answeredAt?: Date
 
   @Column({ nullable: true })
-  private _draftedAt: Date
+  private _draftedAt?: Date
 
   @Column({ nullable: true })
   private _situationAddedAt: Date
@@ -317,7 +317,6 @@ export default class Claim {
     number: number,
     createdAt: Date,
     editedAt: Date = createdAt,
-    draftedAt: Date,
     applicant: Applicant,
     author: User,
     theme: string,
@@ -329,7 +328,6 @@ export default class Claim {
     this.number = number
     this.createdAt = createdAt
     this._editedAt = editedAt
-    this._draftedAt = draftedAt
     this._applicant = applicant
     this.author = author
     this._theme = theme

@@ -21,11 +21,7 @@ export class DbOptionsFactory implements TypeOrmOptionsFactory {
       password: this.config.get('DB_PASSWORD').getOrElse('admin'),
       database: this.config.get('DB_NAME').getOrElse('oncohelp'),
       entities: [join(__dirname, '/../**/*.{entity,vo}.{ts,js}')],
-      synchronize: !this.config
-        .get('PRODUCTION_READY')
-        .map(parseInt)
-        .map(Boolean)
-        .getOrElse(true),
+      synchronize: false,
     }
   }
 }
