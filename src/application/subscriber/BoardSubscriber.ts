@@ -54,7 +54,6 @@ export default class BoardSubscriber implements EventSubscriber {
   ) {}
 
   public subscribedEvents() {
-    return []
     return [
       { key: NewMessageName, handler: this.addLabelNewMessage.bind(this) },
       {

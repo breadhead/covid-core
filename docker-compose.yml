@@ -18,7 +18,6 @@ services:
   #     DB_USER: "root"
   #     DB_PASSWORD: "root"
   #     DB_NAME: "oncohelp"
-  #     PRODUCTION_READY: 0
   #     SECURITY_STRATEGY: "unanimous"
   #     SECURITY_ALLOW_IF_ALL_ABSTAIN: 0
   #     NENAPRASNO_CABINET_URL: "https://cabinet.nenaprasno.ru"
