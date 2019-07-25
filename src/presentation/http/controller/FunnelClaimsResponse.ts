@@ -10,12 +10,6 @@ export class FunnelClaimsResponse {
   @ApiModelProperty({ example: 800 })
   public readonly finishedClaims: number
 
-  @ApiModelProperty({ example: 700 })
-  public readonly answerValidationClaims: number
-
-  @ApiModelProperty({ example: 600 })
-  public readonly sendedToDoctorClaims: number
-
   @ApiModelProperty({ example: 500 })
   public readonly sendedToClientClaims: number
 

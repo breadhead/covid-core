@@ -20,16 +20,12 @@ export class AuditorClaims {
       shortClaims,
       situationClaims,
       finishedClaims,
-      sendedToDoctorClaims,
-      answerValidationClaims,
       sendedToClientClaims,
       successfullyClosedClaims,
     ] = await Promise.all([
       this.claimRepo.getShortClaimsCountByRange(from, to),
       this.claimRepo.getSituationClaimsCountByRange(from, to),
       this.claimRepo.getFinishedClaimsCountByRange(from, to),
-      this.claimRepo.getSentToDoctorClaimsCountByRange(from, to),
-      this.claimRepo.getAnswerValidationClaimsCountByRange(from, to),
       this.claimRepo.getSendedToClientClaimsCountByRange(from, to),
       this.claimRepo.getSuccessufllyClosedClaimsCountByRange(from, to),
     ])
@@ -38,8 +34,6 @@ export class AuditorClaims {
       shortClaims,
       situationClaims,
       finishedClaims,
-      sendedToDoctorClaims,
-      answerValidationClaims,
       sendedToClientClaims,
       successfullyClosedClaims,
     }
