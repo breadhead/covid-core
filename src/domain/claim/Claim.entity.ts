@@ -15,6 +15,7 @@ import RadiationTreatment from './treatment/RadiationTreatment'
 import SurgicalTreatment from './treatment/SurgicalTreatment'
 import { User } from '@app/user/model/User.entity'
 import { Role } from '@app/user/model/Role'
+import { Aids } from '@app/infrastructure/customTypes/Aids'
 
 export enum ClaimStatus {
   New = 'new',
@@ -307,6 +308,9 @@ export default class Claim {
 
   @Column({ nullable: true })
   private _closedAt?: Date
+
+  @Column({ type: 'enum', enum: Aids })
+  public aids: Aids
 
   public constructor(
     id: string,

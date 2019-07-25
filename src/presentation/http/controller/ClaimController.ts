@@ -306,7 +306,9 @@ export default class ClaimController {
       surgicalTreatments,
       medicalsTreatments,
       radiationTreatments,
+      aids,
     } = request
+
     const claim = await this.claimRepo.getOne(id)
     await this.votersUnity.denyAccessUnlessGranted(Attribute.Edit, claim, user)
 
@@ -314,6 +316,7 @@ export default class ClaimController {
       id,
       description,
       feeling,
+      aids,
       diagnosis,
       stage,
       otherDisease,

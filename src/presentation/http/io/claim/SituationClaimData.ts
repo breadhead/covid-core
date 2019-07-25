@@ -14,6 +14,7 @@ import RadiationTreatment, {
 import SurgicalTreatment, {
   exampleSurgicalTreatment,
 } from './treatment/SurgicalTreatment'
+import { Aids } from '@app/infrastructure/customTypes/Aids'
 
 const situationExample: SituationClaimData = {
   id: 'fdfs',
@@ -33,6 +34,7 @@ const situationExample: SituationClaimData = {
   discharge: fileDataExample,
   otherFiles: [fileDataExample],
   diagnosisDate: monthYearExample,
+  aids: Aids.DontKnow,
 }
 
 export default class SituationClaimData {
@@ -52,7 +54,9 @@ export default class SituationClaimData {
       radiationTreatments,
       surgicalTreatments,
       medicinalTreatments,
+      aids,
     } = claim
+
     const { histology, discharge, other } = analysis
 
     return {
@@ -79,6 +83,7 @@ export default class SituationClaimData {
       feeling,
       stage,
       worst,
+      aids,
     }
   }
 
@@ -135,4 +140,7 @@ export default class SituationClaimData {
     required: false,
   })
   public readonly diagnosisDate?: MonthYear
+
+  @ApiModelProperty({ example: situationExample.aids })
+  public readonly aids: Aids
 }
