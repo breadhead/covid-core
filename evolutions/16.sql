@@ -1,5 +1,5 @@
 ALTER TABLE claim
-    ADD COLUMN aids ENUM('Нет', 'Да', 'Не знаю') DEFAULT 'Не знаю' NOT NULL;
+    ADD COLUMN aids ENUM('Нет', 'Да', 'Не знаю');
     
 
 #DOWN
