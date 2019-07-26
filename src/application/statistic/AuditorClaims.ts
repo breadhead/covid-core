@@ -5,10 +5,8 @@ interface Funnel {
   shortClaims: number
   situationClaims: number
   finishedClaims: number
-  answerValidationClaims: number
-  sendedToDoctorClaims: number
-  sendedToClientClaims: number
   successfullyClosedClaims: number
+  closedByClientClaims: number
 }
 
 @Injectable()
@@ -20,8 +18,8 @@ export class AuditorClaims {
       shortClaims,
       situationClaims,
       finishedClaims,
-      sendedToClientClaims,
       successfullyClosedClaims,
+      closedByClientClaims,
     ] = await Promise.all([
       this.claimRepo.getShortClaimsCountByRange(from, to),
       this.claimRepo.getSituationClaimsCountByRange(from, to),
@@ -34,8 +32,8 @@ export class AuditorClaims {
       shortClaims,
       situationClaims,
       finishedClaims,
-      sendedToClientClaims,
       successfullyClosedClaims,
-    }
+      closedByClientClaims,
+    } as Funnel
   }
 }

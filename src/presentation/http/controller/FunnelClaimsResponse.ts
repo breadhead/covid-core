@@ -11,8 +11,8 @@ export class FunnelClaimsResponse {
   public readonly finishedClaims: number
 
   @ApiModelProperty({ example: 500 })
-  public readonly sendedToClientClaims: number
+  public readonly successfullyClosedClaims: number
 
   @ApiModelProperty({ example: 300 })
-  public readonly successfullyClosedClaims: number
+  public readonly closedByClientClaims: number
 }
