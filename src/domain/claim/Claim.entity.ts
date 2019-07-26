@@ -310,7 +310,7 @@ export default class Claim {
   private _closedAt?: Date
 
   @Column({ type: 'enum', enum: Aids })
-  public aids: Aids
+  public aids?: Aids
 
   public constructor(
     id: string,
