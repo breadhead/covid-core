@@ -217,7 +217,6 @@ export class AppModule implements NestModule {
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
     private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
-    private readonly config: Configuration,
     private readonly telegramBot: TelegramBot,
   ) {}
 
@@ -243,10 +242,10 @@ export class AppModule implements NestModule {
 
     this.telegramBot.init(this.moduleRef)
 
-    if (this.config.isDev()) {
-      // in dev use long poll
-      this.telegramBot.startPolling()
-    }
+    // I don't know, why we can't use webhook.
+    // It just doesn't work.
+    // I think, we can use long poll.
+    this.telegramBot.startPolling()
   }
 
   public configure(consumer: MiddlewareConsumer) {
