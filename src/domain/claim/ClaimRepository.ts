@@ -167,7 +167,7 @@ class ClaimRepo {
     return count
   }
 
-  public async getSendedToClientClaimsCountByRange(
+  public async getSuccessfullyClosedClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -186,7 +186,7 @@ class ClaimRepo {
     return count
   }
 
-  public async getSuccessufllyClosedClaimsCountByRange(
+  public async getClosedByClientClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {

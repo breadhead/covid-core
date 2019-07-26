@@ -26,8 +26,8 @@ export class AuditorClaims {
       this.claimRepo.getShortClaimsCountByRange(from, to),
       this.claimRepo.getSituationClaimsCountByRange(from, to),
       this.claimRepo.getFinishedClaimsCountByRange(from, to),
-      this.claimRepo.getSendedToClientClaimsCountByRange(from, to),
-      this.claimRepo.getSuccessufllyClosedClaimsCountByRange(from, to),
+      this.claimRepo.getSuccessfullyClosedClaimsCountByRange(from, to),
+      this.claimRepo.getClosedByClientClaimsCountByRange(from, to),
     ])
 
     return {
