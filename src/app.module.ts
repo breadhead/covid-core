@@ -217,7 +217,6 @@ export class AppModule implements NestModule {
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
     private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
-    private readonly config: Configuration,
     private readonly telegramBot: TelegramBot,
   ) {}
 
