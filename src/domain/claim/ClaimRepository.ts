@@ -13,6 +13,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Status } from '@app/presentation/http/response/ClaimForListResponse'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
+import { Role } from '@app/user/model/Role'
 
 @Injectable()
 class ClaimRepo {
@@ -126,8 +127,7 @@ class ClaimRepo {
     const count = await this.repository
       .createQueryBuilder('claim')
       .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim.createdAt <= :end', { end })
       .getCount()
 
     return count
@@ -143,11 +143,8 @@ class ClaimRepo {
     const count = await this.repository
       .createQueryBuilder('claim')
       .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim.createdAt <= :end', { end })
       .andWhere('claim._situationAddedAt IS NOT NULL')
-      .andWhere('claim._situationAddedAt >= :start', { start })
-      .andWhere('claim._situationAddedAt <= :end', { end })
       .getCount()
 
     return count
@@ -163,17 +160,14 @@ class ClaimRepo {
     const count = await this.repository
       .createQueryBuilder('claim')
       .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
+      .andWhere('claim.createdAt <= :end', { end })
       .andWhere('claim._claimFinishedAt IS NOT NULL')
-      .andWhere('claim._claimFinishedAt >= :start', { start })
-      .andWhere('claim._claimFinishedAt <= :end', { end })
       .getCount()
 
     return count
   }
 
-  public async getSendedToClientClaimsCountByRange(
+  public async getSuccessfullyClosedClaimsCountByRange(
     from: Date,
     to: Date,
   ): Promise<number> {
@@ -183,30 +177,27 @@ class ClaimRepo {
     const count = await this.repository
       .createQueryBuilder('claim')
       .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt IS NULL')
-      .orWhere('claim._closedAt <= :end', { end })
-      .andWhere('claim._sentToClientAt IS NOT NULL')
-      .andWhere('claim._sentToClientAt  >= :start', { start })
-      .andWhere('claim._sentToClientAt <= :end', { end })
-      .getCount()
-
-    return count
-  }
-
-  public async getSuccessufllyClosedClaimsCountByRange(
-    from: Date,
-    to: Date,
-  ): Promise<number> {
-    const start = startOfDay(from).toISOString()
-    const end = endOfDay(to).toISOString()
-
-    const count = await this.repository
-      .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim._closedAt <= :end', { end })
-      .andWhere('claim._status = :status', {
-        status: ClaimStatus.ClosedSuccessfully,
+      .andWhere('claim.createdAt <= :end', { end })
+      .andWhere('claim._status = :closedSuccessfullyStatus', {
+        closedSuccessfullyStatus: ClaimStatus.ClosedSuccessfully,
       })
+      .getCount()
+
+    return count
+  }
+
+  public async getClosedByClientClaimsCountByRange(
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    const count = await this.repository
+      .createQueryBuilder('claim')
+      .where('claim.createdAt >= :start', { start })
+      .andWhere('claim.createdAt <= :end', { end })
+      .andWhere('claim.closedBy = :clientRole', { clientRole: Role.Client })
       .getCount()
 
     return count
