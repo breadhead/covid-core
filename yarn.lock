@@ -6979,10 +6979,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nest-telegram@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/nest-telegram/-/nest-telegram-0.5.0.tgz#0e20c7aa25cf6a3a26739e2aa14d00ee55c9eadd"
-  integrity sha512-+bWMh2dRLu1MqM6HaMcjGOZ1dJyC8IZ8uB/Bjx20NEUyTpYPO46R+84G2EHvNjvjW/QoRLWMiFfLdJW556G5tw==
+nest-telegram@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/nest-telegram/-/nest-telegram-0.5.1.tgz#a4bb845e8cb788d27f2b39b6dbeca8dc91a93247"
+  integrity sha512-Kz2ICeji/tlsb+0MySgVBXhu8sxSN1shB0d39iZgWrjmq/yPmAteG0tqJVHo5+UdTFjB3ucWzV24YpoK9bKBVA==
   dependencies:
     lodash "^4.17.11"
     telegraf "^3.27.1"
