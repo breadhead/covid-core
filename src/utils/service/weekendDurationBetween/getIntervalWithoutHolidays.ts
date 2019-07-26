@@ -2,14 +2,12 @@ import { eachDay, isWeekend } from 'date-fns'
 import { MS_IN_DAY } from './MS_IN_DAY'
 
 export const getIntervalWithoutHolidays = (start: Date, end: Date) => {
-  let [from, to] = [start, end]
+  try {
+    const days = eachDay(start, end)
+    const holidays = days.filter(isWeekend).length
 
-  if (from > to) {
-    ;[from, to] = [to, from]
+    return holidays * MS_IN_DAY
+  } catch (e) {
+    return 0
   }
-
-  const days = eachDay(start, end)
-  const holidays = days.filter(isWeekend).length
-
-  return holidays * MS_IN_DAY
 }
