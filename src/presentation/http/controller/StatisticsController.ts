@@ -147,13 +147,16 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Doctor velocity' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
-  async getDoctorAnswerTimes(): Promise<DoctorAnswerTimeResponse> {
+  async getDoctorAnswerTimes(
+    @Query(DateRandePipe) request: DateRangeRequest,
+  ): Promise<DoctorAnswerTimeResponse> {
+    const { from, to } = request
     const [
       { median, average, min, max, success, failure },
       doctors,
     ] = await Promise.all([
-      this.auditorDoctors.calculateAnswerTime(),
-      this.auditorDoctors.calculateAnswerTimeByDoctors(),
+      this.auditorDoctors.calculateAnswerTime(from, to),
+      this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
     ])
 
     return { median, average, min, max, doctors, success, failure }
