@@ -188,10 +188,15 @@ export default class TrelloBoardManager implements BoardManager {
       .get('BOARD_ID_COMPLETED')
       .getOrElse('5baa59a6648f9b2166d65935')
 
+    const boardIdWaiting = this.config
+      .get('BOARD_ID_WAITING')
+      .getOrElse('5baa59a6648f9b2166d65935')
+
     return {
       [BoardKind.Current]: boardIdCurrent,
       [BoardKind.Rejected]: boardIdRejected,
       [BoardKind.Completed]: boardIdCompleted,
+      [BoardKind.Waiting]: boardIdWaiting,
     }[boardKind]
   }
 

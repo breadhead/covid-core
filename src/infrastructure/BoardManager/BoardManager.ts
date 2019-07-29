@@ -12,6 +12,7 @@ export enum BoardKind {
   Current = 'current',
   Rejected = 'rejected',
   Completed = 'completed',
+  Waiting = 'waiting',
 }
 
 export interface CreateCardParams {
