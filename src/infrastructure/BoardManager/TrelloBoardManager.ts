@@ -106,7 +106,6 @@ export default class TrelloBoardManager implements BoardManager {
   ): Promise<void> {
     const card = await this.getCard(cardId)
     const member = await this.getBoardMemberByUsername(card.idBoard, username)
-
     return this.trello.addMemberToCard(cardId, member.id).then(tapOrThrow)
   }
 
@@ -208,7 +207,6 @@ export default class TrelloBoardManager implements BoardManager {
 
   private async getBoardMemberByUsername(boardId: string, username: string) {
     const boardMembers = await this.getBoardMembers(boardId)
-
     return boardMembers.find(member => member.username === username)
   }
 }
