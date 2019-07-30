@@ -21,6 +21,7 @@ export default class BoardCardFinder {
     numberOfRetries: number = 50,
     boardKind?: BoardKind,
   ): Promise<Card> {
+    debugger
     return this.getCard(async () => {
       const currentBoardKind = !!boardKind
         ? boardKind
@@ -32,7 +33,9 @@ export default class BoardCardFinder {
 
       const idRe = new RegExp(`${id}\\)`)
 
-      return cards.find(card => idRe.test(card.desc))
+      const card = cards.find(card => idRe.test(card.desc))
+
+      return card
     }, numberOfRetries)
   }
 
@@ -64,7 +67,7 @@ export default class BoardCardFinder {
       return claimCard
     }
 
-    if (numberOfRetries > 0) {
+    if (!claimCard && numberOfRetries > 0) {
       await sleep(500)
       return this.getCard(cardFinder, numberOfRetries - 1)
     }
@@ -78,7 +81,7 @@ export default class BoardCardFinder {
     })
 
     if (!claim) {
-      return BoardKind.Waiting
+      return BoardKind.Current
     }
 
     switch (claim.status) {
