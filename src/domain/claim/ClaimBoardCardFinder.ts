@@ -21,7 +21,6 @@ export default class BoardCardFinder {
     numberOfRetries: number = 50,
     boardKind?: BoardKind,
   ): Promise<Card> {
-    debugger
     return this.getCard(async () => {
       const currentBoardKind = !!boardKind
         ? boardKind
