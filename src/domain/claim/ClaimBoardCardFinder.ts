@@ -32,9 +32,7 @@ export default class BoardCardFinder {
 
       const idRe = new RegExp(`${id}\\)`)
 
-      const card = cards.find(card => idRe.test(card.desc))
-
-      return card
+      return cards.find(card => idRe.test(card.desc))
     }, numberOfRetries)
   }
 
