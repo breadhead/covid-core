@@ -59,7 +59,7 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
       .andWhere('claim._closedAt >= :start', { start })
       .andWhere('claim._closedAt <= :end', { end })
@@ -71,7 +71,7 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', {
         statuses: [
           ...CLOSED_STATUSES,
@@ -90,7 +90,7 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', {
         statuses: [
           ...CLOSED_STATUSES,
