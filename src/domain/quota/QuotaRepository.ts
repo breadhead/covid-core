@@ -45,7 +45,9 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
       case CommonLocalizationsEnum.Breast:
         quotas = await this.repository
           .createQueryBuilder('quota')
-          .where('quota._name = :name', { name: 'Avon' })
+          .where('quota._constraints like :localization', {
+            localization: `%${localization}%`,
+          })
           .andWhere('quota._balance > 0')
           .getMany()
         break
