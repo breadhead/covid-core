@@ -35,6 +35,12 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     )
   }
 
+  public findAvonAvaliable(): Promise<Quota[]> {
+    return this.findByType(QuotaType.Special).then(quotas =>
+      quotas.filter(quota => quota.balance && quota.company.name === 'Avon'),
+    )
+  }
+
   private async findByType(type: QuotaType): Promise<Quota[]> {
     const allQuotas = await this.findAll()
 

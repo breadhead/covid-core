@@ -7,6 +7,7 @@ import Claim from '../claim/Claim.entity'
 import QuotaAllocationFailedException from './exception/QuotaAllocationFailedException'
 import Quota from './Quota.entity'
 import QuotaRepository from './QuotaRepository'
+import { CommonLocalizationsEnum } from '../claim/CommonLocalizationsEnum'
 
 @Injectable()
 export default class Allocator {
@@ -29,6 +30,7 @@ export default class Allocator {
     return this.em
       .transaction(async em => {
         const commonQuotas = await this.quotaRepo.findCommonAvailable()
+        const avonQuotas = await this.quotaRepo.findAvonAvaliable()
 
         if (commonQuotas.length === 0) {
           throw new QuotaAllocationFailedException(
@@ -37,7 +39,15 @@ export default class Allocator {
           )
         }
 
-        const quota = sample(commonQuotas)
+        let quota
+        if (
+          claim.localization === CommonLocalizationsEnum.Breast &&
+          avonQuotas.length > 0
+        ) {
+          quota = sample(avonQuotas)
+        } else {
+          quota = sample(commonQuotas)
+        }
 
         claim.bindQuota(quota)
         quota.decreaseBalance(1)
