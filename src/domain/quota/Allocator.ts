@@ -29,25 +29,24 @@ export default class Allocator {
 
     return this.em
       .transaction(async em => {
-        const commonQuotas = await this.quotaRepo.findCommonAvailable()
-        const avonQuotas = await this.quotaRepo.findAvonAvaliable()
+        const [commonQuotas, specialQuotas] = await Promise.all([
+          this.quotaRepo.findCommonAvailable(),
+          this.quotaRepo.findByLocalization(
+            claim.localization as CommonLocalizationsEnum,
+          ),
+        ])
 
-        if (commonQuotas.length === 0) {
+        if (commonQuotas.length === 0 && specialQuotas.length === 0) {
           throw new QuotaAllocationFailedException(
             null,
             'Common quota not found',
           )
         }
 
-        let quota
-        if (
-          claim.localization === CommonLocalizationsEnum.Breast &&
-          avonQuotas.length > 0
-        ) {
-          quota = sample(avonQuotas)
-        } else {
-          quota = sample(commonQuotas)
-        }
+        const quota =
+          specialQuotas.length > 0
+            ? sample(specialQuotas)
+            : sample(commonQuotas)
 
         claim.bindQuota(quota)
         quota.decreaseBalance(1)
