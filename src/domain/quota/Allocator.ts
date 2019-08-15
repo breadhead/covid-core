@@ -49,6 +49,7 @@ export default class Allocator {
             : sample(commonQuotas)
 
         claim.bindQuota(quota)
+
         quota.decreaseBalance(1)
 
         await em.save([claim, quota])
