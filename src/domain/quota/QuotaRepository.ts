@@ -36,26 +36,16 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     )
   }
 
-  public async findByLocalization(
+  public findByLocalization(
     localization: CommonLocalizationsEnum,
   ): Promise<Quota[]> {
-    let quotas = []
-
-    switch (localization) {
-      case CommonLocalizationsEnum.Breast:
-        quotas = await this.repository
-          .createQueryBuilder('quota')
-          .where('quota._constraints like :localization', {
-            localization: `%${localization}%`,
-          })
-          .andWhere('quota._balance > 0')
-          .getMany()
-        break
-      default:
-        break
-    }
-
-    return quotas
+    return this.repository
+      .createQueryBuilder('quota')
+      .where('quota._constraints like :localization', {
+        localization: `%${localization}%`,
+      })
+      .andWhere('quota._balance > 0')
+      .getMany()
   }
 
   private async findByType(type: QuotaType): Promise<Quota[]> {
