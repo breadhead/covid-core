@@ -2,10 +2,10 @@ import { ApiModelProperty } from '@nestjs/swagger'
 
 export class FunnelClaimsResponse {
   @ApiModelProperty({ example: 1000 })
-  public readonly shortClaims: number
+  public readonly firstStep: number
 
   @ApiModelProperty({ example: 900 })
-  public readonly situationClaims: number
+  public readonly secondStep: number
 
   @ApiModelProperty({ example: 800 })
   public readonly finishedClaims: number
