@@ -16,6 +16,7 @@ import SurgicalTreatment from './treatment/SurgicalTreatment'
 import { User } from '@app/user/model/User.entity'
 import { Role } from '@app/user/model/Role'
 import { Aids } from '@app/infrastructure/customTypes/Aids'
+import { CommonLocalizationsEnum } from './CommonLocalizationsEnum'
 
 export enum ClaimStatus {
   New = 'new',
@@ -100,7 +101,7 @@ export default class Claim {
     return this._theme
   }
 
-  public get localization(): string {
+  public get localization(): CommonLocalizationsEnum | string {
     return this._localization
   }
 
