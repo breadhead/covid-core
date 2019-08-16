@@ -196,8 +196,8 @@ class ClaimRepo {
 
     const count = await this.repository
       .createQueryBuilder('claim')
-      .where('claim.closedAt >= :start', { start })
-      .andWhere('claim.closedAt <= :end', { end })
+      .where('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
       .andWhere('claim._status = :closedSuccessfullyStatus', {
         closedSuccessfullyStatus: ClaimStatus.ClosedSuccessfully,
       })
@@ -215,8 +215,8 @@ class ClaimRepo {
 
     const count = await this.repository
       .createQueryBuilder('claim')
-      .where('claim.closedAt >= :start', { start })
-      .andWhere('claim.closedAt <= :end', { end })
+      .where('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
       .andWhere('claim.closedBy = :clientRole', { clientRole: Role.Client })
       .getCount()
 

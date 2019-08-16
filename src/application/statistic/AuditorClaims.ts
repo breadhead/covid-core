@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 
 interface Funnel {
-  shortClaims: number
-  situationClaims: number
+  firstStep: number
+  secondStep: number
   finishedClaims: number
   successfullyClosedClaims: number
   closedByClientClaims: number
@@ -15,8 +15,8 @@ export class AuditorClaims {
 
   async getFunnel(from: Date, to: Date) {
     const [
-      shortClaims,
-      situationClaims,
+      firstStep,
+      secondStep,
       finishedClaims,
       successfullyClosedClaims,
       closedByClientClaims,
@@ -29,8 +29,8 @@ export class AuditorClaims {
     ])
 
     return {
-      shortClaims,
-      situationClaims,
+      firstStep,
+      secondStep,
       finishedClaims,
       successfullyClosedClaims,
       closedByClientClaims,
