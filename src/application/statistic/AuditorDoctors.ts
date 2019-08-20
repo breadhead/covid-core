@@ -64,6 +64,7 @@ export class AuditorDoctors {
         const fullDuration = Math.abs(differenceInMilliseconds(start, end))
         return fullDuration - weekendDuration
       })
+      .filter(diff => diff >= 0)
 
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
