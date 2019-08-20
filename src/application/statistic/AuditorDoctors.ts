@@ -26,7 +26,9 @@ export class AuditorDoctors {
 
   async calculateAnswerTime(from: Date, to: Date) {
     const allClaims = await this.claimRepo.findClosedByRange(from, to)
-    return this.answerTime(allClaims)
+    const claimsWithDoctor = allClaims.filter(claim => !!claim.doctor)
+
+    return this.answerTime(claimsWithDoctor)
   }
 
   async calculateAnswerTimeByDoctors(from: Date, to: Date) {
@@ -39,27 +41,30 @@ export class AuditorDoctors {
       claim => claim.doctor.fullName || claim.doctor.login,
     )
 
-    return Object.entries(grouped).map(([name, claims]) => ({
-      name,
-      ...this.answerTime(claims),
-    }))
+    return Object.entries(grouped).map(([name, claims]) => {
+      return {
+        name,
+        ...this.answerTime(claims),
+      }
+    })
   }
 
   private answerTime(claims: Claim[]) {
-    const claimsDates = claims.map(({ sentToDoctorAt, answeredAt }) => ({
-      start: sentToDoctorAt,
-      end: answeredAt,
-    }))
+    const claimsDates = claims.map(claim => {
+      return {
+        start: claim.sentToDoctorAt,
+        end: claim.answeredAt,
+      }
+    })
 
     const answerTimes = claimsDates
       .filter(({ start, end }) => !!start && !!end)
       .map(({ start, end }) => {
         const weekendDuration = weekendDurationBetween(start, end)
         const fullDuration = Math.abs(differenceInMilliseconds(start, end))
-
         return fullDuration - weekendDuration
       })
-      .filter(diff => diff > 0)
+      .filter(diff => diff >= 0)
 
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
