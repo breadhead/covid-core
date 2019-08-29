@@ -220,7 +220,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { number, author, id } = claim
+    const { number, author, id, questionsWithAnswers } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}. ${name}, готов ответ эксперта по вашей консультации`
@@ -232,6 +232,13 @@ export default class EmailNotificator implements Notificator {
         this.siteUrl
       }/client/consultation/${id}?${expertAnswersEmailUTM}#expert-answers`,
       number,
+      qua: questionsWithAnswers as any,
+      yesLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?donation&${finishYesUTM}`,
+      noLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?openMessage&${finishNoUTM}`,
     })
 
     if (author.contacts.email) {

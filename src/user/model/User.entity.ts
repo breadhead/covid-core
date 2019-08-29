@@ -52,6 +52,10 @@ export class User {
     return this.roles.includes(Role.Client)
   }
 
+  public get isOnlyClient(): boolean {
+    return this.roles.includes(Role.Client) && this.roles.length === 1
+  }
+
   public get valid(): boolean {
     return this._valid
   }
