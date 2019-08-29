@@ -233,6 +233,12 @@ export default class EmailNotificator implements Notificator {
       }/client/consultation/${id}?${expertAnswersEmailUTM}#expert-answers`,
       number,
       qua: questionsWithAnswers as any,
+      yesLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?donation&${finishYesUTM}`,
+      noLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?openMessage&${finishNoUTM}`,
     })
 
     if (author.contacts.email) {

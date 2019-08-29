@@ -10,7 +10,8 @@
         </tr>
         <tr>
             <td class="text__id">
-                <div>Заявка № {{ number }}</div>
+                <div>Заявка №
+                    {{ number }}</div>
             </td>
         </tr>
         <tr>
@@ -46,20 +47,32 @@
                 </td>
             </tr>
         {% endfor %}
-
-        {# <tr>
-            <td class="button__td">
-                <table>
+    </table>
+    <table class="inner__table button__table">
+        <tr>
+            <td class="button__td button__feedback">
+                <table class="button__feedback-table">
                     <tr>
-                        <td class="btn btn__td">
-                            <a target="_blank" href="{{link}}">
-                                <nobr>Посмотреть ответ эксперта</nobr>
+                        <td class="btn btn__td btn__feedback">
+                            <a target="_blank" href="{{yesLink}}">
+                                <nobr>Да, мне все понятно</nobr>
                             </a>
                         </td>
                     </tr>
                 </table>
             </td>
-        </tr> #}
+            <td class="button__td button__no">
+                <table>
+                    <tr>
+                        <td class="btn btn__td btn__no">
+                            <a target="_blank" style="color: #151833;" href="{{noLink}}">
+                                <nobr>Нет</nobr>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
     </table>
 
 {% endblock content %}
