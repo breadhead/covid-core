@@ -15,7 +15,7 @@ export default class AnswerAccessManager {
   public async accessIsGranted(login: string, claim: Claim): Promise<boolean> {
     const user = await this.userRepo.getOne(login)
 
-    if (user.isClient) {
+    if (user.isOnlyClient) {
       return this.statusesWhenCllientHaveAccess.includes(claim.status)
     }
 
