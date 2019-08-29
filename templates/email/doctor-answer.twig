@@ -21,11 +21,17 @@
         <tr>
             <td class="text__p">
                 <div>
-                    Перейдите по ссылке ниже, чтобы увидеть ответ на ваши вопросы.
+                    <a class="link" target="_blank" href="{{link}}">Посмотреть на сайте</a>.
                 </div>
             </td>
         </tr>
         <tr>
+            <td class="text__p">
+                <div>Здравствуйте,
+                    {{ name }}!</div>
+            </td>
+        </tr>
+        {# <tr>
             <td class="button__td">
                 <table>
                     <tr>
@@ -37,7 +43,7 @@
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr> #}
     </table>
 
 {% endblock content %}
