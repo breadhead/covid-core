@@ -144,6 +144,13 @@ export default class Claim {
     }
   }
 
+  public get questionsWithAnswers() {
+    const questions = [...this._defaultQuestions, ...this._additionalQuestions]
+    return questions.map(({ question, answer }) => {
+      return { question, answer }
+    })
+  }
+
   public get answeredQuestions() {
     return {
       defaultQuestions: this._defaultQuestions,

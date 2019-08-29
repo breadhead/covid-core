@@ -25,12 +25,23 @@
                 </div>
             </td>
         </tr>
-        <tr>
-            <td class="text__p">
-                <div>Здравствуйте,
-                    {{ name }}!</div>
-            </td>
-        </tr>
+        {% for item in qua %}
+            <tr>
+                <td class="text__question">
+                    <div>
+                        {{item.question}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="text__answer">
+                    <div>
+                        {{item.answer}}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+
         {# <tr>
             <td class="button__td">
                 <table>
