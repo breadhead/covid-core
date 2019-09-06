@@ -66,6 +66,26 @@ class ClaimRepo {
       .getMany()
   }
 
+  public async findSuccessefullyClosedByRange(
+    from: Date,
+    to: Date,
+  ): Promise<Claim[]> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'quota')
+      .where('claim._status = :status', {
+        status: ClaimStatus.ClosedSuccessfully,
+      })
+      .andWhere('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
+      .getMany()
+  }
+
   async findAllClosed(): Promise<Claim[]> {
     return this.repository
       .createQueryBuilder('claim')

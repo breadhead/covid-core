@@ -25,14 +25,20 @@ export class AuditorDoctors {
   }
 
   async calculateAnswerTime(from: Date, to: Date) {
-    const allClaims = await this.claimRepo.findClosedByRange(from, to)
+    const allClaims = await this.claimRepo.findSuccessefullyClosedByRange(
+      from,
+      to,
+    )
     const claimsWithDoctor = allClaims.filter(claim => !!claim.doctor)
 
     return this.answerTime(claimsWithDoctor)
   }
 
   async calculateAnswerTimeByDoctors(from: Date, to: Date) {
-    const allClaims = await this.claimRepo.findClosedByRange(from, to)
+    const allClaims = await this.claimRepo.findSuccessefullyClosedByRange(
+      from,
+      to,
+    )
 
     const claimsWithDoctor = allClaims.filter(claim => !!claim.doctor)
 
