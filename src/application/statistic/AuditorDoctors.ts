@@ -29,9 +29,14 @@ export class AuditorDoctors {
   }
 
   async calculateAnswerTime(from: Date, to: Date) {
-    const claims = await this.claimRepo.findSuccessefullyClosedByRange(from, to)
+    const allClaims = await this.claimRepo.findSuccessefullyClosedByRange(
+      from,
+      to,
+    )
 
-    return this.answerTime(claims)
+    const claimsWithDoctor = allClaims.filter(claim => !!claim.doctor)
+
+    return this.answerTime(claimsWithDoctor)
   }
 
   async calculateAnswerTimeByDoctors(from: Date, to: Date) {
@@ -73,6 +78,7 @@ export class AuditorDoctors {
         const fullDuration = Math.abs(differenceInMilliseconds(start, end))
         return fullDuration - weekendDuration
       })
+      .filter(diff => diff >= 0)
 
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
