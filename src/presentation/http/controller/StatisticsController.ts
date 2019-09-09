@@ -26,7 +26,6 @@ import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
-import { Logger } from '@app/utils/service/Logger/Logger'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -44,7 +43,6 @@ export default class StatisticsController {
     config: Configuration,
     private readonly auditorDoctors: AuditorDoctors,
     private readonly auditorClaims: AuditorClaims,
-    private readonly logger: Logger,
   ) {
     this.siteUrl = config.getStringOrElse('SITE_URL', 'localhost')
   }
@@ -161,9 +159,6 @@ export default class StatisticsController {
       this.auditorDoctors.calculateAnswerTime(from, to),
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
     ])
-
-    this.logger.warn(`doctors:`)
-    this.logger.warn(doctors.length)
 
     return { median, average, min, max, doctors, success, failure }
   }
