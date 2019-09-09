@@ -7,14 +7,10 @@ import Claim from '@app/domain/claim/Claim.entity'
 import { median } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
-import { Logger } from '@app/utils/service/Logger/Logger'
 
 @Injectable()
 export class AuditorDoctors {
-  constructor(
-    private readonly claimRepo: ClaimRepository,
-    private readonly logger: Logger,
-  ) {}
+  constructor(private readonly claimRepo: ClaimRepository) {}
 
   async getCurrentStatusForDoctor(doctorLogin: string) {
     const [activeCount, overdueCount] = await Promise.all([
@@ -61,18 +57,12 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
-    this.logger.warn(`claims:`)
-    this.logger.warn(claims.length)
-
     const claimsDates = claims.map(claim => {
       return {
         start: claim.sentToDoctorAt,
         end: claim.answeredAt,
       }
     })
-
-    this.logger.warn(`claimsDates:`)
-    this.logger.warn(claimsDates.length)
 
     const answerTimes = claimsDates
       .filter(({ start, end }) => !!start && !!end)
@@ -82,15 +72,8 @@ export class AuditorDoctors {
         return fullDuration - weekendDuration
       })
 
-    this.logger.warn(`answerTimes:`)
-    this.logger.warn(answerTimes.length)
-
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
-
-    this.logger.warn(`success:, failure:`)
-    this.logger.warn(success)
-    this.logger.warn(failure)
 
     return {
       median: median(answerTimes),
