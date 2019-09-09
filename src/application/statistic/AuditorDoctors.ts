@@ -61,7 +61,7 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
-    this.logger.warn('claims:', `${claims.length}`)
+    this.logger.warn(`claims: ${claims.length}`)
     const claimsDates = claims.map(claim => {
       return {
         start: claim.sentToDoctorAt,
@@ -69,7 +69,7 @@ export class AuditorDoctors {
       }
     })
 
-    this.logger.warn('claimsDates:', `${claimsDates.length}`)
+    this.logger.warn(`claimsDates: ${claimsDates.length}`)
 
     const answerTimes = claimsDates
       .filter(({ start, end }) => !!start && !!end)
