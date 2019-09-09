@@ -81,7 +81,6 @@ export class AuditorDoctors {
         const fullDuration = Math.abs(differenceInMilliseconds(start, end))
         return fullDuration - weekendDuration
       })
-      .filter(diff => diff >= 0)
 
     this.logger.warn(`answerTimes:`)
     this.logger.warn(answerTimes.length)
