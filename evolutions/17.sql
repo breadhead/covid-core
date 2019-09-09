@@ -1,4 +1,0 @@
-ALTER TABLE claim ALTER _answeredAt DROP DEFAULT;
-
-#DOWN
-ALTER TABLE claim ALTER _answeredAt SET DEFAULT NOW();
