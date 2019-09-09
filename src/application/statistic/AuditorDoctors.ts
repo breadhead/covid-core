@@ -7,6 +7,7 @@ import Claim from '@app/domain/claim/Claim.entity'
 import { median } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
+import { getAnswerDate } from './helpers/getAnswerDate'
 
 @Injectable()
 export class AuditorDoctors {
@@ -60,7 +61,7 @@ export class AuditorDoctors {
     const claimsDates = claims.map(claim => {
       return {
         start: claim.sentToDoctorAt,
-        end: claim.answeredAt,
+        end: getAnswerDate(claim),
       }
     })
 
