@@ -22,7 +22,7 @@ export class AuditorClaims {
       closedByClientClaims,
     ] = await Promise.all([
       this.claimRepo.getShortClaimsCountByRange(from, to),
-      this.claimRepo.getShortClaimsCountByRange(from, to),
+      this.claimRepo.getSituationClaimsCountByRange(from, to),
       this.claimRepo.getFinishedClaimsCountByRange(from, to),
       this.claimRepo.getSuccessfullyClosedClaimsCountByRange(from, to),
       this.claimRepo.getClosedByClientClaimsCountByRange(from, to),
