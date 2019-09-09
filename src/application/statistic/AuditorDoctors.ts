@@ -83,8 +83,15 @@ export class AuditorDoctors {
       })
       .filter(diff => diff >= 0)
 
+    this.logger.warn(`answerTimes:`)
+    this.logger.warn(answerTimes.length)
+
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
+
+    this.logger.warn(`success:, failure:`)
+    this.logger.warn(success)
+    this.logger.warn(failure)
 
     return {
       median: median(answerTimes),
