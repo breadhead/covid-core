@@ -37,6 +37,7 @@ export default class CloseClaimHandler
     if (successCloseClaimTypes.includes(type)) {
       const author = head(intersection(rolesWithCloseLabel, closedBy))
 
+      claim.changeCloseComment(comment)
       await this.statusMover.success(
         claim,
         type,

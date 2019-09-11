@@ -48,6 +48,10 @@ export default class SmsNotificator implements Notificator {
     }
   }
 
+  public async closeWithoutAnswer(): Promise<void> {
+    // SMS Notification not needed
+  }
+
   public async newChatMessageFromClient(): Promise<void> {
     // SMS Notification not needed
   }
