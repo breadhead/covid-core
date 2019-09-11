@@ -161,12 +161,30 @@ export default class StatisticsController {
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
     ])
 
+    return { median, average, min, max, doctors, success, failure }
+  }
+
+  @Get('doctor-answer-table')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Doctor velocity in csv' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  async getDoctorAnswerTimesTable(
+    @Query(DateRandePipe) request: DateRangeRequest,
+  ): Promise<any> {
+    const { from, to } = request
+
+    const doctors = await this.auditorDoctors.calculateAnswerTimeByDoctors(
+      from,
+      to,
+    )
+
     const statisticItems = doctors.map(DoctorStatisticsItem.getBody())
     const table = await this.tableGenerator.generate(
       statisticItems,
       DoctorStatisticsItem.getHeader(),
     )
 
-    return { median, average, min, max, doctors, success, failure, table }
+    return table
   }
 }

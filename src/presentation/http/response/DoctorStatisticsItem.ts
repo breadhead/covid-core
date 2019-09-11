@@ -1,7 +1,9 @@
+import { formatTimestamp } from '@app/utils/service/formatTimestamp'
+
 interface DoctorStat {
   name: any
-  median: any
   average: any
+  median: any
   min: any
   max: any
   success: any
@@ -14,10 +16,9 @@ export class DoctorStatisticsItem {
       const { name, median, average, max, min, success, failure } = doctorStats
       return {
         name,
-        median,
-        average,
-        max,
-        min,
+        average: formatTimestamp(average),
+        median: formatTimestamp(median),
+        max: formatTimestamp(max),
         success,
         failure,
       }
@@ -27,20 +28,18 @@ export class DoctorStatisticsItem {
   public static getHeader(): DoctorStatisticsItem {
     return {
       name: 'Имя',
-      median: 'Медианное время ответа',
       average: 'Среднее время ответа',
+      median: 'Медианное время ответа',
       max: 'Максимальное время ответа',
-      min: 'Минимальное время ответа',
       success: 'Заявок, закрытых вовремя',
       failure: 'Просроченных заявок',
     }
   }
 
   public readonly name: string
-  public readonly median: string
   public readonly average: string
+  public readonly median: string
   public readonly max: string
-  public readonly min: string
   public readonly success: string
   public readonly failure: string
 }

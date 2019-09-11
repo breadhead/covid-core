@@ -40,7 +40,4 @@ export class DoctorAnswerTimeResponse {
 
   @ApiModelProperty({ example: [] })
   public readonly doctors: DoctorStat[]
-
-  @ApiModelProperty({ example: [] })
-  public readonly table: any
 }
