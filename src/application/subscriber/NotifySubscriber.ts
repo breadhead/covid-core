@@ -21,7 +21,9 @@ import ShortClaimQueuedEvent, {
 import NewFeedbackEvent, {
   NAME as NewFeedbackName,
 } from '@app/domain/feedback/event/NewFeedbackEvent'
-
+import CloseWithoutAnswerEvent, {
+  NAME as CloseWithoutAnswerName,
+} from '@app/domain/claim/event/CloseWithoutAnswerEvent'
 import FeedbackAnswerEvent, {
   NAME as FeedbackAnswerName,
 } from '@app/domain/claim/event/FeedbackAnswerEvent'
@@ -62,6 +64,10 @@ export default class NotifySubscriber implements EventSubscriber {
       { key: ClaimRejectedName, handler: this.onClaimRejected.bind(this) },
       { key: NewFeedbackName, handler: this.onNewFeedback.bind(this) },
       { key: FeedbackAnswerName, handler: this.onFeedbackAnswer.bind(this) },
+      {
+        key: CloseWithoutAnswerName,
+        handler: this.onCloseWithoutAnswer.bind(this),
+      },
     ]
   }
 
@@ -95,5 +101,9 @@ export default class NotifySubscriber implements EventSubscriber {
 
   private onFeedbackAnswer({ payload }: FeedbackAnswerEvent) {
     this.notificator.feedbackAnswerSent(payload)
+  }
+
+  private onCloseWithoutAnswer({ payload }: CloseWithoutAnswerEvent) {
+    this.notificator.closeWithoutAnswer(payload)
   }
 }
