@@ -43,7 +43,7 @@ export default class FileController {
   @ApiImplicitFile({ name: 'file', required: true, description: 'Any file' })
   @ApiOkResponse({ description: 'Uploaded', type: FileResponse })
   @ApiForbiddenResponse({
-    description: 'Admin`s or client`s API token doesn`t provided ',
+    description: 'Admin`s or client`s API token doesnt provided ',
   })
   public async upload(@UploadedFile() file): Promise<FileResponse> {
     const { originalname, buffer } = file
