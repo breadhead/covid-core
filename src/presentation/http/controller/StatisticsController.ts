@@ -26,6 +26,7 @@ import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
+import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -152,20 +153,20 @@ export default class StatisticsController {
   ): Promise<DoctorAnswerTimeResponse> {
     const { from, to } = request
 
-    const [times, doctors] = await Promise.all([
+    const [
+      { median, average, min, max, success, failure },
+      doctors,
+    ] = await Promise.all([
       this.auditorDoctors.calculateAnswerTime(from, to),
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
     ])
 
-    const { median, average, min, max, success, failure } = times
-
+    const statisticItems = doctors.map(DoctorStatisticsItem.getBody())
     const table = await this.tableGenerator.generate(
-      times,
-      ClaimStatisticsItem.getHeader(),
+      statisticItems,
+      DoctorStatisticsItem.getHeader(),
     )
 
-    console.log('table:', table)
-
-    return { median, average, min, max, doctors, success, failure }
+    return { median, average, min, max, doctors, success, failure, table }
   }
 }
