@@ -37,7 +37,7 @@ export default class UserController {
   @ApiOperation({ title: 'List of clients' })
   @ApiOkResponse({ description: 'Success', type: ClientPageResponse })
   @ApiForbiddenResponse({
-    description: 'Case-manager or Admin API token doesn`t provided',
+    description: 'Case-manager or Admin API token doesnt provided',
   })
   public showList(
     @Query(PaginationPipe) pagination: PaginationRequest,
@@ -60,7 +60,7 @@ export default class UserController {
     type: CurrentUserResponse,
   })
   @ApiForbiddenResponse({
-    description: 'API token doesn`t provided',
+    description: 'API token doesnt provided',
   })
   public async showCurrentUser(
     @CurrentUser() tokenPayload: TokenPayload,
@@ -78,7 +78,7 @@ export default class UserController {
     isArray: true,
   })
   @ApiForbiddenResponse({
-    description: 'Case-manager or Admin API token doesn`t provided',
+    description: 'Case-manager or Admin API token doesnt provided',
   })
   public async showDoctors(
     @Param('claimId') claimId: string,

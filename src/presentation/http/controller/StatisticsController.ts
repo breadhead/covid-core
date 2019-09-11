@@ -26,6 +26,7 @@ import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
+import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -56,7 +57,7 @@ export default class StatisticsController {
     type: CompanyResponse,
     isArray: true,
   })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async showDonators(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<CompanyResponse[]> {
@@ -84,7 +85,7 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async generateReportForClosedClaims(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<any> {
@@ -110,7 +111,7 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async generateReportForClaims(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<any> {
@@ -132,7 +133,7 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Claims funnel' })
   @ApiDateRangeQuery()
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async getFunnelClaims(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<FunnelClaimsResponse> {
@@ -146,7 +147,7 @@ export default class StatisticsController {
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Doctor velocity' })
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   async getDoctorAnswerTimes(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<DoctorAnswerTimeResponse> {
@@ -161,5 +162,29 @@ export default class StatisticsController {
     ])
 
     return { median, average, min, max, doctors, success, failure }
+  }
+
+  @Get('doctor-answer-table')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Doctor velocity in csv' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  async getDoctorAnswerTimesTable(
+    @Query(DateRandePipe) request: DateRangeRequest,
+  ): Promise<any> {
+    const { from, to } = request
+
+    const doctors = await this.auditorDoctors.calculateAnswerTimeByDoctors(
+      from,
+      to,
+    )
+
+    const statisticItems = doctors.map(DoctorStatisticsItem.getBody())
+    const table = await this.tableGenerator.generate(
+      statisticItems,
+      DoctorStatisticsItem.getHeader(),
+    )
+
+    return table
   }
 }

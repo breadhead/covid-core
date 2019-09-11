@@ -1,27 +1,8 @@
-import { format } from 'date-fns'
-
 import Claim from '@app/domain/claim/Claim.entity'
-import { Role } from '@app/user/model/Role'
 import { defineStatus } from './ClaimForListResponse'
-
-const formatDateOrEmpty = (date?: Date) =>
-  date ? format(date, 'DD-MM-YYYY') : ''
-
-const tryOr = <T>(get: () => T, or: T) => {
-  try {
-    return get()
-  } catch (e) {
-    return or
-  }
-}
-
-const getReadbleRole = (role: Role): string =>
-  ({
-    [Role.Client]: 'Заказчик',
-    [Role.Doctor]: 'Эксперт',
-    [Role.CaseManager]: 'Кейс-менеджер',
-    [Role.Admin]: 'Администратор',
-  }[role])
+import { formatDateOrEmpty } from '@app/utils/service/formatDateOrEmpty'
+import { tryOr } from '@app/utils/service/tryOr'
+import { getReadbleRole } from '@app/utils/getReadbleRole'
 
 export class ClaimStatisticsItem {
   public static fromClaim(siteUrl: string) {

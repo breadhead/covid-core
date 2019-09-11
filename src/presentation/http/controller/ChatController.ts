@@ -50,7 +50,7 @@ export default class ChatController {
   })
   @ApiForbiddenResponse({
     description:
-      'Claim`s owner, case-manager or doctor API token doesn`t provided ',
+      'Claim`s owner, case-manager or doctor API token doesnt provided ',
   })
   public async showChat(
     @Param('id') id: string,
@@ -78,7 +78,7 @@ export default class ChatController {
   })
   @ApiForbiddenResponse({
     description:
-      'Claim`s owner, case-manager or doctor API token doesn`t provided ',
+      'Claim`s owner, case-manager or doctor API token doesnt provided ',
   })
   public async addMessage(
     @Param('id') claimId: string,
