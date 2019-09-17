@@ -26,7 +26,7 @@ export class UserCreator {
 
   async createInternalClient(email: string, rawPassword: string) {
     const user = new User(email)
-    console.log('createInternalClient:', user)
+
     await user.changePassword(rawPassword, this.passwordEncoder)
 
     user.roles.push(Role.Client)
