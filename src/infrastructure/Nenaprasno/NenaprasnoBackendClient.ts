@@ -6,7 +6,8 @@ import { AxiosResponse } from 'axios'
 import { Configuration } from '../../config/Configuration'
 import { Logger } from '@app/utils/service/Logger/Logger'
 
-const ACCOUNT_EXISTS_STATUS = 409
+export const ACCOUNT_EXISTS_STATUS = 409
+export const EMAIL_IS_ALREADY_TAKEN = 'Email уже занят'
 
 @Injectable()
 export default class NenaprasnoBackendClient {
@@ -35,7 +36,7 @@ export default class NenaprasnoBackendClient {
         if (e.message.includes(ACCOUNT_EXISTS_STATUS)) {
           throw new SignUpException(
             { login },
-            'Email уже занят',
+            EMAIL_IS_ALREADY_TAKEN,
             ACCOUNT_EXISTS_STATUS,
           )
         } else {
