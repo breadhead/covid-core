@@ -15,9 +15,21 @@ export class UserCreator {
   async createClient(nenaprasnoId: number) {
     const login = `nenaprasno-cabinet-${nenaprasnoId}`
 
-    const user = new User(login)
+    const user = await new User(login)
     user.roles.push(Role.Client)
     user.bindToNenaprasnoCabinet(nenaprasnoId)
+
+    await this.entitySaver.save(user)
+
+    return user
+  }
+
+  async createInternalClient(email: string, rawPassword: string) {
+    const user = new User(email)
+
+    await user.changePassword(rawPassword, this.passwordEncoder)
+
+    user.roles.push(Role.Client)
 
     await this.entitySaver.save(user)
 
