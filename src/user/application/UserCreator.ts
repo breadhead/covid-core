@@ -15,7 +15,7 @@ export class UserCreator {
   async createClient(nenaprasnoId: number) {
     const login = `nenaprasno-cabinet-${nenaprasnoId}`
 
-    const user = await new User(login)
+    const user = new User(login)
     user.roles.push(Role.Client)
     user.bindToNenaprasnoCabinet(nenaprasnoId)
 
