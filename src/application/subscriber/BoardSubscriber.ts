@@ -241,7 +241,7 @@ export default class BoardSubscriber implements EventSubscriber {
         'Передано заказчику',
       ],
       [ClaimStatus.ClosedWithoutAnswer]: [
-        BoardKind.Current,
+        BoardKind.Rejected,
         'Не требует ответа эксперта',
       ],
 
