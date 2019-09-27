@@ -112,7 +112,11 @@ export default class BoardSubscriber implements EventSubscriber {
   private async addLabelCloseWithoutAnswer({
     payload,
   }: CloseWithoutAnswerEvent) {
-    const claimCard = await this.claimBoardCardFinder.getCardById(payload.id)
+    const claimCard = await this.claimBoardCardFinder.getCardById(
+      payload.id,
+      50,
+      BoardKind.Rejected,
+    )
     const text = 'Без эксперта'
     return this.board.addLabel(claimCard.id, text)
   }
