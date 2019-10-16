@@ -1,4 +1,3 @@
-import InvalidCredentialsException from '@app/application/exception/InvalidCredentialsException'
 import SignUpException from '@app/application/exception/SignUpException'
 import { HttpService, Injectable } from '@nestjs/common'
 import { AxiosResponse } from 'axios'

@@ -10,3 +10,4 @@ export { default as VerificationController } from './VerificationController'
 export {
   default as PublicStatisticsController,
 } from './PublicStatisticsController'
+export { default as RatingController } from './RatingController'

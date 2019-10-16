@@ -60,6 +60,8 @@ import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
+import Rating from './domain/rating/Rating.entity'
+import RatingRepository from '@app/domain/rating/RatingRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -148,6 +150,8 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
+      Rating,
+      RatingRepository,
     ]),
     HttpModule,
   ],
@@ -202,6 +206,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     EventEmitter,
     CommandRunner,
     ClaimRepository,
+    RatingRepository,
     AuditorDoctors,
     AuditorClaims,
   ],
