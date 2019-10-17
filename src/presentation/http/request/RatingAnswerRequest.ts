@@ -4,6 +4,9 @@ export default class RatingAnswerRequest {
   @ApiModelProperty({ example: 1 })
   public readonly id: number
 
-  @ApiModelProperty({ example: 'new answer' })
-  public readonly text: string
+  @ApiModelProperty({ example: 'question' })
+  public readonly question: string
+
+  @ApiModelProperty({ example: 'answer' })
+  public readonly answer: string
 }

@@ -33,6 +33,6 @@ export default class RatingController {
     @CurrentUser() user: TokenPayload,
     @Body() request: RatingAnswerRequest,
   ): Promise<any> {
-    const { id, text } = request
+    console.log('request:', request)
   }
 }
