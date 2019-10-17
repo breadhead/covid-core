@@ -6,8 +6,8 @@ CREATE TABLE rating
     CONSTRAINT FK_RATING_CLAIM FOREIGN KEY (_claimId) REFERENCES claim (id),
     _questionId VARCHAR(255),
     CONSTRAINT FK_RATING_RATINGQUESTIONS FOREIGN KEY (_questionId) REFERENCES ratingQuestions (id),
-    `_answerValue` VARCHAR(255),
-    `_answerText` VARCHAR(255)
+    `_answerType` VARCHAR(255),
+    `_answerValue` VARCHAR(255)
 );
 
 #DOWN
