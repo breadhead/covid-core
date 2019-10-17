@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 
-@Entity('ratingQuestion')
+@Entity('ratingQuestions')
 export default class RatingQuestions {
   @PrimaryColumn()
   public readonly id: string

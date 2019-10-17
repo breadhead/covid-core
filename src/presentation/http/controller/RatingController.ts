@@ -1,10 +1,11 @@
-import { Controller, UseGuards, Post, Param, Body } from '@nestjs/common'
+import { Controller, UseGuards, Post, Param, Body, Get } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -13,9 +14,11 @@ import CurrentUser from './decorator/CurrentUser'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import RatingAnswerRequest from '../request/RatingAnswerRequest'
 import RatingRepository from '@app/domain/rating/RatingRepository'
+import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuestionsRepository'
 import { EntityManager } from 'typeorm'
 import Rating from '@app/domain/rating/Rating.entity'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
+import RatingQuestionResponse from '../response/RatingQuestionResponse'
 
 @Controller('rating')
 @UseGuards(JwtAuthGuard)
@@ -25,6 +28,8 @@ export default class RatingController {
   public constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: any,
+    @InjectRepository(RatingQuestionsRepository)
+    private readonly ratingQuestionsRepo: any,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
   ) {}
@@ -41,5 +46,20 @@ export default class RatingController {
     const curRating = new Rating(id, new Date(), claimId, question, answer, '')
 
     await this.em.save(curRating)
+  }
+
+  @Get('questions')
+  @ApiOperation({ title: 'Show list of rating questions' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: RatingQuestionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Client API token doesnt provided',
+  })
+  public async getQuestions(): Promise<RatingQuestionResponse> {
+    const questions = await this.ratingQuestionsRepo.findAll()
+
+    return questions
   }
 }

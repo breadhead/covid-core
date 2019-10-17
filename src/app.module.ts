@@ -62,6 +62,8 @@ import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Rating from './domain/rating/Rating.entity'
 import RatingRepository from '@app/domain/rating/RatingRepository'
+import RatingQuestions from './domain/rating-questions/RatingQuestions.entity'
+import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuestionsRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -152,6 +154,8 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Claim,
       Rating,
       RatingRepository,
+      RatingQuestions,
+      RatingQuestionsRepository,
     ]),
     HttpModule,
   ],
