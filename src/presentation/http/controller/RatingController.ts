@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Post, Param, Body } from '@nestjs/common'
+import { Controller, UseGuards, Post, Param, Body } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -13,6 +13,9 @@ import CurrentUser from './decorator/CurrentUser'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import RatingAnswerRequest from '../request/RatingAnswerRequest'
 import RatingRepository from '@app/domain/rating/RatingRepository'
+import { EntityManager } from 'typeorm'
+import Rating from '@app/domain/rating/Rating.entity'
+import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 
 @Controller('rating')
 @UseGuards(JwtAuthGuard)
@@ -22,6 +25,8 @@ export default class RatingController {
   public constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: any,
+    private readonly em: EntityManager,
+    private readonly idGenerator: IdGenerator,
   ) {}
 
   @Post('answer')
@@ -33,6 +38,14 @@ export default class RatingController {
     @CurrentUser() user: TokenPayload,
     @Body() request: RatingAnswerRequest,
   ): Promise<any> {
-    console.log('request:', request)
+    const { answer, question } = request
+
+    const id = this.idGenerator.get()
+
+    console.log('claimId:', claimId)
+
+    const curRating = new Rating(id, new Date(), claimId, 'Q1', answer, '')
+
+    await this.em.save(curRating)
   }
 }
