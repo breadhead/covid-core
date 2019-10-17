@@ -8,9 +8,12 @@ INSERT INTO ratingQuestions(id, _type, _question, _hint) VALUES('Q4', 'value', '
 
 INSERT INTO ratingQuestions(id, _type, _question, _hint) VALUES('Q5', 'value', 'Насколько полезным был ответ?', 'Подсказка к вопросу: 1 - абсолютно бесполезен, 10 - очень полезен');
 
+INSERT INTO ratingQuestions(id, _type, _question, _hint) VALUES('Q6', 'comment', 'Что вам особенно понравилось/не понравилось?', 'Подсказка к вопросу: Вы очень нам поможете, если поделитесь своим опытом');
+
 #DOWN
 DELETE FROM ratingQuestions WHERE id='Q1';
 DELETE FROM ratingQuestions WHERE id='Q2';
 DELETE FROM ratingQuestions WHERE id='Q3';
 DELETE FROM ratingQuestions WHERE id='Q4';
 DELETE FROM ratingQuestions WHERE id='Q5';
+DELETE FROM ratingQuestions WHERE id='Q6';

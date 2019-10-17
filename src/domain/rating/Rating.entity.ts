@@ -27,17 +27,17 @@ export default class Rating {
   }
 
   @Column({ nullable: true })
+  public readonly _answerType: string
+
+  get answerText() {
+    return this._answerType
+  }
+
+  @Column({ nullable: true })
   public readonly _answerValue: string
 
   get answerValue() {
     return this._answerValue
-  }
-
-  @Column({ nullable: true })
-  public readonly _answerText: string
-
-  get answerText() {
-    return this._answerText
   }
 
   public constructor(
@@ -46,13 +46,13 @@ export default class Rating {
     claimId: string,
     questionId: string,
     answerValue: string,
-    answerText: string,
+    answerType: string,
   ) {
     this.id = id
     this._ratingDate = ratingDate
     this._claimId = claimId
     this._questionId = questionId
     this._answerValue = answerValue
-    this._answerText = answerText
+    this._answerType = answerType
   }
 }
