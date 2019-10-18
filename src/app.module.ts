@@ -96,6 +96,7 @@ import { TelegramBot } from 'nest-telegram'
 import { Configuration } from './config/Configuration'
 import TelegramNotificator from './application/notifications/TelegramNotificator'
 import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecurrenter'
+import { AuditorRating } from './application/statistic/AuditorRating'
 
 const cliCommands = [DoctorCommand]
 
@@ -213,6 +214,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     RatingRepository,
     AuditorDoctors,
     AuditorClaims,
+    AuditorRating,
   ],
 })
 export class AppModule implements NestModule {

@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
+import { Injectable } from '@nestjs/common'
 
 interface Funnel {
   firstStep: number
