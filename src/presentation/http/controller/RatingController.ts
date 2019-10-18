@@ -39,11 +39,18 @@ export default class RatingController {
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Answer added' })
   public async addAnswer(@Body() request: RatingAnswerRequest): Promise<any> {
-    const { claimId, answer, question } = request
+    const { claimId, question, answerType, answerValue } = request
 
     const id = this.idGenerator.get()
 
-    const curRating = new Rating(id, new Date(), claimId, question, answer, '')
+    const curRating = new Rating(
+      id,
+      new Date(),
+      claimId,
+      question,
+      answerType,
+      answerValue,
+    )
 
     await this.em.save(curRating)
   }

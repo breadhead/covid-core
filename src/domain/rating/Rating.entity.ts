@@ -45,14 +45,14 @@ export default class Rating {
     ratingDate = new Date(),
     claimId: string,
     questionId: string,
-    answerValue: string,
     answerType: string,
+    answerValue: string,
   ) {
     this.id = id
     this._ratingDate = ratingDate
     this._claimId = claimId
     this._questionId = questionId
-    this._answerValue = answerValue
     this._answerType = answerType
+    this._answerValue = answerValue
   }
 }
