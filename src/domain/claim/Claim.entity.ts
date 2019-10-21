@@ -529,7 +529,7 @@ export default class Claim {
     this._doctor = doctor
 
     if (!this._doctors) {
-      this._doctors = [doctor]
+      this._doctors = []
     }
 
     this._doctors.push(doctor)
