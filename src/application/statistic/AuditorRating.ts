@@ -5,15 +5,6 @@ import { groupBy } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
 import { fromQuestionIdToNum } from './helpers/fromQuestionIdToNum'
 
-export interface RatingValueQuestion {
-  [key: string]: {
-    [key: string]: {
-      count: number
-      persentage: number
-    }
-  }[]
-}
-
 @Injectable()
 export class AuditorRating {
   constructor(
@@ -43,7 +34,10 @@ export class AuditorRating {
         return {
           [answer]: {
             count: answerCount,
-            persentage: (100 * answerCount) / groupedQuestions[key].length,
+            percentage: (
+              (100 * answerCount) /
+              groupedQuestions[key].length
+            ).toFixed(2),
           },
         }
       }),

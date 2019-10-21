@@ -15,10 +15,7 @@ import { Role } from '@app/user/model/Role'
 import { Configuration } from '@app/config/Configuration'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
-import {
-  AuditorRating,
-  RatingValueQuestion,
-} from '@app/application/statistic/AuditorRating'
+import { AuditorRating } from '@app/application/statistic/AuditorRating'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
@@ -31,6 +28,7 @@ import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
+import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuestion'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
