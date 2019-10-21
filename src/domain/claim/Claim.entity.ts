@@ -557,6 +557,10 @@ export default class Claim {
     this._isFeedbackReminderSent = true
   }
 
+  public updateSentToDoctorAt() {
+    this._sentToDoctorAt = new Date()
+  }
+
   private defineInitialCorporateStatus() {
     return this.corporateInfo.isEmpty()
       ? CorporateStatus.Empty
