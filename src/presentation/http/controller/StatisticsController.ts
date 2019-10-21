@@ -15,7 +15,10 @@ import { Role } from '@app/user/model/Role'
 import { Configuration } from '@app/config/Configuration'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
-import { AuditorRating } from '@app/application/statistic/AuditorRating'
+import {
+  AuditorRating,
+  RatingValueQuestion,
+} from '@app/application/statistic/AuditorRating'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
@@ -196,7 +199,7 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
-  public async generateReportForRating(): Promise<any> {
+  public async generateReportForRating(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.auditorRating.getRatingValueQuestionsStat()
 
     return valueQuestions
