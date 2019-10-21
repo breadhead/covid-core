@@ -320,6 +320,9 @@ export default class Claim {
   @Column({ type: 'enum', enum: Aids })
   public aids?: Aids
 
+  @Column({ type: 'json', nullable: true })
+  public _doctors?: User[] = []
+
   public constructor(
     id: string,
     number: number,
@@ -341,6 +344,7 @@ export default class Claim {
     this._theme = theme
     this._localization = localization
     this._target = target
+    this._doctors = []
 
     this._corporateInfo = new CorporateInfo({ company, position })
 
@@ -523,6 +527,12 @@ export default class Claim {
 
   public attachDoctor(doctor: User): void {
     this._doctor = doctor
+
+    if (!this._doctors) {
+      this._doctors = [doctor]
+    }
+
+    this._doctors.push(doctor)
   }
 
   public changeCloseComment(comment: string) {
