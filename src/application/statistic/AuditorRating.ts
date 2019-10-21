@@ -1,9 +1,13 @@
 import RatingRepository from '@app/domain/rating/RatingRepository'
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class AuditorRating {
-  constructor(private readonly ratingRepo: RatingRepository) {}
+  constructor(
+    @InjectRepository(RatingRepository)
+    private readonly ratingRepo: RatingRepository,
+  ) {}
 
   async getRatingValueQuestionsStat() {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
