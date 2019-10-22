@@ -88,7 +88,7 @@ export class NotifyMessageRecurrenter {
         : Promise.resolve()
 
       const fromSpecialistNotification = messageFromSpecialist
-        ? this.notificator.newChatMessageFromClient(messageFromClient)
+        ? this.notificator.newChatMessageFromSpecialist(messageFromSpecialist)
         : Promise.resolve()
 
       // We pass the error because it's just notification
