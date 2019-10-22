@@ -1,7 +1,7 @@
 import { CommandHandler } from '@breadhead/nest-throwable-bus'
 import { Inject } from '@nestjs/common'
 import { ICommandHandler } from '@nestjs/cqrs'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
@@ -35,7 +35,7 @@ export default class ChooseDoctorHandler
     ])
 
     claim.attachDoctor(doctor)
-
+    claim.updateSentToDoctorAt()
     const editedClaim = await this.em.save(claim)
 
     this.emitter.emit(new DoctorChangedEvent(editedClaim))
