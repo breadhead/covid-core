@@ -58,6 +58,7 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
+import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -472,6 +473,23 @@ export default class ClaimController {
     const { claimId, newStatus } = request
 
     await this.corporateStatusMover.changeStatus(claimId, newStatus)
+  }
+
+  @Post('add-story-phone')
+  @Roles(Role.Client)
+  @ApiOperation({ title: 'Add story phone' })
+  @ApiOkResponse({ description: 'Added' })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description: 'Client not logged in',
+  })
+  public async addStoryPhone(
+    @Body() request: AddStoryPhoneRequest,
+  ): Promise<void> {
+    const { claimId, phone } = request
+
+    const claim = await this.claimRepo.getOne(claimId)
+    claim.updateStoryPhone(phone)
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>

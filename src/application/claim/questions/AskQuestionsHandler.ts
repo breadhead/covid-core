@@ -3,7 +3,6 @@ import { ICommandHandler } from '@nestjs/cqrs'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 
-import { ClaimStatus } from '@app/domain/claim/Claim.entity'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
 import Allocator from '@app/domain/quota/Allocator'
