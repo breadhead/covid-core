@@ -198,6 +198,10 @@ export default class Claim {
     return this._closedAt
   }
 
+  public get storyPhone() {
+    return this._storyPhone
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -323,6 +327,9 @@ export default class Claim {
   @Column({ type: 'json', nullable: true })
   public _doctors?: User[] = []
 
+  @Column({ nullable: true })
+  public _storyPhone: string
+
   public constructor(
     id: string,
     number: number,
@@ -345,7 +352,7 @@ export default class Claim {
     this._localization = localization
     this._target = target
     this._doctors = []
-
+    this._storyPhone = ''
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
@@ -569,6 +576,10 @@ export default class Claim {
 
   public updateSentToDoctorAt() {
     this._sentToDoctorAt = new Date()
+  }
+
+  public updateStoryPhone(storyPhone: string) {
+    this._storyPhone = storyPhone
   }
 
   private defineInitialCorporateStatus() {
