@@ -218,6 +218,7 @@ export default class StatusMover {
   private getEvents(claim: Claim): Event[] {
     const actionEvent = {
       [ClaimStatus.Denied]: new ClaimRejectedEvent(claim),
+      [ClaimStatus.ClosedWithoutAnswer]: new ClaimRejectedEvent(claim),
       [ClaimStatus.DeliveredToCustomer]: new DoctorAnswerEvent(claim),
       [ClaimStatus.QueueForQuota]: new ShortClaimQueuedEvent(claim),
       [ClaimStatus.AtTheDoctor]: new ClaimSentToDoctor(claim),
