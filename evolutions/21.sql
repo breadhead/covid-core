@@ -7,7 +7,7 @@ CREATE TABLE rating
     _questionId VARCHAR(255),
     CONSTRAINT FK_RATING_RATINGQUESTIONS FOREIGN KEY (_questionId) REFERENCES ratingQuestions (id),
     `_answerType` VARCHAR(255),
-    `_answerValue` VARCHAR(255)
+    `_answerValue` JSON
 );
 
 #DOWN
