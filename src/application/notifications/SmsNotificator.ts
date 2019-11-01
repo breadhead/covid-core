@@ -27,14 +27,12 @@ export default class SmsNotificator implements Notificator {
   }
 
   public async newChatMessageFromSpecialist(message: Message): Promise<void> {
-    console.log('new chat message from spectialist')
     const { number, author, id } = message.claim
     const { name } = message.claim.applicant
 
     const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}?openMessage`,
     )
-    console.log('link from message', link)
     if (author.contacts.phone) {
       const text = await this.templating.render(
         'sms/new-chat-message-from-specialist',
