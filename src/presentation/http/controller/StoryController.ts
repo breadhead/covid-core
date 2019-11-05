@@ -5,16 +5,17 @@ import {
   ApiOperation,
   ApiUseTags,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import JwtAuthGuard from '../security/JwtAuthGuard'
-import RatingRepository from '@app/domain/rating/RatingRepository'
-import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuestionsRepository'
 import { EntityManager } from 'typeorm'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 import StoryAddPhoneRequest from '../request/StoryAddPhoneRequest'
 import Story from '@app/domain/story/Story.entity'
+import StoryResponse from '../response/StoryResponse'
+import StoryRepository from '@app/domain/story/StoryRepository'
 
 @Controller('story')
 @UseGuards(JwtAuthGuard)
@@ -22,13 +23,26 @@ import Story from '@app/domain/story/Story.entity'
 @ApiBearerAuth()
 export default class StoryController {
   public constructor(
-    @InjectRepository(RatingRepository)
-    private readonly ratingRepo: any,
-    @InjectRepository(RatingQuestionsRepository)
-    private readonly ratingQuestionsRepo: any,
+    @InjectRepository(StoryRepository)
+    private readonly storyRepo: any,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
-  ) { }
+  ) {}
+
+  @Get('')
+  @ApiOperation({ title: 'Show list of rating questions' })
+  @ApiOkResponse({
+    description: 'Success',
+    type: StoryResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Client API token doesnt provided',
+  })
+  public async getQuestions(): Promise<StoryResponse> {
+    const stories = await this.storyRepo.findAll()
+
+    return stories
+  }
 
   @Post('add-phone')
   @ApiOperation({ title: 'Add new phone' })
