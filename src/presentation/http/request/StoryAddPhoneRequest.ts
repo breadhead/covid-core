@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export default class StoryAddPhoneRequest {
-  @ApiModelProperty({ example: '1kke3' })
+  @ApiModelProperty({ example: '01TxsTyJaSGsC6' })
   public readonly claimId: string
 
   @ApiModelProperty({ example: '88008888383' })

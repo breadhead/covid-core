@@ -97,6 +97,7 @@ import { Configuration } from './config/Configuration'
 import TelegramNotificator from './application/notifications/TelegramNotificator'
 import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecurrenter'
 import { AuditorRating } from './application/statistic/AuditorRating'
+import Story from './domain/story/Story.entity'
 
 const cliCommands = [DoctorCommand]
 
@@ -157,6 +158,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       RatingRepository,
       RatingQuestions,
       RatingQuestionsRepository,
+      Story,
     ]),
     HttpModule,
   ],

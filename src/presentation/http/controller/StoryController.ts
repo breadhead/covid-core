@@ -28,7 +28,7 @@ export default class StoryController {
     private readonly ratingQuestionsRepo: any,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
-  ) {}
+  ) { }
 
   @Post('add-phone')
   @ApiOperation({ title: 'Add new phone' })
@@ -40,6 +40,7 @@ export default class StoryController {
     const id = this.idGenerator.get()
 
     const curStory = new Story(id, new Date(), claimId, phone, status)
+
     await this.em.save(curStory)
   }
 }
