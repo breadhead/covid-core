@@ -5,7 +5,6 @@ import {
   ApiOperation,
   ApiUseTags,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -15,6 +14,7 @@ import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuesti
 import { EntityManager } from 'typeorm'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 import StoryAddPhoneRequest from '../request/StoryAddPhoneRequest'
+import Story from '@app/domain/story/Story.entity'
 
 @Controller('story')
 @UseGuards(JwtAuthGuard)
@@ -35,15 +35,11 @@ export default class StoryController {
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Phone added' })
   public async addPhone(@Body() request: StoryAddPhoneRequest): Promise<any> {
-    // const { claimId, phone, status } = request
-    // const id = this.idGenerator.get()
-    // const curStory = new Story(
-    //   id,
-    //   new Date(),
-    //   claimId,
-    //   phone,
-    //   status
-    // )
-    // await this.em.save(curStory)
+    const { claimId, phone, status } = request
+
+    const id = this.idGenerator.get()
+
+    const curStory = new Story(id, new Date(), claimId, phone, status)
+    await this.em.save(curStory)
   }
 }
