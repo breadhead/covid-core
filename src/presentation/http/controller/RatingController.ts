@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Param, Body, Get } from '@nestjs/common'
+import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -10,8 +10,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import JwtAuthGuard from '../security/JwtAuthGuard'
-import CurrentUser from './decorator/CurrentUser'
-import TokenPayload from '@app/infrastructure/security/TokenPayload'
 import RatingAnswerRequest from '../request/RatingAnswerRequest'
 import RatingRepository from '@app/domain/rating/RatingRepository'
 import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuestionsRepository'
@@ -32,7 +30,7 @@ export default class RatingController {
     private readonly ratingQuestionsRepo: any,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
-  ) {}
+  ) { }
 
   @Post('answer')
   @ApiOperation({ title: 'Add new answer' })

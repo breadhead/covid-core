@@ -1,4 +1,4 @@
-import { CommandBus } from '@breadhead/nest-throwable-bus'
+import { CommandBus } from '@breadhead/nest-throwable-bus';
 import {
   Body,
   Controller,
@@ -18,7 +18,6 @@ import {
   ApiOperation,
   ApiUseTags,
 } from '@nestjs/swagger'
-import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
 import ChooseDoctorCommand from '@app/application/claim/ChooseDoctorCommand'
@@ -35,7 +34,6 @@ import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
-import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import { Role } from '@app/user/model/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -59,6 +57,7 @@ import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
+import { EntityManager } from 'typeorm';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -73,7 +72,8 @@ export default class ClaimController {
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly answeringQuestions: AnsweringQuestions,
     private readonly corporateStatusMover: CorporateStatusMover,
-  ) {}
+    private readonly em: EntityManager,
+  ) { }
 
   @Get('/')
   @ApiOperation({ title: 'Show list of quotas' })
@@ -87,7 +87,7 @@ export default class ClaimController {
   })
   public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
     ClaimForListResponse[]
-  > {
+    > {
     const claims = await this.claimRepo.getByLogin(login)
 
     const responseItems = sortBy(
@@ -248,34 +248,34 @@ export default class ClaimController {
 
     const command = !!id
       ? new EditShortClaimCommand(
-          id,
-          login,
-          theme,
-          name,
-          age,
-          gender,
-          region,
-          localization,
-          email,
-          phone,
-          companyName,
-          companyPosition,
-          target,
-        )
+        id,
+        login,
+        theme,
+        name,
+        age,
+        gender,
+        region,
+        localization,
+        email,
+        phone,
+        companyName,
+        companyPosition,
+        target,
+      )
       : new CreateClaimCommand(
-          login,
-          theme,
-          name,
-          age,
-          gender,
-          region,
-          localization,
-          email,
-          phone,
-          companyName,
-          companyPosition,
-          target,
-        )
+        login,
+        theme,
+        name,
+        age,
+        gender,
+        region,
+        localization,
+        email,
+        phone,
+        companyName,
+        companyPosition,
+        target,
+      )
 
     const editedClaim: Claim = await this.bus.execute(command)
 
@@ -490,6 +490,8 @@ export default class ClaimController {
 
     const claim = await this.claimRepo.getOne(claimId)
     claim.updateStoryPhone(phone)
+    await this.em.save(claim)
+
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>
