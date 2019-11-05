@@ -5,10 +5,10 @@ export default class StoryResponse {
   public readonly id: string
 
   @ApiModelProperty({ example: 'mwkwml3~u338' })
-  public readonly _claimId: string
+  public readonly claimId: string
 
   @ApiModelProperty({ example: '05-11-2019' })
-  public readonly _createdAt: string
+  public readonly createdAt: string
 
   @ApiModelProperty({ example: '8 800 123 45 67' })
   public readonly phone: string

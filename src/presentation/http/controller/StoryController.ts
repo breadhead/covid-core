@@ -24,7 +24,7 @@ import StoryRepository from '@app/domain/story/StoryRepository'
 export default class StoryController {
   public constructor(
     @InjectRepository(StoryRepository)
-    private readonly storyRepo: any,
+    private readonly storyRepo: StoryRepository,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
   ) {}
@@ -39,9 +39,9 @@ export default class StoryController {
     description: 'Client API token doesnt provided',
   })
   public async getQuestions(): Promise<StoryResponse> {
-    const stories = await this.storyRepo.findAll()
+    const stories = await this.storyRepo.getStories()
 
-    return stories
+    return stories as any
   }
 
   @Post('add-phone')
