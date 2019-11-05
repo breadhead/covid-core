@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -30,7 +30,7 @@ export default class RatingController {
     private readonly ratingQuestionsRepo: any,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
-  ) { }
+  ) {}
 
   @Post('answer')
   @ApiOperation({ title: 'Add new answer' })

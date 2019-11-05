@@ -1,4 +1,4 @@
-import { CommandBus } from '@breadhead/nest-throwable-bus';
+import { CommandBus } from '@breadhead/nest-throwable-bus'
 import {
   Body,
   Controller,
@@ -57,7 +57,7 @@ import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
-import { EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -73,7 +73,7 @@ export default class ClaimController {
     private readonly answeringQuestions: AnsweringQuestions,
     private readonly corporateStatusMover: CorporateStatusMover,
     private readonly em: EntityManager,
-  ) { }
+  ) {}
 
   @Get('/')
   @ApiOperation({ title: 'Show list of quotas' })
@@ -87,7 +87,7 @@ export default class ClaimController {
   })
   public async showClientList(@CurrentUser() { login }: TokenPayload): Promise<
     ClaimForListResponse[]
-    > {
+  > {
     const claims = await this.claimRepo.getByLogin(login)
 
     const responseItems = sortBy(
@@ -248,34 +248,34 @@ export default class ClaimController {
 
     const command = !!id
       ? new EditShortClaimCommand(
-        id,
-        login,
-        theme,
-        name,
-        age,
-        gender,
-        region,
-        localization,
-        email,
-        phone,
-        companyName,
-        companyPosition,
-        target,
-      )
+          id,
+          login,
+          theme,
+          name,
+          age,
+          gender,
+          region,
+          localization,
+          email,
+          phone,
+          companyName,
+          companyPosition,
+          target,
+        )
       : new CreateClaimCommand(
-        login,
-        theme,
-        name,
-        age,
-        gender,
-        region,
-        localization,
-        email,
-        phone,
-        companyName,
-        companyPosition,
-        target,
-      )
+          login,
+          theme,
+          name,
+          age,
+          gender,
+          region,
+          localization,
+          email,
+          phone,
+          companyName,
+          companyPosition,
+          target,
+        )
 
     const editedClaim: Claim = await this.bus.execute(command)
 
@@ -473,25 +473,6 @@ export default class ClaimController {
     const { claimId, newStatus } = request
 
     await this.corporateStatusMover.changeStatus(claimId, newStatus)
-  }
-
-  @Post('add-story-phone')
-  @Roles(Role.Client)
-  @ApiOperation({ title: 'Add story phone' })
-  @ApiOkResponse({ description: 'Added' })
-  @ApiNotFoundResponse({ description: 'Claim not found' })
-  @ApiForbiddenResponse({
-    description: 'Client not logged in',
-  })
-  public async addStoryPhone(
-    @Body() request: AddStoryPhoneRequest,
-  ): Promise<void> {
-    const { claimId, phone } = request
-
-    const claim = await this.claimRepo.getOne(claimId)
-    claim.updateStoryPhone(phone)
-    await this.em.save(claim)
-
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>
