@@ -7,7 +7,6 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
 } from '@nestjs/swagger'
-import { InjectRepository } from '@nestjs/typeorm'
 
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import { EntityManager } from 'typeorm'
@@ -15,7 +14,6 @@ import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 import StoryAddPhoneRequest from '../request/StoryAddPhoneRequest'
 import Story from '@app/domain/story/Story.entity'
 import StoryResponse from '../response/StoryResponse'
-import StoryRepository from '@app/domain/story/StoryRepository'
 import { StoryService } from '@app/domain/story/StoryService'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 
@@ -29,10 +27,10 @@ export default class StoryController {
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
     private readonly claimRepo: ClaimRepository,
-  ) {}
+  ) { }
 
   @Get('')
-  @ApiOperation({ title: 'Show list of rating questions' })
+  @ApiOperation({ title: 'Show list of users who want to tell a story' })
   @ApiOkResponse({
     description: 'Success',
     type: StoryResponse,

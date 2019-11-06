@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { StoryEnum } from './StoryEnum'
 
 @Entity('story')
 export default class Story {
@@ -26,7 +27,7 @@ export default class Story {
   public readonly phone: string
 
   @Column({ nullable: true })
-  public readonly status: string
+  public readonly status: StoryEnum
 
   public constructor(
     id: string,
@@ -34,7 +35,7 @@ export default class Story {
     claimId: string,
     number: number,
     phone: string,
-    status: string,
+    status: StoryEnum,
   ) {
     this.id = id
     this._createdAt = createdAt
