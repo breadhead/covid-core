@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  PrimaryColumn,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm'
 import { StoryEnum } from './StoryEnum'
+import Claim from '../claim/Claim.entity'
 
 @Entity('story')
 export default class Story {
@@ -13,15 +20,9 @@ export default class Story {
     return this._createdAt
   }
 
-  @Column({ nullable: true })
-  public readonly _claimId: string
-
-  get claimId() {
-    return this._claimId
-  }
-
-  @Column()
-  public readonly number: number
+  @JoinColumn({ name: 'claimId', referencedColumnName: 'id' })
+  @OneToOne(type => Claim, { eager: true })
+  public readonly claim: Claim
 
   @Column()
   public readonly phone: string
@@ -32,15 +33,13 @@ export default class Story {
   public constructor(
     id: string,
     createdAt = new Date(),
-    claimId: string,
-    number: number,
+    claim: Claim,
     phone: string,
     status: StoryEnum,
   ) {
     this.id = id
     this._createdAt = createdAt
-    this._claimId = claimId
-    this.number = number
+    this.claim = claim
     this.phone = phone
     this.status = status
   }

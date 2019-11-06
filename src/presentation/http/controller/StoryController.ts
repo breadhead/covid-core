@@ -53,14 +53,14 @@ export default class StoryController {
   @ApiOperation({ title: 'Add new phone' })
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Phone added' })
-  public async addPhone(@Body() request: StoryAddPhoneRequest): Promise<any> {
-    const { claimId, phone, status } = request
+  public async addPhone(@Body() request: any): Promise<any> {
+    const { phone, status, claimId } = request
 
     const id = this.idGenerator.get()
 
-    const number = await this.claimRepo.getNumberById(claimId)
+    const claim = await this.claimRepo.getOne(claimId)
 
-    const curStory = new Story(id, new Date(), claimId, number, phone, status)
+    const curStory = new Story(id, new Date(), claim, phone, status)
 
     await this.em.save(curStory)
   }

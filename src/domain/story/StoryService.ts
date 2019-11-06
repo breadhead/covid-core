@@ -11,13 +11,13 @@ export class StoryService {
   ) {}
 
   async getStories() {
-    const stories = await this.storyRepo.findAll()
+    const stories = await this.storyRepo.findAllStoriesWithClaims()
 
     return stories.map(story => ({
       id: story.id,
-      claimId: story._claimId,
-      number: story.number,
       createdAt: story._createdAt,
+      claimId: story.claim.id,
+      number: story.claim.number,
       phone: story.phone,
       status: story.status,
     }))
