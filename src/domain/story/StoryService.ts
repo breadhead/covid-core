@@ -20,6 +20,7 @@ export class StoryService {
       number: story.claim.number,
       phone: story.phone,
       status: story.status,
+      name: story.claim.applicant.name,
     }))
   }
 }

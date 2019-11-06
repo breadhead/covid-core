@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm'
+import { Column, Entity, PrimaryColumn, JoinColumn, OneToOne } from 'typeorm'
 import { StoryEnum } from './StoryEnum'
 import Claim from '../claim/Claim.entity'
 
