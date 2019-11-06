@@ -8,4 +8,10 @@ export default class StoryRepository extends AbstractRepository<Story> {
 
     return stories
   }
+
+  public async findById(id: string) {
+    const story = await this.repository.findOne(id)
+
+    return story
+  }
 }

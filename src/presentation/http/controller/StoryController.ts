@@ -16,6 +16,9 @@ import Story from '@app/domain/story/Story.entity'
 import StoryResponse from '../response/StoryResponse'
 import { StoryService } from '@app/domain/story/StoryService'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
+import StoryRepository from '@app/domain/story/StoryRepository'
+import { InjectRepository } from '@nestjs/typeorm'
+import StoryUpdateStatusRequest from '../request/StoryUpdateStatusRequest'
 
 @Controller('story')
 @UseGuards(JwtAuthGuard)
@@ -27,7 +30,9 @@ export default class StoryController {
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
     private readonly claimRepo: ClaimRepository,
-  ) { }
+    @InjectRepository(StoryRepository)
+    private readonly storyRepo: StoryRepository,
+  ) {}
 
   @Get('')
   @ApiOperation({ title: 'Show list of users who want to tell a story' })
@@ -58,5 +63,19 @@ export default class StoryController {
     const curStory = new Story(id, new Date(), claimId, number, phone, status)
 
     await this.em.save(curStory)
+  }
+
+  @Post('update-status')
+  @ApiOperation({ title: 'Update status' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiCreatedResponse({ description: 'Status updated' })
+  public async updateStatus(
+    @Body() request: StoryUpdateStatusRequest,
+  ): Promise<any> {
+    const { id, status } = request
+
+    const story = await this.storyRepo.findById(id)
+    story.updateStatus(status)
+    await this.em.save(story)
   }
 }

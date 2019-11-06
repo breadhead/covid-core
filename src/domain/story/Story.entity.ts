@@ -27,7 +27,7 @@ export default class Story {
   public readonly phone: string
 
   @Column({ nullable: true })
-  public readonly status: StoryEnum
+  public status: StoryEnum
 
   public constructor(
     id: string,
@@ -42,6 +42,10 @@ export default class Story {
     this._claimId = claimId
     this.number = number
     this.phone = phone
+    this.status = status
+  }
+
+  public updateStatus(status: StoryEnum) {
     this.status = status
   }
 }
