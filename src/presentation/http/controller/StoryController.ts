@@ -16,6 +16,8 @@ import StoryAddPhoneRequest from '../request/StoryAddPhoneRequest'
 import Story from '@app/domain/story/Story.entity'
 import StoryResponse from '../response/StoryResponse'
 import StoryRepository from '@app/domain/story/StoryRepository'
+import { StoryService } from '@app/domain/story/StoryService'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 
 @Controller('story')
 @UseGuards(JwtAuthGuard)
@@ -23,10 +25,10 @@ import StoryRepository from '@app/domain/story/StoryRepository'
 @ApiBearerAuth()
 export default class StoryController {
   public constructor(
-    @InjectRepository(StoryRepository)
-    private readonly storyRepo: StoryRepository,
+    private readonly storyService: StoryService,
     private readonly em: EntityManager,
     private readonly idGenerator: IdGenerator,
+    private readonly claimRepo: ClaimRepository,
   ) {}
 
   @Get('')
@@ -38,8 +40,8 @@ export default class StoryController {
   @ApiForbiddenResponse({
     description: 'Client API token doesnt provided',
   })
-  public async getQuestions(): Promise<StoryResponse> {
-    const stories = await this.storyRepo.getStories()
+  public async getStories(): Promise<StoryResponse> {
+    const stories = await this.storyService.getStories()
 
     return stories as any
   }
@@ -53,7 +55,9 @@ export default class StoryController {
 
     const id = this.idGenerator.get()
 
-    const curStory = new Story(id, new Date(), claimId, phone, status)
+    const number = await this.claimRepo.getNumberById(claimId)
+
+    const curStory = new Story(id, new Date(), claimId, number, phone, status)
 
     await this.em.save(curStory)
   }

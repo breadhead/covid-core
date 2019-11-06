@@ -32,6 +32,11 @@ class ClaimRepo {
     return claim
   }
 
+  public async getNumberById(id: string): Promise<number> {
+    const claim = await this.repository.findOne(id)
+    return claim.number
+  }
+
   public async getByLogin(login: string): Promise<Claim[]> {
     const claims = await this.repository.find({
       author: { login },

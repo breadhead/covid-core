@@ -99,6 +99,7 @@ import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecur
 import { AuditorRating } from './application/statistic/AuditorRating'
 import Story from './domain/story/Story.entity'
 import StoryRepository from './domain/story/StoryRepository'
+import { StoryService } from './domain/story/StoryService'
 
 const cliCommands = [DoctorCommand]
 
@@ -219,6 +220,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     AuditorDoctors,
     AuditorClaims,
     AuditorRating,
+    StoryService,
   ],
 })
 export class AppModule implements NestModule {

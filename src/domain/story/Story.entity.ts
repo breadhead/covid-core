@@ -20,6 +20,9 @@ export default class Story {
   }
 
   @Column()
+  public readonly number: number
+
+  @Column()
   public readonly phone: string
 
   @Column({ nullable: true })
@@ -29,12 +32,14 @@ export default class Story {
     id: string,
     createdAt = new Date(),
     claimId: string,
+    number: number,
     phone: string,
     status: string,
   ) {
     this.id = id
     this._createdAt = createdAt
     this._claimId = claimId
+    this.number = number
     this.phone = phone
     this.status = status
   }
