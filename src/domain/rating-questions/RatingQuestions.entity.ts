@@ -8,6 +8,13 @@ export default class RatingQuestions {
   @Column()
   public readonly _type: string
 
+  @Column()
+  public readonly _order: number
+
+  get order() {
+    return this._order
+  }
+
   get type() {
     return this._type
   }
@@ -26,9 +33,16 @@ export default class RatingQuestions {
     return this._hint
   }
 
-  public constructor(id: string, type: string, question: string, hint: string) {
+  public constructor(
+    id: string,
+    type: string,
+    order: number,
+    question: string,
+    hint: string,
+  ) {
     this.id = id
     this._type = type
+    this._order = order
     this._question = question
     this._hint = hint
   }
