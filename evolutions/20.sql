@@ -14,6 +14,7 @@ INSERT INTO ratingQuestions
   (id, _type, _order, _question, _hint)
 VALUES('Q4', 'comment', 4, 'Что вам особенно понравилось/не понравилось?', 'Вы очень нам поможете, если поделитесь своим опытом');
 
+
 #DOWN
 DELETE FROM ratingQuestions WHERE id='Q1';
 DELETE FROM ratingQuestions WHERE id='Q2';
