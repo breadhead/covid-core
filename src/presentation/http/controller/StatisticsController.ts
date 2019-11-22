@@ -14,6 +14,8 @@ import Historian from '@app/domain/service/Historian/Historian'
 import { Role } from '@app/user/model/Role'
 import { Configuration } from '@app/config/Configuration'
 import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
+import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
+import { AuditorRating } from '@app/application/statistic/AuditorRating'
 
 import ApiDateRangeQuery from '../request/dateRange/ApiDateRangeQuery'
 import DateRandePipe from '../request/dateRange/DateRangePipe'
@@ -25,8 +27,8 @@ import Roles from '../security/Roles'
 import { DoctorAnswerTimeResponse } from '../response/DoctorAnswerTimeResponse'
 import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator'
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
-import { AuditorClaims } from '@app/application/statistic/AuditorClaims'
 import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
+import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuestion'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -44,6 +46,7 @@ export default class StatisticsController {
     config: Configuration,
     private readonly auditorDoctors: AuditorDoctors,
     private readonly auditorClaims: AuditorClaims,
+    private readonly auditorRating: AuditorRating,
   ) {
     this.siteUrl = config.getStringOrElse('SITE_URL', 'localhost')
   }
@@ -186,5 +189,17 @@ export default class StatisticsController {
     )
 
     return table
+  }
+
+  @Get('rating-report')
+  @Header('Content-Type', 'application/json')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Common quotas avalability' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  public async generateReportForRating(): Promise<RatingValueQuestion[]> {
+    const valueQuestions = await this.auditorRating.getRatingValueQuestionsStat()
+
+    return valueQuestions
   }
 }

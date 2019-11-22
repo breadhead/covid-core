@@ -18,7 +18,6 @@ import {
   ApiOperation,
   ApiUseTags,
 } from '@nestjs/swagger'
-import { InjectRepository } from '@nestjs/typeorm'
 import { sortBy } from 'lodash'
 
 import ChooseDoctorCommand from '@app/application/claim/ChooseDoctorCommand'
@@ -35,7 +34,6 @@ import BindQuotaCommand from '@app/application/quota/BindQuotaCommand'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
-import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 import { Role } from '@app/user/model/Role'
 import Attribute from '@app/infrastructure/security/SecurityVoter/Attribute'
 import SecurityVotersUnity from '@app/infrastructure/security/SecurityVoter/SecurityVotersUnity'
@@ -58,6 +56,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
+import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
+import { EntityManager } from 'typeorm'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -72,6 +72,7 @@ export default class ClaimController {
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly answeringQuestions: AnsweringQuestions,
     private readonly corporateStatusMover: CorporateStatusMover,
+    private readonly em: EntityManager,
   ) {}
 
   @Get('/')

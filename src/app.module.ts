@@ -60,6 +60,10 @@ import { AuditorDoctors } from '@app/application/statistic/AuditorDoctors'
 import Claim from '@app/domain/claim/Claim.entity'
 import ClaimBoardCardFinder from '@app/domain/claim/ClaimBoardCardFinder'
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
+import Rating from './domain/rating/Rating.entity'
+import RatingRepository from '@app/domain/rating/RatingRepository'
+import RatingQuestions from './domain/rating-questions/RatingQuestions.entity'
+import RatingQuestionsRepository from '@app/domain/rating-questions/RatingQuestionsRepository'
 import Message from '@app/domain/claim/Message.entity'
 import MessageRepository from '@app/domain/claim/MessageRepository'
 import StatusMover from '@app/domain/claim/StatusMover'
@@ -92,6 +96,10 @@ import { TelegramBot } from 'nest-telegram'
 import { Configuration } from './config/Configuration'
 import TelegramNotificator from './application/notifications/TelegramNotificator'
 import { NotifyOverdueRecurrenter } from './application/claim/NotifyOverdueRecurrenter'
+import { AuditorRating } from './application/statistic/AuditorRating'
+import Story from './domain/story/Story.entity'
+import StoryRepository from './domain/story/StoryRepository'
+import { StoryService } from './domain/story/StoryService'
 
 const cliCommands = [DoctorCommand]
 
@@ -148,6 +156,12 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       Message,
       MessageRepository,
       Claim,
+      Rating,
+      RatingRepository,
+      RatingQuestions,
+      RatingQuestionsRepository,
+      Story,
+      StoryRepository,
     ]),
     HttpModule,
   ],
@@ -202,8 +216,11 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     EventEmitter,
     CommandRunner,
     ClaimRepository,
+    RatingRepository,
     AuditorDoctors,
     AuditorClaims,
+    AuditorRating,
+    StoryService,
   ],
 })
 export class AppModule implements NestModule {

@@ -345,7 +345,6 @@ export default class Claim {
     this._localization = localization
     this._target = target
     this._doctors = []
-
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New

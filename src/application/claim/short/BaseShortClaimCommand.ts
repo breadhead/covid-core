@@ -1,7 +1,6 @@
-import { ICommand } from '@nestjs/cqrs'
-
 import { ClaimTarget } from '@app/domain/claim/Claim.entity'
 import Gender from '@app/infrastructure/customTypes/Gender'
+import { ICommand } from '@nestjs/cqrs'
 
 export default class BaseShortClaimCommand implements ICommand {
   public constructor(

@@ -6,3 +6,4 @@ ALTER TABLE claim
 
 ALTER TABLE claim
     DROP COLUMN _doctors;
+
