@@ -207,6 +207,7 @@ export default class EmailNotificator implements Notificator {
     const { number, author, closeComment } = claim
     const { name } = claim.applicant
     const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
+
     const html = await this.renderHtml('email/claim-rejected', {
       siteUrl: this.siteUrl,
       name,
@@ -220,7 +221,7 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async doctorAnswer(claim: Claim): Promise<void> {
-    const { number, author, id } = claim
+    const { number, author, id, questionsWithAnswers } = claim
     const { name } = claim.applicant
 
     const subject = `Заявка №${number}. ${name}, готов ответ эксперта по вашей консультации`
@@ -232,6 +233,13 @@ export default class EmailNotificator implements Notificator {
         this.siteUrl
       }/client/consultation/${id}?${expertAnswersEmailUTM}#expert-answers`,
       number,
+      qua: questionsWithAnswers as any,
+      yesLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?donation&${finishYesUTM}`,
+      noLink: `${
+        this.siteUrl
+      }/client/consultation/${id}?openMessage&${finishNoUTM}`,
     })
 
     if (author.contacts.email) {
@@ -258,6 +266,23 @@ export default class EmailNotificator implements Notificator {
       }/client/consultation/${id}?openMessage&${finishNoUTM}`,
     })
 
+    if (author.contacts.email) {
+      await this.send(author.contacts.email, subject, { html })
+    }
+  }
+
+  public async closeWithoutAnswer(claim: Claim): Promise<void> {
+    const { number, author, closeComment } = claim
+    const { name } = claim.applicant
+    const subject = `Заявка №${number}. ${name}, ваш вопрос не требует ответа эксперта`
+
+    const html = await this.renderHtml('email/claim-closed-without-answer', {
+      siteUrl: this.siteUrl,
+      name,
+      link: `${this.siteUrl}/contacts#feedback-form`,
+      number,
+      closeComment,
+    })
     if (author.contacts.email) {
       await this.send(author.contacts.email, subject, { html })
     }

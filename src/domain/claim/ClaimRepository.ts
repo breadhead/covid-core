@@ -32,6 +32,11 @@ class ClaimRepo {
     return claim
   }
 
+  public async getNumberById(id: string): Promise<number> {
+    const claim = await this.repository.findOne(id)
+    return claim.number
+  }
+
   public async getByLogin(login: string): Promise<Claim[]> {
     const claims = await this.repository.find({
       author: { login },
@@ -59,8 +64,28 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', { statuses: CLOSED_STATUSES })
+      .andWhere('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
+      .getMany()
+  }
+
+  public async findSuccessefullyClosedByRange(
+    from: Date,
+    to: Date,
+  ): Promise<Claim[]> {
+    const start = startOfDay(from).toISOString()
+    const end = endOfDay(to).toISOString()
+
+    return this.repository
+      .createQueryBuilder('claim')
+      .leftJoinAndSelect('claim.author', 'author')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .leftJoinAndSelect('claim._quota', 'quota')
+      .where('claim._status = :status', {
+        status: ClaimStatus.ClosedSuccessfully,
+      })
       .andWhere('claim._closedAt >= :start', { start })
       .andWhere('claim._closedAt <= :end', { end })
       .getMany()
@@ -71,7 +96,7 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', {
         statuses: [
           ...CLOSED_STATUSES,
@@ -90,7 +115,7 @@ class ClaimRepo {
       .createQueryBuilder('claim')
       .leftJoinAndSelect('claim.author', 'author')
       .leftJoinAndSelect('claim._doctor', 'doctor')
-      .leftJoinAndSelect('claim._quota', 'auota')
+      .leftJoinAndSelect('claim._quota', 'quota')
       .where('claim._status in (:statuses)', {
         statuses: [
           ...CLOSED_STATUSES,
@@ -180,9 +205,8 @@ class ClaimRepo {
 
     const count = await this.repository
       .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim.createdAt <= :end', { end })
-      .andWhere('claim._claimFinishedAt IS NOT NULL')
+      .where('claim._claimFinishedAt >= :start', { start })
+      .andWhere('claim._claimFinishedAt <= :end', { end })
       .getCount()
 
     return count
@@ -197,8 +221,8 @@ class ClaimRepo {
 
     const count = await this.repository
       .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim.createdAt <= :end', { end })
+      .where('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
       .andWhere('claim._status = :closedSuccessfullyStatus', {
         closedSuccessfullyStatus: ClaimStatus.ClosedSuccessfully,
       })
@@ -216,8 +240,8 @@ class ClaimRepo {
 
     const count = await this.repository
       .createQueryBuilder('claim')
-      .where('claim.createdAt >= :start', { start })
-      .andWhere('claim.createdAt <= :end', { end })
+      .where('claim._closedAt >= :start', { start })
+      .andWhere('claim._closedAt <= :end', { end })
       .andWhere('claim.closedBy = :clientRole', { clientRole: Role.Client })
       .getCount()
 

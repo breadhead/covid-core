@@ -61,7 +61,7 @@ export default class QuotaController {
   @ApiOperation({ title: 'List of quotas' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse, isArray: true })
   @ApiForbiddenResponse({
-    description: 'Case-manager or Admin API token doesn`t provided',
+    description: 'Case-manager or Admin API token doesnt provided',
   })
   public async showList(): Promise<QuotaResponse[]> {
     const quotas = await this.quotaRepo.findAll()
@@ -78,7 +78,7 @@ export default class QuotaController {
     type: TransactionRepsonse,
     isArray: true,
   })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async showTransactionHistory(
     @Query(DateRandePipe) request: DateRangeRequest,
   ): Promise<TransactionRepsonse[]> {
@@ -92,7 +92,7 @@ export default class QuotaController {
   @ApiOperation({ title: 'Quota' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiForbiddenResponse({
-    description: 'Case-manager or Admin API token doesn`t provided',
+    description: 'Case-manager or Admin API token doesnt provided',
   })
   public async show(@Param('id') id: string): Promise<QuotaResponse> {
     const quota = await this.quotaRepo.getOne(id)
@@ -106,9 +106,9 @@ export default class QuotaController {
   @ApiOperation({ title: 'Transfer quota' })
   @ApiOkResponse({ description: 'Transfered', type: QuotaTransferResponse })
   @ApiNotFoundResponse({
-    description: 'Quota with the provided id doesn`t exist',
+    description: 'Quota with the provided id doesnt exist',
   })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async transfer(@Body() request: QuotaTransferRequest) {
     const [sourceQuota, targetQuota] = await this.commandBus.execute(
       new TransferQuotaCommand(
@@ -131,7 +131,7 @@ export default class QuotaController {
   @ApiBadRequestResponse({
     description: 'Quota with the provided name already exists',
   })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async create(
     @Body() request: QuotaCreateRequest,
   ): Promise<QuotaResponse> {
@@ -172,9 +172,9 @@ export default class QuotaController {
   @ApiOperation({ title: 'Edit the existing quota' })
   @ApiOkResponse({ description: 'Success', type: QuotaResponse })
   @ApiNotFoundResponse({
-    description: 'Quota with the provided id doesn`t exist',
+    description: 'Quota with the provided id doesnt exist',
   })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async edit(@Body() request: QuotaEditRequest): Promise<QuotaResponse> {
     const { id } = request
     const {
@@ -212,9 +212,9 @@ export default class QuotaController {
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Increase balance of quota' })
   @ApiOkResponse({ description: 'Balance increased' })
-  @ApiForbiddenResponse({ description: 'Admin API token doesn`t provided' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   @ApiNotFoundResponse({
-    description: 'Quota or company with the provided id doesn`t exist',
+    description: 'Quota or company with the provided id doesnt exist',
   })
   public async income(
     @Body() request: QuotaIncomeRequest,

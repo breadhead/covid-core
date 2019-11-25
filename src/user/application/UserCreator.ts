@@ -24,6 +24,18 @@ export class UserCreator {
     return user
   }
 
+  async createInternalClient(email: string, rawPassword: string) {
+    const user = new User(email)
+
+    await user.changePassword(rawPassword, this.passwordEncoder)
+
+    user.roles.push(Role.Client)
+
+    await this.entitySaver.save(user)
+
+    return user
+  }
+
   async createDoctor(
     email: string,
     rawPassword: string,

@@ -7,8 +7,11 @@ import { LinkShortener } from './LinkShortener'
 export class ClckLinkShortener implements LinkShortener {
   getShort(link: string) {
     return axios
-      .get(`'https://clck.ru/--?url='${link}`)
+      .get(`https://clck.ru/--?url=${link}`)
       .then(response => response.data)
-      .catch(() => link)
+      .catch(error => {
+        console.log('error here', error)
+        return link
+      })
   }
 }

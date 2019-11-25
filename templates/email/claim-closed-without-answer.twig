@@ -1,0 +1,30 @@
+{% extends "./utils/_layout.twig" %}
+
+{% block content %}
+    <table class="inner__table">
+        <tr>
+            <td class="text__id">
+                <div><b>Заявка №{{ number }}</b></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>{{ name }}, ваша консультация завершена</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p text__comment">
+                <div>
+                    {{ closeComment }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="text__p">
+                <div>Если у вас есть вопросы, напишите в
+                    <a class="link" href="{{link}}">форму обратной связи</a>.</div>
+            </td>
+        </tr>
+    </table>
+
+{% endblock content %}

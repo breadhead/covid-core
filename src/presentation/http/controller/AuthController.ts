@@ -81,6 +81,10 @@ export default class AuthController {
 
     const user = await this.userRepo.getOneByContactEmail(login)
 
+    if (!user.contacts.phone) {
+      return null
+    }
+
     return this.hidePhoneNumber(user.contacts.phone)
   }
 

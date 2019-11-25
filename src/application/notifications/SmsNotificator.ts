@@ -33,7 +33,6 @@ export default class SmsNotificator implements Notificator {
     const link = await this.linkShortener.getShort(
       `${this.siteUrl}/client/consultation/${id}?openMessage`,
     )
-
     if (author.contacts.phone) {
       const text = await this.templating.render(
         'sms/new-chat-message-from-specialist',
@@ -46,6 +45,10 @@ export default class SmsNotificator implements Notificator {
 
       await this.send(author.contacts.phone, text)
     }
+  }
+
+  public async closeWithoutAnswer(): Promise<void> {
+    // SMS Notification not needed
   }
 
   public async newChatMessageFromClient(): Promise<void> {

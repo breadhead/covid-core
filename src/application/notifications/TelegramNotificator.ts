@@ -83,6 +83,10 @@ export default class TelegramNotificator implements Notificator {
     // SMS Notification not needed
   }
 
+  public async closeWithoutAnswer(): Promise<void> {
+    // SMS Notification not needed
+  }
+
   public async claimRejected(): Promise<void> {
     // SMS Notification not needed
   }

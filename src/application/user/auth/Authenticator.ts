@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
-import NenaprasnoBackendClient from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
+import NenaprasnoBackendClient, {
+  EMAIL_IS_ALREADY_TAKEN,
+} from '@app/infrastructure/Nenaprasno/NenaprasnoBackendClient'
 import TokenPayload from '@app/infrastructure/security/TokenPayload'
 
 import InvalidCredentialsException from '../../exception/InvalidCredentialsException'
@@ -9,6 +11,7 @@ import SignInProvider, { SignInProviders } from './providers/SignInProvider'
 import tokenFromUser from './tokenFromUser'
 import { UserRepository } from '@app/user/service/UserRepository'
 import { User } from '@app/user/model/User.entity'
+import { UserCreator } from '@app/user/application/UserCreator'
 
 interface SignUpResult {
   token: string
@@ -22,6 +25,7 @@ export default class Authenticator {
     private readonly userRepo: UserRepository,
     private readonly nenaprasno: NenaprasnoBackendClient,
     private readonly jwtService: JwtService,
+    private readonly userCreator: UserCreator,
   ) {}
 
   public async signIn(login: string, credential: string): Promise<string> {
@@ -52,12 +56,29 @@ export default class Authenticator {
     password: string,
     confirm: string,
   ): Promise<SignUpResult> {
-    const id = await this.nenaprasno.signUp(login, password, confirm)
+    try {
+      const id = await this.nenaprasno.signUp(login, password, confirm)
+      const token = await this.signIn(login, password)
+      const cabinetUser = await this.userRepo.findOneByCabinetId(id)
+      return { token, user: cabinetUser }
+    } catch (e) {
+      if (e.message.includes(EMAIL_IS_ALREADY_TAKEN)) {
+        const internalUser = await this.userRepo.findOneByContactEmail(login)
+        if (!!internalUser) {
+          const token = await this.signIn(login, password)
 
-    const token = await this.signIn(login, password)
-    const user = await this.userRepo.findOneByCabinetId(id)
+          return { token, user: internalUser }
+        }
+        const newUser = await this.userCreator.createInternalClient(
+          login,
+          password,
+        )
+        const token = await this.signIn(login, password)
+        return { token, user: newUser }
+      }
 
-    return { token, user }
+      throw e
+    }
   }
 
   public async validateUser(token: TokenPayload): Promise<User | null> {

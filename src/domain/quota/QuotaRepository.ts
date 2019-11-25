@@ -2,6 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm'
 
 import EntityNotFoundException from '../exception/EntityNotFoundException'
 import Quota, { QuotaType } from './Quota.entity'
+import { CommonLocalizationsEnum } from '../claim/CommonLocalizationsEnum'
 
 @EntityRepository(Quota)
 export default class QuotaRepository extends AbstractRepository<Quota> {
@@ -33,6 +34,18 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     return this.findCommon().then(quotas =>
       quotas.filter(quota => quota.balance),
     )
+  }
+
+  public findByLocalization(
+    localization: CommonLocalizationsEnum,
+  ): Promise<Quota[]> {
+    return this.repository
+      .createQueryBuilder('quota')
+      .where('quota._constraints like :localization', {
+        localization: `%${localization}%`,
+      })
+      .andWhere('quota._balance > 0')
+      .getMany()
   }
 
   private async findByType(type: QuotaType): Promise<Quota[]> {

@@ -16,6 +16,7 @@ import SurgicalTreatment from './treatment/SurgicalTreatment'
 import { User } from '@app/user/model/User.entity'
 import { Role } from '@app/user/model/Role'
 import { Aids } from '@app/infrastructure/customTypes/Aids'
+import { CommonLocalizationsEnum } from './CommonLocalizationsEnum'
 
 export enum ClaimStatus {
   New = 'new',
@@ -100,7 +101,7 @@ export default class Claim {
     return this._theme
   }
 
-  public get localization(): string {
+  public get localization(): CommonLocalizationsEnum | string {
     return this._localization
   }
 
@@ -141,6 +142,13 @@ export default class Claim {
         q => q.question,
       ),
     }
+  }
+
+  public get questionsWithAnswers() {
+    const questions = [...this._defaultQuestions, ...this._additionalQuestions]
+    return questions.map(({ question, answer }) => {
+      return { question, answer }
+    })
   }
 
   public get answeredQuestions() {
@@ -312,6 +320,9 @@ export default class Claim {
   @Column({ type: 'enum', enum: Aids })
   public aids?: Aids
 
+  @Column({ type: 'json', nullable: true })
+  public _doctors?: User[] = []
+
   public constructor(
     id: string,
     number: number,
@@ -333,7 +344,7 @@ export default class Claim {
     this._theme = theme
     this._localization = localization
     this._target = target
-
+    this._doctors = []
     this._corporateInfo = new CorporateInfo({ company, position })
 
     this._status = ClaimStatus.New
@@ -515,6 +526,12 @@ export default class Claim {
 
   public attachDoctor(doctor: User): void {
     this._doctor = doctor
+
+    if (!this._doctors) {
+      this._doctors = []
+    }
+
+    this._doctors.push(doctor)
   }
 
   public changeCloseComment(comment: string) {
@@ -547,6 +564,10 @@ export default class Claim {
 
   public updateIsFeedbackReminderSent() {
     this._isFeedbackReminderSent = true
+  }
+
+  public updateSentToDoctorAt() {
+    this._sentToDoctorAt = new Date()
   }
 
   private defineInitialCorporateStatus() {
