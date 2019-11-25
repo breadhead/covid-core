@@ -19,6 +19,8 @@ import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import StoryRepository from '@app/domain/story/StoryRepository'
 import { InjectRepository } from '@nestjs/typeorm'
 import StoryUpdateStatusRequest from '../request/StoryUpdateStatusRequest'
+import Roles from '../security/Roles'
+import { Role } from '@app/user/model/Role'
 
 @Controller('story')
 @UseGuards(JwtAuthGuard)
@@ -35,6 +37,7 @@ export default class StoryController {
   ) {}
 
   @Get('')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Show list of users who want to tell a story' })
   @ApiOkResponse({
     description: 'Success',
@@ -50,6 +53,7 @@ export default class StoryController {
   }
 
   @Post('add-phone')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Add new phone' })
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Phone added' })
@@ -66,6 +70,7 @@ export default class StoryController {
   }
 
   @Post('update-status')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Update status' })
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Status updated' })

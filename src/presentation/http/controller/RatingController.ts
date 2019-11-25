@@ -17,6 +17,8 @@ import { EntityManager } from 'typeorm'
 import Rating from '@app/domain/rating/Rating.entity'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
 import RatingQuestionResponse from '../response/RatingQuestionResponse'
+import Roles from '../security/Roles'
+import { Role } from '@app/user/model/Role'
 
 @Controller('rating')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +35,7 @@ export default class RatingController {
   ) {}
 
   @Post('answer')
+  @Roles(Role.Client)
   @ApiOperation({ title: 'Add new answer' })
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Answer added' })
@@ -54,6 +57,7 @@ export default class RatingController {
   }
 
   @Get('questions')
+  @Roles(Role.Client)
   @ApiOperation({ title: 'Show list of rating questions' })
   @ApiOkResponse({
     description: 'Success',
