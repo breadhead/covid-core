@@ -56,35 +56,35 @@ export default class CreateClaimHandler
       this.generateNextNumber(),
     ])
 
-    return this.em.transaction(async em => {
-      user.newContacts(email, phone)
+    user.newContacts(email, phone)
 
-      const applicant = new Applicant(name, age, gender, region)
+    const applicant = new Applicant(name, age, gender, region)
 
-      const shortClaim = new Claim(
-        id,
-        number,
-        new Date(),
-        new Date(),
-        applicant,
-        user,
-        theme,
-        localization,
-        {
-          company,
-          position,
-        },
-        target,
-      )
+    const shortClaim = new Claim(
+      id,
+      number,
+      new Date(),
+      new Date(),
+      applicant,
+      user,
+      theme,
+      localization,
+      {
+        company,
+        position,
+      },
+      target,
+    )
 
-      await this.statusMover.afterCreate(shortClaim)
+    await this.em.save([shortClaim, user])
 
-      const [savedClaim, ...rest] = await em.save([shortClaim, user])
+    await this.statusMover.afterCreate(shortClaim)
 
-      await this.eventEmitter.emit(new ClaimEditedEvent(savedClaim as Claim))
+    const [savedClaim, ...rest] = await this.em.save([shortClaim])
 
-      return savedClaim as Claim
-    })
+    await this.eventEmitter.emit(new ClaimEditedEvent(savedClaim as Claim))
+
+    return savedClaim as Claim
   }
 
   private async generateNextNumber(): Promise<number> {

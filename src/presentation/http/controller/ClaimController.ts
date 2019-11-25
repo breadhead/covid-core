@@ -232,7 +232,6 @@ export default class ClaimController {
     const { login } = user
     const { id, theme, localization, company, target } = request
     const { name, age, gender, region, email, phone } = request.personalData
-
     const { companyName = null, companyPosition = null } = company
       ? { companyName: company.name, companyPosition: company.position }
       : {}
@@ -278,7 +277,6 @@ export default class ClaimController {
         )
 
     const editedClaim: Claim = await this.bus.execute(command)
-
     return ShortClaimData.fromEntity(editedClaim, this.hideSensitiveData(user))
   }
 

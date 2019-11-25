@@ -227,7 +227,7 @@ export default class BoardSubscriber implements EventSubscriber {
       [ClaimStatus.QuotaAllocation]: [BoardKind.Current, 'Распределение квоты'],
       [ClaimStatus.QueueForQuota]: [BoardKind.Current, 'В очереди на квоту'],
       [ClaimStatus.QuestionnaireWaiting]: [
-        BoardKind.Current,
+        BoardKind.Waiting,
         'Ожидание анкеты',
       ],
       [ClaimStatus.QuestionnaireValidation]: [

@@ -4,24 +4,29 @@ import BoardManager, {
   BoardManager as BoardManagerSymbol,
   Card,
 } from '@app/infrastructure/BoardManager/BoardManager'
-import { Configuration } from '@app/config/Configuration'
 import { Inject, Injectable } from '@nestjs/common'
 import { promisify } from 'util'
+import { ClaimRepository } from './ClaimRepository'
+import { ClaimStatus } from './Claim.entity'
 
 @Injectable()
 export default class BoardCardFinder {
   public constructor(
     @Inject(BoardManagerSymbol) private readonly board: BoardManager,
-    private readonly config: Configuration,
+    private readonly claimRepo: ClaimRepository,
   ) {}
 
   public async getCardById(
     id: string,
     numberOfRetries: number = 50,
-    boardKind: BoardKind = BoardKind.Current,
+    boardKind?: BoardKind,
   ): Promise<Card> {
     return this.getCard(async () => {
-      const boardId = this.board.getBoardIdByKind(boardKind)
+      const currentBoardKind = !!boardKind
+        ? boardKind
+        : await this.defineKindById(id)
+
+      const boardId = await this.board.getBoardIdByKind(currentBoardKind)
 
       const cards = await this.board.getCardsOnBoard(boardId)
 
@@ -59,11 +64,28 @@ export default class BoardCardFinder {
       return claimCard
     }
 
-    if (numberOfRetries > 0) {
+    if (!claimCard && numberOfRetries > 0) {
       await sleep(500)
       return this.getCard(cardFinder, numberOfRetries - 1)
     }
 
     throw new EntityNotFoundException('Card')
+  }
+
+  private async defineKindById(claimId: string): Promise<BoardKind> {
+    const claim = await this.claimRepo.getOne(claimId).catch(() => {
+      return null
+    })
+
+    if (!claim) {
+      return BoardKind.Current
+    }
+
+    switch (claim.status) {
+      case ClaimStatus.QuestionnaireWaiting:
+        return BoardKind.Waiting
+      default:
+        return BoardKind.Current
+    }
   }
 }
