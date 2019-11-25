@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common'
+import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -53,7 +53,7 @@ export default class StoryController {
   }
 
   @Post('add-phone')
-  @Roles(Role.Admin)
+  @Roles(Role.Client)
   @ApiOperation({ title: 'Add new phone' })
   @ApiOkResponse({ description: 'Success' })
   @ApiCreatedResponse({ description: 'Phone added' })
