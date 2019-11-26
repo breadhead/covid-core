@@ -106,10 +106,8 @@ export default class TrelloBoardManager implements BoardManager {
   ): Promise<void> {
     const card = await this.getCard(cardId)
     const member = await this.getBoardMemberByUsername(card.idBoard, username)
-    console.log('member:', member)
 
-    const memberId = member.id || 'breadheaduser'
-    return this.trello.addMemberToCard(cardId, memberId).then(tapOrThrow)
+    return this.trello.addMemberToCard(cardId, member.id).then(tapOrThrow)
   }
 
   public async removeMemberFromCardByUsername(
