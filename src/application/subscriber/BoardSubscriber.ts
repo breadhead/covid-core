@@ -206,10 +206,6 @@ export default class BoardSubscriber implements EventSubscriber {
       this.getListIdForClaimStatus(payload.status),
     ])
 
-    console.log('payload.status:', payload.status)
-    console.log('boardId:', boardId)
-    console.log('listId:', listId)
-
     await this.board.moveCard(claimCard.id, listId, boardId)
   }
 
@@ -261,9 +257,9 @@ export default class BoardSubscriber implements EventSubscriber {
     const [boardKind, listName] = statusListNameTable[status]
 
     const boardId = this.board.getBoardIdByKind(boardKind)
-    console.log('boardId:', boardId)
+    
     const lists = await this.board.getBoardLists(boardId)
-    console.log('lists:', lists)
+    
     const listId = lists.find(l => l.name.includes(listName)).id
 
     return [boardId, listId]
