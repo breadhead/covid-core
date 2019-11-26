@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common'
+import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -57,7 +57,7 @@ export default class RatingController {
   }
 
   @Get('questions')
-  @Roles(Role.Client)
+  @Roles(Role.Client, Role.Admin)
   @ApiOperation({ title: 'Show list of rating questions' })
   @ApiOkResponse({
     description: 'Success',
