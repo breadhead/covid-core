@@ -206,6 +206,10 @@ export default class BoardSubscriber implements EventSubscriber {
       this.getListIdForClaimStatus(payload.status),
     ])
 
+    console.log('payload.status:', payload.status)
+    console.log('boardId:', boardId)
+    console.log('listId:', listId)
+
     await this.board.moveCard(claimCard.id, listId, boardId)
   }
 
