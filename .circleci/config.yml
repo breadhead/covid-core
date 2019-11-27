@@ -122,7 +122,8 @@ jobs:
             sudo docker logout &&
             sudo docker-compose down &&
             sudo docker-compose up -d &&
-            sudo docker image prune -f && sudo docker run && yarn evolutions:run"
+            sudo docker run oncohelp-core yarn evolutions:run &&
+            sudo docker image prune -f"
   
   prod:
     machine:
@@ -142,7 +143,8 @@ jobs:
             sudo docker logout &&
             sudo docker-compose down &&
             sudo docker-compose up -d &&
-            sudo docker image prune -f && sudo docker run && yarn evolutions:run"
+            sudo docker run oncohelp-core yarn evolutions:run &&
+            sudo docker image prune -f"
 
 workflows:
   version: 2
