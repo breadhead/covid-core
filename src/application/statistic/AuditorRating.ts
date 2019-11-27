@@ -45,4 +45,20 @@ export class AuditorRating {
 
     return ratingValueQuestions
   }
+
+  async getRatingCommentQuestionsStat() {
+    const commentQuestions = await this.ratingRepo.findAllCommentQuestions()
+
+    const groupedQuestions = groupBy(commentQuestions, '_questionId')
+
+    const ratingCommentQuestions = Object.entries(groupedQuestions).map(
+      ([key, val]) => {
+        return {
+          [key]: val.map(item => item._answerValue),
+        }
+      },
+    )
+
+    return ratingCommentQuestions
+  }
 }
