@@ -8,10 +8,10 @@ WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
-RUN yarn evolutions:run
 
 COPY . .
 
+RUN yarn evolutions:run
 RUN yarn prestart:prod
 
 RUN rm -rf src
