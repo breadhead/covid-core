@@ -4,24 +4,18 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { groupBy } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
 import { fromQuestionIdToNum } from './helpers/fromQuestionIdToNum'
+import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 
 @Injectable()
 export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) {}
+  ) { }
 
   async getRatingValueQuestionsStat() {
-    const valueQuestions = await this.ratingRepo
-      .findAllValueQuestions()
-      .then(val =>
-        val.sort(
-          (a, b) =>
-            fromQuestionIdToNum(a._questionId) -
-            fromQuestionIdToNum(b._questionId),
-        ),
-      )
+    const valueQuestions = await this.ratingRepo.findAllValueQuestions()
+
 
     const groupedQuestions = groupBy(valueQuestions, '_questionId')
 
@@ -60,5 +54,44 @@ export class AuditorRating {
     )
 
     return ratingCommentQuestions
+  }
+
+  async getRatingDoctors() {
+    const claimsWithFeedback = await this.ratingRepo.findAllClaimsWithFeedback() as any
+
+
+    const claims = claimsWithFeedback.map((claim) => {
+      return {
+        doctor: claim._claimId._doctor.fullName,
+        question: {
+          id: claim._questionId,
+          type: claim._answerType,
+          value: claim._answerValue
+        }
+      }
+    })
+
+    const groupedClaims = groupBy(claims, 'doctor')
+
+
+    const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
+      return {
+        doctor: key,
+        value: val.filter(item => item.question.type === 'value').map((item) => {
+          return {
+            id: item.question.id,
+            value: item.question.value
+          }
+        }),
+        comment: val.filter(item => item.question.type === 'comment').map((item) => {
+          return {
+            id: item.question.id,
+            value: item.question.value
+          }
+        })
+      }
+    })
+
+    return ratingDoctors
   }
 }
