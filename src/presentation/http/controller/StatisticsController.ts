@@ -29,6 +29,7 @@ import { TableGenerator } from '@app/utils/service/TableGenerator/TableGenerator
 import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
 import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuestion'
+import { RatingCommentQuestion } from '@app/application/statistic/RatingCommentQuestion'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -191,15 +192,27 @@ export default class StatisticsController {
     return table
   }
 
-  @Get('rating-report')
+  @Get('rating-report-value')
   @Header('Content-Type', 'application/json')
   @Roles(Role.Admin)
   @ApiOperation({ title: 'Common quotas avalability' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
-  public async generateReportForRating(): Promise<RatingValueQuestion[]> {
+  public async generateValueReport(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.auditorRating.getRatingValueQuestionsStat()
 
     return valueQuestions
+  }
+
+  @Get('rating-report-comment')
+  @Header('Content-Type', 'application/json')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Common quotas avalability' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  public async generateCommentReport(): Promise<RatingCommentQuestion[]> {
+    const commentQuestions = await this.auditorRating.getRatingCommentQuestionsStat()
+
+    return commentQuestions
   }
 }
