@@ -11,7 +11,6 @@ RUN yarn
 
 COPY . .
 
-RUN yarn evolutions:run
 RUN yarn prestart:prod
 
 RUN rm -rf src
