@@ -13,6 +13,7 @@ export default class RatingRepository extends AbstractRepository<Rating> {
       .where('rating._answerType like :type', {
         type: 'value',
       })
+      .leftJoinAndSelect('rating._questionId', 'question')
       .getMany()
 
     return valueQuestions

@@ -15,26 +15,38 @@ export class AuditorRating {
   async getRatingValueQuestionsStat() {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
 
+    const mappedQuestions = valueQuestions.map(item => {
+      return {
+        question: (item._questionId as any).id,
+        order: (item._questionId as any)._order,
+        rest: item
+      }
+    })
 
-    const groupedQuestions = groupBy(valueQuestions, '_questionId')
+    const group = groupBy(mappedQuestions, 'question')
 
-    const ratingValueQuestions = Object.keys(groupedQuestions).map(key => ({
-      [key]: Object.keys(RatingValueAnswers).map(answer => {
-        const answerCount = groupedQuestions[key].filter(
-          answ => answ._answerValue === answer,
-        ).length
+    const ratingValueQuestions = Object.entries(group).map(([key, val]) => {
+      const answers = val.map(item => item.rest)
+      return {
+        question: key,
+        order: val[0].order,
+        answers: Object.keys(RatingValueAnswers).map(answer => {
+          const answerCount = answers.filter(
+            answ => answ._answerValue === answer,
+          ).length
 
-        return {
-          [answer]: {
-            count: answerCount,
-            percentage: (
-              (100 * answerCount) /
-              groupedQuestions[key].length
-            ).toFixed(2),
-          },
-        }
-      }),
-    }))
+          return {
+            [answer]: {
+              count: answerCount,
+              percentage: (
+                (100 * answerCount) /
+                group[key].length
+              ).toFixed(2),
+            },
+          }
+        }),
+      }
+    })
 
     return ratingValueQuestions
   }
