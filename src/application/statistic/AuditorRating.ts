@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { groupBy } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
-import { fromQuestionIdToNum } from './helpers/fromQuestionIdToNum'
-import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
+import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
 
 @Injectable()
 export class AuditorRating {
@@ -60,10 +59,10 @@ export class AuditorRating {
     const claimsWithFeedback = await this.ratingRepo.findAllClaimsWithFeedback() as any
 
 
-    const claims = claimsWithFeedback.map((claim) => {
+    const claims: ClaimsRatingDoctors = claimsWithFeedback.map((claim) => {
       return {
         doctor: claim._claimId._doctor.fullName,
-        question: {
+        questions: {
           id: claim._questionId,
           type: claim._answerType,
           value: claim._answerValue
@@ -73,25 +72,31 @@ export class AuditorRating {
 
     const groupedClaims = groupBy(claims, 'doctor')
 
-
     const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
       return {
         doctor: key,
-        value: val.filter(item => item.question.type === 'value').map((item) => {
-          return {
-            id: item.question.id,
-            value: item.question.value
-          }
-        }),
-        comment: val.filter(item => item.question.type === 'comment').map((item) => {
-          return {
-            id: item.question.id,
-            value: item.question.value
-          }
-        })
+        value: this.formatRatingDoctorAnswers(val, 'value'),
+        comment: this.formatRatingDoctorAnswers(val, 'comment'),
+        average: this.getAverage(val)
       }
     })
 
     return ratingDoctors
+
+  }
+
+  private formatRatingDoctorAnswers(answers: ClaimsRatingDoctors | any, type: string) {
+    const formattedAnswers = answers.filter(item => item.questions.type === type).map((item) => {
+      return {
+        id: item.questions.id,
+        [type]: item.questions.value,
+      }
+    })
+    return formattedAnswers
+  }
+
+  private getAverage(answers: ClaimsRatingDoctors | any) {
+    const allValues = answers.filter(item => item.questions.type === 'value').map(item => Number(item.questions.value))
+    return Math.round(allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length)
   }
 }
