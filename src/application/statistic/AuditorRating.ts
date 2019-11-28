@@ -87,9 +87,9 @@ export class AuditorRating {
     const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
       return {
         doctor: key,
+        average: this.getAverage(val),
         value: this.formatRatingDoctorAnswers(val, 'value'),
         comment: this.formatRatingDoctorAnswers(val, 'comment'),
-        average: this.getAverage(val)
       }
     })
 
@@ -97,11 +97,39 @@ export class AuditorRating {
 
   }
 
+
   private formatRatingDoctorAnswers(answers: ClaimsRatingDoctors | any, type: string) {
-    const formattedAnswers = answers.filter(item => item.questions.type === type).map((item) => {
+    const filteredAnswers = answers.filter(item => item.questions.type === type)
+    const arr = filteredAnswers.map(item => {
       return {
-        id: item.questions.id,
-        [type]: item.questions.value,
+        id: item.questions.id.id,
+        value: item.questions.value
+      }
+    })
+    const groupedArr = groupBy(arr, 'id')
+
+    const formattedAnswers = filteredAnswers.map((item) => {
+
+      return {
+        question: item.questions.id.id,
+        order: item.questions.id._order,
+        answers: type === 'value' ? Object.keys(RatingValueAnswers).map(answer => {
+          const curAnswers = groupedArr[item.questions.id.id].map(item => Number(item.value))
+
+          const answerCount = curAnswers.filter(
+            answ => answ === Number(answer),
+          ).length
+
+          return {
+            [answer]: {
+              count: answerCount,
+              percentage: (
+                (100 * answerCount) /
+                curAnswers.length
+              ).toFixed(2),
+            },
+          }
+        }) : item.questions.value,
       }
     })
     return formattedAnswers
