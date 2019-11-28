@@ -195,7 +195,7 @@ export default class StatisticsController {
   @Get('rating-report-value')
   @Header('Content-Type', 'application/json')
   @Roles(Role.Admin)
-  @ApiOperation({ title: 'Common quotas avalability' })
+  @ApiOperation({ title: 'report of value questions' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async generateValueReport(): Promise<RatingValueQuestion[]> {
@@ -207,7 +207,7 @@ export default class StatisticsController {
   @Get('rating-report-comment')
   @Header('Content-Type', 'application/json')
   @Roles(Role.Admin)
-  @ApiOperation({ title: 'Common quotas avalability' })
+  @ApiOperation({ title: 'report of comment questions' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   public async generateCommentReport(): Promise<RatingCommentQuestion[]> {
@@ -215,4 +215,17 @@ export default class StatisticsController {
 
     return commentQuestions
   }
+
+  @Get('rating-report-doctors')
+  @Header('Content-Type', 'application/json')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'report of rating doctors' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  public async generateRatingDoctors(): Promise<any[]> {
+    const ratingDoctors = await this.auditorRating.getRatingDoctors()
+
+    return ratingDoctors
+  }
+
 }

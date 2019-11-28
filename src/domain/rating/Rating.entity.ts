@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn, JoinColumn, OneToOne } from 'typeorm'
+import Claim from '../claim/Claim.entity'
+import RatingQuestions from '../rating-questions/RatingQuestions.entity'
 
 @Entity('rating')
 export default class Rating {
@@ -12,14 +14,16 @@ export default class Rating {
     return this._ratingDate
   }
 
-  @Column({ nullable: true })
+  @JoinColumn({ name: '_claimId', referencedColumnName: 'id' })
+  @OneToOne(type => Claim, { eager: true })
   public readonly _claimId: string
 
   get claimId() {
     return this._claimId
   }
 
-  @Column()
+  @JoinColumn({ name: '_questionId', referencedColumnName: 'id' })
+  @OneToOne(type => RatingQuestions, { eager: true })
   public readonly _questionId: string
 
   get questionId() {

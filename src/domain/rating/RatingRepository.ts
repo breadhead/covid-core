@@ -13,6 +13,7 @@ export default class RatingRepository extends AbstractRepository<Rating> {
       .where('rating._answerType like :type', {
         type: 'value',
       })
+      .leftJoinAndSelect('rating._questionId', 'question')
       .getMany()
 
     return valueQuestions
@@ -21,11 +22,23 @@ export default class RatingRepository extends AbstractRepository<Rating> {
   public async findAllCommentQuestions() {
     const commentQuestions = await this.repository
       .createQueryBuilder('rating')
+      .leftJoinAndSelect('rating._questionId', 'question')
       .where('rating._answerType like :type', {
         type: 'comment',
       })
       .getMany()
 
     return commentQuestions
+  }
+
+  async findAllClaimsWithFeedback() {
+    const claimsWithFeedback = await this.repository
+    .createQueryBuilder('rating')
+    .leftJoinAndSelect('rating._questionId', 'question')
+    .leftJoinAndSelect('rating._claimId', 'claim')
+    .leftJoinAndSelect('claim._doctor', 'doctor')
+    .getMany()
+
+    return claimsWithFeedback
   }
 }

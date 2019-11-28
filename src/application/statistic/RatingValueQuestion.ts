@@ -1,6 +1,8 @@
 export interface RatingValueQuestion {
-  [key: string]: {
-    [key: string]: {
+  question: string,
+  order: number,
+  answers: {
+    [x: string]: {
       count: number
       percentage: string
     }
