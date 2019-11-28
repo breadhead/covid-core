@@ -22,6 +22,7 @@ export default class RatingRepository extends AbstractRepository<Rating> {
   public async findAllCommentQuestions() {
     const commentQuestions = await this.repository
       .createQueryBuilder('rating')
+      .leftJoinAndSelect('rating._questionId', 'question')
       .where('rating._answerType like :type', {
         type: 'comment',
       })
