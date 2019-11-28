@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { groupBy } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
 import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
+import { RatingValueQuestion } from './RatingValueQuestion'
 
 @Injectable()
 export class AuditorRating {
@@ -12,7 +13,7 @@ export class AuditorRating {
     private readonly ratingRepo: RatingRepository,
   ) { }
 
-  async getRatingValueQuestionsStat() {
+  async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
 
     const mappedQuestions = valueQuestions.map(item => {
@@ -29,7 +30,7 @@ export class AuditorRating {
       const answers = val.map(item => item.rest)
       return {
         question: key,
-        order: val[0].order,
+        order: val[0].order as number,
         answers: Object.keys(RatingValueAnswers).map(answer => {
           const answerCount = answers.filter(
             answ => answ._answerValue === answer,
