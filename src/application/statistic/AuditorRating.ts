@@ -67,7 +67,7 @@ export class AuditorRating {
 
     return ratingCommentQuestions
   }
-
+  
   async getRatingDoctors() {
     const claimsWithFeedback = await this.ratingRepo.findAllClaimsWithFeedback() as any
 
@@ -85,14 +85,14 @@ export class AuditorRating {
 
     const groupedClaims = groupBy(claims, 'doctor')
 
-    const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
-      return {
-        doctor: key,
-        average: this.getAverage(val),
-        value: this.formatRatingDoctorAnswers(val, 'value'),
-        comment: this.formatRatingDoctorAnswers(val, 'comment'),
-      }
-    })
+  const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
+    return {
+      doctor: key,
+      average: this.getAverage(val),
+      value: this.formatRatingDoctorAnswers(val, 'value'),
+      comment: this.formatRatingDoctorAnswers(val, 'comment'),
+    }
+  })
 
     return ratingDoctors
 
@@ -100,44 +100,51 @@ export class AuditorRating {
 
 
   private formatRatingDoctorAnswers(answers: ClaimsRatingDoctors | any, type: string) {
-    const filteredAnswers = answers.filter(item => item.questions.type === type)
-    const arr = filteredAnswers.map(item => {
-      return {
-        id: item.questions.id.id,
-        value: item.questions.value
-      }
-    })
-    const groupedArr = groupBy(arr, 'id')
+  const filteredAnswers = answers.filter(item => item.questions.type === type)
+  const arr = filteredAnswers.map(item => {
+    return {
+      id: item.questions.id.id,
+      value: item.questions.value
+    }
+  })
+  const groupedArr = groupBy(arr, 'id')
 
-    const formattedAnswers = filteredAnswers.map((item) => {
+  const formattedAnswers = filteredAnswers.map((item) => {
 
-      return {
-        question: item.questions.id.id,
-        order: item.questions.id._order,
-        answers: type === 'value' ? Object.keys(RatingValueAnswers).map(answer => {
-          const curAnswers = groupedArr[item.questions.id.id].map(item => Number(item.value))
+    return {
+      question: item.questions.id.id,
+      order: item.questions.id._order,
+      answers: type === 'value' ? this.getFormattedDoctorAnswers(groupedArr, item) : item.questions.value,
+    }
+  })
 
-          const answerCount = curAnswers.filter(
-            answ => answ === Number(answer),
-          ).length
 
-          return {
-            [answer]: {
-              count: answerCount,
-              percentage: (
-                (100 * answerCount) /
-                curAnswers.length
-              ).toFixed(2),
-            },
-          }
-        }) : item.questions.value,
-      }
-    })
-    return formattedAnswers
-  }
+  return formattedAnswers
+}
 
   private getAverage(answers: ClaimsRatingDoctors | any) {
-    const allValues = answers.filter(item => item.questions.type === 'value').map(item => Number(item.questions.value))
-    return Math.round(allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length)
-  }
+  const allValues = answers.filter(item => item.questions.type === 'value').map(item => Number(item.questions.value))
+  return Math.round(allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length)
+}
+
+  private getFormattedDoctorAnswers(groupedArr: any, item: any) {
+  const gradeAnswer = Object.keys(RatingValueAnswers).map(answer => {
+    const curAnswers = groupedArr[item.questions.id.id].map(item => Number(item.value))
+
+    const answerCount = curAnswers.filter(
+      answ => answ === Number(answer),
+    ).length
+
+    return {
+      [answer]: {
+        count: answerCount,
+        percentage: (
+          (100 * answerCount) /
+          curAnswers.length
+        ).toFixed(2),
+      },
+    }
+  })
+  return gradeAnswer
+}
 }
