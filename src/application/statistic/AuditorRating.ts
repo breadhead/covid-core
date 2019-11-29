@@ -90,18 +90,23 @@ export class AuditorRating {
       return {
         doctor: key,
         average: this.getAverage(val),
-        value: this.formatRatingDoctorAnswers(val, 'value'),
-        // comment: this.formatRatingDoctorAnswers(val, 'comment'),
+        value: this.formatRatingDoctorValueAnswers(val),
+        comment: this.formatRatingDoctorCommentAnswers(val),
       }
     })
 
     return ratingDoctors
+  }
 
+  private formatRatingDoctorCommentAnswers(answers: ClaimsRatingDoctors | any) {
+    const filteredAnswers = answers.filter(item => item.questions.type === 'comment')
+
+    return filteredAnswers.map(item => item.questions.value)
   }
 
 
-  private formatRatingDoctorAnswers(answers: ClaimsRatingDoctors | any, type: string) {
-    const filteredAnswers = answers.filter(item => item.questions.type === type)
+  private formatRatingDoctorValueAnswers(answers: ClaimsRatingDoctors | any) {
+    const filteredAnswers = answers.filter(item => item.questions.type === 'value')
 
     const formattedArr = filteredAnswers.map(item => {
       return {
