@@ -103,52 +103,27 @@ export class AuditorRating {
   private formatRatingDoctorAnswers(answers: ClaimsRatingDoctors | any, type: string) {
     const filteredAnswers = answers.filter(item => item.questions.type === type)
 
-    const arr = filteredAnswers.map(item => {
+    const formattedArr = filteredAnswers.map(item => {
       return {
         id: item.questions.id.id,
         order: item.questions.id._order,
         value: item.questions.value
       }
     })
-    const groupedArr = groupBy(arr, 'id')
+    const groupedArr = groupBy(formattedArr, 'id')
 
 
-    const res = Object.entries(groupedArr).map(([key, val]) => {
+    const formattedAnswers = Object.entries(groupedArr).map(([key, val]) => {
       const curAnswers = val.map(item => Number(item.value))
-
-      const answersStat = Object.keys(RatingValueAnswers).map(answer => {
-        const answerCount = curAnswers.filter(
-          answ => answ === Number(answer)
-        ).length
-
-        return {
-          [answer]: {
-            count: answerCount,
-            percentage: (
-              (100 * answerCount) /
-              curAnswers.length
-            ).toFixed(2),
-          },
-        }
-      })
 
       return {
         question: key,
         order: val[0].order,
-        answers: answersStat
-        // answers: type === 'value' ? this.getFormattedDoctorAnswers(groupedArr, item) : item.questions.value,
+        answers: this.getFormattedDoctorAnswers(groupedArr, curAnswers)
       }
     })
 
-    const formattedAnswers = filteredAnswers.map((item) => {
-      return {
-        question: item.questions.id.id,
-        order: item.questions.id._order,
-        answers: type === 'value' ? this.getFormattedDoctorAnswers(groupedArr, item) : item.questions.value,
-      }
-    })
-
-    return res
+    return formattedAnswers
   }
 
   private getAverage(answers: ClaimsRatingDoctors | any) {
@@ -156,13 +131,10 @@ export class AuditorRating {
     return Math.round(allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length)
   }
 
-  private getFormattedDoctorAnswers(groupedArr: any, item: any) {
-
-    const gradeAnswer = Object.keys(RatingValueAnswers).map(answer => {
-      const curAnswers = groupedArr[item.questions.id.id].map(item => Number(item.value))
-
+  private getFormattedDoctorAnswers(groupedArr: any, curAnswers: any) {
+    return Object.keys(RatingValueAnswers).map(answer => {
       const answerCount = curAnswers.filter(
-        answ => answ === Number(answer),
+        answ => answ === Number(answer)
       ).length
 
       return {
@@ -175,6 +147,6 @@ export class AuditorRating {
         },
       }
     })
-    return gradeAnswer
+
   }
 }
