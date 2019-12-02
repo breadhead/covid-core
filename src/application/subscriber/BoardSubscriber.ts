@@ -257,9 +257,9 @@ export default class BoardSubscriber implements EventSubscriber {
     const [boardKind, listName] = statusListNameTable[status]
 
     const boardId = this.board.getBoardIdByKind(boardKind)
-    
+
     const lists = await this.board.getBoardLists(boardId)
-    
+
     const listId = lists.find(l => l.name.includes(listName)).id
 
     return [boardId, listId]

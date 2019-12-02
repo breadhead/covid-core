@@ -227,5 +227,4 @@ export default class StatisticsController {
 
     return ratingDoctors
   }
-
 }

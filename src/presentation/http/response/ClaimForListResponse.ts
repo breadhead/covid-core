@@ -50,7 +50,7 @@ export default class ClaimForListResponse {
       target: claim.target,
       closeComment: claim.closeComment,
       corporateStatus: claim.corporateStatus,
-      dontUnderstand: claim.dontUnderstand
+      dontUnderstand: claim.dontUnderstand,
     }
   }
 
@@ -102,7 +102,6 @@ export default class ClaimForListResponse {
     example: CorporateStatus.Empty,
     enum: Object.values(CorporateStatus),
   })
-
   public readonly corporateStatus: CorporateStatus
 
   @ApiModelProperty({
@@ -110,5 +109,4 @@ export default class ClaimForListResponse {
     enum: DontUnderstandEnum,
   })
   public readonly dontUnderstand: DontUnderstandEnum
-
 }

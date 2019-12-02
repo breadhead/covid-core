@@ -11,7 +11,7 @@ export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) { }
+  ) {}
 
   async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
@@ -20,7 +20,7 @@ export class AuditorRating {
       return {
         question: (item._questionId as any).id,
         order: (item._questionId as any)._order,
-        rest: item
+        rest: item,
       }
     })
 
@@ -39,10 +39,7 @@ export class AuditorRating {
           return {
             [answer]: {
               count: answerCount,
-              percentage: (
-                (100 * answerCount) /
-                group[key].length
-              ).toFixed(2),
+              percentage: ((100 * answerCount) / group[key].length).toFixed(2),
             },
           }
         }),
@@ -69,24 +66,22 @@ export class AuditorRating {
   }
 
   async getRatingDoctors() {
-    const claimsWithFeedback = await this.ratingRepo.findAllClaimsWithFeedback() as any
+    const claimsWithFeedback = (await this.ratingRepo.findAllClaimsWithFeedback()) as any
 
-
-    const claims: ClaimsRatingDoctors = claimsWithFeedback.map((claim) => {
+    const claims: ClaimsRatingDoctors = claimsWithFeedback.map(claim => {
       return {
         doctor: claim._claimId._doctor.fullName,
         questions: {
           id: claim._questionId,
           type: claim._answerType,
-          value: claim._answerValue
-        }
+          value: claim._answerValue,
+        },
       }
     })
 
     const groupedClaims = groupBy(claims, 'doctor')
 
     const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
-
       return {
         doctor: key,
         average: this.getAverage(val),
@@ -99,24 +94,26 @@ export class AuditorRating {
   }
 
   private formatRatingDoctorCommentAnswers(answers: ClaimsRatingDoctors | any) {
-    const filteredAnswers = answers.filter(item => item.questions.type === 'comment')
+    const filteredAnswers = answers.filter(
+      item => item.questions.type === 'comment',
+    )
 
     return filteredAnswers.map(item => item.questions.value)
   }
 
-
   private formatRatingDoctorValueAnswers(answers: ClaimsRatingDoctors | any) {
-    const filteredAnswers = answers.filter(item => item.questions.type === 'value')
+    const filteredAnswers = answers.filter(
+      item => item.questions.type === 'value',
+    )
 
     const formattedArr = filteredAnswers.map(item => {
       return {
         id: item.questions.id.id,
         order: item.questions.id._order,
-        value: item.questions.value
+        value: item.questions.value,
       }
     })
     const groupedArr = groupBy(formattedArr, 'id')
-
 
     const formattedAnswers = Object.entries(groupedArr).map(([key, val]) => {
       const curAnswers = val.map(item => Number(item.value))
@@ -124,7 +121,7 @@ export class AuditorRating {
       return {
         question: key,
         order: val[0].order,
-        answers: this.getFormattedDoctorAnswers(groupedArr, curAnswers)
+        answers: this.getFormattedDoctorAnswers(groupedArr, curAnswers),
       }
     })
 
@@ -132,26 +129,25 @@ export class AuditorRating {
   }
 
   private getAverage(answers: ClaimsRatingDoctors | any) {
-    const allValues = answers.filter(item => item.questions.type === 'value').map(item => Number(item.questions.value))
-    return Math.round(allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length)
+    const allValues = answers
+      .filter(item => item.questions.type === 'value')
+      .map(item => Number(item.questions.value))
+    return Math.round(
+      allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length,
+    )
   }
 
   private getFormattedDoctorAnswers(groupedArr: any, curAnswers: any) {
     return Object.keys(RatingValueAnswers).map(answer => {
-      const answerCount = curAnswers.filter(
-        answ => answ === Number(answer)
-      ).length
+      const answerCount = curAnswers.filter(answ => answ === Number(answer))
+        .length
 
       return {
         [answer]: {
           count: answerCount,
-          percentage: (
-            (100 * answerCount) /
-            curAnswers.length
-          ).toFixed(2),
+          percentage: ((100 * answerCount) / curAnswers.length).toFixed(2),
         },
       }
     })
-
   }
 }

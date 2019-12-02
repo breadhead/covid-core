@@ -325,7 +325,7 @@ export default class Claim {
   public _doctors?: User[] = []
 
   @Column({ type: 'enum', nullable: true })
-  public _dontUnderstand: DontUnderstandEnum 
+  public _dontUnderstand: DontUnderstandEnum
 
   public constructor(
     id: string,
@@ -338,7 +338,7 @@ export default class Claim {
     localization?: string,
     { company, position }: CorporateParams = {},
     target: ClaimTarget = ClaimTarget.Self,
-    dontUnderstand: DontUnderstandEnum = DontUnderstandEnum.DEFAULT
+    dontUnderstand: DontUnderstandEnum = DontUnderstandEnum.DEFAULT,
   ) {
     this.id = id
     this.number = number
@@ -578,6 +578,10 @@ export default class Claim {
 
   public get dontUnderstand() {
     return this._dontUnderstand
+  }
+
+  public updateDontUnderstand(val: DontUnderstandEnum) {
+    return (this._dontUnderstand = val)
   }
 
   private defineInitialCorporateStatus() {

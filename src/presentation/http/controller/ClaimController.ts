@@ -58,6 +58,7 @@ import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
 import { EntityManager } from 'typeorm'
+import UpdateDontUnderstand from '../request/UpdateDontUnderstand'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -471,6 +472,24 @@ export default class ClaimController {
     const { claimId, newStatus } = request
 
     await this.corporateStatusMover.changeStatus(claimId, newStatus)
+  }
+
+  @Post('update-dontUnderstand')
+  @Roles(Role.Client)
+  @ApiOperation({ title: 'Change dont understand status' })
+  @ApiOkResponse({ description: 'Changed' })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description: 'Client API token doesn`t provided',
+  })
+  public async updateDontUnderstand(
+    @Body() request: UpdateDontUnderstand,
+  ): Promise<void> {
+    const { claimId, newStatus } = request
+    const claim = await this.claimRepo.getOne(claimId)
+
+    claim.updateDontUnderstand(newStatus)
+    await this.em.save(claim)
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>
