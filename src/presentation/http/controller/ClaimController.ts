@@ -56,9 +56,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
-import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
 import { EntityManager } from 'typeorm'
-import UpdateDontUnderstand from '../request/UpdateDontUnderstand'
+import UpdateDontUnderstandRequest from '../request/UpdateDontUnderstand'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -474,7 +473,7 @@ export default class ClaimController {
     await this.corporateStatusMover.changeStatus(claimId, newStatus)
   }
 
-  @Post('update-dontUnderstand')
+  @Post('update-dont-understand')
   @Roles(Role.Client)
   @ApiOperation({ title: 'Change dont understand status' })
   @ApiOkResponse({ description: 'Changed' })
@@ -483,12 +482,13 @@ export default class ClaimController {
     description: 'Client API token doesn`t provided',
   })
   public async updateDontUnderstand(
-    @Body() request: UpdateDontUnderstand,
+    @Body() request: UpdateDontUnderstandRequest,
   ): Promise<void> {
-    const { claimId, newStatus } = request
-    const claim = await this.claimRepo.getOne(claimId)
-
-    claim.updateDontUnderstand(newStatus)
+    const { id, status } = request
+  
+    const claim = await this.claimRepo.getOne(id)
+  
+    claim.updateDontUnderstand(status)
     await this.em.save(claim)
   }
 

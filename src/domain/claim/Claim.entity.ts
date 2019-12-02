@@ -324,7 +324,7 @@ export default class Claim {
   @Column({ type: 'json', nullable: true })
   public _doctors?: User[] = []
 
-  @Column({ type: 'enum', nullable: true })
+  @Column({ type: 'enum' })
   public _dontUnderstand: DontUnderstandEnum
 
   public constructor(
@@ -580,8 +580,8 @@ export default class Claim {
     return this._dontUnderstand
   }
 
-  public updateDontUnderstand(val: DontUnderstandEnum) {
-    return (this._dontUnderstand = val)
+  public updateDontUnderstand(status: DontUnderstandEnum) {
+    this._dontUnderstand = status
   }
 
   private defineInitialCorporateStatus() {
