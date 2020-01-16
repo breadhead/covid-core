@@ -37,7 +37,7 @@ export default class EntityNotFoundFilter implements ExceptionFilter {
       message: `Try to create duplicate "${entryName}" entry`,
     })
 
-    this && this.logger.warn(responseToLog(res))
+    this.logger.warn(responseToLog(res))
   }
 
   private skipFilter(exception: QueryFailedError, host: ArgumentsHost) {

@@ -126,6 +126,36 @@ export default class Allocator {
     })
   }
 
+  public allocateToClaimFailedCorporateStatus(claim: Claim): Promise<void> {
+    this.deallocate(claim)
+
+    return this.em
+      .transaction(async em => {
+        const [commonQuotas, specialQuotas] = await Promise.all([
+          this.quotaRepo.findCommonAvailable(),
+          this.quotaRepo.findByLocalization(
+            claim.localization as CommonLocalizationsEnum,
+          ),
+        ])
+
+        if (commonQuotas.length === 0 && specialQuotas.length === 0) {
+          throw new QuotaAllocationFailedException(null, 'Quota not found')
+        }
+
+        const quota =
+          specialQuotas.length > 0
+            ? sample(specialQuotas)
+            : sample(commonQuotas)
+
+        claim.bindQuota(quota)
+
+        quota.decreaseBalance(1)
+
+        await em.save([claim, quota])
+      })
+      .catch(this.throwAllocatorException())
+  }
+
   private throwAllocatorException(quota?: Quota, cause?: string) {
     return (e: Error) => {
       const realCause = cause || e.message
