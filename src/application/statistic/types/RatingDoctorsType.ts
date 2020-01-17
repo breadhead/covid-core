@@ -1,10 +1,10 @@
 export interface ClaimsRatingDoctors {
-  doctor: string,
+  doctor: string
   questions: ClaimsRatingQuestions[]
 }
 
 export interface ClaimsRatingQuestions {
-  id: string,
-  type: string,
+  id: string
+  type: string
   value: string
 }

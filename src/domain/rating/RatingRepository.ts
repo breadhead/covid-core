@@ -33,11 +33,11 @@ export default class RatingRepository extends AbstractRepository<Rating> {
 
   async findAllClaimsWithFeedback() {
     const claimsWithFeedback = await this.repository
-    .createQueryBuilder('rating')
-    .leftJoinAndSelect('rating._questionId', 'question')
-    .leftJoinAndSelect('rating._claimId', 'claim')
-    .leftJoinAndSelect('claim._doctor', 'doctor')
-    .getMany()
+      .createQueryBuilder('rating')
+      .leftJoinAndSelect('rating._questionId', 'question')
+      .leftJoinAndSelect('rating._claimId', 'claim')
+      .leftJoinAndSelect('claim._doctor', 'doctor')
+      .getMany()
 
     return claimsWithFeedback
   }

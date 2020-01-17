@@ -8,6 +8,7 @@ import QuotaAllocationFailedException from './exception/QuotaAllocationFailedExc
 import Quota from './Quota.entity'
 import QuotaRepository from './QuotaRepository'
 import { CommonLocalizationsEnum } from '../claim/CommonLocalizationsEnum'
+import { CorporateStatus } from '../claim/CorporateStatus'
 
 @Injectable()
 export default class Allocator {
@@ -29,6 +30,18 @@ export default class Allocator {
 
     return this.em
       .transaction(async em => {
+        const corporateQuotas =
+          claim.corporateStatus === CorporateStatus.Checking
+            ? await this.quotaRepo.findCorporateByCompanyName(
+                claim.corporateInfo
+                  .map(info => ({
+                    name: info.name,
+                    position: info.position,
+                  }))
+                  .getOrElse(null).name,
+              )
+            : null
+
         const [commonQuotas, specialQuotas] = await Promise.all([
           this.quotaRepo.findCommonAvailable(),
           this.quotaRepo.findByLocalization(
@@ -36,17 +49,23 @@ export default class Allocator {
           ),
         ])
 
-        if (commonQuotas.length === 0 && specialQuotas.length === 0) {
-          throw new QuotaAllocationFailedException(
-            null,
-            'Common quota not found',
-          )
+        if (
+          commonQuotas.length === 0 &&
+          specialQuotas.length === 0 &&
+          corporateQuotas.length === 0
+        ) {
+          throw new QuotaAllocationFailedException(null, 'Quota not found')
         }
 
-        const quota =
-          specialQuotas.length > 0
-            ? sample(specialQuotas)
-            : sample(commonQuotas)
+        let quota
+        if (corporateQuotas.length > 0) {
+          quota = sample(corporateQuotas)
+        } else {
+          quota =
+            specialQuotas.length > 0
+              ? sample(specialQuotas)
+              : sample(commonQuotas)
+        }
 
         claim.bindQuota(quota)
 
@@ -105,6 +124,36 @@ export default class Allocator {
 
       await em.save(entitiesForSave)
     })
+  }
+
+  public allocateToClaimFailedCorporateStatus(claim: Claim): Promise<void> {
+    this.deallocate(claim)
+
+    return this.em
+      .transaction(async em => {
+        const [commonQuotas, specialQuotas] = await Promise.all([
+          this.quotaRepo.findCommonAvailable(),
+          this.quotaRepo.findByLocalization(
+            claim.localization as CommonLocalizationsEnum,
+          ),
+        ])
+
+        if (commonQuotas.length === 0 && specialQuotas.length === 0) {
+          throw new QuotaAllocationFailedException(null, 'Quota not found')
+        }
+
+        const quota =
+          specialQuotas.length > 0
+            ? sample(specialQuotas)
+            : sample(commonQuotas)
+
+        claim.bindQuota(quota)
+
+        quota.decreaseBalance(1)
+
+        await em.save([claim, quota])
+      })
+      .catch(this.throwAllocatorException())
   }
 
   private throwAllocatorException(quota?: Quota, cause?: string) {
