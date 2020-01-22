@@ -31,6 +31,8 @@ import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
 import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuestion'
 import { RatingCommentQuestion } from '@app/application/statistic/RatingCommentQuestion'
+import DoctorReportByRangeRequest from '../request/DoctorReportByRangeRequest'
+import { DoctorReportResponse } from '../response/DoctorReportResponse'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -172,22 +174,18 @@ export default class StatisticsController {
 
     const res = doctors
       .map(doctor => {
-        const doc = rating.map(rat => {
-          return (
+        const doc = rating.map(
+          rat =>
             doctor.name === rat.doctor && {
               ...doctor,
               ratingAverage: rat.ratingAverage,
               ratingMedian: rat.ratingMedian,
-            }
-          )
-        })
+            },
+        )
 
-        const filteredInfo = doc.filter(it => !!it)
-
-        if (filteredInfo.length > 0) {
-          return filteredInfo[0]
-        }
-        return null
+        return doc.filter(it => !!it).length > 0
+          ? doc.filter(it => !!it)[0]
+          : null
       })
       .filter(it => !!it)
 
@@ -204,6 +202,42 @@ export default class StatisticsController {
       ratingAverage,
       ratingMedian,
     }
+  }
+
+  @Get('doctor-report')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Doctor stats' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  async getDoctorReportByRange(
+    @Query() request: DoctorReportByRangeRequest,
+  ): Promise<DoctorReportResponse> {
+    const { from, to, name } = request
+
+    const [doctors, rating] = await Promise.all([
+      this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+      this.auditorRating.getDoctorsRatingByRange(from, to),
+    ])
+
+    const res = doctors
+      .map(doctor => {
+        const doc = rating.map(
+          rat =>
+            doctor.name === rat.doctor && {
+              ...doctor,
+              ratingAverage: rat.ratingAverage,
+              ratingMedian: rat.ratingMedian,
+            },
+        )
+
+        return doc.filter(it => !!it).length > 0
+          ? doc.filter(it => !!it)[0]
+          : null
+      })
+      .filter(it => !!it)
+      .filter(it => it.name === name)[0]
+
+    return res
   }
 
   @Get('doctor-answer-table')
