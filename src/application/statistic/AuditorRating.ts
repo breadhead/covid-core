@@ -5,13 +5,14 @@ import { groupBy } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
 import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
 import { RatingValueQuestion } from './RatingValueQuestion'
+import { getMedian } from '@app/utils/service/median'
 
 @Injectable()
 export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) {}
+  ) { }
 
   async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
@@ -85,6 +86,7 @@ export class AuditorRating {
       return {
         doctor: key,
         average: this.getAverage(val),
+        median: this.getValuesMeidan(val),
         value: this.formatRatingDoctorValueAnswers(val),
         comment: this.formatRatingDoctorCommentAnswers(val),
       }
@@ -129,12 +131,19 @@ export class AuditorRating {
   }
 
   private getAverage(answers: ClaimsRatingDoctors | any) {
-    const allValues = answers
+    const values = answers
       .filter(item => item.questions.type === 'value')
       .map(item => Number(item.questions.value))
     return Math.round(
-      allValues.reduce((acc, cur) => acc + cur, 0) / allValues.length,
+      values.reduce((acc, cur) => acc + cur, 0) / values.length,
     )
+  }
+
+  private getValuesMeidan(answers: ClaimsRatingDoctors | any) {
+    const values = answers
+      .filter(item => item.questions.type === 'value')
+      .map(item => Number(item.questions.value))
+    return getMedian(values)
   }
 
   private getFormattedDoctorAnswers(groupedArr: any, curAnswers: any) {

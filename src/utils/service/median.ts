@@ -1,4 +1,4 @@
-export const median = (values: number[]) => {
+export const getMedian = (values: number[]) => {
   if (values.length === 0) {
     return 0
   }

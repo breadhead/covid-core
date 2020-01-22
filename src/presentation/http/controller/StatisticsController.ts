@@ -166,6 +166,8 @@ export default class StatisticsController {
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
     ])
 
+
+    // add ratingAverage & ratingMedian
     return { median, average, min, max, doctors, success, failure, all, closedByClient }
   }
 

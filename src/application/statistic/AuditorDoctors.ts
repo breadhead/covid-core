@@ -4,7 +4,7 @@ import { groupBy } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
-import { median } from '@app/utils/service/median'
+import { getMedian } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 import { getAnswerDate } from './helpers/getAnswerDate'
@@ -79,7 +79,7 @@ export class AuditorDoctors {
     const closedByClient = this.getClosedByClient(claims).length
 
     return {
-      median: median(answerTimes),
+      median: getMedian(answerTimes),
       average: this.average(answerTimes),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
