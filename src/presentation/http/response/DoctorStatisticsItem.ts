@@ -1,4 +1,4 @@
-import { formatTimestamp } from '@app/utils/service/formatTimestamp';
+import { formatTimestamp } from '@app/utils/service/formatTimestamp'
 
 interface DoctorStat {
   name: any
@@ -28,7 +28,8 @@ export class DoctorStatisticsItem {
         closedByClient,
         ratingAverage,
         ratingMedian,
-        failure } = doctorStats
+        failure,
+      } = doctorStats
       return {
         name,
         average: formatTimestamp(average),
@@ -63,10 +64,10 @@ export class DoctorStatisticsItem {
   public readonly average: string
   public readonly median: string
   public readonly max: string
-  public readonly all: string;
+  public readonly all: string
   public readonly success: string
   public readonly failure: string
-  public readonly closedByClient: string;
-  public readonly ratingAverage: string;
-  public readonly ratingMedian: string;
+  public readonly closedByClient: string
+  public readonly ratingAverage: string
+  public readonly ratingMedian: string
 }

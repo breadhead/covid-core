@@ -1,11 +1,11 @@
-import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common';
+import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
-  ApiImplicitQuery
+  ApiImplicitQuery,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -161,14 +161,45 @@ export default class StatisticsController {
     const [
       { median, average, min, max, all, closedByClient, success, failure },
       doctors,
+      rating,
     ] = await Promise.all([
       this.auditorDoctors.calculateAnswerTime(from, to),
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+      this.auditorRating.getDoctorsRatingByRange(from, to),
     ])
 
+    const res = doctors
+      .map(doctor => {
+        const doc = rating.map(rat => {
+          return (
+            doctor.name === rat.doctor && {
+              ...doctor,
+              ratingAverage: rat.ratingAverage,
+              ratingMedian: rat.ratingMedian,
+            }
+          )
+        })
 
-    // add ratingAverage & ratingMedian
-    return { median, average, min, max, doctors, success, failure, all, closedByClient }
+        const filteredInfo = doc.filter(it => !!it)
+
+        if (filteredInfo.length > 0) {
+          return filteredInfo[0]
+        }
+        return null
+      })
+      .filter(it => !!it)
+
+    return {
+      median,
+      average,
+      min,
+      max,
+      doctors: res,
+      success,
+      failure,
+      all,
+      closedByClient,
+    }
   }
 
   @Get('doctor-answer-table')
@@ -177,7 +208,7 @@ export default class StatisticsController {
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   async getDoctorAnswerTimesTable(
-    @Query(DateRandePipe) 
+    @Query(DateRandePipe)
     request: DateRangeRequest,
   ): Promise<any> {
     const { from, to } = request

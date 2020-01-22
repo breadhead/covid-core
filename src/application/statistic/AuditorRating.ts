@@ -6,13 +6,14 @@ import { RatingValueAnswers } from './RatingValueAnswers'
 import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
 import { RatingValueQuestion } from './RatingValueQuestion'
 import { getMedian } from '@app/utils/service/median'
+import { getAverage } from '@app/utils/service/getAverage'
 
 @Injectable()
 export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) { }
+  ) {}
 
   async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
@@ -85,7 +86,7 @@ export class AuditorRating {
     const ratingDoctors = Object.entries(groupedClaims).map(([key, val]) => {
       return {
         doctor: key,
-        average: this.getAverage(val),
+        average: this.getValuesAverage(val),
         median: this.getValuesMeidan(val),
         value: this.formatRatingDoctorValueAnswers(val),
         comment: this.formatRatingDoctorCommentAnswers(val),
@@ -93,6 +94,34 @@ export class AuditorRating {
     })
 
     return ratingDoctors
+  }
+
+  public async getDoctorsRatingByRange(from: Date, to: Date) {
+    const claims = await this.ratingRepo.findAllClaimsWithValueQuestionsByRange(
+      from,
+      to,
+    )
+
+    const answersValuesByDoctor = claims.map(claim => {
+      return {
+        doctor: (claim._claimId as any)._doctor.fullName,
+        value: claim._answerValue,
+      }
+    })
+
+    const groupedValues = groupBy(answersValuesByDoctor, 'doctor')
+
+    const rating = Object.entries(groupedValues).map(([key, val]) => {
+      const values = val.map(it => parseInt(it.value, 10))
+
+      return {
+        doctor: key,
+        ratingAverage: getAverage(values),
+        ratingMedian: getMedian(values),
+      }
+    })
+
+    return rating
   }
 
   private formatRatingDoctorCommentAnswers(answers: ClaimsRatingDoctors | any) {
@@ -123,20 +152,18 @@ export class AuditorRating {
       return {
         question: key,
         order: val[0].order,
-        answers: this.getFormattedDoctorAnswers(groupedArr, curAnswers),
+        answers: this.getFormattedDoctorAnswers(curAnswers),
       }
     })
 
     return formattedAnswers
   }
 
-  private getAverage(answers: ClaimsRatingDoctors | any) {
+  private getValuesAverage(answers: ClaimsRatingDoctors | any) {
     const values = answers
       .filter(item => item.questions.type === 'value')
       .map(item => Number(item.questions.value))
-    return Math.round(
-      values.reduce((acc, cur) => acc + cur, 0) / values.length,
-    )
+    return Math.round(values.reduce((acc, cur) => acc + cur, 0) / values.length)
   }
 
   private getValuesMeidan(answers: ClaimsRatingDoctors | any) {
@@ -146,7 +173,7 @@ export class AuditorRating {
     return getMedian(values)
   }
 
-  private getFormattedDoctorAnswers(groupedArr: any, curAnswers: any) {
+  private getFormattedDoctorAnswers(curAnswers: any) {
     return Object.keys(RatingValueAnswers).map(answer => {
       const answerCount = curAnswers.filter(answ => answ === Number(answer))
         .length
