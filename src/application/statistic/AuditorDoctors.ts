@@ -76,11 +76,15 @@ export class AuditorDoctors {
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
 
+    const closedByClient = this.getClosedByClient(claims).length
+
     return {
       median: median(answerTimes),
       average: this.average(answerTimes),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
+      all: answerTimes.length,
+      closedByClient,
       success,
       failure,
     }
@@ -91,5 +95,9 @@ export class AuditorDoctors {
     const count = values.length
 
     return Math.round(sum / (count || 1))
+  }
+
+  private getClosedByClient(claims: Claim[]) {
+    return claims.filter(it => it.closedBy === 'client')
   }
 }

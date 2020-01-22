@@ -40,4 +40,10 @@ export class DoctorAnswerTimeResponse {
 
   @ApiModelProperty({ example: [] })
   public readonly doctors: DoctorStat[]
+
+  @ApiModelProperty({ example: 33 })
+  public readonly closedByClient: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly all: number 
 }
