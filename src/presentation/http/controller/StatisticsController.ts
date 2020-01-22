@@ -162,10 +162,12 @@ export default class StatisticsController {
       { median, average, min, max, all, closedByClient, success, failure },
       doctors,
       rating,
+      { ratingAverage, ratingMedian },
     ] = await Promise.all([
       this.auditorDoctors.calculateAnswerTime(from, to),
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
       this.auditorRating.getDoctorsRatingByRange(from, to),
+      this.auditorRating.getRatingByAllClaimsByRange(from, to),
     ])
 
     const res = doctors
@@ -199,6 +201,8 @@ export default class StatisticsController {
       failure,
       all,
       closedByClient,
+      ratingAverage,
+      ratingMedian,
     }
   }
 

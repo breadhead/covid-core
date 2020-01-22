@@ -58,4 +58,10 @@ export class DoctorAnswerTimeResponse {
 
   @ApiModelProperty({ example: 3837 })
   public readonly all: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly ratingAverage: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly ratingMedian: number
 }

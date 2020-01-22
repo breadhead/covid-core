@@ -124,6 +124,22 @@ export class AuditorRating {
     return rating
   }
 
+  public async getRatingByAllClaimsByRange(from: Date, to: Date) {
+    const claims = await this.ratingRepo.findAllClaimsWithValueQuestionsByRange(
+      from,
+      to,
+    )
+
+    const values = claims
+      .map(claim => claim._answerValue)
+      .map(it => parseInt(it, 10))
+
+    return {
+      ratingAverage: getAverage(values),
+      ratingMedian: getMedian(values),
+    }
+  }
+
   private formatRatingDoctorCommentAnswers(answers: ClaimsRatingDoctors | any) {
     const filteredAnswers = answers.filter(
       item => item.questions.type === 'comment',
