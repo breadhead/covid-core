@@ -1,4 +1,12 @@
-import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Header,
+  Query,
+  UseGuards,
+  Post,
+  Param,
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -195,20 +203,14 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Doctor stats' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
-  async getDoctorReportByRange(
-    @Query() request: DoctorReportByRangeRequest,
-  ): Promise<any> {
-    // TODO: add types
-    const { from, to, name } = request
+  async getDoctorReportByRange(@Query() query: { name: string }): Promise<any> {
+    const { name } = query
 
-    const [doctors, rating] = await Promise.all([
-     this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
-      this.auditorRating.getDoctorsRatingByRange(from, to),
+    const [doctors] = await Promise.all([
+      this.auditorDoctors.getReportInfo(name),
     ])
 
-    return formatDoctorAnswerRes(doctors, rating).filter(
-      it => it.name === name,
-    )[0]
+    return doctors
   }
 
   @Get('doctor-answer-table')
