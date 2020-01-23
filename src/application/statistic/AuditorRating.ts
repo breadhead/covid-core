@@ -7,6 +7,7 @@ import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
 import { RatingValueQuestion } from './RatingValueQuestion'
 import { getMedian } from '@app/utils/service/median'
 import { getAverage } from '@app/utils/service/getAverage'
+import { DoctorRatingResponse } from '@app/presentation/http/response/DoctorRatingResponse'
 
 @Injectable()
 export class AuditorRating {
@@ -96,7 +97,10 @@ export class AuditorRating {
     return ratingDoctors
   }
 
-  public async getDoctorsRatingByRange(from: Date, to: Date) {
+  public async getDoctorsRatingByRange(
+    from: Date,
+    to: Date,
+  ): Promise<DoctorRatingResponse[]> {
     const claims = await this.ratingRepo.findAllClaimsWithValueQuestionsByRange(
       from,
       to,

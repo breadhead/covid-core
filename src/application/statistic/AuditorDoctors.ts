@@ -8,6 +8,8 @@ import { getMedian } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 import { getAnswerDate } from './helpers/getAnswerDate'
+import { getMonthRange } from './helpers/getMonthRange'
+import { DoctorStat } from '@app/presentation/http/response/DoctorAnswerTimeResponse'
 
 @Injectable()
 export class AuditorDoctors {
@@ -36,7 +38,10 @@ export class AuditorDoctors {
     return this.answerTime(claimsWithDoctor)
   }
 
-  async calculateAnswerTimeByDoctors(from: Date, to: Date) {
+  async calculateAnswerTimeByDoctors(
+    from: Date,
+    to: Date,
+  ): Promise<DoctorStat[]> {
     const allClaims = await this.claimRepo.findSuccessefullyClosedByRange(
       from,
       to,
@@ -58,6 +63,8 @@ export class AuditorDoctors {
   }
 
   private answerTime(claims: Claim[]) {
+    console.log('claims:', claims.length)
+
     const claimsDates = claims.map(claim => {
       return {
         start: claim.sentToDoctorAt,
@@ -88,6 +95,16 @@ export class AuditorDoctors {
       success,
       failure,
     }
+  }
+
+  public async getReportInfo(from: Date, to: Date) {
+    const info = getMonthRange(from, to).map(async month => {
+      const { first, last } = month
+      const res = await this.calculateAnswerTimeByDoctors(first, last)
+      return res
+    })
+
+    return info
   }
 
   private average(values: number[]) {

@@ -2,7 +2,7 @@
 
 import { ApiModelProperty } from '@nestjs/swagger'
 
-class DoctorStat {
+export class DoctorStat {
   @ApiModelProperty({ example: 'Шило' })
   public readonly name: string
 

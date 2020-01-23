@@ -33,6 +33,7 @@ import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuest
 import { RatingCommentQuestion } from '@app/application/statistic/RatingCommentQuestion'
 import DoctorReportByRangeRequest from '../request/DoctorReportByRangeRequest'
 import { DoctorReportResponse } from '../response/DoctorReportResponse'
+import { formatDoctorAnswerRes } from '../helpers/formatDoctorAnswerRes'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -172,22 +173,7 @@ export default class StatisticsController {
       this.auditorRating.getRatingByAllClaimsByRange(from, to),
     ])
 
-    const res = doctors
-      .map(doctor => {
-        const doc = rating.map(
-          rat =>
-            doctor.name === rat.doctor && {
-              ...doctor,
-              ratingAverage: rat.ratingAverage,
-              ratingMedian: rat.ratingMedian,
-            },
-        )
-
-        return doc.filter(it => !!it).length > 0
-          ? doc.filter(it => !!it)[0]
-          : null
-      })
-      .filter(it => !!it)
+    const res = formatDoctorAnswerRes(doctors, rating)
 
     return {
       median,
