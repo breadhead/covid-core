@@ -197,33 +197,18 @@ export default class StatisticsController {
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   async getDoctorReportByRange(
     @Query() request: DoctorReportByRangeRequest,
-  ): Promise<DoctorReportResponse> {
+  ): Promise<any> {
+    // TODO: add types
     const { from, to, name } = request
 
     const [doctors, rating] = await Promise.all([
-      this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+     this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
       this.auditorRating.getDoctorsRatingByRange(from, to),
     ])
 
-    const res = doctors
-      .map(doctor => {
-        const doc = rating.map(
-          rat =>
-            doctor.name === rat.doctor && {
-              ...doctor,
-              ratingAverage: rat.ratingAverage,
-              ratingMedian: rat.ratingMedian,
-            },
-        )
-
-        return doc.filter(it => !!it).length > 0
-          ? doc.filter(it => !!it)[0]
-          : null
-      })
-      .filter(it => !!it)
-      .filter(it => it.name === name)[0]
-
-    return res
+    return formatDoctorAnswerRes(doctors, rating).filter(
+      it => it.name === name,
+    )[0]
   }
 
   @Get('doctor-answer-table')

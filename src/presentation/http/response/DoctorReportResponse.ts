@@ -3,6 +3,9 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export class DoctorReportResponse {
+  @ApiModelProperty({ example: 'Шило' })
+  public readonly name: string
+
   @ApiModelProperty({ example: 21321 })
   public readonly median: number
 

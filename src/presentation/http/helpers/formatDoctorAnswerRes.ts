@@ -4,7 +4,7 @@ import { DoctorRatingResponse } from '../response/DoctorRatingResponse'
 export const formatDoctorAnswerRes = (
   doctors: DoctorStat[],
   rating: DoctorRatingResponse[],
-) => {
+): any => {
   const res = doctors
     .map(doctor => {
       if (rating.length === 0) {
