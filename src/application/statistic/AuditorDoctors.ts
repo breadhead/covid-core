@@ -10,6 +10,7 @@ import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 import { getAnswerDate } from './helpers/getAnswerDate'
 import { getYearAgoMonthRange } from './helpers/getYearAgoMonthRange'
 import { DoctorStat } from '@app/presentation/http/response/DoctorAnswerTimeResponse'
+import { DEFAULT_START } from './helpers/config'
 
 @Injectable()
 export class AuditorDoctors {
@@ -95,17 +96,40 @@ export class AuditorDoctors {
     }
   }
 
-  public async getReportInfo(name: string) {
-    const info = getYearAgoMonthRange(new Date()).map(async month => {
+  public async getReportGraphInfo(name: string) {
+    const info = getYearAgoMonthRange(new Date()).map(async (month, i) => {
       const { first, last, monthName } = month
       const res = await this.calculateAnswerTimeByDoctors(first, last)
 
       const currentDoctor = res.filter(doc => doc.name === name)[0]
 
-      return { monthName, ...currentDoctor }
+      return {
+        monthName: Number(monthName),
+        all: (currentDoctor && currentDoctor.all) || 0,
+        average: (currentDoctor && currentDoctor.average) || 0,
+        closedByClient: (currentDoctor && currentDoctor.closedByClient) || 0,
+        failure: (currentDoctor && currentDoctor.failure) || 0,
+        max: (currentDoctor && currentDoctor.max) || 0,
+        median: (currentDoctor && currentDoctor.median) || 0,
+        min: (currentDoctor && currentDoctor.min) || 0,
+        success: (currentDoctor && currentDoctor.success) || 0,
+      }
     })
 
     return Promise.all(info)
+  }
+
+  public async getReportInfo(name: string) {
+    const now = new Date()
+    const res = await this.calculateAnswerTimeByDoctors(DEFAULT_START, now)
+
+    const doctor = res.filter(doc => doc.name === name)[0]
+    return {
+      success: doctor.success,
+      closedByClient: doctor.closedByClient,
+      failure: doctor.failure,
+      all: doctor.all,
+    }
   }
 
   private average(values: number[]) {

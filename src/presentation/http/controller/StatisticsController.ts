@@ -203,14 +203,17 @@ export default class StatisticsController {
   @ApiOperation({ title: 'Doctor stats' })
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
-  async getDoctorReportByRange(@Query() query: { name: string }): Promise<any> {
+  async getDoctorReportByRange(@Query() query: { name: string }): Promise<
+    DoctorReportResponse
+  > {
     const { name } = query
 
-    const [doctors] = await Promise.all([
+    const [info, graphInfo] = await Promise.all([
       this.auditorDoctors.getReportInfo(name),
+      this.auditorDoctors.getReportGraphInfo(name),
     ])
 
-    return doctors
+    return { ...info, graphInfo }
   }
 
   @Get('doctor-answer-table')

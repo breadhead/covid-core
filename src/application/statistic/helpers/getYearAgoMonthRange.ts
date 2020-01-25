@@ -6,7 +6,7 @@ export const getYearAgoMonthRange = (date: Date) => {
   let prev = addMonths(date, 1)
   for (let i = 12; i > 0; i--) {
     const current = subMonths(prev, 1)
-    const monthName = getMonth(current)
+    const monthName: number = getMonth(current)
     const first = subDays(current, current.getDate() - 1)
     const last = endOfMonth(current)
 
