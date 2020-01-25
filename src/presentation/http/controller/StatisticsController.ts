@@ -227,12 +227,14 @@ export default class StatisticsController {
   ): Promise<any> {
     const { from, to } = request
 
-    const doctors = await this.auditorDoctors.calculateAnswerTimeByDoctors(
-      from,
-      to,
-    )
+    const [doctors, rating] = await Promise.all([
+      this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+      this.auditorRating.getDoctorsRatingByRange(from, to),
+    ])
 
-    const statisticItems = doctors.map(DoctorStatisticsItem.getBody())
+    const formatted = formatDoctorAnswerRes(doctors, rating)
+
+    const statisticItems = formatted.map(DoctorStatisticsItem.getBody())
     const table = await this.tableGenerator.generate(
       statisticItems,
       DoctorStatisticsItem.getHeader(),

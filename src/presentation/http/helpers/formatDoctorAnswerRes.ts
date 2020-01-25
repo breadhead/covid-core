@@ -19,19 +19,20 @@ export const formatDoctorAnswerRes = (
             ratingMedian: rat.ratingMedian,
           }
         }
+
+        return null
       })
 
       const filteredDoc =
         doc.filter(it => !!it).length > 0 ? doc.filter(it => !!it)[0] : null
 
-      const ans = !!filteredDoc
+      return !!filteredDoc
         ? filteredDoc
         : {
-            ...doctor,
-            ratingAverage: 0,
-            ratingMedian: 0,
-          }
-      return ans
+          ...doctor,
+          ratingAverage: 0,
+          ratingMedian: 0,
+        }
     })
     .filter(it => !!it)
 

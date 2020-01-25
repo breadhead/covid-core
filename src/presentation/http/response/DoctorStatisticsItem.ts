@@ -54,8 +54,8 @@ export class DoctorStatisticsItem {
       all: 'Всего заявок',
       success: 'Заявок, закрытых вовремя',
       closedByClient: 'Закрытых клиентом заявок',
-      ratingAverage: 'Среднее время',
-      ratingMedian: 'Медианное время',
+      ratingAverage: 'Средняя оценка',
+      ratingMedian: 'Медианная оценка',
       failure: 'Просроченных заявок',
     }
   }
