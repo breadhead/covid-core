@@ -104,6 +104,7 @@ export class AuditorDoctors {
       const currentDoctor = res.filter(doc => doc.name === name)[0]
 
       return {
+        index: i,
         monthName: Number(monthName),
         all: (currentDoctor && currentDoctor.all) || 0,
         average: (currentDoctor && currentDoctor.average) || 0,
@@ -125,6 +126,10 @@ export class AuditorDoctors {
 
     const doctor = res.filter(doc => doc.name === name)[0]
     return {
+      average: doctor.average,
+      median: doctor.median,
+      min: doctor.min,
+      max: doctor.max,
       success: doctor.success,
       closedByClient: doctor.closedByClient,
       failure: doctor.failure,

@@ -3,6 +3,9 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 
 export class DoctorGraphInfo {
+  @ApiModelProperty({ example: 3837 })
+  public readonly index: number
+
   @ApiModelProperty({ example: 1 })
   public readonly monthName: number
 
@@ -45,4 +48,16 @@ export class DoctorReportResponse {
 
   @ApiModelProperty({ example: 3837 })
   public readonly all: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly average: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly median: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly min: number
+
+  @ApiModelProperty({ example: 3837 })
+  public readonly max: number
 }
