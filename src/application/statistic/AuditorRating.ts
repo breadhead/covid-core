@@ -8,13 +8,15 @@ import { RatingValueQuestion } from './RatingValueQuestion'
 import { getMedian } from '@app/utils/service/median'
 import { getAverage } from '@app/utils/service/getAverage'
 import { DoctorRatingResponse } from '@app/presentation/http/response/DoctorRatingResponse'
+import Claim from '@app/domain/claim/Claim.entity'
+import { RatingCommentQuestion } from './RatingCommentQuestion'
 
 @Injectable()
 export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) {}
+  ) { }
 
   async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
@@ -52,7 +54,7 @@ export class AuditorRating {
     return ratingValueQuestions
   }
 
-  async getRatingCommentQuestionsStat() {
+  async getRatingCommentQuestionsStat(): Promise<RatingCommentQuestion[]> {
     const commentQuestions = await this.ratingRepo.findAllCommentQuestions()
 
     const groupedQuestions = groupBy(commentQuestions, '_questionId.id')
@@ -60,7 +62,11 @@ export class AuditorRating {
     const ratingCommentQuestions = Object.entries(groupedQuestions).map(
       ([key, val]) => {
         return {
-          [key]: val.map(item => item._answerValue),
+          [key]: val.map(item => ({
+            claimId: (item._claimId as unknown as Claim).id,
+            text: item._answerValue
+          })),
+
         }
       },
     )
