@@ -16,7 +16,7 @@ export class AuditorRating {
   constructor(
     @InjectRepository(RatingRepository)
     private readonly ratingRepo: RatingRepository,
-  ) { }
+  ) {}
 
   async getRatingValueQuestionsStat(): Promise<RatingValueQuestion[]> {
     const valueQuestions = await this.ratingRepo.findAllValueQuestions()
@@ -63,10 +63,9 @@ export class AuditorRating {
       ([key, val]) => {
         return {
           [key]: val.map(item => ({
-            claimId: (item._claimId as unknown as Claim).id,
-            text: item._answerValue
+            claimId: ((item._claimId as unknown) as Claim).id,
+            text: item._answerValue,
           })),
-
         }
       },
     )
@@ -80,6 +79,7 @@ export class AuditorRating {
     const claims: ClaimsRatingDoctors = claimsWithFeedback.map(claim => {
       return {
         doctor: claim._claimId._doctor.fullName,
+        claimId: claim._claimId.id,
         questions: {
           id: claim._questionId,
           type: claim._answerType,
@@ -155,7 +155,9 @@ export class AuditorRating {
       item => item.questions.type === 'comment',
     )
 
-    return filteredAnswers.map(item => item.questions.value)
+    return filteredAnswers.map(item => {
+      return { claimId: item.claimId, text: item.questions.value }
+    })
   }
 
   private formatRatingDoctorValueAnswers(answers: ClaimsRatingDoctors | any) {

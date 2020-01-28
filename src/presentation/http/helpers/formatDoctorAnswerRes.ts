@@ -29,10 +29,10 @@ export const formatDoctorAnswerRes = (
       return !!filteredDoc
         ? filteredDoc
         : {
-          ...doctor,
-          ratingAverage: 0,
-          ratingMedian: 0,
-        }
+            ...doctor,
+            ratingAverage: 0,
+            ratingMedian: 0,
+          }
     })
     .filter(it => !!it)
 
