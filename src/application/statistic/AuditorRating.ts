@@ -125,7 +125,7 @@ export class AuditorRating {
 
       return {
         doctor: key,
-        ratingAverage: +mean(values).toFixed(2),
+        ratingAverage: Number(mean(values).toFixed(2)),
         ratingMedian: getMedian(values),
       }
     })
@@ -144,7 +144,7 @@ export class AuditorRating {
       .map(it => parseInt(it, 10))
 
     return {
-      ratingAverage: +mean(values).toFixed(2),
+      ratingAverage: Number(mean(values).toFixed(2)),
       ratingMedian: getMedian(values),
     }
   }
