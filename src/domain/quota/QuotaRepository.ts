@@ -26,6 +26,19 @@ export default class QuotaRepository extends AbstractRepository<Quota> {
     })
   }
 
+  public findCorporateByCompanyName(
+    companyName: string,
+  ): Promise<Quota[] | null> {
+    return this.repository
+      .createQueryBuilder('quota')
+      .where('quota.CompanyName like :companyName', {
+        companyName,
+      })
+      .andWhere('quota._corporate > 0')
+      .andWhere('quota._balance > 0')
+      .getMany()
+  }
+
   public findCommon(): Promise<Quota[]> {
     return this.findByType(QuotaType.Common)
   }

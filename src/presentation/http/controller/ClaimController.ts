@@ -58,6 +58,8 @@ import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
 import { EntityManager } from 'typeorm'
 import UpdateDontUnderstandRequest from '../request/UpdateDontUnderstand'
+import Allocator from '@app/domain/quota/Allocator'
+import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -72,6 +74,7 @@ export default class ClaimController {
     private readonly claimBoardCardFinder: ClaimBoardCardFinder,
     private readonly answeringQuestions: AnsweringQuestions,
     private readonly corporateStatusMover: CorporateStatusMover,
+    private readonly allocator: Allocator,
     private readonly em: EntityManager,
   ) {}
 
@@ -471,6 +474,12 @@ export default class ClaimController {
     const { claimId, newStatus } = request
 
     await this.corporateStatusMover.changeStatus(claimId, newStatus)
+
+    if (newStatus === CorporateStatus.Fail) {
+      const claim = await this.claimRepo.getOne(claimId)
+
+      this.allocator.allocateToClaimFailedCorporateStatus(claim)
+    }
   }
 
   @Post('update-dont-understand')
@@ -485,9 +494,9 @@ export default class ClaimController {
     @Body() request: UpdateDontUnderstandRequest,
   ): Promise<void> {
     const { id, status } = request
-  
+
     const claim = await this.claimRepo.getOne(id)
-  
+
     claim.updateDontUnderstand(status)
     await this.em.save(claim)
   }
