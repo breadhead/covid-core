@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { differenceInMilliseconds, differenceInCalendarDays } from 'date-fns'
-import { groupBy } from 'lodash'
+import { groupBy, mean } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
@@ -86,7 +86,7 @@ export class AuditorDoctors {
 
     return {
       median: getMedian(answerTimes),
-      average: this.average(answerTimes),
+      average: Number((mean(answerTimes)).toFixed(2)),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
       all: answerTimes.length,
@@ -135,13 +135,6 @@ export class AuditorDoctors {
       failure: doctor.failure,
       all: doctor.all,
     }
-  }
-
-  private average(values: number[]) {
-    const sum = values.reduce((a, b) => a + b, 0)
-    const count = values.length
-
-    return Math.round(sum / (count || 1))
   }
 
   private getClosedByClient(claims: Claim[]) {

@@ -1,12 +1,11 @@
 import RatingRepository from '@app/domain/rating/RatingRepository'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { groupBy } from 'lodash'
+import { groupBy, mean } from 'lodash'
 import { RatingValueAnswers } from './RatingValueAnswers'
 import { ClaimsRatingDoctors } from './types/RatingDoctorsType'
 import { RatingValueQuestion } from './RatingValueQuestion'
 import { getMedian } from '@app/utils/service/median'
-import { getAverage } from '@app/utils/service/getAverage'
 import { DoctorRatingResponse } from '@app/presentation/http/response/DoctorRatingResponse'
 import Claim from '@app/domain/claim/Claim.entity'
 import { RatingCommentQuestion } from './RatingCommentQuestion'
@@ -126,7 +125,7 @@ export class AuditorRating {
 
       return {
         doctor: key,
-        ratingAverage: getAverage(values),
+        ratingAverage: +mean(values).toFixed(2),
         ratingMedian: getMedian(values),
       }
     })
@@ -145,7 +144,7 @@ export class AuditorRating {
       .map(it => parseInt(it, 10))
 
     return {
-      ratingAverage: getAverage(values),
+      ratingAverage: +mean(values).toFixed(2),
       ratingMedian: getMedian(values),
     }
   }
