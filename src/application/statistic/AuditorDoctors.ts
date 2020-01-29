@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { differenceInMilliseconds, differenceInCalendarDays } from 'date-fns'
-import { groupBy } from 'lodash'
+import { groupBy, mean } from 'lodash'
 
 import { ClaimRepository } from '@app/domain/claim/ClaimRepository'
 import Claim from '@app/domain/claim/Claim.entity'
-import { median } from '@app/utils/service/median'
+import { getMedian } from '@app/utils/service/median'
 import { weekendDurationBetween } from '@app/utils/service/weekendDurationBetween'
 import { MS_IN_DAY } from '@app/utils/service/weekendDurationBetween/MS_IN_DAY'
 import { getAnswerDate } from './helpers/getAnswerDate'
+import { getYearAgoMonthRange } from './helpers/getYearAgoMonthRange'
+import { DoctorStat } from '@app/presentation/http/response/DoctorAnswerTimeResponse'
+import { DEFAULT_START } from './helpers/config'
 
 @Injectable()
 export class AuditorDoctors {
@@ -36,7 +39,10 @@ export class AuditorDoctors {
     return this.answerTime(claimsWithDoctor)
   }
 
-  async calculateAnswerTimeByDoctors(from: Date, to: Date) {
+  async calculateAnswerTimeByDoctors(
+    from: Date,
+    to: Date,
+  ): Promise<DoctorStat[]> {
     const allClaims = await this.claimRepo.findSuccessefullyClosedByRange(
       from,
       to,
@@ -76,20 +82,62 @@ export class AuditorDoctors {
     const success = answerTimes.filter(time => time <= MS_IN_DAY * 2).length
     const failure = answerTimes.filter(time => time > MS_IN_DAY * 2).length
 
+    const closedByClient = this.getClosedByClient(claims).length
+
     return {
-      median: median(answerTimes),
-      average: this.average(answerTimes),
+      median: getMedian(answerTimes),
+      average: Number(mean(answerTimes).toFixed(1)),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
+      all: answerTimes.length,
+      closedByClient,
       success,
       failure,
     }
   }
 
-  private average(values: number[]) {
-    const sum = values.reduce((a, b) => a + b, 0)
-    const count = values.length
+  public async getReportGraphInfo(name: string) {
+    const info = getYearAgoMonthRange(new Date()).map(async (month, i) => {
+      const { first, last, monthName } = month
+      const res = await this.calculateAnswerTimeByDoctors(first, last)
 
-    return Math.round(sum / (count || 1))
+      const currentDoctor = res.filter(doc => doc.name === name)[0]
+
+      return {
+        index: i,
+        monthName: Number(monthName),
+        all: (currentDoctor && currentDoctor.all) || 0,
+        average: (currentDoctor && currentDoctor.average) || 0,
+        closedByClient: (currentDoctor && currentDoctor.closedByClient) || 0,
+        failure: (currentDoctor && currentDoctor.failure) || 0,
+        max: (currentDoctor && currentDoctor.max) || 0,
+        median: (currentDoctor && currentDoctor.median) || 0,
+        min: (currentDoctor && currentDoctor.min) || 0,
+        success: (currentDoctor && currentDoctor.success) || 0,
+      }
+    })
+
+    return Promise.all(info)
+  }
+
+  public async getReportInfo(name: string) {
+    const now = new Date()
+    const res = await this.calculateAnswerTimeByDoctors(DEFAULT_START, now)
+
+    const doctor = res.filter(doc => doc.name === name)[0]
+    return {
+      average: doctor.average,
+      median: doctor.median,
+      min: doctor.min,
+      max: doctor.max,
+      success: doctor.success,
+      closedByClient: doctor.closedByClient,
+      failure: doctor.failure,
+      all: doctor.all,
+    }
+  }
+
+  private getClosedByClient(claims: Claim[]) {
+    return claims.filter(it => it.closedBy === 'client')
   }
 }

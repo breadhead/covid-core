@@ -1,10 +1,19 @@
-import { Controller, Get, Header, Query, UseGuards, Post } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Header,
+  Query,
+  UseGuards,
+  Post,
+  Param,
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
+  ApiImplicitQuery,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 
@@ -30,6 +39,9 @@ import { FunnelClaimsResponse } from './FunnelClaimsResponse'
 import { DoctorStatisticsItem } from '../response/DoctorStatisticsItem'
 import { RatingValueQuestion } from '@app/application/statistic/RatingValueQuestion'
 import { RatingCommentQuestion } from '@app/application/statistic/RatingCommentQuestion'
+import DoctorReportByRangeRequest from '../request/DoctorReportByRangeRequest'
+import { DoctorReportResponse } from '../response/DoctorReportResponse'
+import { formatDoctorAnswerRes } from '../helpers/formatDoctorAnswerRes'
 
 @Controller('statistics')
 @UseGuards(JwtAuthGuard)
@@ -158,14 +170,50 @@ export default class StatisticsController {
     const { from, to } = request
 
     const [
-      { median, average, min, max, success, failure },
+      { median, average, min, max, all, closedByClient, success, failure },
       doctors,
+      rating,
+      { ratingAverage, ratingMedian },
     ] = await Promise.all([
       this.auditorDoctors.calculateAnswerTime(from, to),
       this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+      this.auditorRating.getDoctorsRatingByRange(from, to),
+      this.auditorRating.getRatingByAllClaimsByRange(from, to),
     ])
 
-    return { median, average, min, max, doctors, success, failure }
+    const res = formatDoctorAnswerRes(doctors, rating)
+
+    return {
+      median,
+      average,
+      min,
+      max,
+      doctors: res,
+      success,
+      failure,
+      all,
+      closedByClient,
+      ratingAverage,
+      ratingMedian,
+    }
+  }
+
+  @Get('doctor-report')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Doctor stats' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
+  async getDoctorReportByRange(@Query() query: { name: string }): Promise<
+    DoctorReportResponse
+  > {
+    const { name } = query
+
+    const [info, graphInfo] = await Promise.all([
+      this.auditorDoctors.getReportInfo(name),
+      this.auditorDoctors.getReportGraphInfo(name),
+    ])
+
+    return { ...info, graphInfo }
   }
 
   @Get('doctor-answer-table')
@@ -174,16 +222,19 @@ export default class StatisticsController {
   @ApiOkResponse({ description: 'Success' })
   @ApiForbiddenResponse({ description: 'Admin API token doesnt provided' })
   async getDoctorAnswerTimesTable(
-    @Query(DateRandePipe) request: DateRangeRequest,
+    @Query(DateRandePipe)
+    request: DateRangeRequest,
   ): Promise<any> {
     const { from, to } = request
 
-    const doctors = await this.auditorDoctors.calculateAnswerTimeByDoctors(
-      from,
-      to,
-    )
+    const [doctors, rating] = await Promise.all([
+      this.auditorDoctors.calculateAnswerTimeByDoctors(from, to),
+      this.auditorRating.getDoctorsRatingByRange(from, to),
+    ])
 
-    const statisticItems = doctors.map(DoctorStatisticsItem.getBody())
+    const formatted = formatDoctorAnswerRes(doctors, rating)
+
+    const statisticItems = formatted.map(DoctorStatisticsItem.getBody())
     const table = await this.tableGenerator.generate(
       statisticItems,
       DoctorStatisticsItem.getHeader(),

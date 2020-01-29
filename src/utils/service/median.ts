@@ -1,4 +1,4 @@
-export const median = (values: number[]) => {
+export const getMedian = (values: number[]) => {
   if (values.length === 0) {
     return 0
   }
@@ -21,5 +21,5 @@ export const median = (values: number[]) => {
   const minMeanValue = sorted[minMeanIndex]
   const maxMeanValue = sorted[maxMeanIndex]
 
-  return (maxMeanValue + minMeanValue) / 2
+  return Number(((maxMeanValue + minMeanValue) / 2).toFixed(1))
 }
