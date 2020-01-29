@@ -17,6 +17,7 @@ import { User } from '@app/user/model/User.entity'
 import { Role } from '@app/user/model/Role'
 import { Aids } from '@app/infrastructure/customTypes/Aids'
 import { CommonLocalizationsEnum } from './CommonLocalizationsEnum'
+import { DontUnderstandEnum } from './DontUnderstandEnum'
 
 export enum ClaimStatus {
   New = 'new',
@@ -323,6 +324,9 @@ export default class Claim {
   @Column({ type: 'json', nullable: true })
   public _doctors?: User[] = []
 
+  @Column({ type: 'enum' })
+  public _dontUnderstand: DontUnderstandEnum
+
   public constructor(
     id: string,
     number: number,
@@ -334,6 +338,7 @@ export default class Claim {
     localization?: string,
     { company, position }: CorporateParams = {},
     target: ClaimTarget = ClaimTarget.Self,
+    dontUnderstand: DontUnderstandEnum = DontUnderstandEnum.DEFAULT,
   ) {
     this.id = id
     this.number = number
@@ -352,6 +357,7 @@ export default class Claim {
     this._analysis = new Analysis({})
 
     this.corporateStatus = this.defineInitialCorporateStatus()
+    this._dontUnderstand = dontUnderstand
   }
 
   public isActive() {
@@ -568,6 +574,14 @@ export default class Claim {
 
   public updateSentToDoctorAt() {
     this._sentToDoctorAt = new Date()
+  }
+
+  public get dontUnderstand() {
+    return this._dontUnderstand
+  }
+
+  public updateDontUnderstand(status: DontUnderstandEnum) {
+    this._dontUnderstand = status
   }
 
   private defineInitialCorporateStatus() {

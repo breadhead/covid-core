@@ -56,8 +56,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import HttpCodeNoContent from './decorator/HttpCodeNoContent'
-import AddStoryPhoneRequest from '../request/AddStoryPhoneRequest'
 import { EntityManager } from 'typeorm'
+import UpdateDontUnderstandRequest from '../request/UpdateDontUnderstand'
 import Allocator from '@app/domain/quota/Allocator'
 import { CorporateStatus } from '@app/domain/claim/CorporateStatus'
 
@@ -480,6 +480,25 @@ export default class ClaimController {
 
       this.allocator.allocateToClaimFailedCorporateStatus(claim)
     }
+  }
+
+  @Post('update-dont-understand')
+  @Roles(Role.Client)
+  @ApiOperation({ title: 'Change dont understand status' })
+  @ApiOkResponse({ description: 'Changed' })
+  @ApiNotFoundResponse({ description: 'Claim not found' })
+  @ApiForbiddenResponse({
+    description: 'Client API token doesn`t provided',
+  })
+  public async updateDontUnderstand(
+    @Body() request: UpdateDontUnderstandRequest,
+  ): Promise<void> {
+    const { id, status } = request
+
+    const claim = await this.claimRepo.getOne(id)
+
+    claim.updateDontUnderstand(status)
+    await this.em.save(claim)
   }
 
   private hideSensitiveData = ({ roles }: TokenPayload) =>
