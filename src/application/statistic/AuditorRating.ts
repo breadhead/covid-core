@@ -43,7 +43,7 @@ export class AuditorRating {
           return {
             [answer]: {
               count: answerCount,
-              percentage: ((100 * answerCount) / group[key].length).toFixed(2),
+              percentage: ((100 * answerCount) / group[key].length).toFixed(1),
             },
           }
         }),
@@ -125,7 +125,7 @@ export class AuditorRating {
 
       return {
         doctor: key,
-        ratingAverage: Number(mean(values).toFixed(2)),
+        ratingAverage: Number(mean(values).toFixed(1)),
         ratingMedian: getMedian(values),
       }
     })
@@ -144,7 +144,7 @@ export class AuditorRating {
       .map(it => parseInt(it, 10))
 
     return {
-      ratingAverage: Number(mean(values).toFixed(2)),
+      ratingAverage: Number(mean(values).toFixed(1)),
       ratingMedian: getMedian(values),
     }
   }
@@ -208,7 +208,7 @@ export class AuditorRating {
       return {
         [answer]: {
           count: answerCount,
-          percentage: ((100 * answerCount) / curAnswers.length).toFixed(2),
+          percentage: ((100 * answerCount) / curAnswers.length).toFixed(1),
         },
       }
     })

@@ -86,7 +86,7 @@ export class AuditorDoctors {
 
     return {
       median: getMedian(answerTimes),
-      average: Number(mean(answerTimes).toFixed(2)),
+      average: Number(mean(answerTimes).toFixed(1)),
       max: Math.max(...[...answerTimes, 0]),
       min: Math.min(...[...answerTimes, 0]),
       all: answerTimes.length,

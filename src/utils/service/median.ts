@@ -21,5 +21,5 @@ export const getMedian = (values: number[]) => {
   const minMeanValue = sorted[minMeanIndex]
   const maxMeanValue = sorted[maxMeanIndex]
 
-  return Number(((maxMeanValue + minMeanValue) / 2).toFixed(2))
+  return Number(((maxMeanValue + minMeanValue) / 2).toFixed(1))
 }
