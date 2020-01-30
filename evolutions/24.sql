@@ -1,0 +1,7 @@
+ALTER TABLE claim
+    ADD COLUMN _closeType VARCHAR(255) DEFAULT NULL;
+
+#DOWN
+
+ALTER TABLE claim
+    DROP COLUMN _closeType;

@@ -18,6 +18,7 @@ import {
   finishYesUTM,
   finishNoUTM,
 } from '@app/domain/claim/analysis/utmCodes'
+import { CloseType } from '../claim/CloseClaimCommand'
 
 @Injectable()
 export default class EmailNotificator implements Notificator {
@@ -204,7 +205,12 @@ export default class EmailNotificator implements Notificator {
   }
 
   public async claimRejected(claim: Claim): Promise<void> {
-    const { number, author, closeComment } = claim
+    const { number, author, closeComment, closeType } = claim
+
+    if (closeType === CloseType.WithoutNotification) {
+      return
+    }
+
     const { name } = claim.applicant
     const subject = `Заявка №${number}. ${name}, к сожалению, ваша заявка отклонена`
 

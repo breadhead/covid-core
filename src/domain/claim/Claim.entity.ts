@@ -18,6 +18,7 @@ import { Role } from '@app/user/model/Role'
 import { Aids } from '@app/infrastructure/customTypes/Aids'
 import { CommonLocalizationsEnum } from './CommonLocalizationsEnum'
 import { DontUnderstandEnum } from './DontUnderstandEnum'
+import { CloseType } from '@app/application/claim/CloseClaimCommand'
 
 export enum ClaimStatus {
   New = 'new',
@@ -199,6 +200,10 @@ export default class Claim {
     return this._closedAt
   }
 
+  public get closeType() {
+    return this._closeType
+  }
+
   @Column({ nullable: true })
   public description?: string
 
@@ -326,6 +331,9 @@ export default class Claim {
 
   @Column({ type: 'enum' })
   public _dontUnderstand: DontUnderstandEnum
+
+  @Column({ nullable: true })
+  public _closeType: string
 
   public constructor(
     id: string,
@@ -582,6 +590,10 @@ export default class Claim {
 
   public updateDontUnderstand(status: DontUnderstandEnum) {
     this._dontUnderstand = status
+  }
+
+  public defineCloseType(type: CloseType) {
+    this._closeType = type
   }
 
   private defineInitialCorporateStatus() {
