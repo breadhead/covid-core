@@ -40,7 +40,7 @@ export default class Allocator {
                   }))
                   .getOrElse(null).name,
               )
-            : null
+            : []
 
         const [commonQuotas, specialQuotas] = await Promise.all([
           this.quotaRepo.findCommonAvailable(),
@@ -49,15 +49,17 @@ export default class Allocator {
           ),
         ])
 
-        if (
+        const noQuotasCondition =
           commonQuotas.length === 0 &&
           specialQuotas.length === 0 &&
           corporateQuotas.length === 0
-        ) {
+
+        if (noQuotasCondition) {
           throw new QuotaAllocationFailedException(null, 'Quota not found')
         }
 
-        let quota
+        let quota = null
+
         if (corporateQuotas.length > 0) {
           quota = sample(corporateQuotas)
         } else {
