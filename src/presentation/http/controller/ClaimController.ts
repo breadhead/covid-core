@@ -102,7 +102,7 @@ export default class ClaimController {
   }
 
   @Get('/manager/client')
-  @Roles(Role.CaseManager)
+  @Roles(Role.CaseManager, Role.Doctor)
   @ApiImplicitQuery({ name: 'login' })
   @ApiOperation({ title: 'Show list of claims for individual client' })
   @ApiOkResponse({
