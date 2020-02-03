@@ -36,13 +36,16 @@ export class UserCreator {
     return user
   }
 
-  async createDoctor(
-    email: string,
-    rawPassword: string,
-    name: string,
-    boardUsername: string,
-    desciption?: string,
-  ) {
+  async createDoctor(data: any) {
+    const {
+      name,
+      email,
+      boardUsername,
+      rawPassword,
+      description,
+      telegramId,
+    } = data
+
     const user = new User(email)
 
     await user.changePassword(rawPassword, this.passwordEncoder)
@@ -50,7 +53,8 @@ export class UserCreator {
     user.roles.push(Role.Doctor)
     user.fullName = name
     user.boardUsername = boardUsername
-    user.description = desciption
+    user.description = description
+    user.newContacts(email, null, telegramId)
 
     await this.entitySaver.save(user)
 

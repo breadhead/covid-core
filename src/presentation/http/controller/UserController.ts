@@ -118,21 +118,7 @@ export default class UserController {
     @Body() createDoctorRequest: any,
     //  fix types
   ): Promise<any> {
-    const {
-      name,
-      email,
-      boardUsername,
-      rawPassword,
-      desciption,
-    } = createDoctorRequest
-
-    const doctor = await this.userCreator.createDoctor(
-      name,
-      email,
-      boardUsername,
-      rawPassword,
-      desciption,
-    )
+    const doctor = await this.userCreator.createDoctor(createDoctorRequest)
 
     return doctor
   }

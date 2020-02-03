@@ -88,8 +88,8 @@ export class User {
     this._roles = []
   }
 
-  public newContacts(email?: string, phone?: string) {
-    this._contacts = new Contacts({ email, phone })
+  public newContacts(email?: string, phone?: string, telegramId?: string) {
+    this._contacts = new Contacts({ email, phone, telegramId })
   }
 
   public async changePassword(
