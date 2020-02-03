@@ -4,6 +4,7 @@ import { Role } from '@app/user/model/Role'
 import { User } from '@app/user/model/User.entity'
 import { EntitySaver } from '@app/db/EntitySaver'
 import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEncoder'
+import CreateDoctorRequest from '@app/presentation/http/request/CreateDoctorRequest'
 
 @Injectable()
 export class UserCreator {
@@ -36,7 +37,7 @@ export class UserCreator {
     return user
   }
 
-  async createDoctor(data: any) {
+  async createDoctor(data: CreateDoctorRequest) {
     const {
       name,
       email,

@@ -31,6 +31,8 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
 import { UserCreator } from '@app/user/application/UserCreator'
+import CreateDoctorRequest from '../request/CreateDoctorRequest'
+import { User } from '@app/user/model/User.entity'
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -114,10 +116,8 @@ export default class UserController {
   @ApiOkResponse({ description: 'Created' })
   @ApiBadRequestResponse({ description: 'Login already taken' })
   public async register(
-    // fix types
-    @Body() createDoctorRequest: any,
-    //  fix types
-  ): Promise<any> {
+    @Body() createDoctorRequest: CreateDoctorRequest,
+  ): Promise<User> {
     const doctor = await this.userCreator.createDoctor(createDoctorRequest)
 
     return doctor
