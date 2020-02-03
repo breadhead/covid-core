@@ -1,10 +1,19 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  UseGuards,
+  Post,
+  Body,
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUseTags,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
 import { UserRepository } from '@app/user/service/UserRepository'
@@ -21,6 +30,7 @@ import DoctorResponse from '../response/DoctorResponse'
 import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import CurrentUser from './decorator/CurrentUser'
+import { UserCreator } from '@app/user/application/UserCreator'
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -30,6 +40,7 @@ export default class UserController {
   public constructor(
     private readonly userRepo: UserRepository,
     private readonly claimRepo: ClaimRepository,
+    private readonly userCreator: UserCreator,
   ) {}
 
   @Get()
@@ -96,5 +107,33 @@ export default class UserController {
     })
 
     return doctors.map(DoctorResponse.fromEntity).map(mapAssigned)
+  }
+
+  @Post('create-doctor')
+  @ApiOperation({ title: 'Create the new doctor' })
+  @ApiOkResponse({ description: 'Created' })
+  @ApiBadRequestResponse({ description: 'Login already taken' })
+  public async register(
+    // fix types
+    @Body() createDoctorRequest: any,
+    //  fix types
+  ): Promise<any> {
+    const {
+      name,
+      email,
+      boardUsername,
+      rawPassword,
+      desciption,
+    } = createDoctorRequest
+
+    const doctor = await this.userCreator.createDoctor(
+      name,
+      email,
+      boardUsername,
+      rawPassword,
+      desciption,
+    )
+
+    return doctor
   }
 }
