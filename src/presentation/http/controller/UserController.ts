@@ -112,6 +112,7 @@ export default class UserController {
   }
 
   @Post('create-doctor')
+  @Roles(Role.Admin)
   @ApiOperation({ title: 'Create the new doctor' })
   @ApiOkResponse({ description: 'Created' })
   @ApiBadRequestResponse({ description: 'Login already taken' })
@@ -121,5 +122,15 @@ export default class UserController {
     const doctor = await this.userCreator.createDoctor(createDoctorRequest)
 
     return doctor
+  }
+
+  @Get('generate-doctors-password')
+  @Roles(Role.Admin)
+  @ApiOperation({ title: 'Generate doctors password' })
+  @ApiOkResponse({ description: 'Generated' })
+  @ApiBadRequestResponse({ description: 'Admin API token doesent provided' })
+  public async generate(): // fix types
+  Promise<any> {
+    return 'orange_purple_931'
   }
 }
