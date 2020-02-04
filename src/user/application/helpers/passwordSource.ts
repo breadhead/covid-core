@@ -88,7 +88,6 @@ const colors = [
   'rose',
   'brown',
   'turquoise',
-  'flirt',
   'frostbite',
   'fuchsia',
   'fulvous',
@@ -100,6 +99,11 @@ const colors = [
   'yellow',
   'cobalt',
   'silver',
+  'tan',
+  'maroon',
+  'gold',
+  'mindaro',
+  'mustard',
 ]
 
 export const getRandomColor = () =>

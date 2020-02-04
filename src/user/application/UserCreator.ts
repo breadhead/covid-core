@@ -6,6 +6,7 @@ import { PasswordEncoder } from '@app/utils/service/PasswordEncoder/PasswordEnco
 import { Injectable } from '@nestjs/common'
 import { getRandomColor } from './helpers/passwordSource'
 import { IdGenerator } from '@app/utils/service/IdGenerator/IdGenerator'
+import { UserRepository } from '@app/user/service/UserRepository'
 
 @Injectable()
 export class UserCreator {
@@ -13,7 +14,8 @@ export class UserCreator {
     private readonly entitySaver: EntitySaver,
     private readonly passwordEncoder: PasswordEncoder,
     private readonly idGenerator: IdGenerator,
-  ) {}
+    private readonly userRepo: UserRepository,
+  ) { }
 
   async createClient(nenaprasnoId: number) {
     const login = `nenaprasno-cabinet-${nenaprasnoId}`
@@ -65,6 +67,26 @@ export class UserCreator {
   }
 
   async generatePassword() {
+    const raw = this.generateRawPassword()
+    const doctors = await this.userRepo.findDoctors()
+
+    const passwords = doctors
+      .map(doc => doc.passwordCredentials.getOrElse(null))
+      .filter(it => !!it)
+      .map(it => it.password)
+
+    const overlaps = await Promise.all(passwords.map(pas => this.passwordEncoder.isPasswordValid(pas, raw)))
+
+    const filteredOverlaps = overlaps.filter(ov => !!ov)
+
+    if (filteredOverlaps.length > 0) {
+      this.generatePassword()
+    }
+
+    return raw
+  }
+
+  private generateRawPassword() {
     return `${getRandomColor()}_${getRandomColor()}_${this.idGenerator.getNumeric(
       2,
     )}`
