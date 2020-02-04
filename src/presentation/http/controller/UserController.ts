@@ -129,8 +129,7 @@ export default class UserController {
   @ApiOperation({ title: 'Generate doctors password' })
   @ApiOkResponse({ description: 'Generated' })
   @ApiBadRequestResponse({ description: 'Admin API token doesent provided' })
-  public async generate(): // fix types
-  Promise<any> {
-    return 'orange_purple_931'
+  public async generate(): Promise<any> {
+    return this.userCreator.generatePassword()
   }
 }
