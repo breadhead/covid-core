@@ -1,6 +1,6 @@
 // TODO: fix types
 export default interface BaseTable {
-  load(): Promise<any>
+  load(name: string): Promise<any>
 }
 
 const BaseTable = Symbol('BaseTable')
