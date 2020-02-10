@@ -14,7 +14,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { ConfigModule } from '@app/config/config.module'
 
-import DoctorCommand from '@app/presentation/cli/command/DoctorCommand'
 import CommandRunner from '@app/presentation/cli/CommandRunner'
 import * as httpControllers from '@app/presentation/http/controller'
 import httpFilters from '@app/presentation/http/filter'
@@ -101,8 +100,6 @@ import Story from './domain/story/Story.entity'
 import StoryRepository from './domain/story/StoryRepository'
 import { StoryService } from './domain/story/StoryService'
 
-const cliCommands = [DoctorCommand]
-
 const commandHandlers = [
   AskQuestionsHandler,
   CreateQuotaHandler,
@@ -167,7 +164,6 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
   ],
   controllers: [...Object.values(httpControllers)],
   providers: [
-    ...cliCommands,
     ...httpFilters,
     ...commandHandlers,
     ...securityVoters,
@@ -248,7 +244,6 @@ export class AppModule implements NestModule {
     this.eventEmitter.register(eventSubscribers)
 
     this.commandRunner.setModuleRef(this.moduleRef)
-    this.commandRunner.register(cliCommands)
 
     this.allNotificator.setModuleRef(this.moduleRef)
     this.allNotificator.register(notificators)
