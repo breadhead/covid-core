@@ -15,7 +15,7 @@ export class UserCreator {
     private readonly passwordEncoder: PasswordEncoder,
     private readonly idGenerator: IdGenerator,
     private readonly userRepo: UserRepository,
-  ) { }
+  ) {}
 
   async createClient(nenaprasnoId: number) {
     const login = `nenaprasno-cabinet-${nenaprasnoId}`
@@ -75,7 +75,9 @@ export class UserCreator {
       .filter(it => !!it)
       .map(it => it.password)
 
-    const overlaps = await Promise.all(passwords.map(pas => this.passwordEncoder.isPasswordValid(pas, raw)))
+    const overlaps = await Promise.all(
+      passwords.map(pas => this.passwordEncoder.isPasswordValid(pas, raw)),
+    )
 
     const filteredOverlaps = overlaps.filter(ov => !!ov)
 
