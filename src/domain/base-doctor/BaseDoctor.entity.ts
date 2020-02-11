@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm'
 import BaseClinic from '../base-clinic/BaseClinic.entity'
 
-@Entity('baseDoctor')
+@Entity('base_doctor')
 export default class BaseDoctor {
   @PrimaryColumn()
   public readonly id: string

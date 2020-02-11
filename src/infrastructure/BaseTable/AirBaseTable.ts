@@ -13,7 +13,7 @@ export class AirBaseTable implements BaseTable {
     }).base(this.config.getOrElse('AIRTABLE_ID', null))
   }
 
-  public async load(name) {
+  public async load(name): Promise<any[]> {
     const currentBase = await this.base
 
     const all = currentBase(name).select({
@@ -33,6 +33,6 @@ export class AirBaseTable implements BaseTable {
           }
         },
       )
-    })
+    }) as Promise<any[]>
   }
 }
