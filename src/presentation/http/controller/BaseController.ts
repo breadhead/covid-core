@@ -12,9 +12,9 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { AirBaseTable } from '@app/infrastructure/BaseTable/AirBaseTable'
 import { BaseTable } from '@app/infrastructure/BaseTable/BaseTable'
-import BaseDoctor from '@app/domain/base-doctor/BaseDoctor.entity'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
+import { BaseDoctorService } from '@app/domain/base-doctor/BaseDoctorService'
 
 @Controller('base')
 @UseGuards(JwtAuthGuard)
@@ -24,10 +24,11 @@ export default class BaseController {
   public constructor(
     @Inject(BaseTable)
     private readonly airtable: AirBaseTable,
-    @InjectEntityManager() private readonly em: EntityManager,
+    @Inject(BaseDoctorService)
+    private readonly baseDoctor: BaseDoctorService,
   ) {}
 
-  @Get('doctors')
+  @Get('save-base-data')
   // @Header('Content-Type', 'application/json')
   @Roles(Role.Client, Role.CaseManager)
   @ApiOperation({ title: 'get base doctors' })
@@ -35,21 +36,11 @@ export default class BaseController {
   @ApiForbiddenResponse({
     description: 'Admin or Manager API token doesnt provided',
   })
-  public async getBaseDoctors(): Promise<any> {
-    const baseDoctors = await this.airtable
-      .load('Врачи')
-      .catch(err => console.log('airtable error', err))
+  public async saveBaseData(): Promise<any> {
+    const doctors = await this.airtable.load('Врачи')
 
-    const doctors =
-      baseDoctors &&
-      baseDoctors.map(doctor =>
-        this.em.save(
-          new BaseDoctor(doctor.id, doctor._rawJson.fields['Имя'].trim()),
-        ),
-      )
-
-    await Promise.all(doctors)
-
-    return baseDoctors
+    if (doctors) {
+      this.baseDoctor.saveDoctors(doctors)
+    }
   }
 }
