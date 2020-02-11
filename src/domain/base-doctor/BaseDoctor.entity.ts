@@ -10,7 +10,7 @@ export default class BaseDoctor {
   public readonly name: string
 
   @ManyToMany(type => BaseClinic, { lazy: true })
-  @JoinTable({ name: 'baseDoctor_baseClinic' })
+  @JoinTable({ name: 'base_doctor_base_clinic' })
   private clinic: Promise<BaseClinic[]>
 
   public async getClinics(): Promise<BaseClinic[]> {
