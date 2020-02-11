@@ -32,8 +32,10 @@ export default class BaseController {
     description: 'Admin or Manager API token doesnt provided',
   })
   public async getBaseDoctors(): Promise<any> {
-    const baseDoctors = await this.airtable.load('Врачи')
-    console.log('baseDoctors:', baseDoctors)
+    const baseDoctors = await this.airtable
+      .load('Врачи')
+      .catch(err => console.log('airtable error', err))
+
     return baseDoctors
   }
 }

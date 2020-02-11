@@ -1,43 +1,38 @@
 import { Injectable } from '@nestjs/common'
 import * as Airtable from 'airtable'
 import BaseTable from './BaseTable'
+import { Configuration } from '../../config/Configuration'
 
-// AIRTABLE_ID = 'appoJF3vF5m6I0Pxs'
-// AIRTABLE_API_KEY = 'key43jZPdwh3hE5OB'
 @Injectable()
 export class AirBaseTable implements BaseTable {
   private base: Promise<any> = null
 
-  constructor() {
-    this.base = new Airtable({ apiKey: 'key43jZPdwh3hE5OB' }).base(
-      'appoJF3vF5m6I0Pxs',
-    )
+  constructor(private readonly config: Configuration) {
+    this.base = new Airtable({
+      apiKey: this.config.getOrElse('AIRTABLE_API_KEY', null),
+    }).base(this.config.getOrElse('AIRTABLE_ID', null))
   }
 
   public async load(name) {
     const currentBase = await this.base
 
-    const res = await currentBase(name)
-      .select({
-        maxRecords: 3,
-        view: 'Grid view',
-      })
-      .eachPage(
-        function page(records, fetchNextPage) {
-          records.forEach(function(record) {
-            console.log('Retrieved', record.get('Имя'))
-          })
+    const all = currentBase(name).select({
+      view: 'Grid view',
+    })
+
+    return new Promise((resolve, reject) => {
+      all.eachPage(
+        (record, fetchNextPage) => {
           fetchNextPage()
-          return records
+          resolve(record)
         },
         function done(err) {
           if (err) {
             console.error(err)
-            return
+            reject(err)
           }
         },
       )
-    console.log('res:', res)
-    return res
+    })
   }
 }
