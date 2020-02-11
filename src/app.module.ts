@@ -102,6 +102,8 @@ import StoryRepository from './domain/story/StoryRepository'
 import { StoryService } from './domain/story/StoryService'
 import { BaseTable } from './infrastructure/BaseTable/BaseTable'
 import { AirBaseTable } from './infrastructure/BaseTable/AirBaseTable'
+import { BaseDoctorService } from './domain/base-doctor/BaseDoctorService'
+import { BaseClinicService } from './domain/base-clinic/BaseClinicService'
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -224,6 +226,8 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     AuditorClaims,
     AuditorRating,
     StoryService,
+    BaseDoctorService,
+    BaseClinicService,
   ],
 })
 export class AppModule implements NestModule {

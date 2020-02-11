@@ -1,6 +1,8 @@
+import { BaseTabeViewEnum } from './BaseTabeViewEnum'
+
 // TODO: fix types
 export default interface BaseTable {
-  load(name: string): Promise<any>
+  load(name: string, view: BaseTabeViewEnum): Promise<any>
 }
 
 const BaseTable = Symbol('BaseTable')

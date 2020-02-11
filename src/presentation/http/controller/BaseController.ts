@@ -12,9 +12,10 @@ import JwtAuthGuard from '../security/JwtAuthGuard'
 import Roles from '../security/Roles'
 import { AirBaseTable } from '@app/infrastructure/BaseTable/AirBaseTable'
 import { BaseTable } from '@app/infrastructure/BaseTable/BaseTable'
-import { InjectEntityManager } from '@nestjs/typeorm'
-import { EntityManager } from 'typeorm'
+
 import { BaseDoctorService } from '@app/domain/base-doctor/BaseDoctorService'
+import { BaseTabeViewEnum } from '@app/infrastructure/BaseTable/BaseTabeViewEnum'
+import { BaseClinicService } from '@app/domain/base-clinic/BaseClinicService'
 
 @Controller('base')
 @UseGuards(JwtAuthGuard)
@@ -26,6 +27,8 @@ export default class BaseController {
     private readonly airtable: AirBaseTable,
     @Inject(BaseDoctorService)
     private readonly baseDoctor: BaseDoctorService,
+    @Inject(BaseClinicService)
+    private readonly baseClinic: BaseClinicService,
   ) {}
 
   @Get('save-base-data')
@@ -36,11 +39,19 @@ export default class BaseController {
   @ApiForbiddenResponse({
     description: 'Admin or Manager API token doesnt provided',
   })
-  public async saveBaseData(): Promise<any> {
-    const doctors = await this.airtable.load('Врачи')
+  public async saveBaseData() {
+    const doctors = await this.airtable.load('Врачи', BaseTabeViewEnum.Grid)
+    const clinics = await this.airtable.load(
+      'Учреждения',
+      BaseTabeViewEnum.Table,
+    )
 
     if (doctors) {
-      this.baseDoctor.saveDoctors(doctors)
+      this.baseDoctor.save(doctors)
+    }
+
+    if (clinics) {
+      this.baseClinic.save(clinics)
     }
   }
 }

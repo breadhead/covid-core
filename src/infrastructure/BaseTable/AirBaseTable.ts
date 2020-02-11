@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import * as Airtable from 'airtable'
 import BaseTable from './BaseTable'
 import { Configuration } from '../../config/Configuration'
+import { BaseTabeViewEnum } from './BaseTabeViewEnum'
 
 @Injectable()
 export class AirBaseTable implements BaseTable {
@@ -13,12 +14,10 @@ export class AirBaseTable implements BaseTable {
     }).base(this.config.getOrElse('AIRTABLE_ID', null))
   }
 
-  public async load(name): Promise<any[]> {
+  public async load(name: string, view: BaseTabeViewEnum): Promise<any[]> {
     const currentBase = await this.base
 
-    const all = currentBase(name).select({
-      view: 'Grid view',
-    })
+    const all = currentBase(name).select({ view })
 
     return new Promise((resolve, reject) => {
       all.eachPage(
