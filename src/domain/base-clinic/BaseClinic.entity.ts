@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm'
-import BaseDoctor from '../base-doctor/BaseDoctor.entity';
+import BaseDoctor from '../base-doctor/BaseDoctor.entity'
 
 @Entity('baseClinic')
 export default class BaseClinic {
@@ -8,6 +8,9 @@ export default class BaseClinic {
 
   @Column()
   public readonly name: string
+
+  @Column()
+  public readonly city: string
 
   @ManyToMany(type => BaseDoctor, { lazy: true })
   @JoinTable({ name: 'base_doctor_base_clinic' })
@@ -23,12 +26,7 @@ export default class BaseClinic {
     this.doctor = Promise.resolve(doctor)
   }
 
-  public constructor(
-    id: string,
-    name: string,
-  ) {
-    this.id = id,
-      this.name = name
+  public constructor(id: string, name: string, city: string) {
+    this.id = id, this.name = name, this.city = city
   }
-
 }

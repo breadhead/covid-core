@@ -1,7 +1,8 @@
 CREATE TABLE base_doctor
 (
-    `id` VARCHAR(255),
-    `name` VARCHAR(255)
+    id VARCHAR(255),
+    name VARCHAR(255),
+    PRIMARY KEY (id)
     );
 
 

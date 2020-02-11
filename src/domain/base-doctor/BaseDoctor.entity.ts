@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm'
-import BaseClinic from '../base-clinic/BaseClinic.entity';
+import BaseClinic from '../base-clinic/BaseClinic.entity'
 
 @Entity('baseDoctor')
 export default class BaseDoctor {
@@ -23,12 +23,7 @@ export default class BaseDoctor {
     this.clinic = Promise.resolve(clinic)
   }
 
-  public constructor(
-    id: string,
-    name: string,
-  ) {
-    this.id = id,
-      this.name = name
+  public constructor(id: string, name: string) {
+    ;(this.id = id), (this.name = name)
   }
-
 }
