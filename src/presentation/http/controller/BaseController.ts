@@ -33,7 +33,7 @@ export default class BaseController {
   })
   public async getBaseDoctors(): Promise<any> {
     const baseDoctors = await this.airtable
-      .load('Врачи')
+      .load('Клиники')
       .catch(err => console.log('airtable error', err))
 
     return baseDoctors
