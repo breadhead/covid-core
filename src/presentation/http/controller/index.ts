@@ -12,3 +12,4 @@ export {
 } from './PublicStatisticsController'
 export { default as RatingController } from './RatingController'
 export { default as StoryController } from './StoryController'
+export { default as BaseController } from './BaseController'

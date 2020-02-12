@@ -77,6 +77,7 @@ import { FeedbackAnswerRecurrenter } from '@app/domain/service/FeedbackAnswerRec
 
 import { BoardManager } from '@app/infrastructure/BoardManager/BoardManager'
 import TrelloBoardManager from '@app/infrastructure/BoardManager/TrelloBoardManager'
+
 import EventEmitter from '@app/infrastructure/events/EventEmitter'
 import { FileSaver } from '@app/infrastructure/FileSaver/FileSaver'
 import { S3FileSaver } from '@app/infrastructure/FileSaver/S3FileSaver'
@@ -99,6 +100,10 @@ import { AuditorRating } from './application/statistic/AuditorRating'
 import Story from './domain/story/Story.entity'
 import StoryRepository from './domain/story/StoryRepository'
 import { StoryService } from './domain/story/StoryService'
+import { BaseTable } from './infrastructure/BaseTable/BaseTable'
+import { AirBaseTable } from './infrastructure/BaseTable/AirBaseTable'
+import { BaseDoctorService } from './domain/base-doctor/BaseDoctorService'
+import { BaseClinicService } from './domain/base-clinic/BaseClinicService'
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -192,6 +197,10 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       provide: BoardManager,
       useClass: TrelloBoardManager,
     },
+    {
+      provide: BaseTable,
+      useClass: AirBaseTable,
+    },
     CorporateStatusMover,
     AnsweringQuestions,
     AnswerAccessManager,
@@ -217,6 +226,8 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     AuditorClaims,
     AuditorRating,
     StoryService,
+    BaseDoctorService,
+    BaseClinicService,
   ],
 })
 export class AppModule implements NestModule {

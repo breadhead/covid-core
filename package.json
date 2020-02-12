@@ -35,6 +35,7 @@
     "@solid-soda/console": "^1.0.0",
     "@solid-soda/evolutions": "^0.0.14",
     "@solid-soda/voters": "^1.0.0",
+    "airtable": "^0.8.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
