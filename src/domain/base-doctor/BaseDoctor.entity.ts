@@ -9,18 +9,16 @@ export default class BaseDoctor {
   @Column()
   public readonly name: string
 
-  @ManyToMany(type => BaseClinic, { lazy: true })
-  @JoinTable({ name: 'base_doctor_base_clinic' })
-  private clinic: Promise<BaseClinic[]>
+  @ManyToMany(type => BaseClinic, { eager: true })
+  @JoinTable({
+    name: 'base_doctor_base_clinic',
+    joinColumn: { name: 'base_doctor_id' },
+    inverseJoinColumn: { name: 'base_clinic_id' },
+  })
+  public clinic: BaseClinic[]
 
-  public async getClinics(): Promise<BaseClinic[]> {
-    const clinic = await this.clinic
-
-    return clinic
-  }
-
-  public async setClinics(clinic: BaseClinic[]): Promise<void> {
-    this.clinic = Promise.resolve(clinic)
+  public setClinics(clinic: BaseClinic[]) {
+    this.clinic = clinic
   }
 
   public constructor(id: string, name: string) {

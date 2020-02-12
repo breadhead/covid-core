@@ -1,4 +1,4 @@
-import { Controller, Get, Header, UseGuards, Inject } from '@nestjs/common'
+import { Controller, Get, UseGuards, Inject } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -46,12 +46,12 @@ export default class BaseController {
       BaseTabeViewEnum.Table,
     )
 
-    if (doctors) {
-      this.baseDoctor.save(doctors)
+    if (clinics) {
+      await this.baseClinic.save(clinics)
     }
 
-    if (clinics) {
-      this.baseClinic.save(clinics)
+    if (doctors) {
+      await this.baseDoctor.save(doctors)
     }
   }
 }

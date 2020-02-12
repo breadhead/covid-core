@@ -2,18 +2,28 @@ import { Injectable } from '@nestjs/common'
 import BaseDoctor from './BaseDoctor.entity'
 import { EntityManager } from 'typeorm'
 import { InjectEntityManager } from '@nestjs/typeorm'
+import { get } from 'lodash'
 
 @Injectable()
 export class BaseDoctorService {
   constructor(@InjectEntityManager() private readonly em: EntityManager) {}
 
   public async save(doctors: any[]) {
-    doctors.map(doctor =>
-      this.em.save(
-        new BaseDoctor(doctor.id, doctor._rawJson.fields['Имя'].trim()),
-      ),
-    )
+    const newDoctors = doctors.map(doctor => {
+      const name = get(doctor, '_rawJson.fields["Имя"]', null)
+      const newDoctor = new BaseDoctor(doctor.id, name ? name.trim() : null)
 
-    await Promise.all(doctors)
+      const clinics = get(doctor, '_rawJson.fields["Клиники"]', []).map(
+        clinic => {
+          return { id: clinic }
+        },
+      )
+
+      newDoctor.clinic = clinics
+
+      return this.em.save(newDoctor)
+    })
+
+    await Promise.all(newDoctors)
   }
 }

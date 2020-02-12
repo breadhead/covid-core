@@ -13,13 +13,13 @@ export class BaseClinicService {
       const name = get(clinic, '_rawJson.fields["Клиника"]', null)
       const city = get(clinic, '_rawJson.fields["Город"]', null)
 
-      this.em.save(
-        new BaseClinic(
-          clinic.id,
-          name ? name.trim() : null,
-          city ? city.trim() : null,
-        ),
+      const newClinic = new BaseClinic(
+        clinic.id,
+        name ? name.trim() : null,
+        city ? city.trim() : null,
       )
+
+      return this.em.save(newClinic)
     })
 
     await Promise.all(clinics)

@@ -12,19 +12,13 @@ export default class BaseClinic {
   @Column()
   public readonly city: string
 
-  @ManyToMany(type => BaseDoctor, { lazy: true })
-  @JoinTable({ name: 'base_doctor_base_clinic' })
-  private doctor: Promise<BaseDoctor[]>
-
-  public async getDoctors(): Promise<BaseDoctor[]> {
-    const doctor = await this.doctor
-
-    return doctor
-  }
-
-  public async setDoctors(doctor: BaseDoctor[]): Promise<void> {
-    this.doctor = Promise.resolve(doctor)
-  }
+  @ManyToMany(type => BaseDoctor, { cascade: true })
+  @JoinTable({
+    name: 'base_doctor_base_clinic',
+    joinColumn: { name: 'base_clinic_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'base_doctor_id', referencedColumnName: 'id' },
+  })
+  public doctor: BaseDoctor[]
 
   public constructor(id: string, name: string, city: string) {
     ;(this.id = id), (this.name = name), (this.city = city)
