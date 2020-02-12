@@ -1,57 +1,22 @@
-import { Controller, Get, UseGuards, Inject } from '@nestjs/common'
-import {
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiUseTags,
-} from '@nestjs/swagger'
-import { Role } from '@app/user/model/Role'
+import { Controller, Get, Inject, Header, Headers } from '@nestjs/common'
+import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 
-import JwtAuthGuard from '../security/JwtAuthGuard'
-import Roles from '../security/Roles'
 import { AirBaseTable } from '@app/infrastructure/BaseTable/AirBaseTable'
 import { BaseTable } from '@app/infrastructure/BaseTable/BaseTable'
 
-import { BaseDoctorService } from '@app/domain/base-doctor/BaseDoctorService'
-import { BaseTabeViewEnum } from '@app/infrastructure/BaseTable/BaseTabeViewEnum'
-import { BaseClinicService } from '@app/domain/base-clinic/BaseClinicService'
-
 @Controller('base')
-@UseGuards(JwtAuthGuard)
 @ApiUseTags('base')
-@ApiBearerAuth()
 export default class BaseController {
   public constructor(
     @Inject(BaseTable)
     private readonly airtable: AirBaseTable,
-    @Inject(BaseDoctorService)
-    private readonly baseDoctor: BaseDoctorService,
-    @Inject(BaseClinicService)
-    private readonly baseClinic: BaseClinicService,
   ) {}
 
   @Get('save-base-data')
-  // @Header('Content-Type', 'application/json')
-  @Roles(Role.Client, Role.CaseManager)
+  @Header('Content-Type', 'application/json')
   @ApiOperation({ title: 'get base doctors' })
   @ApiOkResponse({ description: 'Success' })
-  @ApiForbiddenResponse({
-    description: 'Admin or Manager API token doesnt provided',
-  })
-  public async saveBaseData() {
-    const doctors = await this.airtable.load('Врачи', BaseTabeViewEnum.Grid)
-    const clinics = await this.airtable.load(
-      'Учреждения',
-      BaseTabeViewEnum.Table,
-    )
-
-    if (clinics) {
-      await this.baseClinic.save(clinics)
-    }
-
-    if (doctors) {
-      await this.baseDoctor.save(doctors)
-    }
+  public async saveBaseData(@Headers() headers) {
+    return this.airtable.update(headers.authorization)
   }
 }
