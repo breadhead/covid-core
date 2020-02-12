@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Header, Headers } from '@nestjs/common'
+import { Controller, Get, Inject, Header, Headers, Post } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
 
 import { AirBaseTable } from '@app/infrastructure/BaseTable/AirBaseTable'
@@ -12,7 +12,7 @@ export default class BaseController {
     private readonly airtable: AirBaseTable,
   ) {}
 
-  @Get('save-base-data')
+  @Post('save-base-data')
   @Header('Content-Type', 'application/json')
   @ApiOperation({ title: 'get base doctors' })
   @ApiOkResponse({ description: 'Success' })

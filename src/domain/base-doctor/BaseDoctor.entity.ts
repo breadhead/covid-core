@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions, no-sequences */
+
 import { Column, Entity, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm'
 import BaseClinic from '../base-clinic/BaseClinic.entity'
 
@@ -21,7 +23,11 @@ export default class BaseDoctor {
     this.clinic = clinic
   }
 
-  public constructor(id: string, name: string) {
-    ;(this.id = id), (this.name = name)
+  public constructor(
+    id: string,
+    name: string
+  ) {
+    this.id = id,
+      this.name = name
   }
 }
