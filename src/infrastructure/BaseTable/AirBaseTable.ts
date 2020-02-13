@@ -55,7 +55,7 @@ export class AirBaseTable implements BaseTable {
           records = [...records, ...record]
           fetchNextPage()
         },
-        (err) => {
+        err => {
           if (err) {
             console.error(err)
             reject(err)
