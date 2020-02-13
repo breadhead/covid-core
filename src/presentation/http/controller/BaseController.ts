@@ -16,8 +16,11 @@ import {
   ApiOperation,
   ApiUseTags,
   ApiImplicitQuery,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
+import { BaseClinicRepository } from '@app/domain/base-clinic/BaseClinicRepository'
+import BaseClinic from '@app/domain/base-clinic/BaseClinic.entity'
 
 @Controller('base')
 @ApiUseTags('base')
@@ -27,18 +30,28 @@ export default class BaseController {
     private readonly airtable: AirBaseTable,
     @InjectRepository(BaseDoctorRepository)
     private readonly baseDoctorRepo: BaseDoctorRepository,
+    @InjectRepository(BaseClinicRepository)
+    private readonly baseClinicRepo: BaseClinicRepository,
   ) {}
 
   @Get('doctors')
   @ApiOperation({ title: 'Search results' })
   @ApiImplicitQuery({ name: 'query', type: 'string', required: true })
-  @ApiOkResponse({
-    description: 'Success',
-    type: 'SearchResponse',
-    isArray: true,
-  })
-  public async getSearchData(@Query() query): Promise<BaseDoctor[]> {
+  @ApiOkResponse({ description: 'Success' })
+  @ApiNotFoundResponse({ description: 'doctor not found' })
+  public async getSearchDoctors(@Query() query): Promise<BaseDoctor[]> {
     const items = await this.baseDoctorRepo.search(query.query)
+
+    return items
+  }
+
+  @Get('clinics')
+  @ApiOperation({ title: 'Search results' })
+  @ApiImplicitQuery({ name: 'query', type: 'string', required: true })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiNotFoundResponse({ description: 'clinic not found' })
+  public async getSearchClinics(@Query() query): Promise<BaseClinic[]> {
+    const items = await this.baseClinicRepo.search(query.query)
 
     return items
   }
