@@ -104,6 +104,7 @@ import { BaseTable } from './infrastructure/BaseTable/BaseTable'
 import { AirBaseTable } from './infrastructure/BaseTable/AirBaseTable'
 import { BaseDoctorService } from './domain/base-doctor/BaseDoctorService'
 import { BaseClinicService } from './domain/base-clinic/BaseClinicService'
+import { BaseDoctorRepository } from './domain/base-doctor/BaseDoctorRepository'
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -164,6 +165,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       RatingQuestionsRepository,
       Story,
       StoryRepository,
+      BaseDoctorRepository,
     ]),
     HttpModule,
   ],
