@@ -1,4 +1,3 @@
-import BaseDoctor from '@app/domain/base-doctor/BaseDoctor.entity'
 import { BaseDoctorRepository } from '@app/domain/base-doctor/BaseDoctorRepository'
 import { AirBaseTable } from '@app/infrastructure/BaseTable/AirBaseTable'
 import { BaseTable } from '@app/infrastructure/BaseTable/BaseTable'
@@ -20,7 +19,6 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseClinicRepository } from '@app/domain/base-clinic/BaseClinicRepository'
-import BaseClinic from '@app/domain/base-clinic/BaseClinic.entity'
 
 @Controller('base')
 @ApiUseTags('base')

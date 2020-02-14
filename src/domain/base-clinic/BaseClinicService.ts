@@ -12,11 +12,13 @@ export class BaseClinicService {
     clinics.map(clinic => {
       const name = get(clinic, '_rawJson.fields["Клиника"]', null)
       const city = get(clinic, '_rawJson.fields["Город"]', null)
+      const region = get(clinic, '_rawJson.fields["Регион"]', null)
 
       const newClinic = new BaseClinic(
         clinic.id,
         name ? name.trim() : null,
         city ? city.trim() : null,
+        region ? region.trim() : null,
       )
 
       return this.em.save(newClinic)
