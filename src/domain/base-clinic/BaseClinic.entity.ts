@@ -14,6 +14,9 @@ export default class BaseClinic {
   @Column()
   public readonly city: string
 
+  @Column()
+  public readonly region: string
+
   @ManyToMany(type => BaseDoctor, { cascade: true })
   @JoinTable({
     name: 'base_doctor_base_clinic',
@@ -22,13 +25,10 @@ export default class BaseClinic {
   })
   public doctor: BaseDoctor[]
 
-  public constructor(
-    id: string,
-    name: string,
-    city: string
-  ) {
-    this.id = id,
-    this.name = name,
-    this.city = city
+  public constructor(id: string, name: string, city: string, region: string) {
+    ;(this.id = id),
+      (this.name = name),
+      (this.city = city),
+      (this.region = region)
   }
 }
