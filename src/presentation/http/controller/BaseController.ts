@@ -50,9 +50,23 @@ export default class BaseController {
   @ApiOperation({ title: 'Search results' })
   @ApiImplicitQuery({ name: 'query', type: 'string', required: true })
   @ApiOkResponse({ description: 'Success' })
-  @ApiNotFoundResponse({ description: 'clinic not found' })
+  @ApiNotFoundResponse({ description: 'clinics not found' })
   public async getSearchClinics(@Query() query): Promise<string[]> {
     const items = await this.baseClinicRepo.searchByName(query.query)
+
+    const names = items.map(it => it.name)
+    const unique = Array.from(new Set(names))
+
+    return unique
+  }
+
+  @Get('clinics-by-region')
+  @ApiOperation({ title: 'Search results' })
+  @ApiImplicitQuery({ name: 'region', type: 'string', required: true })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiNotFoundResponse({ description: 'clinics not found' })
+  public async getSearchClinicsByRegion(@Query() query): Promise<string[]> {
+    const items = await this.baseClinicRepo.searchByRegion(query.query)
 
     const names = items.map(it => it.name)
     const unique = Array.from(new Set(names))

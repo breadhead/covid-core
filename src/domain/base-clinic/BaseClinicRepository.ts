@@ -22,9 +22,8 @@ export class BaseClinicRepository extends AbstractRepository<BaseClinic> {
     return items
   }
 
-  public async searchByNameAndCity(
-    name: string,
-    city: string,
+  public async searchByRegion(
+    region: string,
     params: {
       limit: number
     } = {
@@ -33,8 +32,7 @@ export class BaseClinicRepository extends AbstractRepository<BaseClinic> {
   ): Promise<BaseClinic[]> {
     const items = await this.repository
       .createQueryBuilder('base_clinic')
-      .andWhere('base_clinic.name LIKE :name', { name: `%${name}%` })
-      .andWhere('base_clinic.city LIKE :city', { city: `%${city}%` })
+      .andWhere('base_clinic.region LIKE :region', { region: `%${region}%` })
       .limit(params.limit)
       .getMany()
 
