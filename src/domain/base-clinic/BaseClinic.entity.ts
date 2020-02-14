@@ -26,9 +26,9 @@ export default class BaseClinic {
   public doctor: BaseDoctor[]
 
   public constructor(id: string, name: string, city: string, region: string) {
-    ;(this.id = id),
-      (this.name = name),
-      (this.city = city),
-      (this.region = region)
+    this.id = id
+    this.name = name
+    this.city = city
+    this.region = region
   }
 }
