@@ -39,10 +39,13 @@ export default class BaseController {
   @ApiImplicitQuery({ name: 'query', type: 'string', required: true })
   @ApiOkResponse({ description: 'Success' })
   @ApiNotFoundResponse({ description: 'doctor not found' })
-  public async getSearchDoctors(@Query() query): Promise<BaseDoctor[]> {
+  public async getSearchDoctors(@Query() query): Promise<string[]> {
     const items = await this.baseDoctorRepo.search(query.query)
 
-    return items
+    const names = items.map(it => it.name)
+    const unique = Array.from(new Set(names))
+
+    return unique
   }
 
   @Get('clinics')
@@ -50,10 +53,13 @@ export default class BaseController {
   @ApiImplicitQuery({ name: 'query', type: 'string', required: true })
   @ApiOkResponse({ description: 'Success' })
   @ApiNotFoundResponse({ description: 'clinic not found' })
-  public async getSearchClinics(@Query() query): Promise<BaseClinic[]> {
-    const items = await this.baseClinicRepo.search(query.query)
+  public async getSearchClinics(@Query() query): Promise<string[]> {
+    const items = await this.baseClinicRepo.searchByName(query.query)
 
-    return items
+    const names = items.map(it => it.name)
+    const unique = Array.from(new Set(names))
+
+    return unique
   }
 
   @Post('save-base-data')
