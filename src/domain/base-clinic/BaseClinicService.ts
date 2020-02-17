@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common'
 import { EntityManager } from 'typeorm'
-import { InjectEntityManager } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BaseClinic from './BaseClinic.entity'
 import { get } from 'lodash'
+import { BaseClinicRepository } from './BaseClinicRepository'
+import ClinicsByRegionResponse from '@app/presentation/http/response/ClinicsByRegionResponse'
 
 @Injectable()
 export class BaseClinicService {
-  constructor(@InjectEntityManager() private readonly em: EntityManager) {}
+  constructor(
+    @InjectEntityManager() private readonly em: EntityManager,
+    @InjectRepository(BaseClinicRepository)
+    private readonly repo: BaseClinicRepository,
+  ) {}
 
   public async save(clinics: any[]) {
     clinics.map(clinic => {
@@ -25,5 +31,33 @@ export class BaseClinicService {
     })
 
     await Promise.all(clinics)
+  }
+
+  public async getClinicsByRegion(
+    region,
+    name,
+  ): Promise<ClinicsByRegionResponse[]> {
+    const regionItems = await this.repo.searchByRegion(region)
+    const commonItems = await this.repo.searchByName(name)
+
+    const items = Array.from(new Set([...regionItems, ...commonItems]))
+
+    const regionClinics = items.filter(it => it.region === region)
+    const commonClinics = items.filter(it => it.region !== region)
+
+    return [
+      this.formatItems(regionClinics, 'В выбранном регионе'),
+      this.formatItems(commonClinics, 'Во всех регионах'),
+    ]
+  }
+
+  private formatItems(items, title): ClinicsByRegionResponse {
+    const names = items.map(it => it.name)
+    const unique = Array.from(new Set(names)) as string[]
+
+    return {
+      title,
+      children: unique,
+    }
   }
 }
