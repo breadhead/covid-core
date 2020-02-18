@@ -19,6 +19,9 @@ import {
 } from '@nestjs/swagger'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseClinicRepository } from '@app/domain/base-clinic/BaseClinicRepository'
+import ClinicsByRegionRequest from '../request/ClinicsByRegionRequest'
+import { BaseClinicService } from '@app/domain/base-clinic/BaseClinicService'
+import ClinicsByRegionResponse from '../response/ClinicsByRegionResponse'
 
 @Controller('base')
 @ApiUseTags('base')
@@ -30,6 +33,8 @@ export default class BaseController {
     private readonly baseDoctorRepo: BaseDoctorRepository,
     @InjectRepository(BaseClinicRepository)
     private readonly baseClinicRepo: BaseClinicRepository,
+    @Inject(BaseClinicService)
+    private readonly clinicService: BaseClinicService,
   ) {}
 
   @Get('doctors')
@@ -65,13 +70,12 @@ export default class BaseController {
   @ApiImplicitQuery({ name: 'region', type: 'string', required: true })
   @ApiOkResponse({ description: 'Success' })
   @ApiNotFoundResponse({ description: 'clinics not found' })
-  public async getSearchClinicsByRegion(@Query() query): Promise<string[]> {
-    const items = await this.baseClinicRepo.searchByRegion(query.query)
+  public async getSearchClinicsByRegion(
+    @Query() query: ClinicsByRegionRequest,
+  ): Promise<ClinicsByRegionResponse[]> {
+    const { region, name } = query
 
-    const names = items.map(it => it.name)
-    const unique = Array.from(new Set(names))
-
-    return unique
+    return this.clinicService.getClinicsByRegion(region, name)
   }
 
   @Post('save-base-data')
