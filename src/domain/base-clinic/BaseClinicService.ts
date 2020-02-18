@@ -37,8 +37,10 @@ export class BaseClinicService {
     region,
     name,
   ): Promise<ClinicsByRegionResponse[]> {
-    const regionItems = await this.repo.searchByRegion(region)
-    const commonItems = await this.repo.searchByName(name)
+    const [regionItems, commonItems] = await Promise.all([
+      this.repo.searchByRegion(region),
+      this.repo.searchByName(name),
+    ])
 
     const items = Array.from(new Set([...regionItems, ...commonItems]))
 

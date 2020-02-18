@@ -75,9 +75,7 @@ export default class BaseController {
   ): Promise<ClinicsByRegionResponse[]> {
     const { region, name } = query
 
-    const res = await this.clinicService.getClinicsByRegion(region, name)
-
-    return res
+    return this.clinicService.getClinicsByRegion(region, name)
   }
 
   @Post('save-base-data')
