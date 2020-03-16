@@ -54,6 +54,9 @@ export default class TelegramNotificator implements Notificator {
 
   public async claimSendToDoctor(claim: Claim): Promise<void> {
     const { number, id, doctor } = claim
+    
+    console.log('doctor:', doctor, claim)
+
 
     if (!doctor.contacts.telegramId) {
       return
