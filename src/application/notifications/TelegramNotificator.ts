@@ -55,16 +55,9 @@ export default class TelegramNotificator implements Notificator {
   public async claimSendToDoctor(claim: Claim): Promise<void> {
     const { number, id, doctor } = claim
 
-    console.log('doctor:', doctor)
-
     if (!doctor.contacts.telegramId) {
-      console.log('missed telegram id')
       return
     }
-    console.log(
-      'telegram chat',
-      await this.telegramClient.getChat(doctor.contacts.telegramId),
-    )
 
     const counters = await this.auditor.getCurrentStatusForDoctor(doctor.login)
 
