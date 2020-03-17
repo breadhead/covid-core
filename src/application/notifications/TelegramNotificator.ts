@@ -61,7 +61,10 @@ export default class TelegramNotificator implements Notificator {
       console.log('missed telegram id')
       return
     }
-    console.log(this.telegramClient.getChat(doctor.contacts.telegramId))
+    console.log(
+      'telegram chat',
+      await this.telegramClient.getChat(doctor.contacts.telegramId),
+    )
 
     const counters = await this.auditor.getCurrentStatusForDoctor(doctor.login)
 
