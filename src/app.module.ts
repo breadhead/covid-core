@@ -106,6 +106,8 @@ import { BaseDoctorService } from './domain/base-doctor/BaseDoctorService'
 import { BaseClinicService } from './domain/base-clinic/BaseClinicService'
 import { BaseDoctorRepository } from './domain/base-doctor/BaseDoctorRepository'
 import { BaseClinicRepository } from './domain/base-clinic/BaseClinicRepository'
+import { Form } from '@app/domain/form/Form.entity'
+import { FormRepository } from '@app/domain/form/FormRepository'
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -168,6 +170,8 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       StoryRepository,
       BaseDoctorRepository,
       BaseClinicRepository,
+      Form,
+      FormRepository,
     ]),
     HttpModule,
   ],
