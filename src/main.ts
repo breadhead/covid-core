@@ -1,34 +1,34 @@
-import { NestFactory } from '@nestjs/core'
-import * as bodyParser from 'body-parser'
-import { join } from 'path'
+import { NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
+import { join } from 'path';
 
-import { AppModule } from '@app/app.module'
-import corsMiddleware from '@app/corsMiddleware'
-import setupSwagger from '@app/infrastructure/swagger'
-import { answerRedisMiddleware } from './answerRedisMiddleware'
-import { extraLoggerMiddleware } from './extraLoggerMiddleware'
-import { Configuration } from './config/Configuration'
-import { Logger } from './utils/service/Logger/Logger'
-import { rateLimiter } from './rateLimiter'
+import { AppModule } from '@app/app.module';
+import corsMiddleware from '@app/corsMiddleware';
+import setupSwagger from '@app/infrastructure/swagger';
+import { answerRedisMiddleware } from './answerRedisMiddleware';
+import { extraLoggerMiddleware } from './extraLoggerMiddleware';
+import { Configuration } from './config/Configuration';
+import { Logger } from './utils/service/Logger/Logger';
+import { rateLimiter } from './rateLimiter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule);
 
-  setupSwagger(app, 'docs')
+  setupSwagger(app, 'docs');
 
-  app.useStaticAssets(join(__dirname, '..', 'public'))
+  app.useStaticAssets(join(__dirname, '..', 'public'));
 
-  app.use(corsMiddleware())
+  app.use(corsMiddleware());
 
-  app.use(bodyParser.json())
+  app.use(bodyParser.json());
 
-  const logger = app.get<Logger>(Logger as any)
-  const config = app.get<Configuration>(Configuration as any)
+  const logger = app.get<Logger>(Logger as any);
+  const config = app.get<Configuration>(Configuration as any);
 
-  app.use(extraLoggerMiddleware(logger))
-  app.use(answerRedisMiddleware(config))
-  app.use(rateLimiter(app))
+  app.use(extraLoggerMiddleware(logger));
+  app.use(answerRedisMiddleware(config));
+  app.use(rateLimiter(app));
 
-  await app.listen(3000)
+  await app.listen(3000);
 }
-bootstrap()
+bootstrap();
