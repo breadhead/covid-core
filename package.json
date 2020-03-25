@@ -89,9 +89,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "resolutions": {
-    "**/event-stream": "^4.0.1"
-  },
   "scripts": {
     "cmd": "node --require ./tsconfig-paths-bootstrap.js ./dist/console.js",
     "cmd:dev": "NODE_ENV=development ts-node -r tsconfig-paths/register ./src/console.ts",
