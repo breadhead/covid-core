@@ -2,7 +2,7 @@
   "name": "coronovirus-core",
   "description": "Backend for Coronovirus",
   "version": "1.0.0",
-  "author": "Igor Kamyshev <igor@kamyshev.me>",
+  "author": "Katya Bogdanova <katya@breadhead.ru>",
   "dependencies": {
     "@breadhead/detil-ts": "^1.0.1",
     "@breadhead/nest-throwable-bus": "^1.0.5",
