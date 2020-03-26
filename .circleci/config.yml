@@ -10,14 +10,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - js-dependencies-{{ checksum "yarn.lock" }}
+          - js-dependencies-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn
       - save_cache:
           key: js-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+          - ./node_modules
       - run:
           name: Lint Code
           command: yarn s lint
@@ -32,21 +32,21 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - js-dependencies-{{ checksum "yarn.lock" }}
+          - js-dependencies-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn
       - save_cache:
           key: js-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+          - ./node_modules
       - run:
           name: Test Code (unit)
           command: yarn test
 
   types:
     docker:
-      - image: circleci/node:8.11.1
+     - image: circleci/node:8.11.1
 
     working_directory: ~/repo
 
@@ -54,14 +54,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - js-dependencies-{{ checksum "yarn.lock" }}
+          - js-dependencies-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn
       - save_cache:
           key: js-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+          - ./node_modules
       - run:
           name: Type Checking
           command: yarn types
@@ -79,7 +79,7 @@ jobs:
           name: Setup Env
           command: |
             echo 'export IMAGE_TAG=${CIRCLE_TAG:-latest}' >> $BASH_ENV
-            echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV
+            echo 'export IMAGE_NAME=covid-core' >> $BASH_ENV
       - run:
           name: Build and push Docker image
           command: |
@@ -87,7 +87,7 @@ jobs:
             docker build -t breadheadhub/$IMAGE_NAME:$IMAGE_TAG .
             docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
             docker push breadheadhub/$IMAGE_NAME:$IMAGE_TAG
-  
+
   push_stable:
     docker:
       - image: docker:17.05.0-ce-git
@@ -101,7 +101,7 @@ jobs:
           name: Setup Env
           command: |
             echo 'export IMAGE_TAG=stable' >> $BASH_ENV
-            echo 'export IMAGE_NAME=oncohelp-core' >> $BASH_ENV
+            echo 'export IMAGE_NAME=covid-core' >> $BASH_ENV
       - run:
           name: Build and push Docker image
           command: |
@@ -116,15 +116,15 @@ jobs:
     steps:
       - run:
           name: Deploy Over SSH
-          command: ssh $SSH_USER@$SSH_HOST "cd /home/cloud-user/www/oncohelp &&
+          command: ssh $SSH_USER@$SSH_HOST "cd /home/cloud-user/www/coronavirus &&
             sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" &&
-            sudo docker pull breadheadhub/oncohelp-core &&
+            sudo docker pull breadheadhub/covid-core &&
             sudo docker logout &&
             sudo docker-compose down &&
             sudo docker-compose up -d &&
-            sudo docker-compose exec -T oncohelp-code yarn evolutions:run &&
-            sudo docker image prune -f"
-  
+            sudo docker image prune -f &&
+            sudo docker-compose exec -d covid-core yarn evolutions:run -y"
+
   prod:
     machine:
       enabled: true
@@ -137,61 +137,63 @@ jobs:
           name: Deploy Over SSH
           command: |
             source $BASH_ENV
-            ssh $SSH_PROD_USER@$SSH_PROD_HOST "cd /root/web &&
+            ssh $SSH_PROD_USER@$SSH_PROD_HOST "cd /root/web/covid &&
             sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" &&
-            sudo docker pull breadheadhub/oncohelp-core:$IMAGE_TAG &&
+            sudo docker pull breadheadhub/covid-core:$IMAGE_TAG &&
             sudo docker logout &&
             sudo docker-compose down &&
             sudo docker-compose up -d &&
-            sudo docker-compose exec -T oncohelp-core yarn evolutions:run &&
-            sudo docker image prune -f"
+            sudo docker image prune -f &&
+            sudo docker-compose exec -d covid-core yarn evolutions:run -y"
+
+
 
 workflows:
   version: 2
   check-pr:
     jobs:
-      - lint:
-          filters:
-            branches:
-              ignore: 
-                - master
-      - test:
-          filters:
-            branches:
-              ignore:
-                - master
-      - types:
-          filters:
-            branches:
-              ignore:
-                - master
+    - lint:
+        filters:
+          branches:
+            ignore:
+            - master
+    - test:
+        filters:
+          branches:
+            ignore:
+            - master
+    - types:
+        filters:
+          branches:
+            ignore:
+            - master
   deploy-dev:
     jobs:
-      - push:
-          filters:
-            branches:
-              only: 
-                - master
-      - dev:
-          filters:
-            branches:
-              only: 
-                - master
-          requires:
-            - push
+    - push:
+        filters:
+          branches:
+            only:
+            - master
+    - dev:
+        filters:
+          branches:
+            only:
+            - master
+        requires:
+        - push
   deploy-prod:
     jobs:
-      - push_stable:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - prod:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-          requires:
-            - push_stable
+    - push_stable:
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            ignore: /.*/
+    - prod:
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            ignore: /.*/
+        requires:
+        - push_stable
