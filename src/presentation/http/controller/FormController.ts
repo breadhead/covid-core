@@ -25,7 +25,7 @@ export class FormController {
   public async createForm(
     @Body() request: FormRequest,
   ): Promise<FormResponse> {
-    const form = new Form(request.type, request.fields, FormStatus.New);
+    let form = new Form(request.type, request.fields, FormStatus.New);
 
     try {
       await this.saveService.save(form);
@@ -35,7 +35,7 @@ export class FormController {
     }
 
     return {
-      id: form ? form.id : 0,
+      id: form.id || 0,
     } as FormResponse;
   }
 

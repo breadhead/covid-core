@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Column,
   CreateDateColumn,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
   Entity,
 } from 'typeorm';
@@ -22,8 +22,8 @@ import {
 @Injectable()
 @Entity()
 export class Form {
-  @PrimaryColumn()
-  public readonly id: string;
+  @PrimaryGeneratedColumn()
+  public readonly id: number | null;
 
   @Column()
   public readonly type: string;
