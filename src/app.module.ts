@@ -108,6 +108,9 @@ import { BaseDoctorRepository } from './domain/base-doctor/BaseDoctorRepository'
 import { BaseClinicRepository } from './domain/base-clinic/BaseClinicRepository'
 import { Form } from '@app/domain/form/Form.entity'
 import { FormRepository } from '@app/domain/form/FormRepository'
+import {AirtableCommand} from "@app/presentation/cli/command/AirtableCommand";
+import {DataSender} from "@app/presentation/cli/airtable/DataSender";
+
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -130,6 +133,10 @@ const signInProviders = [
   InternalSignInProvider,
   ResetedSignInProvider,
   NenaprasnoCabinetSignInProvider,
+]
+
+const cliCommands = [
+  AirtableCommand
 ]
 
 const securityVoters = [PostMessageVoter, ShowClaimVoter, EditClaimVoter]
@@ -170,13 +177,13 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       StoryRepository,
       BaseDoctorRepository,
       BaseClinicRepository,
-      Form,
-      FormRepository,
+      FormRepository
     ]),
     HttpModule,
   ],
   controllers: [...Object.values(httpControllers)],
   providers: [
+    ...cliCommands,
     ...httpFilters,
     ...commandHandlers,
     ...securityVoters,
@@ -236,7 +243,11 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     StoryService,
     BaseDoctorService,
     BaseClinicService,
+    DataSender
   ],
+  exports: [
+    DataSender
+  ]
 })
 export class AppModule implements NestModule {
   public constructor(
@@ -253,6 +264,9 @@ export class AppModule implements NestModule {
   ) {}
 
   public onModuleInit() {
+    this.commandRunner.setModuleRef(this.moduleRef);
+    this.commandRunner.register(cliCommands);
+
     this.command$.setModuleRef(this.moduleRef)
     this.command$.register(commandHandlers)
 
@@ -261,8 +275,6 @@ export class AppModule implements NestModule {
 
     this.eventEmitter.setModuleRef(this.moduleRef)
     this.eventEmitter.register(eventSubscribers)
-
-    this.commandRunner.setModuleRef(this.moduleRef)
 
     this.allNotificator.setModuleRef(this.moduleRef)
     this.allNotificator.register(notificators)

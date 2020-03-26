@@ -1,58 +1,73 @@
 version: '3'
 services:
-  # oncohelp-code:
-  #   image: oncohelp-core
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./.data/upload:/app/public/upload
-  #   links:
-  #     - mysql:mysql
-  #   depends_on:
-  #     - mysql
-  #   environment:
-  #     NODE_ENV: "production"
-  #     APP_SECRET: "NotSoSecret"
-  #     DB_HOST: "mysql"
-  #     DB_PORT: 3306
-  #     DB_USER: "root"
-  #     DB_PASSWORD: "root"
-  #     DB_NAME: "oncohelp"
-  #     SECURITY_STRATEGY: "unanimous"
-  #     SECURITY_ALLOW_IF_ALL_ABSTAIN: 0
-  #     NENAPRASNO_CABINET_URL: "https://cabinet.nenaprasno.ru"
-  #     SMTP_HOST: "smtp.ethereal.email"
-  #     SMTP_PORT: 587
-  #     SMTP_USER: "cemj7hczk6j4golp@ethereal.email"
-  #     SMTP_PASSWORD: "D1EBHkyHV7nhkuQJA7"
-  #     ONCOHELP_SENDER_EMAIL: "hello@breadhead.ru"
-  #     SITE_URL: "localhost:3332"
-  # mysql:
-  #   image: mysql:5.7
-  #   volumes:
-  #     - ./.data/db:/var/lib/mysql
-  #   ports:
-  #     - "5506:3306"
-  #   environment:
-  #     MYSQL_DATABASE: "oncohelp"
-  #     MYSQL_ROOT_PASSWORD: "root"
-  #     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-  #     MYSQL_ROOT_HOST: "%"
+  covid-core:
+    image: breadheadhub/coronavirus-core
+    ports:
+      - "5050:3000"
+    links:
+      - mysql:mysql
+      - redis:redis
+    depends_on:
+      - mysql
+      - minio
+      - redis
+    environment:
+      NODE_ENV: "production"
+      APP_SECRET: "NotSoSecret"
+      DB_HOST: "mysql"
+      DB_PORT: 3306
+      DB_USER: "root"
+      DB_PASSWORD: "root"
+      DB_NAME: "covid"
+      PRODUCTION_READY: 0
+      SMS_LOGIN: "nenaprasno"
+      SMS_API_KEY: "4dc3b59faa894a3ebee1f8bc2d1c56f1"
+      SECURITY_STRATEGY: "unanimous"
+      SECURITY_ALLOW_IF_ALL_ABSTAIN: 0
+      NENAPRASNO_CABINET_URL: "https://cabinet.nenaprasno.ru"
+      SMTP_HOST: "smtp.yandex.ru"
+      SMTP_PORT: 25
+      SMTP_USER: "ask@nenaprasno.ru"
+      SMTP_PASSWORD: "nenap2020"
+      ONCOHELP_SENDER_EMAIL: "ask@nenaprasno.ru"
+      SITE_URL: "http://covid-dev.breadhead.ru"
+      MINIO_ACCESS_KEY: 5791B6226743C56F44F8274CC67B8BEB9751B6403E697243AD00FD37AF5635E3
+      MINIO_SECRET_KEY: 924BC23ADDEF9C6C61F9BFB2A78F0074C70BDC31E7B7C42EAE8AC84476F64B17
+      MINIO_HOST: "api.oncohelp.breadhead.ru:9001"
+      MINIO_BUCKET: "oncobucket"
+      REDIS_PASSWORD: "redisamsterdam"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      TELEGRAM_BOT_TOKEN: "766985251:AAFxPwMOdtJhpTtgstW8pkYV9tlLhj2J_-4"
+      AIRTABLE_ID: "appoJF3vF5m6I0Pxs"
+      AIRTABLE_API_KEY: "keygZPynXs8EIuCYc"
+      PIPEDREAM_ID: "pipedream-airtable-oncobase"
+  mysql:
+    image: mysql:5.7
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      - ./.data/db:/var/lib/mysql
+    ports:
+      - "5507:3306"
+    environment:
+      MYSQL_DATABASE: "covid"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
   minio:
     image: minio/minio
-    ports:
-      - "9000:9000"
     volumes:
-      - ./.data/s3:/data
+      - ./data/s3:/data
+    ports:
+      - "9002:9000"
     environment:
-      MINIO_ACCESS_KEY: "AKIAIOSFODNN7EXAMPLE"
-      MINIO_SECRET_KEY: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+      MINIO_ACCESS_KEY: 5791B6226743C56F44F8274CC67B8BEB9751B6403E697243AD00FD37AF5635E3
+      MINIO_SECRET_KEY: 924BC23ADDEF9C6C61F9BFB2A78F0074C70BDC31E7B7C42EAE8AC84476F64B17
     command: server /data
-  # redis:
-  #   image: 'bitnami/redis:latest'
-  #   environment:
-  #     - REDIS_PASSWORD=redisamsterdam
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - ./.data/redis:/bitnami/redis/data
+  redis:
+    image: 'bitnami/redis:latest'
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+    environment:
+      - REDIS_PASSWORD=redisamsterdam
+    volumes:
+      - ./.data/redis:/bitnami/redis/data

@@ -65,4 +65,9 @@ export class AirBaseTable implements BaseTable {
       )
     }) as Promise<any[]>
   }
+
+  public async create(){
+    this.base
+    return 'crete complete'
+  }
 }
