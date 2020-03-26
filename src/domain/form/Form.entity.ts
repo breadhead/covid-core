@@ -10,7 +10,7 @@ import { FormStatus } from '@app/domain/form/FormStatus';
 import {FormType} from "@app/domain/form/FormType";
 
 import {
-  targetList,
+  deseasesList,
   temperatureList,
   symptomsSinceList,
   symptomsList,
@@ -82,35 +82,34 @@ export class Form {
           "Пол": this.fields['[gender'] || '',
           "Возраст": this.fields['age'] || '',
           "Симптомы": this.translateSymptoms(symptoms, symptomsList).join(', '),
-          "Тип кашля": this.fields['coughOptions'] ? this.translateSymptoms(this.fields['coughOptions'], coughList) : '',
-          "Тип боли в груди": this.fields['chestPainOptions'] ? this.translateSymptoms(this.fields['chestPainOptions'], chestPainList) : '',
-          "Температура": this.fields['temperatureOptions'] ? this.translateSymptoms(this.fields['temperatureOptions'], temperatureList) : '',
-          "Одышка": this.fields['dyspneaOptions'] ? this.translateSymptoms(this.fields['dyspneaOptions'], dyspneaList) : '',
-          "Когда появились симптомы": this.fields['sinceOptions'] ? this.translateSymptoms(this.fields['sinceOptions'], symptomsSinceList) : '',
-        //  "Сопутствующие заболевания": this.fields['deseases'] ? this.translateSymptoms(this.fields['deseases'], deseasesList) : '',
+          "Тип кашля": this.fields['coughOptions'] ? this.translateSymptoms(this.fields['coughOptions'], coughList).join(', ') : '',
+          "Тип боли в груди": this.fields['chestPainOptions'] ? this.translateSymptoms(this.fields['chestPainOptions'], chestPainList).join(', ') : '',
+          "Температура": this.fields['temperatureOptions'] ? this.translateSymptoms(this.fields['temperatureOptions'], temperatureList).join(', ') : '',
+          "Одышка": this.fields['dyspneaOptions'] ? this.translateSymptoms(this.fields['dyspneaOptions'], dyspneaList).join(', ') : '',
+          "Когда появились симптомы": this.fields['sinceOptions'] ? this.translateSymptoms(this.fields['sinceOptions'], symptomsSinceList).join(', ') : '',
+          "Сопутствующие заболевания": this.fields['deseases'] ? this.translateSymptoms(this.fields['deseases'], deseasesList).join(', ') : '',
           "Email": this.fields['email'] || ''
         };
     }
   }
 
 
-  private translateSymptoms(symptoms: string[], source): string[]
+  private translateSymptoms(symptoms: string[] | string, source): string[]
   {
     let result = [];
 
-    symptoms.reduce((obj, key) => {
-      let symptom = source.find(item => item.id == key);
+    if (Array.isArray(symptoms)) {
+      symptoms.reduce((obj, key) => {
+        let symptom = source.find(item => item.id == key);
 
-      obj.push(symptom.value);
+        obj.push(symptom.value);
 
-      return obj;
-    }, result);
+        return obj;
+      }, result);
+    } else {
+      result = source.find(item => item.id == symptoms) || [];
+    }
 
     return result;
-  }
-
-  private translateSymptom(symptom: string, source): string
-  {
-    return source.find(item => item.id == symptom) || null;
   }
 }

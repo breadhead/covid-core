@@ -146,3 +146,22 @@ export const symptomsList = [
     value: 'Боль в животе',
   },
 ]
+export const deseasesList = [
+  {
+    id: 'diabetes',
+    value: 'Сахарный диабет',
+  },
+  {
+    id: 'oncological',
+    value: 'Онкологические заболевания',
+  },
+  {
+    id: 'cardiovascular',
+    value: 'Сердечно-сосудистые заболевания',
+  },
+  {
+    id: 'COPD',
+    value: 'Заболевания дыхательных путей (ХОБЛ, бронхиальная астма, интерстициальные заболеванияя лёгких)',
+  }
+
+]

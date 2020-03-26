@@ -1,11 +1,11 @@
-import {Body, Controller, Inject, NotFoundException, Post} from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import {Body, Controller, NotFoundException, Post} from '@nestjs/common';
+import {ApiCreatedResponse, ApiOperation, ApiUseTags} from '@nestjs/swagger';
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
 import FormRequest from '@app/presentation/http/request/FormRequest';
 import FormResponse from '@app/presentation/http/response/FormResponse';
 
-import { Form } from '@app/domain/form/Form.entity';
-import { FormStatus } from '@app/domain/form/FormStatus';
+import {Form} from '@app/domain/form/Form.entity';
+import {FormStatus} from '@app/domain/form/FormStatus';
 import {FormUpdateRequest} from "@app/presentation/http/request/FormUpdateRequest";
 import {FormRepository} from "@app/domain/form/FormRepository";
 
@@ -54,6 +54,7 @@ export class FormController {
     form.fields['email'] = request.email;
 
     try {
+      form.status = FormStatus.New;
       await this.saveService.save(form);
 
     } catch (error) {
