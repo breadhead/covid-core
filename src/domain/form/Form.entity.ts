@@ -34,6 +34,9 @@ export class Form {
   @Column({ type: 'json', name: 'fields' })
   public readonly fields: string;
 
+  @Column({ name: 'external_id' })
+  private _externalId: string;
+
   @CreateDateColumn({ readonly: true, name: 'created_at' })
   public readonly createdAt: Date;
 
@@ -51,6 +54,16 @@ export class Form {
     return this._status;
   }
 
+  public set externalId(id: string)
+  {
+    this._externalId = id;
+  }
+
+  public get externalId(): string | null
+  {
+    return this._externalId;
+  }
+
   public constructor(type: string, fields: string, status: FormStatus) {
     this.type = type;
     this.status = status;
@@ -59,13 +72,11 @@ export class Form {
 
   public getTableView()
   {
-    console.log('ss');
-    console.log(this.type);
     if (this.type == FormType.Covid) {
         this.fields['symptoms'] = this.fields['symptoms'] || [];
         const symptoms = Object.keys(this.fields['symptoms']).filter(key => this.fields['symptoms'][key] === true);
 
-        let tbleFields = {
+        return {
           "Для кого ищут информацию": this.fields['target'] || '',
           "Регион": this.fields['region'] || '',
           "Пол": this.fields['[gender'] || '',
@@ -74,10 +85,11 @@ export class Form {
           "Тип кашля": this.fields['coughOptions'] ? this.translateSymptoms(this.fields['coughOptions'], coughList) : '',
           "Тип боли в груди": this.fields['chestPainOptions'] ? this.translateSymptoms(this.fields['chestPainOptions'], chestPainList) : '',
           "Температура": this.fields['temperatureOptions'] ? this.translateSymptoms(this.fields['temperatureOptions'], temperatureList) : '',
+          "Одышка": this.fields['dyspneaOptions'] ? this.translateSymptoms(this.fields['dyspneaOptions'], dyspneaList) : '',
+          "Когда появились симптомы": this.fields['sinceOptions'] ? this.translateSymptoms(this.fields['sinceOptions'], symptomsSinceList) : '',
+        //  "Сопутствующие заболевания": this.fields['deseases'] ? this.translateSymptoms(this.fields['deseases'], deseasesList) : '',
+          "Email": this.fields['email'] || ''
         };
-
-        return tbleFields;
-
     }
   }
 

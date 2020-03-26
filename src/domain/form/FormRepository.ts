@@ -10,7 +10,7 @@ export class FormRepository extends AbstractRepository<Form> {
     return this.repository.find();
   }
 
-  public async getOne(id: string): Promise<Form | null> {
+  public async getOne(id: number): Promise<Form | null> {
     return this.repository.findOne(id);
   }
 

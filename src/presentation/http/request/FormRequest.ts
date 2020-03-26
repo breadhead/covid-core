@@ -1,8 +1,9 @@
 import { ApiModelProperty } from '@nestjs/swagger';
+import {FormType} from "@app/domain/form/FormType";
 
 export default class FormRequest {
-  @ApiModelProperty({ example: 'Corona' })
-  public readonly type: string;
+  @ApiModelProperty({ required: true, enum: FormType })
+  public readonly type: FormType;
 
   @ApiModelProperty({
     example: '{"target":"Для себя"}',

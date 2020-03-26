@@ -254,9 +254,10 @@ export class AppModule implements NestModule {
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
     private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
+    private readonly tableDataSender: DataSender
   ) {}
 
-  public onModuleInit() {
+  public async onModuleInit() {
     this.commandRunner.setModuleRef(this.moduleRef);
     this.commandRunner.register(cliCommands);
 
@@ -274,7 +275,15 @@ export class AppModule implements NestModule {
 
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
-    this.notifyOverdueRecurrenter.start()
+    this.notifyOverdueRecurrenter.start();
+
+    if (
+      process.env.NODE_ENV === 'production' &&
+      parseInt(process.env.INSTANCE_ID, 10) === 0
+    ) {
+
+      await this.tableDataSender.start();
+    }
   }
 
   public configure(consumer: MiddlewareConsumer) {
