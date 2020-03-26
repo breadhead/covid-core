@@ -8,6 +8,7 @@ module.exports = {
       instances: 'max',
       exec_mode: 'cluster',
       merge_logs: true,
+      instance_var: 'INSTANCE_ID',
       env_production: { NODE_ENV: 'production' },
     },
   ],
