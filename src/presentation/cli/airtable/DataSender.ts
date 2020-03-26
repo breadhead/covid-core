@@ -43,13 +43,14 @@ export class DataSender {
   }
 
   public async sendForms() {
+    console.log('try sender');
     const inProgress = await this.formRepo.findByStatus(FormStatus.InProgress);
     if (inProgress.length > 0) {
       return false;
     }
 
     const newForms = await this.formRepo.findByStatus(FormStatus.New);
-
+    console.log('process sender');
     for (const form of newForms) {
       form.status = FormStatus.InProgress;
       await this.saver.save(form);
