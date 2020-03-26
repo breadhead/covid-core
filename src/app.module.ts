@@ -276,7 +276,8 @@ export class AppModule implements NestModule {
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
     this.notifyOverdueRecurrenter.start();
-
+console.log(process.env.NODE_ENV);
+    console.log(process.env.INSTANCE_ID);
     if (
       process.env.NODE_ENV === 'production' &&
       parseInt(process.env.INSTANCE_ID, 10) === 0

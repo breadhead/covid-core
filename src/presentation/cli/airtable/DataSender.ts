@@ -39,10 +39,13 @@ export class DataSender {
       true,
     );
 
+    console.log('job - start');
+
     this.job.start();
   }
 
   public async sendForms() {
+    console.log('send forms');
     const inProgress = await this.formRepo.findByStatus(FormStatus.InProgress);
     if (inProgress.length > 0) {
       return false;
