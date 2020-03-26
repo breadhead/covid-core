@@ -156,31 +156,31 @@ workflows:
         filters:
           branches:
             ignore:
-            - master
+              - master
     - test:
         filters:
           branches:
             ignore:
-            - master
+              - master
     - types:
         filters:
           branches:
             ignore:
-            - master
+              - master
   deploy-dev:
     jobs:
     - push:
         filters:
           branches:
             only:
-            - master
+              - master
     - dev:
         filters:
           branches:
             only:
-            - master
+              - master
         requires:
-        - push
+            - push
   deploy-prod:
     jobs:
     - push_stable:
@@ -196,4 +196,4 @@ workflows:
           branches:
             ignore: /.*/
         requires:
-        - push_stable
+          - push_stable
