@@ -73,21 +73,24 @@ export class Form {
   public getTableView()
   {
     if (this.type == FormType.Covid) {
-        this.fields['symptoms'] = this.fields['symptoms'] || [];
-        const symptoms = Object.keys(this.fields['symptoms']).filter(key => this.fields['symptoms'][key] === true);
+        let fieldSymptoms = this.fields['symptoms'];
+
+        fieldSymptoms = fieldSymptoms || [];
+        const symptoms = Object.keys(fieldSymptoms).filter(key => this.fields['symptoms'][key] === true);
+
 
         return {
           "Для кого ищут информацию": this.fields['target'] || '',
           "Регион": this.fields['region'] || '',
-          "Пол": this.fields['[gender'] || '',
+          "Пол": this.fields['gender'] || '',
           "Возраст": this.fields['age'] || '',
           "Симптомы": this.translateSymptoms(symptoms, symptomsList).join(', '),
-          "Тип кашля": this.fields['coughOptions'] ? this.translateSymptoms(this.fields['coughOptions'], coughList).join(', ') : '',
-          "Тип боли в груди": this.fields['chestPainOptions'] ? this.translateSymptoms(this.fields['chestPainOptions'], chestPainList).join(', ') : '',
-          "Температура": this.fields['temperatureOptions'] ? this.translateSymptoms(this.fields['temperatureOptions'], temperatureList).join(', ') : '',
-          "Одышка": this.fields['dyspneaOptions'] ? this.translateSymptoms(this.fields['dyspneaOptions'], dyspneaList).join(', ') : '',
-          "Когда появились симптомы": this.fields['sinceOptions'] ? this.translateSymptoms(this.fields['sinceOptions'], symptomsSinceList).join(', ') : '',
-          "Сопутствующие заболевания": this.fields['deseases'] ? this.translateSymptoms(this.fields['deseases'], deseasesList).join(', ') : '',
+          "Тип кашля": fieldSymptoms['caughtType'] || '',
+          "Тип боли в груди": fieldSymptoms['thoraxType'] || '',
+          "Температура": fieldSymptoms['temperatureType'] ||  '',
+          "Одышка": fieldSymptoms['dyspneaType'] || '',
+          "Когда появились симптомы": fieldSymptoms['symptomsSince'] ||  '',
+          "Сопутствующие заболевания": fieldSymptoms['deseases'] ? this.translateSymptoms(fieldSymptoms['deseases'], deseasesList) : '',
           "Email": this.fields['email'] || ''
         };
     }
@@ -101,7 +104,6 @@ export class Form {
     if (Array.isArray(symptoms)) {
       symptoms.reduce((obj, key) => {
         let symptom = source.find(item => item.id == key);
-
         if (symptom) {
           obj.push(symptom.value);
         }
@@ -109,7 +111,10 @@ export class Form {
         return obj;
       }, result);
     } else {
+      console.log(symptoms);
+      console.log(source);
       result = source.find(item => item.id == symptoms) || [];
+      console.log(result);
     }
 
     return result;
