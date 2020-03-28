@@ -102,7 +102,9 @@ export class Form {
       symptoms.reduce((obj, key) => {
         let symptom = source.find(item => item.id == key);
 
-        obj.push(symptom.value);
+        if (symptom) {
+          obj.push(symptom.value);
+        }
 
         return obj;
       }, result);
