@@ -40,6 +40,7 @@ export class User {
   public get contacts(): Contacts {
     return this._contacts
   }
+
   public get verificationCode(): string | null {
     return this._verificationCode
   }

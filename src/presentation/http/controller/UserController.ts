@@ -79,6 +79,7 @@ export default class UserController {
     @CurrentUser() tokenPayload: TokenPayload,
   ): Promise<CurrentUserResponse> {
     const user = await this.userRepo.getOne(tokenPayload.login)
+
     return CurrentUserResponse.fromUser(user)
   }
 
