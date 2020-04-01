@@ -1,17 +1,18 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 
-import {Configuration} from '@app/config/Configuration';
-import {FormRepository} from "@app/domain/form/FormRepository";
-import {FormStatus} from "@app/domain/form/FormStatus";
-import {CronJob} from "cron";
+import { Configuration } from '@app/config/Configuration'
+import { FormRepository } from '@app/domain/form/FormRepository'
+import { FormStatus } from '@app/domain/form/FormStatus'
+import { CronJob } from 'cron'
+import { Form } from '@app/domain/form/Form.entity'
 
-const Airtable = require('airtable');
+const Airtable = require('airtable')
 
 @Injectable()
 export class DataSender {
-  private airtableBase;
-  private job;
+  private airtableBase
+  private job
 
   constructor(
     @InjectEntityManager()
@@ -21,7 +22,7 @@ export class DataSender {
     @Inject(Configuration)
     private readonly config: Configuration,
   ) {
-    this.airtableBase =  new Airtable({
+    this.airtableBase = new Airtable({
       apiKey: this.config.getOrElse('AIRTABLE_COVID_API_KEY', null),
     }).base(this.config.getOrElse('AIRTABLE_COVID_ID', null))
   }
@@ -30,67 +31,73 @@ export class DataSender {
     this.job = new CronJob(
       `0 */1 * * *`,
       async () => {
-        await this.sendForms();
+        await this.sendForms()
       },
       null,
       null,
       null,
       null,
       true,
-    );
+    )
 
-    this.job.start();
+    this.job.start()
   }
 
-  public async sendForms() {
-    console.log('try sender');
-    const inProgress = await this.formRepo.findByStatus(FormStatus.InProgress);
+  public async sendForms(): Promise<void> {
+    const inProgress = await this.formRepo.findByStatus(FormStatus.InProgress)
     if (inProgress.length > 0) {
-      return false;
+      return
     }
 
-    const newForms = await this.formRepo.findByStatus(FormStatus.New);
-    console.log('process sender');
+    const newForms = await this.formRepo.findByStatus(FormStatus.New)
     for (const form of newForms) {
-      form.status = FormStatus.InProgress;
-      await this.saver.save(form);
+      form.status = FormStatus.InProgress
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.saver.save(form)
 
       if (form.externalId) {
-        await this.airtableBase('Анкеты с сайта').update(
-          [{
-            "id": form.externalId,
-            "fields": form.getTableView()
-          }])
-          .then(records => {
-            form.externalId = records[0].getId();
-
-            form.status = FormStatus.Sent;
-
-            return this.saver.save(form);
-          })
-          .catch(error => {
-            form.status = FormStatus.Fail;
-
-            return this.saver.save(form);
-          });
-      } else {
+        // eslint-disable-next-line no-await-in-loop
         await this.airtableBase('Анкеты с сайта')
-          .create(
-            [{
-              "fields": form.getTableView()
-            }])
+          .update([
+            {
+              id: form.externalId,
+              fields: form.getTableView(),
+            },
+          ])
           .then(records => {
-            form.externalId = records[0].getId();
+            form.externalId = records[0].getId()
 
-            form.status = FormStatus.Sent;
+            form.status = FormStatus.Sent
 
-            return this.saver.save(form);
+            return this.saver.save(form)
           })
           .catch(error => {
-            form.status = FormStatus.Fail;
+            form.status = FormStatus.Fail
 
-            return this.saver.save(form);
-          });
+            // eslint-disable-next-line no-await-in-loop
+            return this.saver.save(form)
+          })
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        await this.airtableBase('Анкеты с сайта')
+          .create([
+            {
+              fields: form.getTableView(),
+            },
+          ])
+          .then(records => {
+            form.externalId = records[0].getId()
+
+            form.status = FormStatus.Sent
+
+            return this.saver.save(form)
+          })
+          .catch(error => {
+            form.status = FormStatus.Fail
+
+            return this.saver.save(form)
+          })
       }
     }
   }

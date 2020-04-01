@@ -1,3 +1,3 @@
 export enum FormType {
-  Covid = 'corona'
+  Covid = 'corona',
 }

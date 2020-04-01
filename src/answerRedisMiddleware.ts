@@ -13,7 +13,7 @@ export const answerRedisMiddleware = (config: Configuration) => {
     password: config.getStringOrElse('REDIS_PASSWORD', undefined),
   })
 
-  const get = (key: string) =>
+  const get = (key: string): Object =>
     new Promise((resolve, reject) =>
       client.get(key, (err, data) => {
         if (err) {

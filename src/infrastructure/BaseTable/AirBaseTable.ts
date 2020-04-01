@@ -8,7 +8,7 @@ import { BaseDoctorService } from '@app/domain/base-doctor/BaseDoctorService'
 
 @Injectable()
 export class AirBaseTable implements BaseTable {
-  private base: Promise<any> = null
+  private readonly base: Promise<any> = null
 
   constructor(
     private readonly config: Configuration,
@@ -22,10 +22,10 @@ export class AirBaseTable implements BaseTable {
     }).base(this.config.getOrElse('AIRTABLE_ID', null))
   }
 
-  public async update(authHeader: string) {
+  public async update(authHeader: string): Promise<void> {
     if (authHeader !== this.config.getOrElse('PIPEDREAM_ID', null)) {
       // TODO: throw error
-      return 'bad request'
+      return
     }
 
     const doctors = await this.load('Врачи', BaseTabeViewEnum.Grid)
@@ -38,8 +38,6 @@ export class AirBaseTable implements BaseTable {
     if (doctors) {
       await this.baseDoctor.save(doctors)
     }
-
-    return 'updation complete'
   }
 
   public async load(name: string, view: BaseTabeViewEnum): Promise<any[]> {
@@ -64,10 +62,5 @@ export class AirBaseTable implements BaseTable {
         },
       )
     }) as Promise<any[]>
-  }
-
-  public async create(){
-    this.base
-    return 'crete complete'
   }
 }

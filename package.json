@@ -52,7 +52,7 @@
     "tsoption": "^0.7.0",
     "twig": "^1.12.0",
     "typeorm": "^0.2.7",
-    "typescript": "^3.0.1",
+    "typescript": "^3.8.3",
     "winston": "^3.1.0",
     "z": "^1.0.8"
   },
@@ -67,7 +67,7 @@
     "@types/json2csv": "^4.2.0",
     "@types/lodash": "^4.14.116",
     "@types/md5": "^2.1.33",
-    "@types/node": "^10.7.1",
+    "@types/node": "^13.9.8",
     "@types/nodemailer": "^4.6.5",
     "@types/passport-http-bearer": "^1.0.33",
     "@types/passport-jwt": "^3.0.1",
@@ -88,6 +88,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn types && yarn soda pretty && yarn soda lint --fix"
+    }
   },
   "scripts": {
     "cmd": "node --require ./tsconfig-paths-bootstrap.js ./dist/console.js",

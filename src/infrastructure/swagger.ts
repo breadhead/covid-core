@@ -7,7 +7,7 @@ export default (app: INestApplication, path: string) => {
     .setDescription('The core API documentation')
     .setVersion('1.0')
     .addBearerAuth()
-    .setSchemes('https')
+    .setSchemes('http')
     .build()
 
   const document = SwaggerModule.createDocument(app, options)

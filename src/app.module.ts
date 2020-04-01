@@ -104,9 +104,8 @@ import { BaseDoctorRepository } from './domain/base-doctor/BaseDoctorRepository'
 import { BaseClinicRepository } from './domain/base-clinic/BaseClinicRepository'
 import { Form } from '@app/domain/form/Form.entity'
 import { FormRepository } from '@app/domain/form/FormRepository'
-import {AirtableCommand} from "@app/presentation/cli/command/AirtableCommand";
-import {DataSender} from "@app/presentation/cli/airtable/DataSender";
-
+import { AirtableCommand } from '@app/presentation/cli/command/AirtableCommand'
+import { DataSender } from '@app/presentation/cli/airtable/DataSender'
 
 const commandHandlers = [
   AskQuestionsHandler,
@@ -131,9 +130,7 @@ const signInProviders = [
   NenaprasnoCabinetSignInProvider,
 ]
 
-const cliCommands = [
-  AirtableCommand
-]
+const cliCommands = [AirtableCommand]
 
 const securityVoters = [PostMessageVoter, ShowClaimVoter, EditClaimVoter]
 
@@ -172,7 +169,7 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
       StoryRepository,
       BaseDoctorRepository,
       BaseClinicRepository,
-      FormRepository
+      FormRepository,
     ]),
     HttpModule,
   ],
@@ -237,11 +234,9 @@ const eventSubscribers = [BoardSubscriber, NotifySubscriber]
     StoryService,
     BaseDoctorService,
     BaseClinicService,
-    DataSender
+    DataSender,
   ],
-  exports: [
-    DataSender
-  ]
+  exports: [DataSender],
 })
 export class AppModule implements NestModule {
   public constructor(
@@ -254,12 +249,12 @@ export class AppModule implements NestModule {
     private readonly notifyMessageRecurrenter: NotifyMessageRecurrenter,
     private readonly feedbackAnswerRecurrenter: FeedbackAnswerRecurrenter,
     private readonly notifyOverdueRecurrenter: NotifyOverdueRecurrenter,
-    private readonly tableDataSender: DataSender
+    private readonly tableDataSender: DataSender,
   ) {}
 
   public async onModuleInit() {
-    this.commandRunner.setModuleRef(this.moduleRef);
-    this.commandRunner.register(cliCommands);
+    this.commandRunner.setModuleRef(this.moduleRef)
+    this.commandRunner.register(cliCommands)
 
     this.command$.setModuleRef(this.moduleRef)
     this.command$.register(commandHandlers)
@@ -275,14 +270,14 @@ export class AppModule implements NestModule {
 
     this.notifyMessageRecurrenter.start()
     this.feedbackAnswerRecurrenter.start()
-    this.notifyOverdueRecurrenter.start();
+    this.notifyOverdueRecurrenter.start()
 
     if (
       process.env.NODE_ENV === 'production' &&
       parseInt(process.env.INSTANCE_ID, 10) === 0
     ) {
-      console.log('inited sender');
-      await this.tableDataSender.start();
+      console.log('inited sender')
+      await this.tableDataSender.start()
     }
   }
 

@@ -1,13 +1,13 @@
-import {Body, Controller, NotFoundException, Post} from '@nestjs/common';
-import {ApiCreatedResponse, ApiOperation, ApiUseTags} from '@nestjs/swagger';
-import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
-import FormRequest from '@app/presentation/http/request/FormRequest';
-import FormResponse from '@app/presentation/http/response/FormResponse';
+import { Body, Controller, NotFoundException, Post } from '@nestjs/common'
+import { ApiCreatedResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import FormRequest from '@app/presentation/http/request/FormRequest'
+import FormResponse from '@app/presentation/http/response/FormResponse'
 
-import {Form} from '@app/domain/form/Form.entity';
-import {FormStatus} from '@app/domain/form/FormStatus';
-import {FormUpdateRequest} from "@app/presentation/http/request/FormUpdateRequest";
-import {FormRepository} from "@app/domain/form/FormRepository";
+import { Form } from '@app/domain/form/Form.entity'
+import { FormStatus } from '@app/domain/form/FormStatus'
+import { FormUpdateRequest } from '@app/presentation/http/request/FormUpdateRequest'
+import { FormRepository } from '@app/domain/form/FormRepository'
 
 @Controller('form')
 @ApiUseTags('form')
@@ -22,21 +22,18 @@ export class FormController {
   @Post('save')
   @ApiOperation({ title: 'Save form result' })
   @ApiCreatedResponse({ description: 'Success', type: FormResponse })
-  public async createForm(
-    @Body() request: FormRequest,
-  ): Promise<FormResponse> {
-    let form = new Form(request.type, request.fields, FormStatus.New);
+  public async createForm(@Body() request: FormRequest): Promise<FormResponse> {
+    const form = new Form(request.type, request.fields, FormStatus.New)
 
     try {
-      await this.saveService.save(form);
-
+      await this.saveService.save(form)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
 
     return {
       id: form.id || 0,
-    } as FormResponse;
+    } as FormResponse
   }
 
   @Post('update')
@@ -45,24 +42,24 @@ export class FormController {
   public async updateForm(
     @Body() request: FormUpdateRequest,
   ): Promise<FormResponse> {
-    const form = await this.formRepo.getOne(request.id);
+    const form = await this.formRepo.getOne(request.id)
 
     if (!form) {
-      throw new NotFoundException('form not found');
+      throw new NotFoundException('form not found')
     }
 
-    form.fields['email'] = request.email;
+    // eslint-disable-next-line dot-notation
+    form.fields['email'] = request.email
 
     try {
-      form.status = FormStatus.New;
-      await this.saveService.save(form);
-
+      form.status = FormStatus.New
+      await this.saveService.save(form)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
 
     return {
       id: form ? form.id : 0,
-    } as FormResponse;
+    } as FormResponse
   }
 }
