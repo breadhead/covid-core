@@ -1,0 +1,6 @@
+ALTER TABLE form
+  ADD COLUMN response VARCHAR(255) NULL;
+
+#DOWN
+ALTER TABLE form
+  DROP COLUMN response ;

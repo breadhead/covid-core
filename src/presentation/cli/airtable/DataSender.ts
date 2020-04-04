@@ -100,6 +100,8 @@ export class DataSender {
         .catch(error => {
           form.status = FormStatus.Fail
 
+          form.response = error.message;
+          console.log(error)
           // eslint-disable-next-line no-await-in-loop
           return this.saver.save(form)
         })
@@ -121,6 +123,9 @@ export class DataSender {
         .catch(error => {
           form.status = FormStatus.Fail
 
+          form.response = error.message;
+
+          console.log(error)
           return this.saver.save(form)
         })
     }
