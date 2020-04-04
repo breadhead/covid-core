@@ -46,16 +46,14 @@ export class Form {
   public readonly updatedAt: Date
 
   @Column()
-  private _response: string;
+  private _response: string
 
-  public set response(val: string)
-  {
-    this._response = val;
+  public set response(val: string) {
+    this._response = val
   }
 
-  public get response(): string | null
-  {
-    return this._response;
+  public get response(): string | null {
+    return this._response
   }
 
   public set status(status: FormStatus) {
