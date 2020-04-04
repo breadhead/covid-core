@@ -1,6 +1,6 @@
 export enum FormType {
   Covid = 'corona',
   Partner = 'partner',
-  Hospital = 'for-clinics',
+  Hospital = 'for-hospitals',
   Volunteer = 'volunteer',
 }
