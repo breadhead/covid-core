@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+
 import { Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 
@@ -6,6 +8,7 @@ import { FormRepository } from '@app/domain/form/FormRepository'
 import { FormStatus } from '@app/domain/form/FormStatus'
 import { CronJob } from 'cron'
 import { Form } from '@app/domain/form/Form.entity'
+import { FormType } from '@app/domain/form/FormType'
 
 const Airtable = require('airtable')
 
@@ -51,54 +54,75 @@ export class DataSender {
 
     const newForms = await this.formRepo.findByStatus(FormStatus.New)
     for (const form of newForms) {
-      form.status = FormStatus.InProgress
+      switch (form.type) {
+        case FormType.Covid:
+          await this.sendForm('Анкеты с сайта', form)
 
-      // eslint-disable-next-line no-await-in-loop
-      await this.saver.save(form)
+          break
+        case FormType.Hospital:
+          await this.sendForm('Для больниц', form)
 
-      if (form.externalId) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.airtableBase('Анкеты с сайта')
-          .update([
-            {
-              id: form.externalId,
-              fields: form.getTableView(),
-            },
-          ])
-          .then(records => {
-            form.externalId = records[0].getId()
+          break
+        case FormType.Partner:
+          await this.sendForm('Стать партнером', form)
 
-            form.status = FormStatus.Sent
+          break
+        case FormType.Volunteer:
+          await this.sendForm('Стать волонтером', form)
 
-            return this.saver.save(form)
-          })
-          .catch(error => {
-            form.status = FormStatus.Fail
-
-            // eslint-disable-next-line no-await-in-loop
-            return this.saver.save(form)
-          })
-      } else {
-        // eslint-disable-next-line no-await-in-loop
-        await this.airtableBase('Анкеты с сайта')
-          .create([
-            {
-              fields: form.getTableView(),
-            },
-          ])
-          .then(records => {
-            form.externalId = records[0].getId()
-
-            form.status = FormStatus.Sent
-
-            return this.saver.save(form)
-          })
-          .catch(error => {
-            form.status = FormStatus.Fail
-
-            return this.saver.save(form)
-          })
+          break
+        default:
       }
+    }
+  }
+
+  private async sendForm(name: string, form: Form): Promise<void> {
+    form.status = FormStatus.InProgress
+
+    await this.saver.save(form)
+
+    if (form.externalId) {
+      // eslint-disable-next-line no-await-in-loop
+      await this.airtableBase(name)
+        .update([
+          {
+            id: form.externalId,
+            fields: form.getTableView(),
+          },
+        ])
+        .then(records => {
+          form.externalId = records[0].getId()
+
+          form.status = FormStatus.Sent
+
+          return this.saver.save(form)
+        })
+        .catch(error => {
+          form.status = FormStatus.Fail
+
+          // eslint-disable-next-line no-await-in-loop
+          return this.saver.save(form)
+        })
+    } else {
+      // eslint-disable-next-line no-await-in-loop
+      await this.airtableBase(name)
+        .create([
+          {
+            fields: form.getTableView(),
+          },
+        ])
+        .then(records => {
+          form.externalId = records[0].getId()
+
+          form.status = FormStatus.Sent
+
+          return this.saver.save(form)
+        })
+        .catch(error => {
+          form.status = FormStatus.Fail
+
+          return this.saver.save(form)
+        })
     }
   }
 }

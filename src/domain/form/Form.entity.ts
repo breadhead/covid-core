@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { Injectable } from '@nestjs/common'
 import {
   Column,
@@ -68,35 +69,16 @@ export class Form {
 
   public getTableView(): Object | null {
     if (this.type === FormType.Covid) {
-      // eslint-disable-next-line dot-notation
-      let fieldSymptoms = this.fields['symptoms']
-
-      fieldSymptoms = fieldSymptoms || []
-      const symptoms = Object.keys(fieldSymptoms).filter(
-        key => fieldSymptoms[key] === true,
-      )
-
-      return {
-        // eslint-disable-next-line dot-notation
-        'Для кого ищут информацию': this.fields['target'] || '',
-        // eslint-disable-next-line dot-notation
-        Регион: this.fields['region'] || '',
-        // eslint-disable-next-line dot-notation
-        Пол: this.fields['gender'] || '',
-        // eslint-disable-next-line dot-notation
-        Возраст: this.fields['age'] || '',
-        Симптомы: this.translateSymptoms(symptoms, symptomsList).join(', '),
-        'Тип кашля': fieldSymptoms.caughtType || '',
-        'Тип боли в груди': fieldSymptoms.thoraxType || '',
-        Температура: fieldSymptoms.temperatureType || '',
-        Одышка: fieldSymptoms.dyspneaType || '',
-        'Когда появились симптомы': fieldSymptoms.symptomsSince || '',
-        'Сопутствующие заболевания': fieldSymptoms.deseases
-          ? this.translateSymptoms(fieldSymptoms.deseases, deseasesList)
-          : '',
-        // eslint-disable-next-line dot-notation
-        Email: this.fields['email'] || '',
-      }
+      return this.getCovidFields()
+    }
+    if (this.type === FormType.Hospital) {
+      return this.getHospitalFields()
+    }
+    if (this.type === FormType.Partner) {
+      return this.getPartnerFields()
+    }
+    if (this.type === FormType.Volunteer) {
+      return this.getVolunteerFields()
     }
 
     return null
@@ -115,12 +97,73 @@ export class Form {
         return obj
       }, result)
     } else {
-      console.log(symptoms)
-      console.log(source)
       result = source.find(item => item.id === symptoms) || []
-      console.log(result)
     }
 
     return result
+  }
+
+  private getCovidFields(): Object {
+    // eslint-disable-next-line dot-notation
+    let fieldSymptoms = this.fields['symptoms']
+
+    fieldSymptoms = fieldSymptoms || []
+    const symptoms = Object.keys(fieldSymptoms).filter(
+      key => fieldSymptoms[key] === true,
+    )
+
+    return {
+      'Для кого ищут информацию': this.fields['target'] || '',
+      Регион: this.fields['region'] || '',
+      Пол: this.fields['gender'] || '',
+      Возраст: this.fields['age'] || '',
+      Симптомы: this.translateSymptoms(symptoms, symptomsList).join(', '),
+      'Тип кашля': fieldSymptoms.caughtType || '',
+      'Тип боли в груди': fieldSymptoms.thoraxType || '',
+      Температура: fieldSymptoms.temperatureType || '',
+      Одышка: fieldSymptoms.dyspneaType || '',
+      'Когда появились симптомы': fieldSymptoms.symptomsSince || '',
+      'Сопутствующие заболевания': fieldSymptoms.deseases
+        ? this.translateSymptoms(fieldSymptoms.deseases, deseasesList)
+        : '',
+      Email: this.fields['email'] || '',
+    }
+  }
+
+  private getHospitalFields(): Object {
+    return {
+      Город: this.fields['city'],
+      Больница: this.fields['hospital'],
+      'ФИО контактного лица': this.fields['name'],
+      Телефон: this.fields['phone'],
+      Почта: this.fields['Email'],
+      'Чего не хватает?': this.fields['what_is_needed'],
+    }
+  }
+
+  private getVolunteerFields(): Object {
+    return {
+      Имя: this.fields['name'],
+      Почта: this.fields['email'],
+      Телефон: this.fields['phone'],
+      Город: this.fields['city'],
+      'Ссылка на соцсети (VK/FB)': this.fields['social'],
+      Профессия: this.fields['profession'],
+      'Чем вы готовы помочь?': this.fields['aid'],
+      'Сколько времени в неделю вы готовы уделять проекту?': this.fields[
+        'time'
+      ],
+    }
+  }
+
+  private getPartnerFields(): Object {
+    return {
+      Имя: this.fields['name'],
+      'Название организации': this.fields['organisation_name'],
+      Почта: this.fields['email'],
+      Телефон: this.fields['phone'],
+      Тема: this.fields['theme'],
+      Сообщение: this.fields['message'],
+    }
   }
 }

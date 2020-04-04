@@ -276,7 +276,6 @@ export class AppModule implements NestModule {
       process.env.NODE_ENV === 'production' &&
       parseInt(process.env.INSTANCE_ID, 10) === 0
     ) {
-      console.log('inited sender')
       await this.tableDataSender.start()
     }
   }
