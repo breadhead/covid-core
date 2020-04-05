@@ -45,7 +45,7 @@ export class Form {
   @UpdateDateColumn({ name: 'updated_at' })
   public readonly updatedAt: Date
 
-  @Column({name: 'response'})
+  @Column({ name: 'response' })
   private _response: string
 
   public set response(val: string) {
@@ -129,10 +129,20 @@ export class Form {
       Пол: this.fields['gender'] || '',
       Возраст: this.fields['age'] || '',
       Симптомы: this.translateSymptoms(symptoms, symptomsList).join(', '),
-      'Тип кашля': fieldSymptoms.caughtType || '',
-      'Тип боли в груди': fieldSymptoms.thoraxType || '',
+      'Тип кашля': fieldSymptoms.caughtType
+        ? this.translateSymptoms(fieldSymptoms.caughtType, coughList).join(', ')
+        : '',
+      'Тип боли в груди': fieldSymptoms.thoraxType
+        ? this.translateSymptoms(fieldSymptoms.thoraxType, chestPainList).join(
+            ', ',
+          )
+        : '',
       Температура: fieldSymptoms.temperatureType || '',
-      Одышка: fieldSymptoms.dyspneaType || '',
+      Одышка: fieldSymptoms.dyspneaType
+        ? this.translateSymptoms(fieldSymptoms.dyspneaType, chestPainList).join(
+            ', ',
+          )
+        : '',
       'Когда появились симптомы': fieldSymptoms.symptomsSince || '',
       'Сопутствующие заболевания': fieldSymptoms.deseases
         ? this.translateSymptoms(fieldSymptoms.deseases, deseasesList)
