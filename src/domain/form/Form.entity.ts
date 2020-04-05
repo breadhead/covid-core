@@ -45,7 +45,7 @@ export class Form {
   @UpdateDateColumn({ name: 'updated_at' })
   public readonly updatedAt: Date
 
-  @Column()
+  @Column({name: 'response'})
   private _response: string
 
   public set response(val: string) {
