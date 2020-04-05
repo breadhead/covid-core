@@ -161,6 +161,7 @@ export class Form {
       'Ссылка на соцсети (VK/FB)': this.fields['social'],
       Профессия: this.fields['profession'],
       'Чем вы готовы помочь?': this.fields['aid'],
+      'Уточните вашу профессию': this.fields['otherProfession'],
       'Сколько времени в неделю вы готовы уделять проекту?': this.fields[
         'time'
       ],
