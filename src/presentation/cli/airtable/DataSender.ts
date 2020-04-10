@@ -71,6 +71,10 @@ export class DataSender {
           await this.sendForm('Стать волонтером', form)
 
           break
+        case FormType.WebinarRegistration:
+          await this.sendForm('Записи на вебинары', form)
+
+          break
         default:
       }
     }

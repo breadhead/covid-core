@@ -91,6 +91,9 @@ export class Form {
     if (this.type === FormType.Volunteer) {
       return this.getVolunteerFields()
     }
+    if (this.type === FormType.WebinarRegistration) {
+      return this.getWebinarRegistrationFields()
+    }
 
     return null
   }
@@ -186,6 +189,15 @@ export class Form {
       Телефон: this.fields['phone'],
       Тема: this.fields['theme'],
       Сообщение: this.fields['message'],
+    }
+  }
+
+  private getWebinarRegistrationFields(): Object {
+    return {
+      'Название мероприятия': this.fields['webinarName'],
+      'Почта': this.fields['email'],
+      'Имя': this.fields['name'],
+      'Телефон': this.fields['phone'],
     }
   }
 }
