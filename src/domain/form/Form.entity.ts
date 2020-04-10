@@ -195,9 +195,9 @@ export class Form {
   private getWebinarRegistrationFields(): Object {
     return {
       'Название мероприятия': this.fields['webinarName'],
-      'Почта': this.fields['email'],
-      'Имя': this.fields['name'],
-      'Телефон': this.fields['phone'],
+      Почта: this.fields['email'],
+      Имя: this.fields['name'],
+      Телефон: this.fields['phone'],
     }
   }
 }
