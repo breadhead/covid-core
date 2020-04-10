@@ -3,4 +3,5 @@ export enum FormType {
   Partner = 'partner',
   Hospital = 'for-hospitals',
   Volunteer = 'volunteer',
+  WebinarRegistration = 'webinar-registration',
 }
