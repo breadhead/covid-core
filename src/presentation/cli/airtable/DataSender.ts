@@ -32,7 +32,7 @@ export class DataSender {
 
   public async start() {
     this.job = new CronJob(
-      `0 */1 * * *`,
+      `*/5 * * * *`,
       async () => {
         await this.sendForms()
       },
