@@ -162,6 +162,7 @@ export class Form {
       Телефон: this.fields['phone'],
       Почта: this.fields['Email'],
       'Чего не хватает?': this.fields['what_is_needed'],
+      Статус: 'Новый',
     }
   }
 
@@ -189,6 +190,7 @@ export class Form {
       Телефон: this.fields['phone'],
       Тема: this.fields['theme'],
       Сообщение: this.fields['message'],
+      Статус: 'Новый',
     }
   }
 
