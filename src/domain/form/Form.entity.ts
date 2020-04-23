@@ -94,6 +94,9 @@ export class Form {
     if (this.type === FormType.WebinarRegistration) {
       return this.getWebinarRegistrationFields()
     }
+    if (this.type === FormType.Checklist) {
+      return this.getChecklistFields()
+    }
 
     return null
   }
@@ -159,7 +162,8 @@ export class Form {
       Город: this.fields['city'],
       Больница: this.fields['hospital'],
       'ФИО контактного лица': this.fields['name'],
-      Телефон: this.fields['phone'],
+      Должность: this.fields['position'],
+      'Мобильный телефон': this.fields['phone'],
       Почта: this.fields['Email'],
       'Чего не хватает?': this.fields['what_is_needed'],
       Статус: 'Новый',
@@ -201,5 +205,165 @@ export class Form {
       Имя: this.fields['name'],
       Телефон: this.fields['phone'],
     }
+  }
+
+  private getChecklistFields(): Object {
+    const shortageTitleSuffix = '(проблемы с поставкой)'
+    const reservesTitleSuffix = '(сутки)'
+
+    const shortageNameSuffix = 'ShortageExpected'
+    const reservesNameSuffix = 'DaysRemaining'
+
+    const checkListFields = {
+      'Одноразовые костюмы': 'disposableSuits',
+      'Одноразовые халаты': 'disposableRobes',
+      Очки: 'glasses',
+      'Маски обычные': 'regularMasks',
+      'Респираторы FFP2': 'respiratorsFFP2',
+      'Респираторы FFP3': 'respiratorsFFP3',
+      'Бахилы (высокие, хирургические)': 'shoeCovers',
+      'Одноразовые перчатки': 'disposableGloves',
+      Антисептики: 'antiseptics',
+      Видеоларингоскопы: 'videoLaryngoscopes',
+      'Кислородные концентраторы': 'oxygenConcentrators',
+      'Обычная носовая канюля': 'regularNasalCannula',
+      'Кислородная лицевая маска с мешком (non-rebreather)': 'oxygenMask',
+      'Увлажнители кислорода': 'oxygenMoisturizers',
+      'Небулайзеры-компрессоры': 'nebulizersCompressors',
+      'Небулайзерные насадки': 'nebulizerAttachments',
+      'Рабочих аппаратов НИВЛ CPAP/BIPAP': [
+        {
+          name: 'workingCPAP/BIPAPCount',
+          titleSuffix: '(количество аппаратов)',
+        },
+        {
+          name: 'workingCPAP/BIPAPShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Маски для аппараторв НИВЛ CPAP/BIPAP (однопатрубочных)':
+        'masksForCPAP/BIPAP',
+      'Рабочих аппаратов ИВЛ': [
+        {
+          name: 'workingVentilators',
+          titleSuffix: '(количество аппаратов)',
+        },
+        {
+          name: 'workingVentilatorsShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Мешки Амбу': [
+        {
+          name: 'ambuBagsSwitcher',
+          titleSuffix: '(свитчер: Обеспечены/Нет)',
+        },
+        {
+          name: 'ambuBagsShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Компрессоры сжатого воздуха': [
+        {
+          name: 'airCompressorBedsCount',
+          titleSuffix: '(количество обеспеченных коек)',
+        },
+        {
+          name: 'airCompressorShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Концентраторы кислорода высокого давления': [
+        {
+          name: 'highPressureOxygenConcentratorsSwitcher',
+          titleSuffix: '(cвитчер: Есть/Нет)',
+        },
+        {
+          name: 'highPressureOxygenConcentratorsShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Пункционнные трахеостомы': 'punctureTracheostomy',
+      'Трахеостомические трубки': 'tracheostomyTube',
+      'Закрытые системы для санации ТБД': 'closedTBDsystems',
+      'Обычные катетеры для санации ТБД': 'TBDcatheter',
+      'Одноразовые дыхательные контуры': 'disposableBreathingCircuits',
+      'Вирусно-бактериальные фильтры': 'virusBacterialFilters',
+      Тепловлагообменники: 'heatMoistureExchangers',
+      'Уголковые коннекторы между контуром и эндотрахеальной трубкой':
+        'breathingCircuitConnectors',
+      'Эндотрахеальные трубки разных диаметров': 'endotrachealTubes',
+      'Проводники для интубации': 'intubationStylets',
+      'Гелевые подушки подлобные подгрудные для вентиляции в прон-позиции': [
+        {
+          name: 'heliumPillowsBedCount',
+          titleSuffix: '(количество обеспеченных коек)',
+        },
+        {
+          name: 'heliumPillowsShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      Капельницы: 'IVBags',
+      'Периферические венозные катетеры': 'peripheralVenousCatheters',
+      'Центральные венозные катетеры': 'centralVenousCatheters',
+      'Трехходовые краники': 'threeWayStopcocks',
+      'Инфузоматы шприцевые': [
+        {
+          name: 'syringeInfusionPumpsBedCount',
+          titleSuffix: '(количество обеспеченных коек)',
+        },
+        {
+          name: 'syringeInfusionPumpsShortageExpected',
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Инфузоматы перистальтические': 'peristalticInfusionPumps',
+      'Шприцы для инфузоматов (50 мл)': 'infusionSyringes',
+      'Инфузионные линии': 'infusionLines',
+      'Капельницы для инфузоматов': 'infusionBags',
+      'Пульсоксиметры (портативные)': 'portablePulseOximeters',
+      'Пульсоксиметры-мониторы': 'pulseOximeters',
+      Капнографы: 'capnographs',
+      'Простые мониторы (ниАД, ЭКГ, SpO2)': 'simpleMonitors',
+      'Анализаторы газов крови': 'bloodGasAnalyzer',
+      'Системы для инфузии энтерального питания': 'enteralInfusionSystems',
+      'Назогастральные/дуоденальные зонды для питания': 'nasogastricTubes',
+      'Инфузоматы перистальтические для энтерального питания':
+        'peristalticEnteralInfusionPumps',
+      Бинты: 'bandages',
+      Пластыри: 'bandAids',
+      Наклейки: 'stickers',
+      'Катетеры Фолея': 'foleyCatheters',
+      Мочеприемники: 'urineBags',
+    }
+
+    const resultFields = {
+      Город: this.fields['city'],
+      Больница: this.fields['hospital'],
+      'ФИО контактного лица': this.fields['name'],
+      Должность: this.fields['position'],
+      'Мобильный телефон': this.fields['phone'],
+      Почта: this.fields['Email'],
+      'Чего не хватает?': this.fields['what_is_needed'],
+      Статус: 'Новый',
+    }
+
+    Object.entries(checkListFields).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        resultFields[key + reservesTitleSuffix] = this.fields[
+          value + reservesNameSuffix
+        ]
+        resultFields[key + shortageTitleSuffix] = this.fields[
+          value + shortageNameSuffix
+        ]
+      } else {
+        value.forEach(({ name, titleSuffix }) => {
+          resultFields[key + titleSuffix] = this.fields[name]
+        })
+      }
+    })
+
+    return resultFields
   }
 }

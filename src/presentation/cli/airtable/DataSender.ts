@@ -75,6 +75,10 @@ export class DataSender {
           await this.sendForm('Записи на вебинары', form)
 
           break
+        case FormType.Checklist:
+          await this.sendForm('Чеклисты', form)
+
+          break
         default:
       }
     }
