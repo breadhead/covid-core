@@ -164,7 +164,7 @@ export class Form {
       'ФИО контактного лица': this.fields['name'],
       Должность: this.fields['position'],
       'Телефон': this.fields['phone'],
-      Почта: this.fields['Email'],
+      Почта: this.fields['email'],
       'Чего не хватает?': this.fields['what_is_needed'],
       Статус: 'Новый',
     }
