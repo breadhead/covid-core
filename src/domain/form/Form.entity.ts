@@ -316,7 +316,7 @@ export class Form {
       'Проводники для интубации': 'intubationStylets',
       'Гелевые подушки подлобные подгрудные для вентиляции в прон-позиции': [
         {
-          name: 'heliumPillowsBedCount',
+          name: 'heliumPillowsBedsCount',
           titleSuffix: '(количество обеспеченных коек)',
         },
         {
@@ -330,7 +330,7 @@ export class Form {
       'Трехходовые краники': 'threeWayStopcocks',
       'Инфузоматы шприцевые': [
         {
-          name: 'syringeInfusionPumpsBedCount',
+          name: 'syringeInfusionPumpsBedsCount',
           titleSuffix: '(количество обеспеченных коек)',
         },
         {
