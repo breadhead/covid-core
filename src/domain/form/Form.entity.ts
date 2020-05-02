@@ -163,7 +163,7 @@ export class Form {
       Больница: this.fields['hospital'],
       'ФИО контактного лица': this.fields['name'],
       Должность: this.fields['position'],
-      'Телефон': this.fields['phone'],
+      Телефон: this.fields['phone'],
       Почта: this.fields['email'],
       'Чего не хватает?': this.fields['what_is_needed'],
       Статус: 'Новый',
@@ -214,6 +214,17 @@ export class Form {
     const shortageNameSuffix = 'ShortageExpected'
     const reservesNameSuffix = 'DaysRemaining'
 
+    const countField = name => [
+      {
+        name: `${name}Count`,
+        titleSuffix: '(количество)',
+      },
+      {
+        name: `${name}${shortageNameSuffix}`,
+        titleSuffix: shortageTitleSuffix,
+      },
+    ]
+
     const checkListFields = {
       'Одноразовые костюмы': 'disposableSuits',
       'Одноразовые халаты': 'disposableRobes',
@@ -224,12 +235,21 @@ export class Form {
       'Бахилы (высокие, хирургические)': 'shoeCovers',
       'Одноразовые перчатки': 'disposableGloves',
       Антисептики: 'antiseptics',
-      Видеоларингоскопы: 'videoLaryngoscopes',
-      'Кислородные концентраторы': 'oxygenConcentrators',
+      Видеоларингоскопы: countField('videoLaryngoscopes'),
+      'Кислородные концентраторы': [
+        {
+          name: 'oxygenConcentrators',
+          titleSuffix: '(обеспечены?)',
+        },
+        {
+          name: `oxygenConcentrators${shortageNameSuffix}`,
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
       'Обычная носовая канюля': 'regularNasalCannula',
       'Кислородная лицевая маска с мешком (non-rebreather)': 'oxygenMask',
       'Увлажнители кислорода': 'oxygenMoisturizers',
-      'Небулайзеры-компрессоры': 'nebulizersCompressors',
+      'Небулайзеры-компрессоры': countField('nebulizersCompressors'),
       'Небулайзерные насадки': 'nebulizerAttachments',
       'Рабочих аппаратов НИВЛ CPAP/BIPAP': [
         {
@@ -237,7 +257,7 @@ export class Form {
           titleSuffix: '(количество аппаратов)',
         },
         {
-          name: 'workingCPAP/BIPAPShortageExpected',
+          name: `workingCPAP/BIPAP${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -249,7 +269,7 @@ export class Form {
           titleSuffix: '(количество аппаратов)',
         },
         {
-          name: 'workingVentilatorsShortageExpected',
+          name: `workingVentilators${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -259,7 +279,7 @@ export class Form {
           titleSuffix: '(свитчер: Обеспечены/Нет)',
         },
         {
-          name: 'ambuBagsShortageExpected',
+          name: `ambuBags${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -269,7 +289,7 @@ export class Form {
           titleSuffix: '(количество обеспеченных коек)',
         },
         {
-          name: 'airCompressorShortageExpected',
+          name: `airCompressor${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -279,7 +299,7 @@ export class Form {
           titleSuffix: '(cвитчер: Есть/Нет)',
         },
         {
-          name: 'highPressureOxygenConcentratorsShortageExpected',
+          name: `highPressureOxygenConcentrators${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -300,7 +320,7 @@ export class Form {
           titleSuffix: '(количество обеспеченных коек)',
         },
         {
-          name: 'heliumPillowsShortageExpected',
+          name: `heliumPillows${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
@@ -314,23 +334,42 @@ export class Form {
           titleSuffix: '(количество обеспеченных коек)',
         },
         {
-          name: 'syringeInfusionPumpsShortageExpected',
+          name: `syringeInfusionPumps${shortageNameSuffix}`,
           titleSuffix: shortageTitleSuffix,
         },
       ],
-      'Инфузоматы перистальтические': 'peristalticInfusionPumps',
+      'Инфузоматы перистальтические': countField('peristalticInfusionPumps'),
       'Шприцы для инфузоматов (50 мл)': 'infusionSyringes',
       'Инфузионные линии': 'infusionLines',
       'Капельницы для инфузоматов': 'infusionBags',
-      'Пульсоксиметры (портативные)': 'portablePulseOximeters',
-      'Пульсоксиметры-мониторы': 'pulseOximeters',
-      Капнографы: 'capnographs',
-      'Простые мониторы (ниАД, ЭКГ, SpO2)': 'simpleMonitors',
-      'Анализаторы газов крови': 'bloodGasAnalyzer',
+      'Пульсоксиметры (портативные)': [
+        {
+          name: 'portablePulseOximetersCount',
+          titleSuffix: '(приблизительное количество)',
+        },
+        {
+          name: `portablePulseOximeters${shortageNameSuffix}`,
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      'Пульсоксиметры-мониторы': [
+        {
+          name: 'pulseOximetersCount',
+          titleSuffix: '(приблизительное количество)',
+        },
+        {
+          name: `pulseOximeters${shortageNameSuffix}`,
+          titleSuffix: shortageTitleSuffix,
+        },
+      ],
+      Капнографы: countField('capnographs'),
+      'Простые мониторы (ниАД, ЭКГ, SpO2)': countField('simpleMonitors'),
+      'Анализаторы газов крови': countField('bloodGasAnalyzer'),
       'Системы для инфузии энтерального питания': 'enteralInfusionSystems',
       'Назогастральные/дуоденальные зонды для питания': 'nasogastricTubes',
-      'Инфузоматы перистальтические для энтерального питания':
+      'Инфузоматы перистальтические для энтерального питания': countField(
         'peristalticEnteralInfusionPumps',
+      ),
       Бинты: 'bandages',
       Пластыри: 'bandAids',
       Наклейки: 'stickers',
