@@ -28,7 +28,7 @@ export class NodemailerEmailSender implements EmailSender {
       host,
       port,
       auth,
-      secure: this.config.isProd() && port === SECURE_PORT,
+      secure: this.config.get('SMTP_SECURE').getOrElse(false),
     })
   }
 
